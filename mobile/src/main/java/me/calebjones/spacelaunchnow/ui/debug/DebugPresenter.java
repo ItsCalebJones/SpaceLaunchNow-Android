@@ -111,7 +111,7 @@ public class DebugPresenter implements DebugContract.Presenter {
     @Override
     public void jobEventButtonClicked(Context context) {
         new MaterialDialog.Builder(context)
-                .title("Job Events")
+                .title("Job EventsFragment")
                 .content(JobUtils.getJobRequestStatus())
                 .show();
     }

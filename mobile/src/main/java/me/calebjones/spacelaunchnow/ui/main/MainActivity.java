@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.main;
 
+import android.animation.ObjectAnimator;
+import android.animation.StateListAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -22,13 +24,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.ashokvarma.bottomnavigation.BottomNavigationBar;
+import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.crashlytics.android.Crashlytics;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -49,9 +52,7 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.holder.ImageHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,7 +61,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.concurrent.TimeUnit;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.mrapp.android.preference.activity.PreferenceActivity;
@@ -69,6 +72,8 @@ import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.iss.ISSFragment;
+import me.calebjones.spacelaunchnow.events.EventsFragment;
 import me.calebjones.spacelaunchnow.local.common.BaseActivity;
 import me.calebjones.spacelaunchnow.local.common.customviews.generate.Rate;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
@@ -102,11 +107,13 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     @BindView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
     @BindView(R.id.navigation_view)
-    BottomNavigationView bottomNavigationView;
+    BottomNavigationBar bottomNavigationView;
     private LaunchesViewPager mlaunchesViewPager;
     private NextLaunchFragment mUpcomingFragment;
     private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
+    private ISSFragment mIssFragment;
+    private EventsFragment mEventsFragment;
     private Drawer drawer = null;
     private SharedPreferences sharedPref;
     private SwitchPreferences switchPreferences;
@@ -114,6 +121,13 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private Context context;
     private boolean adviewEnabled = false;
     private Rate rate;
+
+    private static final String HOME_TAG = "HOME_TAG";
+    private static final String LAUNCHES_TAG = "LAUNCH_VIEWPAGER";
+    private static final String NEWS_TAG = "NEWS_FRAGMENT_VIEWPAGER";
+    private static final String VEHICLE_TAG = "VEHICLE_VIEWPAGER";
+    private static final String ISS_TAG = "ISS_TAG";
+    private static final String EVENTS_TAG = "EVENTS_TAG";
 
     static final int SHOW_INTRO = 1;
 
@@ -200,7 +214,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         setSupportActionBar(toolbar);
         // load saved navigation state if present
         if (null == savedInstanceState) {
-            mNavItemId = R.id.menu_launches;
+            mNavItemId = R.id.menu_home;
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
@@ -231,31 +245,22 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .withTranslucentStatusBar(true)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        new ExpandableDrawerItem()
+                        new PrimaryDrawerItem()
                                 .withName(R.string.home)
                                 .withIcon(GoogleMaterial.Icon.gmd_home)
                                 .withIdentifier(R.id.menu_home)
-                                .withSelectable(false)
-                                .withSubItems(
-                                        new SecondaryDrawerItem()
-                                                .withIcon(GoogleMaterial.Icon.gmd_assignment)
-                                                .withName("Launches")
-                                                .withLevel(2)
-                                                .withIdentifier(R.id.menu_launches)
-                                                .withSelectable(true),
-                                        new SecondaryDrawerItem()
-                                                .withIcon(CommunityMaterial.Icon.cmd_newspaper)
-                                                .withName(R.string.news)
-                                                .withLevel(2)
-                                                .withIdentifier(R.id.menu_news)
-                                                .withSelectable(true),
-                                        new SecondaryDrawerItem()
-                                                .withIcon(R.drawable.ic_rocket_grey)
-                                                .withLevel(2)
-                                                .withName(R.string.vehicle)
-                                                .withIdentifier(R.id.menu_vehicle)
-                                                .withSelectable(true)
-                                ),
+                                .withSelectable(true),
+                        new PrimaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_satellite)
+                                .withName("ISS")
+                                .withIdentifier(R.id.menu_iss)
+                                .withSelectable(true),
+                        new PrimaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_event)
+                                .withName("Events")
+                                .withIdentifier(R.id.menu_events)
+                                .withSelectable(true),
+                        new DividerDrawerItem(),
                         new PrimaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_info_outline)
                                 .withName(R.string.whats_new)
@@ -312,24 +317,86 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                             .withIdentifier(R.id.menu_support)
                             .withSelectable(false));
         }
+        bottomNavigationView
+                .addItem(new BottomNavigationItem(R.drawable.ic_favorite, "Favorites")
+                        .setActiveColorResource(R.color.accent))
+                .addItem(new BottomNavigationItem(R.drawable.ic_satellite_white, "Launches")
+                        .setActiveColorResource(R.color.primary))
+                .addItem(new BottomNavigationItem(R.drawable.ic_assignment_white, "News")
+                        .setActiveColorResource(R.color.material_color_deep_orange_500))
+                .addItem(new BottomNavigationItem(R.drawable.ic_rocket, "Vehicles")
+                        .setActiveColorResource(R.color.material_color_blue_grey_500))
+                .setFirstSelectedPosition(0)
+                .initialise();
 
+        bottomNavigationView.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int position) {
+                navigateToTab(position);
+            }
 
+            @Override
+            public void onTabUnselected(int position) {
+
+            }
+
+            @Override
+            public void onTabReselected(int position) {
+
+            }
+        });
         if ("SHOW_FILTERS".equals(action)) {
             navigate(R.id.menu_launches);
         } else {
             Timber.d("Navigate to initial fragment.");
             navigate(mNavItemId);
         }
+    }
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
-            if (mNavItemId != menuItem.getItemId()) {
-                mNavItemId = menuItem.getItemId();
-                drawer.setSelection(mNavItemId, false);
-                navigate(mNavItemId);
-            }
-            return true;
-        });
+    private void navigateToTab(int position) {
+        switch(position){
+            case 0:
+                mNavItemId = R.id.menu_favorite;
+                break;
+            case 1:
+                mNavItemId = R.id.menu_launches;
+                break;
+            case 2:
+                mNavItemId = R.id.menu_news;
+                break;
+            case 3:
+                mNavItemId = R.id.menu_vehicle;
+                break;
+        }
+        navigate(mNavItemId);
+    }
 
+    public void hideBottomNavigation(){
+        bottomNavigationView.setVisibility(View.GONE);
+    }
+
+    public void showBottomNavigation(){
+        bottomNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    public void removeAppBarElevation() {
+        getSupportActionBar().setElevation(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            appBarLayout.setElevation(0);
+            StateListAnimator stateListAnimator = new StateListAnimator();
+            stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(appBarLayout, "elevation", 0));
+            appBarLayout.setStateListAnimator(stateListAnimator);
+        }
+    }
+
+    public void addAppBarElevation() {
+        getSupportActionBar().setElevation(8);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            appBarLayout.setElevation(8);
+            StateListAnimator stateListAnimator = new StateListAnimator();
+            stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(appBarLayout, "elevation", 8));
+            appBarLayout.setStateListAnimator(stateListAnimator);
+        }
     }
 
     private void setupWindowAnimations() {
@@ -573,63 +640,82 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private void navigate(final int itemId) {
         Timber.v("Navigate to %s", itemId);
         // perform the actual navigation logic, updating the main_menu content fragment etc
-        FragmentManager fm = getSupportFragmentManager();
-        Timber.v(String.valueOf(getSupportActionBar().getElevation()));
-        getSupportActionBar().setElevation(0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            appBarLayout.setElevation(0);
-        }
         switch (itemId) {
-            case R.id.menu_launches:
-                mNavItemId = R.id.menu_launches;
-                // Check to see if we have retained the worker fragment.
-                mlaunchesViewPager = (LaunchesViewPager) fm.findFragmentByTag("LAUNCH_VIEWPAGER");
-
-                // If not retained (or first time running), we need to create it.
-                if (mlaunchesViewPager == null) {
-                    mlaunchesViewPager = new LaunchesViewPager();
-                    // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mlaunchesViewPager, "LAUNCH_VIEWPAGER").commit();
+            case R.id.menu_home:
+                navigateToTab(bottomNavigationView.getCurrentSelectedPosition());
+                break;
+            case R.id.menu_favorite:
+                setActionBarTitle("Space Launch Now");
+                if (mUpcomingFragment == null)
+                    mUpcomingFragment = NextLaunchFragment.newInstance();
+                navigateToFragment(mUpcomingFragment, HOME_TAG);
+                if (bottomNavigationView.getChildCount() > 0) {
+                    bottomNavigationView.selectTab(0, false);
                 }
+                addAppBarElevation();
+                showBottomNavigation();
                 if (rate != null) {
                     rate.showRequest();
                 }
-                bottomNavigationView.setSelectedItemId(R.id.menu_launches);
+                break;
+            case R.id.menu_launches:
+                setActionBarTitle("Space Launch Now");
+                removeAppBarElevation();
+                showBottomNavigation();
+                if (mlaunchesViewPager == null) {
+                    mlaunchesViewPager = LaunchesViewPager.newInstance();
+                }
+                navigateToFragment(mlaunchesViewPager, LAUNCHES_TAG);
+                if (rate != null) {
+                    rate.showRequest();
+                }
                 break;
             case R.id.menu_news:
-                mNavItemId = R.id.menu_news;
                 setActionBarTitle(getString(R.string.space_launch_news));
-                // Check to see if we have retained the worker fragment.
-                mNewsViewpagerFragment = (NewsViewPager) fm.findFragmentByTag("NEWS_FRAGMENT_VIEWPAGER");
+                removeAppBarElevation();
+                showBottomNavigation();
+                if (mNewsViewpagerFragment == null)
+                    mNewsViewpagerFragment = NewsViewPager.newInstance();
+                navigateToFragment(mNewsViewpagerFragment, NEWS_TAG);
 
-                // If not retained (or first time running), we need to create it.
-                if (mNewsViewpagerFragment == null) {
-                    mNewsViewpagerFragment = new NewsViewPager();
-                    // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mNewsViewpagerFragment, "NEWS_FRAGMENT").commit();
-                }
                 if (rate != null) {
                     rate.showRequest();
                 }
-                bottomNavigationView.setSelectedItemId(R.id.menu_launches);
+                break;
+            case R.id.menu_iss:
+                setActionBarTitle("International Space Station");
+                addAppBarElevation();
+                hideBottomNavigation();
+                if (mIssFragment == null)
+                    mIssFragment = ISSFragment.newInstance();
+                navigateToFragment(mIssFragment, ISS_TAG);
+
+                if (rate != null) {
+                    rate.showRequest();
+                }
+                break;
+            case R.id.menu_events:
+                setActionBarTitle("Space Launch Events");
+                addAppBarElevation();
+                hideBottomNavigation();
+                if (mEventsFragment == null)
+                    mEventsFragment = EventsFragment.newInstance();
+                navigateToFragment(mEventsFragment, EVENTS_TAG);
+
+                if (rate != null) {
+                    rate.showRequest();
+                }
                 break;
             case R.id.menu_vehicle:
-                mNavItemId = R.id.menu_vehicle;
                 setActionBarTitle(getString(R.string.vehicles));
-                // Check to see if we have retained the worker fragment.
-                mVehicleViewPager = (VehiclesViewPager) fm.findFragmentByTag("VEHICLE_VIEWPAGER");
+                removeAppBarElevation();
+                showBottomNavigation();
+                if (mVehicleViewPager == null) mVehicleViewPager = VehiclesViewPager.newInstance();
+                navigateToFragment(mVehicleViewPager, VEHICLE_TAG);
 
-                // If not retained (or first time running), we need to create it.
-                if (mVehicleViewPager == null) {
-                    mVehicleViewPager = new VehiclesViewPager();
-                    // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mVehicleViewPager, "VEHICLE_VIEWPAGER").commit();
-                }
                 if (rate != null) {
                     rate.showRequest();
                 }
-
-                bottomNavigationView.setSelectedItemId(R.id.menu_launches);
                 break;
             case R.id.menu_launch:
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
@@ -680,6 +766,20 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             default:
                 // ignore
                 break;
+        }
+    }
+
+    private void navigateToFragment(Fragment fragment, String TAG) {
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+        Fragment inputFragment = supportFragmentManager.findFragmentByTag(TAG);
+
+        if (inputFragment == null) {
+            fragmentTransaction.replace(R.id.flContent, fragment, TAG)
+                    .addToBackStack(null).commitAllowingStateLoss();
+        } else {
+            fragmentTransaction.replace(R.id.flContent, inputFragment, TAG)
+                    .addToBackStack(null).commitAllowingStateLoss();
         }
     }
 

@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/titleBarColor"
-            app:popupTheme="@style/LightTheme.PopupOverlay" />
+            app:popupTheme="@style/BaseAppTheme.PopupOverlay" />
 
 
         <me.calebjones.spacelaunchnow.utils.views.BadgeTabLayout

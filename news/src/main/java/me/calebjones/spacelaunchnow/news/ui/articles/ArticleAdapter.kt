@@ -69,7 +69,7 @@ class ArticleAdapter(
         return if (hasExtraRow() && position == itemCount - 1) {
             R.layout.network_state_item
         } else {
-            R.layout.reddit_post_item
+            R.layout.article_item
         }
     }
 

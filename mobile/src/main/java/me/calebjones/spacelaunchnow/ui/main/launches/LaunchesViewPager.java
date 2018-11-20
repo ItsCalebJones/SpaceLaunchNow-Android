@@ -16,8 +16,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.ui.launches.agency.PreviousAgencyLaunchesFragment;
-import me.calebjones.spacelaunchnow.ui.launches.agency.UpcomingAgencyLaunchesFragment;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import timber.log.Timber;
@@ -33,6 +31,15 @@ public class LaunchesViewPager extends Fragment {
     private PreviousLaunchesFragment previousFragment;
     private Context context;
 
+    public static LaunchesViewPager newInstance() {
+
+        LaunchesViewPager u = new LaunchesViewPager();
+        Bundle b = new Bundle();
+        u.setArguments(b);
+
+        return u;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,14 +51,14 @@ public class LaunchesViewPager extends Fragment {
         View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText("Next"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Following"));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.upcoming));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.previous));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount());
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -82,7 +89,6 @@ public class LaunchesViewPager extends Fragment {
     }
 
 
-
     @Override
     public void onResume() {
         Timber.d("onResume");
@@ -111,8 +117,6 @@ public class LaunchesViewPager extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         Timber.v("onDestroyView");
-        upcomingFragment = null;
-        previousFragment = null;
         viewPager.clearOnPageChangeListeners();
         tabLayout.setOnTabSelectedListener(null);
         pagerAdapter = null;
@@ -131,9 +135,24 @@ public class LaunchesViewPager extends Fragment {
         public Fragment getItem(int position) {
 
             switch (position) {
-                case 0: return NextLaunchFragment.newInstance();
-                case 1: return UpcomingLaunchesFragment.newInstance("Upcoming");
-                case 2: return PreviousLaunchesFragment.newInstance("Previous");
+//                case 0:
+//                    if (nextLaunchFragment != null){
+//                        return nextLaunchFragment;
+//                    } else {
+//                        return NextLaunchFragment.newInstance();
+//                    }
+                case 0:
+                    if (upcomingFragment != null) {
+                        return upcomingFragment;
+                    } else {
+                        return UpcomingLaunchesFragment.newInstance("Upcoming");
+                    }
+                case 1:
+                    if (previousFragment != null) {
+                        return previousFragment;
+                    } else {
+                        return PreviousLaunchesFragment.newInstance("Previous");
+                    }
                 default:
                     return null;
             }
@@ -145,13 +164,13 @@ public class LaunchesViewPager extends Fragment {
             Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
             // save the appropriate reference depending on position
             switch (position) {
+//                case 0:
+//                    nextLaunchFragment = (NextLaunchFragment) createdFragment;
+//                    break;
                 case 0:
-                    nextLaunchFragment = (NextLaunchFragment) createdFragment;
-                    break;
-                case 1:
                     upcomingFragment = (UpcomingLaunchesFragment) createdFragment;
                     break;
-                case 2:
+                case 1:
                     previousFragment = (PreviousLaunchesFragment) createdFragment;
                     break;
             }

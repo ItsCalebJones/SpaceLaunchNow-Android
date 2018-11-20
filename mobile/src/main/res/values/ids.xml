@@ -4,6 +4,9 @@
     <item name="menu_discord" type="id"/>
     <item name="menu_facebook" type="id"/>
     <item name="menu_website" type="id"/>
-    <item name="menu_news" type="id"/>
     <item name="menu_home" type="id"/>
+    <item name="menu_favorite" type="id"/>
+    <item name="menu_news" type="id"/>
+    <item name="menu_iss" type="id"/>
+    <item name="menu_events" type="id"/>
 </resources>

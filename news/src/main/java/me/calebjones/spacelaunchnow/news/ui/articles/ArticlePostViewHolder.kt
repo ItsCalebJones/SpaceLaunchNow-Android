@@ -59,17 +59,17 @@ class ArticlePostViewHolder(view: View, private val glide: GlideRequests, privat
         title.text = post?.title ?: "loading"
         subtitle.text = itemView.context.resources.getString(R.string.post_subtitle,
                 post?.news_site_long ?: "unknown")
-        date.text = outDateFormat.format(post?.date_published)
+        date.text = outDateFormat.format(Date(post?.date_published!!.toLong() * 1000))
+
         when {
-            post?.featured_image?.startsWith("http") == true -> {
+            post.featured_image.startsWith("http") -> {
                 thumbnail.visibility = View.VISIBLE
                 glide.load(post.featured_image)
                         .centerCrop()
-                        .placeholder(R.drawable.ic_insert_photo_black_48dp)
+                        .placeholder(R.drawable.placeholder)
                         .into(thumbnail)
             }
-            post?.news_site != null -> tryDefault(post.news_site, thumbnail)
-            else -> glide.clear(thumbnail)
+            else -> tryDefault(post.news_site, thumbnail)
         }
     }
 

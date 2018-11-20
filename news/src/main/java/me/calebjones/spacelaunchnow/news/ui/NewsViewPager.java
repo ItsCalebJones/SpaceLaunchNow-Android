@@ -24,6 +24,14 @@ public class NewsViewPager extends Fragment {
     private TabLayout tabLayout;
     private Context context;
 
+    public static NewsViewPager newInstance() {
+
+        NewsViewPager u = new NewsViewPager();
+        Bundle b = new Bundle();
+        u.setArguments(b);
+
+        return u;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

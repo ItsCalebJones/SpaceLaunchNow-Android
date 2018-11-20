@@ -15,6 +15,5 @@
   -->
 
 <resources>
-
-
+    <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetLightWithActionsStyle" />
 </resources>

@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="BaseAppTheme" parent="MaterialTheme.DarkToolbar.DayNight">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -11,6 +11,10 @@
         <item name="android:colorControlActivated">@color/materialGrey</item>
         <item name="android:textColorPrimary">#212121</item>
         <!--<item name="android:textColorSecondary">#757575</item>-->
+        <!-- enable overlap of transitions -->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
 
          <!--MaterialDrawer specific values -->
         <item name="material_drawer_background">@color/material_drawer_background</item>
@@ -23,6 +27,8 @@
         <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
         <item name="spinnerStyle">@style/MySpinner</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
 
     </style>
 
@@ -30,11 +36,7 @@
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
-    <style name="BaseAppTheme.TranslucentStatus" parent="BaseAppTheme">
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentStatus">true</item>
-
-    </style>
+    <style name="BaseAppTheme.NormalNavigation" parent="BaseAppTheme" />
 
     <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity.Light">
         <item name="colorPrimary">@color/colorPrimary</item>

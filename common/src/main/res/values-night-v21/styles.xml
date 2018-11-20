@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BaseAppTheme" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
+        <item name="colorAccent">@color/darkAccent</item>
+        <item name="titleBarColor">@color/darkPrimary</item>
+        <item name="cardTitleBarColor">@color/darkPrimary</item>
+        <item name="shareIconColor">@color/darkIcons</item>
+        <item name="exploreIconColor">@color/darkIcons</item>
+        <item name="android:colorControlActivated">@color/materialGrey</item>
+        <item name="android:colorControlHighlight">@color/cardview_dark_background</item>
+        <item name="android:statusBarColor">@color/darkIcons</item>
+        <item name="colorControlNormal">@color/darkIcons</item>
+        <item name="android:windowActivityTransitions">true</item>
+        <item name="md_background_color">@color/dark_card_background</item>
+        <item name="android:navigationBarColor">@color/dark_theme_background</item>
+
+        <item name="android:textColorHighlight">@color/dark_primary_text_color_selector</item>
+        <item name="android:textColorPrimary">@color/dark_primary_text_color_selector</item>
+        <item name="android:textColor">@color/dark_secondary_text_color_selector</item>
+
+        <!-- enable overlap of transitions -->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+
+        <!-- MaterialDrawer specific values -->
+        <item name="material_drawer_background">@color/material_drawer_dark_background</item>
+        <item name="material_drawer_primary_text">@color/material_drawer_dark_primary_text</item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
+        <item name="material_drawer_secondary_text">@color/material_drawer_dark_secondary_text</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</item>
+        <item name="material_drawer_divider">@color/material_drawer_dark_divider</item>
+        <item name="material_drawer_selected">@color/material_drawer_dark_selected</item>
+        <item name="material_drawer_selected_text">@color/colorAccent</item>
+        <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
+        <item name="spinnerStyle">@style/MySpinner.Dark</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="BaseAppTheme.NormalNavigation" parent="BaseAppTheme" />
+
+    <style name="MySpinner.Dark" parent="MySpinner">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
+    </style>
+
+    <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity">
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <item name="colorPrimaryDark">@color/darkPrimary_dark</item>
+        <item name="colorAccent">@color/darkAccent</item>
+    </style>
+
+    <style name="SPL"></style>
+
+    <style name="SPL.SnackBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="SPL.SnackBar.Layout">
+        <item name="android:background">@color/darkPrimary</item>
+    </style>
+
+    <style name="SPL.SnackBar.Text">
+        <item name="android:textSize">14sp</item>
+        <item name="android:gravity">left</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="SPL.SnackBar.Button">
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@color/darkPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SPL.SnackBar.Button.Decline">
+        <item name="android:background">@null</item>
+        <item name="android:layout_width">40dp</item>
+    </style>
+</resources>

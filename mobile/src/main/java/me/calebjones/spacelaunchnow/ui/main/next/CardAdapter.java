@@ -60,16 +60,24 @@ import timber.log.Timber;
  */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> implements SectionIndexer {
 
-    private static ListPreferences sharedPreference;
     public int position;
     private RealmList<Launch> launchList;
     private Context context;
+    private SimpleDateFormat fullDate;
+    private SimpleDateFormat shortDate;
 
 
     public CardAdapter(Context context) {
         launchList = new RealmList<>();
         this.context = context;
-        sharedPreference = ListPreferences.getInstance(context);
+
+        if (DateFormat.is24HourFormat(context)) {
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
+        } else {
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
+        }
+        fullDate.toLocalizedPattern();
+        shortDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
     }
 
     public void addItems(List<Launch> launchList) {
@@ -90,7 +98,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.content_card, viewGroup, false);
         return new ViewHolder(v);
     }
@@ -128,14 +136,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 holder.landingView.setVisibility(View.INVISIBLE);
                 if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() >= 1) {
                     if (launchItem.getRocket().getFirstStage().size() > 1) {
-                        String stagesText = "";
+                        StringBuilder stagesText = new StringBuilder();
                         for (Stage stage : launchItem.getRocket().getFirstStage()) {
                             if (stage.getLanding().getLandingLocation() != null) {
-                                stagesText = stagesText + stage.getLanding().getLandingLocation().getAbbrev() + " ";
+                                stagesText.append(stage.getLanding().getLandingLocation().getAbbrev()).append(" ");
                             }
                         }
                         holder.landingView.setVisibility(View.VISIBLE);
-                        holder.landing.setText(stagesText);
+                        holder.landing.setText(stagesText.toString());
                     } else if (launchItem.getRocket().getFirstStage().size() == 1) {
                         if (launchItem.getRocket().getFirstStage().first().getLanding() != null) {
                             Landing landing = launchItem.getRocket().getFirstStage().first().getLanding();
@@ -177,24 +185,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     if (launchItem.getNet() != null) {
                         //Get launch date
 
-                        SimpleDateFormat sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
+
                         Date date = launchItem.getNet();
-                        String launchTime = sdf.format(date);
+                        String launchTime = shortDate.format(date);
                         if (launchItem.getTbddate()) {
                             launchTime = launchTime + " " + context.getString(R.string.unconfirmed);
                         }
                         holder.launchDateCompact.setText(launchTime);
                     }
                 } else {
-                    SimpleDateFormat sdf;
-                    if (DateFormat.is24HourFormat(context)) {
-                        sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
-                    } else {
-                        sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
-                    }
-                    sdf.toLocalizedPattern();
                     Date date = launchItem.getNet();
-                    holder.launchDateCompact.setText(sdf.format(date));
+                    holder.launchDateCompact.setText(fullDate.format(date));
                 }
 
                 if (launchItem.getVidURLs() != null) {
@@ -321,11 +322,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             final Launch launch = launchList.get(position);
             Intent sendIntent = new Intent();
 
-            SimpleDateFormat df = Utils.getSimpleDateFormatForUI("EEEE, MMMM d, yyyy - hh:mm a zzz");
-            df.toLocalizedPattern();
-
             Date date = launch.getNet();
-            String launchDate = df.format(date);
+            String launchDate = fullDate.format(date);
 
             switch (v.getId()) {
                 case R.id.watchButton:

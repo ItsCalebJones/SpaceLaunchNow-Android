@@ -21,10 +21,4 @@
         <attr name="finalHeight" format="dimension" />
     </declare-styleable>
 
-    <attr name="titleBarColor" format="reference" />
-    <attr name="cardTitleBarColor" format="reference"/>
-    <attr name="recentBarColor" format="reference" />
-    <attr name="shareIconColor" format="reference" />
-    <attr name="exploreIconColor" format="reference" />
-
 </resources>

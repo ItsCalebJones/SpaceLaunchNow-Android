@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -79,16 +80,22 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Timber.v("onCreateView");
         this.context = getContext();
         canLoadMore = true;
         setHasOptionsMenu(true);
-        adapter = new ListAdapter(getContext());
+
+        if (adapter == null) {
+            Timber.v("Creating new ListAdapter");
+            adapter = new ListAdapter(getContext());
+        }
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.getInitialPrefetchItemCount();
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         mRecyclerView.setAdapter(adapter);
@@ -105,7 +112,6 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             }
         };
         mRecyclerView.addOnScrollListener(scrollListener);
-        statefulView.showProgress();
         statefulView.setOfflineRetryOnClickListener(v -> fetchData(true));
         return view;
     }
@@ -160,28 +166,34 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             @Override
             public void onLaunchesLoaded(List<LaunchList> launches, int next, int total) {
                 Timber.v("Offset - %s", next);
-                nextOffset = next;
-                canLoadMore = next > 0;
-                updateAdapter(launches);
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    nextOffset = next;
+                    canLoadMore = next > 0;
+                    updateAdapter(launches);
+                }
             }
 
             @Override
             public void onNetworkStateChanged(boolean refreshing) {
-                showNetworkLoading(refreshing);
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    showNetworkLoading(refreshing);
+                }
             }
 
             @Override
             public void onError(String message, @Nullable Throwable throwable) {
-                statefulView.showOffline();
-                statefulStateContentShow = false;
-                showNetworkLoading(false);
-                if (throwable != null) {
-                    Timber.e(throwable);
-                } else {
-                    Timber.e(message);
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    statefulView.showOffline();
+                    statefulStateContentShow = false;
+                    showNetworkLoading(false);
+                    if (throwable != null) {
+                        Timber.e(throwable);
+                    } else {
+                        Timber.e(message);
+                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
+                    }
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
             }
         });
     }
@@ -196,12 +208,12 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
     private void showLoading() {
         Timber.v("Show Loading...");
-        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     private void hideLoading() {
         Timber.v("Hide Loading...");
-        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
 
@@ -209,6 +221,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public void onResume() {
         Timber.d("OnResume!");
         if (adapter.getItemCount() == 0) {
+            statefulStateContentShow = false;
+            statefulView.showProgress();
             fetchData(false);
         }
         super.onResume();

@@ -21,36 +21,39 @@
                 android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="0dp"
                 android:background="?attr/titleBarColor"
+                android:elevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/main_toolbar"
-                    android:elevation="0dp"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:theme="@style/ThemeOverlay.MaterialComponents.Dark"/>
+                    android:elevation="0dp"
+                    android:theme="@style/ThemeOverlay.MaterialComponents.Dark" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <com.google.android.material.bottomnavigation.BottomNavigationView
+            <com.ashokvarma.bottomnavigation.BottomNavigationBar
                 android:id="@+id/navigation_view"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_height"
-                android:background="?android:attr/windowBackground"
-                android:elevation="4dp"
-                app:itemHorizontalTranslationEnabled="true"
-                app:itemIconTint="@color/bnv_tab_item_foreground"
-                app:itemTextColor="@color/bnv_tab_item_foreground"
-                app:labelVisibilityMode="labeled"
+                android:layout_height="wrap_content"
+                android:elevation="8dp"
+                android:layout_marginTop="2dp"
+                android:clipToPadding="false"
+                app:bnbElevation="6dp"
+                app:bnbAutoHideEnabled="true"
+                app:bnbActiveColor="@color/primary"
+                app:bnbInactiveColor="?android:attr/textColorSecondary"
+                app:bnbBackgroundColor="?android:attr/windowBackground"
+                app:bnbMode="mode_fixed"
+                app:bnbBackgroundStyle="background_style_static"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:menu="@menu/bottom_main_menu" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <FrameLayout
                 android:id="@+id/flContent"
@@ -65,17 +68,17 @@
                 app:layout_constraintVertical_bias="0.39" />
 
             <com.google.android.gms.ads.AdView
-                xmlns:ads="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/adView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                ads:adSize="SMART_BANNER"
-                ads:adUnitId="ca-app-pub-9824528399164059/9713798255"
+                android:clipToPadding="false"
+                android:visibility="gone"
+                app:adSize="SMART_BANNER"
+                app:adUnitId="ca-app-pub-9824528399164059/9713798255"
                 app:layout_constraintBottom_toTopOf="@+id/navigation_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/flContent"/>
+                app:layout_constraintTop_toBottomOf="@+id/flContent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

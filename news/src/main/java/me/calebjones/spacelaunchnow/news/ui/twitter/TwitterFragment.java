@@ -22,26 +22,19 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import me.calebjones.spacelaunchnow.news.R2;
 import me.calebjones.spacelaunchnow.news.R;
 import timber.log.Timber;
 
 
 public class TwitterFragment extends Fragment {
 
-    @BindView(R2.id.recycler_view)
-    RecyclerView recyclerView;
-    @BindView(R2.id.swiperefresh)
-    SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private Context context;
     private LinearLayoutManager linearLayoutManager;
     private TweetTimelineRecyclerViewAdapter timelineAdapter;
     private TwitterListTimeline timeline;
-    private Unbinder unbinder;
 
 
     @Override
@@ -49,8 +42,9 @@ public class TwitterFragment extends Fragment {
                              Bundle savedInstanceState) {
         context = getActivity();
         setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.fragment_twitter, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        View view = inflater.inflate(R.layout.fragment_twitter_timeline, container, false);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
         getTwitterTimeline();
         swipeRefreshLayout.setOnRefreshListener(() -> timelineAdapter.refresh(new Callback<TimelineResult<Tweet>>() {
             @Override
@@ -71,7 +65,6 @@ public class TwitterFragment extends Fragment {
         super.onDestroyView();
         Timber.v("onDestroyView");
         swipeRefreshLayout.setOnRefreshListener(null);
-        unbinder.unbind();
     }
 
     @Override
@@ -89,10 +82,9 @@ public class TwitterFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-
-    public void getTwitterTimeline() {
+    private void getTwitterTimeline() {
         linearLayoutManager = new LinearLayoutManager(context);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(context,
                 linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(linearLayoutManager);

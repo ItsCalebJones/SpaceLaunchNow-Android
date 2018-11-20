@@ -18,12 +18,11 @@
         android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
         android:maxWidth="400dp"
         android:layout_gravity="center"
-        android:elevation="2dp"
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        app:cardElevation="2dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center">
@@ -142,7 +141,7 @@
 
 
 
-            <androidx.appcompat.widget.AppCompatImageButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/exploreButton"
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="0dp"

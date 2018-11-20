@@ -62,9 +62,10 @@ public class FabExtensionAnimator {
         return new SimpleGlyphState(text, icon);
     }
 
-    public void updateGlyphs(@NonNull GlyphState glyphState) {
+    public void updateGlyphs(@NonNull GlyphState glyphState, boolean extended) {
         boolean isSame = glyphState.equals(this.glyphState);
         this.glyphState = glyphState;
+        setExtended(extended, true);
         animateChange(glyphState, isSame);
     }
 

@@ -694,7 +694,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (listPreferences != null) {
             if (key.equals(PREFS_CALENDAR_STATUS) && !getCalendarStatus()) {
-                //Delete Events
+                //Delete EventsFragment
             } else {
 
             }

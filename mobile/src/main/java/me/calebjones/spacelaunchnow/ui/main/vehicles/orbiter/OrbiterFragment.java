@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -97,7 +98,6 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
         mRecyclerView.setAdapter(adapter);
-        statefulView.showProgress();
         statefulView.setOfflineRetryOnClickListener(v -> loadJSON());
         return view;
     }
@@ -113,6 +113,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
     @Override
     public void onResume() {
         if (adapter.getItemCount() == 0) {
+            statefulView.showProgress();
             new Handler().postDelayed(() -> loadJSON(), 100);
         }
         super.onResume();
@@ -120,7 +121,9 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
 
     private void loadJSON() {
         Timber.v("Loading vehicles...");
-        showLoading();
+        if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+            showLoading();
+        }
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
         Call<AgencyResponse> call = request.getAgenciesWithOrbiters(true);
@@ -136,29 +139,33 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
                     Timber.v("Response pulled from network.");
                 }
 
-                if (response.isSuccessful()) {
-                    AgencyResponse jsonResponse = response.body();
-                    Timber.v("Success %s", response.message());
-                    items = jsonResponse.getAgencies();
-                    statefulView.showContent();
-                    adapter.addItems(items);
-                    Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    if (response.isSuccessful()) {
+                        AgencyResponse jsonResponse = response.body();
+                        Timber.v("Success %s", response.message());
+                        items = jsonResponse.getAgencies();
+                        statefulView.showContent();
+                        adapter.addItems(items);
+                        Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
-                } else {
-                    statefulView.showEmpty();
-                    Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
-                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
+                    } else {
+                        statefulView.showEmpty();
+                        Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
+                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
+                    }
+                    hideLoading();
                 }
-                hideLoading();
 
             }
 
             @Override
             public void onFailure(Call<AgencyResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
-                statefulView.showOffline();
-                hideLoading();
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    statefulView.showOffline();
+                    hideLoading();
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
+                }
                 Analytics.getInstance().sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });

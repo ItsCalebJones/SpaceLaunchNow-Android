@@ -34,6 +34,14 @@ public class VehiclesViewPager extends BaseFragment {
     private static ListPreferences sharedPreference;
     private Context context;
 
+    public static VehiclesViewPager newInstance() {
+
+        VehiclesViewPager u = new VehiclesViewPager();
+        Bundle b = new Bundle();
+        u.setArguments(b);
+
+        return u;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

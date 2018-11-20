@@ -17,7 +17,7 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="250dp"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
@@ -93,10 +93,7 @@
             android:id="@+id/detail.tabs"
             android:layout_width="fill_parent"
             android:layout_height="?attr/actionBarSize"
-            app:tabIndicatorColor="@color/colorAccentLight"
-            app:tabIndicatorHeight="4dp"
-            app:tabSelectedTextColor="@color/white"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark" />
+            style="@style/BaseAppTheme.TabBarOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

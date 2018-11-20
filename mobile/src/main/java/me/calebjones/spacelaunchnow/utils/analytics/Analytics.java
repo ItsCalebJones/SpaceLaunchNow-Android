@@ -205,7 +205,7 @@ public class Analytics {
         Timber.v("Purchased: %s %s - $%sSKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
     }
 
-    //Custom Answer Events
+    //Custom Answer EventsFragment
     private class MapClicked extends CustomEvent {
 
         MapClicked() {

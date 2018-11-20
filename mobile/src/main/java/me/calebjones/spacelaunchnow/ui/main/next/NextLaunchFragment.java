@@ -7,11 +7,9 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -20,6 +18,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.SwitchCompat;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,8 +39,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import de.mrapp.android.preference.activity.PreferenceActivity;
 
+import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
@@ -107,22 +106,28 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatButton viewMoreLaunches;
     @BindView(R.id.recycler_view_root)
     NestedScrollView nestedScrollView;
+    @BindView(R.id.no_launches)
+    View no_data;
+    @BindView(R.id.fab)
+    MaterialButton fab;
+    @BindView(R.id.recycler_view)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.coordinatorLayout)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.activity_main_swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @BindView(R.id.color_reveal)
+    CoordinatorLayout colorReveal;
 
     private View view;
-    private RecyclerView mRecyclerView;
     private CardAdapter adapter;
     private StaggeredGridLayoutManager layoutManager;
     private LinearLayoutManager linearLayoutManager;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private CoordinatorLayout coordinatorLayout;
-    private View color_reveal;
-    private View no_data;
-    private MaterialButton fab;
+
     private Menu mMenu;
     private RealmResults<Launch> launchRealms;
     private ListPreferences sharedPreference;
     private SwitchPreferences switchPreferences;
-    private SharedPreferences sharedPref;
     private Context context;
     private int preferredCount;
     private NextLaunchDataRepository nextLaunchDataRepository;
@@ -130,6 +135,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private boolean filterViewShowing;
     private boolean switchChanged;
     private FabExtensionAnimator fabExtensionAnimator;
+    private MainActivity mainActivity;
     Unbinder unbinder;
 
     public static NextLaunchFragment newInstance() {
@@ -146,9 +152,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         super.onCreate(savedInstanceState);
         context = getActivity();
         sharedPreference = ListPreferences.getInstance(context);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         switchPreferences = SwitchPreferences.getInstance(context);
         nextLaunchDataRepository = new NextLaunchDataRepository(context, getRealm());
+        mainActivity = (MainActivity) getActivity();
         setScreenName("Next Launch Fragment");
     }
 
@@ -177,8 +183,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             color = R.color.colorPrimary;
         }
 
-        sharedPreference = ListPreferences.getInstance(context);
-
         super.onCreateView(inflater, container, savedInstanceState);
 
         setHasOptionsMenu(true);
@@ -186,49 +190,35 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         unbinder = ButterKnife.bind(this, view);
 
         setUpSwitches();
-        no_data = view.findViewById(R.id.no_launches);
-        color_reveal = view.findViewById(R.id.color_reveal);
-        color_reveal.setBackgroundColor(ContextCompat.getColor(context, color));
-        fab = view.findViewById(R.id.fab);
+        colorReveal.setBackgroundColor(ContextCompat.getColor(context, color));
         fabExtensionAnimator = new FabExtensionAnimator(fab);
-        fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context,R.drawable.ic_notifications_white)));
+        fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context,R.drawable.ic_notifications_white)), true);
         fab.setOnClickListener(v -> checkFilter());
-        fabExtensionAnimator.setExtended(true);
+        fab.setVisibility(View.GONE);
         if (switchPreferences.getNextFABHidden()) {
             fab.setVisibility(View.GONE);
         } else {
             fab.setVisibility(View.VISIBLE);
         }
 
-        mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
         //If preference is for small card, landscape tablets get three others get two.
-        if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-            layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-            mRecyclerView.setLayoutManager(layoutManager);
-        } else {
-            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), RecyclerView.VERTICAL, false);
-            mRecyclerView.setLayoutManager(linearLayoutManager);
-        }
+        linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(), RecyclerView.VERTICAL, false);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(adapter);
-        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                int dy = Math.abs(scrollY - oldScrollY);
+        nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            int dy = Math.abs(scrollY - oldScrollY);
+            if (!isFilterShown()) {
                 if (scrollY > 4) {
                     setFabExtended(false);
-                } else if (scrollY == 0){
+                } else if (scrollY == 0) {
                     setFabExtended(true);
                 }
             }
         });
 
-
-        coordinatorLayout = view.findViewById(R.id.coordinatorLayout);
-
         /*Set up Pull to refresh*/
-        mSwipeRefreshLayout = view.findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         //Enable no data by default
@@ -258,17 +248,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private void setLayoutManager(int size) {
         if (!isDetached() && isAdded()) {
-            if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet) && (launchRealms != null && launchRealms.size() == 1 || size == 1)) {
-                linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
-                        RecyclerView.VERTICAL, false
-                );
-                mRecyclerView.setLayoutManager(linearLayoutManager);
-                mRecyclerView.setAdapter(adapter);
-            } else if (getResources().getBoolean(R.bool.landscape) && getResources().getBoolean(R.bool.isTablet)) {
-                layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-                mRecyclerView.setLayoutManager(layoutManager);
-                mRecyclerView.setAdapter(adapter);
-            }
+            linearLayoutManager = new LinearLayoutManager(context.getApplicationContext(),
+                    RecyclerView.VERTICAL, false);
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+            mRecyclerView.setAdapter(adapter);
         } else if (isDetached()) {
             Timber.v("View is detached.");
         }
@@ -297,23 +280,26 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         int y = (int) (fab.getY() + fab.getHeight() / 2);
 
         // get the initial radius for the clipping circle
-        int initialRadius = Math.max(color_reveal.getWidth(), color_reveal.getHeight());
+        int initialRadius = Math.max(colorReveal.getWidth(), colorReveal.getHeight());
 
         // create the animation (the final radius is zero)
         Animator anim =
-                ViewAnimationUtils.createCircularReveal(color_reveal, x, y, initialRadius, 0);
+                ViewAnimationUtils.createCircularReveal(colorReveal, x, y, initialRadius, 0);
 
         // make the view invisible when the animation is done
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                color_reveal.setVisibility(View.INVISIBLE);
+                colorReveal.setVisibility(View.INVISIBLE);
             }
         });
 
         // start the animation
         anim.start();
+
+
+        mainActivity.showBottomNavigation();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -323,11 +309,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         int y = (int) (fab.getY() + fab.getHeight() / 2);
 
         // get the final radius for the clipping circle
-        int finalRadius = Math.max(color_reveal.getWidth(), color_reveal.getHeight());
+        int finalRadius = Math.max(colorReveal.getWidth(), colorReveal.getHeight());
 
         // create the animator for this view (the start radius is zero)
         Animator anim =
-                ViewAnimationUtils.createCircularReveal(color_reveal, x, y, 0, finalRadius);
+                ViewAnimationUtils.createCircularReveal(colorReveal, x, y, 0, finalRadius);
 
         // make the view invisible when the animation is done
         anim.addListener(new AnimatorListenerAdapter() {
@@ -337,13 +323,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             }
         });
 
-        color_reveal.setVisibility(View.VISIBLE);
+        colorReveal.setVisibility(View.VISIBLE);
         anim.start();
+
+        mainActivity.hideBottomNavigation();
     }
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
-        preferredCount = 10;
+        preferredCount = 5;
         nextLaunchDataRepository.getNextUpcomingLaunches(preferredCount, forceRefresh, new Callbacks.NextLaunchesCallback() {
             @Override
             public void onLaunchesLoaded(RealmResults<Launch> launches) {
@@ -374,7 +362,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private void updateAdapter(RealmResults<Launch> launches) {
         adapter.clear();
-        preferredCount = 10;
+        preferredCount = 5;
         if (launches.size() >= preferredCount) {
             no_data.setVisibility(View.GONE);
             viewMoreLaunches.setVisibility(View.VISIBLE);
@@ -422,7 +410,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         super.onResume();
         Timber.v("onResume");
         setTitle();
-        fetchData(false);
+        if (adapter.getItemCount() == 0) {
+            fetchData(false);
+        } else {
+            no_data.setVisibility(View.GONE);
+            viewMoreLaunches.setVisibility(View.VISIBLE);
+        }
         Bundle bundle = getArguments();
         if (bundle != null) {
             if (bundle.getBoolean("SHOW_FILTERS")) {
@@ -439,7 +432,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void setTitle() {
-        ((MainActivity) getActivity()).setActionBarTitle("Space Launch Now");
+        mainActivity.setActionBarTitle("Space Launch Now");
     }
 
     //Currently only used to debug
@@ -496,6 +489,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
 
+
     public void checkFilter() {
 
         if (!filterViewShowing) {
@@ -504,12 +498,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             filterViewShowing = true;
             fab.setVisibility(View.VISIBLE);
             mSwipeRefreshLayout.setEnabled(false);
-            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Close", ContextCompat.getDrawable(context,R.drawable.ic_close)));
-            fabExtensionAnimator.setExtended(true);
+            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Close", ContextCompat.getDrawable(context, R.drawable.ic_close)), true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 showView();
             } else {
-                color_reveal.setVisibility(View.VISIBLE);
+                colorReveal.setVisibility(View.VISIBLE);
             }
         } else {
             Analytics.getInstance().sendButtonClicked("Hide Launch filters.");
@@ -517,12 +510,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             if (switchPreferences.getNextFABHidden()) {
                 fab.setVisibility(View.GONE);
             }
-            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context,R.drawable.ic_notifications_white)));
+            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)),true);
             mSwipeRefreshLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 hideView();
             } else {
-                color_reveal.setVisibility(View.INVISIBLE);
+                colorReveal.setVisibility(View.INVISIBLE);
             }
             if (switchChanged) {
                 LaunchCardCompactManager launchCardCompactManager = new LaunchCardCompactManager(context);
@@ -569,21 +562,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         callBackListener = null;
         mSwipeRefreshLayout.setOnRefreshListener(null);
         unbinder.unbind();
-    }
-
-    private void confirm() {
-        if (!switchChanged) {
-            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Apply", ContextCompat.getDrawable(context,R.drawable.ic_check)));
-            fabExtensionAnimator.setExtended(true);
-        }
-        switchChanged = true;
-    }
-
-    private void checkAll() {
-        if (switchPreferences.getAllSwitch()) {
-            switchPreferences.setAllSwitch(false);
-            customSwitch.setChecked(false);
-        }
     }
 
     @OnClick(R.id.nasa_switch)
@@ -694,6 +672,21 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             case R.id.last_launch_info:
                 dialog.title(R.string.launch_info).content(R.string.launch_info_description).show();
                 break;
+        }
+    }
+
+    private void confirm() {
+        if (!switchChanged) {
+            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Apply", ContextCompat.getDrawable(context,R.drawable.ic_check)), true);
+            fabExtensionAnimator.setExtended(true);
+        }
+        switchChanged = true;
+    }
+
+    private void checkAll() {
+        if (switchPreferences.getAllSwitch()) {
+            switchPreferences.setAllSwitch(false);
+            customSwitch.setChecked(false);
         }
     }
 
