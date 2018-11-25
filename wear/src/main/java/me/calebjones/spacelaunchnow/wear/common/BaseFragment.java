@@ -1,6 +1,6 @@
 package me.calebjones.spacelaunchnow.wear.common;
 
-import androidx.core.app.Fragment;
+import androidx.fragment.app.Fragment;
 import timber.log.Timber;
 
 public class BaseFragment extends Fragment {

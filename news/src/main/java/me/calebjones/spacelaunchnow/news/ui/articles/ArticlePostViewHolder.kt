@@ -57,7 +57,7 @@ class ArticlePostViewHolder(view: View, private val glide: GlideRequests, privat
     fun bind(post: NewsArticle?) {
         this.post = post
         title.text = post?.title ?: "loading"
-        subtitle.text = itemView.context.resources.getString(R.string.post_subtitle,
+        subtitle.text = itemView.context.resources.getString(R.string.subtitle,
                 post?.news_site_long ?: "unknown")
         date.text = outDateFormat.format(Date(post?.date_published!!.toLong() * 1000))
 

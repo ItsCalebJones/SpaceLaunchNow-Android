@@ -40,6 +40,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.mikepenz:materialdrawer:6.1.0"
+    implementation 'com.afollestad.material-dialogs:core:0.9.4.3'
+    implementation 'com.afollestad.material-dialogs:commons:0.9.3.0'
     implementation 'com.google.android.material:material:1.0.0'
     // DO NOT UPDATE - v5.0.+ not working well.
     implementation 'com.github.michael-rapp:android-preference-activity:4.2.11'

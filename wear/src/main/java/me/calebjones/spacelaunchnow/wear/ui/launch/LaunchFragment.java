@@ -2,10 +2,6 @@ package me.calebjones.spacelaunchnow.wear.ui.launch;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import androidx.core.widget.SwipeRefreshLayout;
-import androidx.appcompat.widget.LinearLayoutManager;
-import androidx.appcompat.widget.RecyclerView;
-import android.support.wear.widget.WearableRecyclerView;
 import android.support.wearable.view.CircularButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +13,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.wear.widget.WearableRecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

@@ -28,7 +28,7 @@ import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.local.common.BaseFragment;
-import me.calebjones.spacelaunchnow.local.common.customviews.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.previous.PreviousDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;

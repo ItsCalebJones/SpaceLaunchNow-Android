@@ -12,7 +12,7 @@
         android:scaleType="centerCrop"
         android:cropToPadding="false" />
 
-    <android.support.wear.widget.BoxInsetLayout
+    <androidx.wear.widget.BoxInsetLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp">
@@ -155,5 +155,5 @@
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
-    </android.support.wear.widget.BoxInsetLayout>
+    </androidx.wear.widget.BoxInsetLayout>
 </FrameLayout>

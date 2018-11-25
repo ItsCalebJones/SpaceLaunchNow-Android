@@ -128,6 +128,7 @@ public *;
 # WORKAROUND for building project with GMS (google play services)
 -keep class com.google.android.gms.iid.zzd { *; }
 -keep class android.support.v4.content.ContextCompat { *; }
+-keep class android.support.**
 
 -keep class com.squareup.okhttp.** { *; }
 -keep interface com.squareup.okhttp.** { *; }

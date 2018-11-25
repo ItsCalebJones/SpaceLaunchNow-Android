@@ -6,8 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
         <cz.kinst.jakub.view.SimpleStatefulLayout
             android:id="@+id/stateful_view"
             android:layout_width="match_parent"
@@ -28,5 +26,4 @@
                     android:layout_height="match_parent" />
             </androidx.cardview.widget.CardView>
         </cz.kinst.jakub.view.SimpleStatefulLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

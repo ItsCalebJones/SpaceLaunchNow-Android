@@ -48,8 +48,8 @@ task clean(type: Delete) {
 ext {
 
     app = [
-            versionMajor : 2,
-            versionMinor : 7,
+            versionMajor : 3,
+            versionMinor : 0,
             versionPatch : 0
 
     ]

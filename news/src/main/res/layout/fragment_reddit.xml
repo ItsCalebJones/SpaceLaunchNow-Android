@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,23 +14,25 @@
   ~ limitations under the License.
   -->
 
-<LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/root">
+    android:orientation="vertical">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout android:id="@+id/swipe_refresh"
-                                                  android:layout_width="match_parent"
-                                                  android:layout_height="match_parent">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            app:layoutManager="LinearLayoutManager"/>
+            app:layoutManager="LinearLayoutManager" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

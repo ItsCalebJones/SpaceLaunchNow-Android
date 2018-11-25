@@ -8,7 +8,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import androidx.annotation.NonNull;
-import androidx.core.widget.SwipeRefreshLayout;
 import androidx.appcompat.widget.AppCompatButton;
 import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.activity.WearableActivity;
@@ -33,6 +32,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Set;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

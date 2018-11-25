@@ -3,12 +3,12 @@ package me.calebjones.spacelaunchnow.wear.ui.launch;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import androidx.core.content.ContextCompat;
-import android.support.wear.widget.drawer.WearableNavigationDrawerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.wear.widget.drawer.WearableNavigationDrawerView;
 import me.calebjones.spacelaunchnow.wear.model.LaunchCategories;
 import timber.log.Timber;
 

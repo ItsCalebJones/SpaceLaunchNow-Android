@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2017 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package me.calebjones.spacelaunchnow.news.ui.articles
 
 import androidx.lifecycle.Observer
@@ -22,29 +6,24 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.paging.PagedList
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import me.calebjones.spacelaunchnow.common.GlideApp
 import me.calebjones.spacelaunchnow.news.R
 import me.calebjones.spacelaunchnow.news.ServiceLocator
 import me.calebjones.spacelaunchnow.news.repository.NetworkState
 import me.calebjones.spacelaunchnow.news.vo.NewsArticle
-import kotlinx.android.synthetic.main.activity_reddit.*
+import kotlinx.android.synthetic.main.fragment_reddit.*
+import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration
 
-/**
- * A list activity that shows reddit posts in the given sub-reddit.
- * <p>
- * The intent arguments can be modified to make it use a different repository (see MainActivity).
- */
+
 class ArticleFragment : Fragment() {
 
     private lateinit var model: ArticleViewModel
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.activity_reddit, container, false)
+        return inflater.inflate(R.layout.fragment_reddit, container, false)
 
     }
 
@@ -53,7 +32,13 @@ class ArticleFragment : Fragment() {
         initAdapter()
         initSwipeToRefresh()
         model.showArticle()
+        setHasOptionsMenu(true)
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        menu!!.clear()
+        inflater!!.inflate(R.menu.main_menu, menu)
     }
 
     private fun getViewModel(): ArticleViewModel {
@@ -71,6 +56,8 @@ class ArticleFragment : Fragment() {
         val adapter = ArticleAdapter(glide, context) {
             model.retry()
         }
+        val itemDecorator = SimpleDividerItemDecoration(context);
+        list.addItemDecoration(itemDecorator)
         list.adapter = adapter
         model.posts.observe(this, Observer<PagedList<NewsArticle>> {
             adapter.submitList(it)

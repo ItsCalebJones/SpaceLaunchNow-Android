@@ -1,10 +1,10 @@
 package me.calebjones.spacelaunchnow.wear.ui.launch;
 
-import androidx.appcompat.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.local.common.customviews;
+package me.calebjones.spacelaunchnow.common.utils;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,7 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
-import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.R;
 
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;

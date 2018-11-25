@@ -268,7 +268,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withSelectable(false),
                         new PrimaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_account_box)
-                                .withName(R.string.about).withDescription(R.string.about_subtitle)
                                 .withIdentifier(R.id.about)
                                 .withSelectable(false),
                         new PrimaryDrawerItem()
