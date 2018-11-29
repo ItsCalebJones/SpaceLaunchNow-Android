@@ -121,7 +121,6 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode appVersionCode
         versionName advancedVersioning.versionName
-        resConfigs "en", "fr", "de", "es", "es-rES", "it", "ru"
         multiDexEnabled true
         wearAppUnbundled true
 
