@@ -8,6 +8,7 @@
         <item name="cardTitleBarColor">@color/colorPrimary</item>
         <item name="shareIconColor">@color/md_grey_700</item>
         <item name="exploreIconColor">@color/colorAccent</item>
+        <item name="navBarColor">?android:attr/windowBackground</item>
         <item name="android:colorControlActivated">@color/materialGrey</item>
         <item name="android:textColorPrimary">#212121</item>
         <!--<item name="android:textColorSecondary">#757575</item>-->
@@ -29,14 +30,13 @@
         <item name="spinnerStyle">@style/MySpinner</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
     </style>
 
     <style name="MySpinner" parent="Base.Widget.AppCompat.Spinner">
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
-    <style name="BaseAppTheme.NormalNavigation" parent="BaseAppTheme" />
+    <style name="BaseAppTheme.ColoredNavigation" parent="BaseAppTheme" />
 
     <style name="CustomPreferenceTheme" parent="@style/PreferenceActivity.Light">
         <item name="colorPrimary">@color/colorPrimary</item>

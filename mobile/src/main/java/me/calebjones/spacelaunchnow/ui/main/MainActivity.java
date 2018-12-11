@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -13,11 +14,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 
+import androidx.annotation.ColorInt;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
 
 import android.transition.Slide;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -188,7 +191,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             switchPreferences.setNightModeStatus(false);
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
-        m_theme = R.style.BaseAppTheme;
+        m_theme = R.style.BaseAppTheme_ColoredNavigation;
         Timber.d("Checking if theme changed.");
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
             SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
@@ -267,6 +270,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withIdentifier(R.id.menu_new)
                                 .withSelectable(false),
                         new PrimaryDrawerItem()
+                                .withName(R.string.about)
                                 .withIcon(GoogleMaterial.Icon.gmd_account_box)
                                 .withIdentifier(R.id.about)
                                 .withSelectable(false),
@@ -318,7 +322,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
         bottomNavigationView
                 .addItem(new BottomNavigationItem(R.drawable.ic_favorite, "Favorites")
-                        .setActiveColorResource(R.color.accent))
+                        .setActiveColorResource(R.color.md_red_700))
                 .addItem(new BottomNavigationItem(R.drawable.ic_satellite_white, "Launches")
                         .setActiveColorResource(R.color.primary))
                 .addItem(new BottomNavigationItem(R.drawable.ic_assignment_white, "News")

@@ -141,7 +141,7 @@ public class LaunchDetailActivity extends BaseActivity
         } else {
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
-        m_theme = R.style.BaseAppTheme_NormalNavigation;
+        m_theme = R.style.BaseAppTheme;
 
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
             SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();

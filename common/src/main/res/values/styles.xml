@@ -14,6 +14,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="titleBarColor">@color/colorPrimary</item>
+        <item name="navBarColor">?android:attr/windowBackground</item>
         <item name="cardTitleBarColor">@color/colorPrimary</item>
         <item name="shareIconColor">@color/md_grey_700</item>
         <item name="exploreIconColor">@color/colorAccent</item>

@@ -291,6 +291,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
+
                 colorReveal.setVisibility(View.INVISIBLE);
             }
         });
@@ -319,6 +320,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
+
                 super.onAnimationEnd(animation);
             }
         });

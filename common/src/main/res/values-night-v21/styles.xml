@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="BaseAppTheme" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents">
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
 
         <item name="colorPrimary">@color/darkPrimary</item>
@@ -11,6 +11,7 @@
         <item name="cardTitleBarColor">@color/darkPrimary</item>
         <item name="shareIconColor">@color/darkIcons</item>
         <item name="exploreIconColor">@color/darkIcons</item>
+        <item name="navBarColor">@color/cardview_dark_background</item>
         <item name="android:colorControlActivated">@color/materialGrey</item>
         <item name="android:colorControlHighlight">@color/cardview_dark_background</item>
         <item name="android:statusBarColor">@color/darkIcons</item>
