@@ -1,13 +1,16 @@
 package me.calebjones.spacelaunchnow.local.common;
 
 import android.os.Bundle;
+
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import timber.log.Timber;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends CyaneaAppCompatActivity {
 
     public BaseActivity(){}
 

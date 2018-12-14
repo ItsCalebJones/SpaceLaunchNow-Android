@@ -47,7 +47,7 @@
                 app:bnbAutoHideEnabled="true"
                 app:bnbActiveColor="?android:attr/textColorPrimary"
                 app:bnbInactiveColor="?android:attr/textColorSecondary"
-                app:bnbBackgroundColor="?attr/navBarColor"
+                app:bnbBackgroundColor="?backgroundColor"
                 app:bnbMode="mode_fixed"
                 app:bnbBackgroundStyle="background_style_static"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -239,7 +239,8 @@ dependencies {
 
     implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
     implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
-    implementation 'com.jaredrummler:colorpicker:1.0.1'
+    implementation 'com.jaredrummler:colorpicker:1.0.5'
+    implementation 'com.jaredrummler:cyanea:1.0.1'
     implementation 'com.andkulikov:transitionseverywhere:1.8.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'

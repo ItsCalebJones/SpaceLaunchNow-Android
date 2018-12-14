@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.local.common.BaseActivity;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
@@ -28,7 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
     
     private Context context;
 

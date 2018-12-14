@@ -33,6 +33,7 @@ import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
+import me.calebjones.spacelaunchnow.local.common.BaseActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.utils.views.BadgeTabLayout;
@@ -41,7 +42,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class AgencyLaunchActivity extends AppCompatActivity implements UpcomingAgencyLaunchesFragment.OnFragmentInteractionListener,
+public class AgencyLaunchActivity extends BaseActivity implements UpcomingAgencyLaunchesFragment.OnFragmentInteractionListener,
         PreviousAgencyLaunchesFragment.OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
 
 

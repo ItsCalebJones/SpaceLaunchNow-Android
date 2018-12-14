@@ -32,12 +32,13 @@ import butterknife.ButterKnife;
 import cn.nekocode.badge.BadgeDrawable;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
+import me.calebjones.spacelaunchnow.local.common.BaseActivity;
 import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.utils.views.BadgeTabLayout;
 import timber.log.Timber;
 
-public class LauncherLaunchActivity extends AppCompatActivity implements UpcomingLauncherLaunchesFragment.OnFragmentInteractionListener, PreviousLauncherLaunchesFragment.OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
+public class LauncherLaunchActivity extends BaseActivity implements UpcomingLauncherLaunchesFragment.OnFragmentInteractionListener, PreviousLauncherLaunchesFragment.OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R.id.toolbar)

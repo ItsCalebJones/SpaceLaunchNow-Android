@@ -28,8 +28,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:layout_scrollFlags="scroll"/>
 
             <FrameLayout
                 android:layout_width="match_parent"

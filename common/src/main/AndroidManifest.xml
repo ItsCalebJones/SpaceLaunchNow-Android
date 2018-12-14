@@ -3,6 +3,7 @@
 
     <application>
         <activity
-            android:name=".customtab.webview.WebViewFallbackActivity"/>
+            android:name=".customtab.webview.WebViewFallbackActivity"
+            android:theme="@style/BaseAppTheme"/>
     </application>
 </manifest>

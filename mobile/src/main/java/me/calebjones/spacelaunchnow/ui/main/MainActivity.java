@@ -38,6 +38,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import com.jaredrummler.cyanea.prefs.CyaneaSettingsActivity;
 import com.michaelflisar.gdprdialog.GDPR;
 import com.michaelflisar.gdprdialog.GDPRConsent;
 import com.michaelflisar.gdprdialog.GDPRConsentState;
@@ -64,6 +65,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.concurrent.TimeUnit;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -191,15 +193,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             switchPreferences.setNightModeStatus(false);
             statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
         }
-        m_theme = R.style.BaseAppTheme_ColoredNavigation;
-        Timber.d("Checking if theme changed.");
-        if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
-            SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
-            editor.putBoolean("recreate", false);
-            editor.apply();
-            recreate();
-        }
-
+        m_theme = R.style.BaseAppTheme;
         Timber.d("Setting theme.");
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
@@ -245,7 +239,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withHasStableIds(true)
-                .withTranslucentStatusBar(true)
+                .withTranslucentStatusBar(false)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         new PrimaryDrawerItem()
@@ -348,6 +342,13 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
             }
         });
+        if (getCyanea().getShouldTintStatusBar()){
+            String strColor = String.format("#%06X", 0xFFFFFF & getCyanea().getPrimary());
+            bottomNavigationView.setBarBackgroundColor(strColor);
+        } else {
+            bottomNavigationView.setBarBackgroundColor(getCyanea().getBackgroundColor());
+        }
+
         if ("SHOW_FILTERS".equals(action)) {
             navigate(R.id.menu_launches);
         } else {
@@ -621,9 +622,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+            startActivity(new Intent(this, CyaneaSettingsActivity.class));
+//            Intent intent = new Intent(this, SettingsActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
             return true;
         }
 

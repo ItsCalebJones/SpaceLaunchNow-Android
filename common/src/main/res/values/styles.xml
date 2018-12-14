@@ -2,19 +2,23 @@
 
     <attr name="cardStyle" format="reference" />
 
+    <style name="MySpinner" parent="Base.Widget.AppCompat.Spinner">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
     <style name="BaseAppTheme.Launcher">
         <item name="android:windowBackground">@drawable/launcher_drawable</item>
         <item name="spinnerStyle">@style/MySpinner</item>
     </style>
 
     <!-- Base application theme. -->
-    <style name="BaseAppTheme" parent="MaterialTheme.DarkToolbar.DayNight">
+    <style name="BaseAppTheme" parent="Theme.Cyanea.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="titleBarColor">@color/colorPrimary</item>
-        <item name="navBarColor">?android:attr/windowBackground</item>
+        <item name="navBarColor">?backgroundColor</item>
         <item name="cardTitleBarColor">@color/colorPrimary</item>
         <item name="shareIconColor">@color/md_grey_700</item>
         <item name="exploreIconColor">@color/colorAccent</item>
