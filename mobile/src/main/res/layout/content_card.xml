@@ -12,6 +12,7 @@
     android:maxWidth="400dp"
     app:cardMaxElevation="2dp"
     android:layout_gravity="center"
+    app:cardBackgroundColor="?backgroundColorLight"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp">
 
@@ -30,9 +31,9 @@
             android:id="@+id/background"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="?attr/cardTitleBarColor"
             android:paddingBottom="4dp"
             android:elevation="2dp"
+            android:background="?colorPrimary"
             app:layout_constraintBottom_toBottomOf="@+id/launch_date_compact"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

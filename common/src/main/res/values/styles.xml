@@ -14,22 +14,26 @@
     <!-- Base application theme. -->
     <style name="BaseAppTheme" parent="Theme.Cyanea.Light">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="titleBarColor">@color/colorPrimary</item>
-        <item name="navBarColor">?backgroundColor</item>
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
         <item name="cardTitleBarColor">@color/colorPrimary</item>
+        <!--<item name="navBarColor">?backgroundColor</item>-->
+        <!--<item name="cardTitleBarColor">@color/colorPrimary</item>-->
         <item name="shareIconColor">@color/md_grey_700</item>
-        <item name="exploreIconColor">@color/colorAccent</item>
-        <item name="recentBarColor">@color/colorRecentPrimary</item>
+        <!--<item name="exploreIconColor">@color/colorAccent</item>-->
+        <!--<item name="recentBarColor">@color/colorRecentPrimary</item>-->
         <item name="android:textColorPrimary">#212121</item>
         <item name="android:textColorSecondary">#757575</item>
 
         <item name="cardStyle">@style/CardView.Light</item>
         <item name="android:textColorHighlight">@color/colorPrimaryLight</item>
 
-        <!-- MaterialDrawer specific values -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="BaseAppTheme.LightBackground" parent="BaseAppTheme">
         <item name="material_drawer_background">@color/material_drawer_background</item>
         <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
         <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
@@ -39,9 +43,18 @@
         <item name="material_drawer_selected">@color/material_drawer_selected</item>
         <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
         <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
+    </style>
 
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="BaseAppTheme.DarkBackground" parent="BaseAppTheme">
+        <item name="material_drawer_background">@color/material_drawer_dark_background</item>
+        <item name="material_drawer_primary_text">@color/material_drawer_dark_primary_text</item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
+        <item name="material_drawer_secondary_text">@color/material_drawer_dark_secondary_text</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</item>
+        <item name="material_drawer_divider">@color/material_drawer_dark_divider</item>
+        <item name="material_drawer_selected">@color/material_drawer_dark_selected</item>
+        <item name="material_drawer_selected_text">@color/material_drawer_dark_selected_text</item>
+        <item name="material_drawer_header_selection_text">@color/material_drawer_dark_header_selection_text</item>
     </style>
 
     <style name="BaseAppTheme.NormalNavigation" parent="BaseAppTheme" />
@@ -75,7 +88,7 @@
     </style>
 
     <style name="ExploreButtonTheme" parent="ThemeOverlay.AppCompat.Light">
-        <item name="colorAccent">?attr/titleBarColor</item>
+        <item name="colorAccent">?colorPrimary</item>
     </style>
 
 

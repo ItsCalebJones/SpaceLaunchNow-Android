@@ -19,7 +19,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/titleBarColor"
+            android:background="?attr/colorPrimary"
             app:popupTheme="@style/BaseAppTheme.PopupOverlay" />
 
 
@@ -27,7 +27,7 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/titleBarColor" />
+            android:background="?attr/colorPrimary" />
     </com.google.android.material.appbar.AppBarLayout>
 
 

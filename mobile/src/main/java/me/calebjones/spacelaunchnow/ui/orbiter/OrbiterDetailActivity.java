@@ -75,11 +75,7 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        if (sharedPreference.isNightModeActive(this)) {
-            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
-        } else {
-            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-        }
+        statusColor = getCyanea().getPrimaryDark();
 
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         toolbarSubTitle = findViewById(R.id.detail_sub_title);

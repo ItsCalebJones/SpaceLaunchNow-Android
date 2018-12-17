@@ -136,11 +136,8 @@ public class LaunchDetailActivity extends BaseActivity
         sharedPreference = ListPreferences.getInstance(context);
         detailsDataRepository = new DetailsDataRepository(context, getRealm());
 
-        if (sharedPreference.isNightModeActive(this)) {
-            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
-        } else {
-            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-        }
+        statusColor = getCyanea().getPrimaryDark();
+
         m_theme = R.style.BaseAppTheme;
 
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
@@ -301,7 +298,7 @@ public class LaunchDetailActivity extends BaseActivity
                 .title(R.string.feedback_title)
                 .autoDismiss(true)
                 .content(R.string.feedback_description)
-                .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .neutralColor(getCyanea().getPrimary())
                 .negativeText(R.string.launch_data)
                 .onNegative((dialog, which) -> {
                     String url = getString(R.string.launch_library_reddit);

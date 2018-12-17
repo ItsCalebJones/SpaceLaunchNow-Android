@@ -137,13 +137,7 @@ public class Utils {
 
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
-        if (sharedPreference.isNightModeActive(context)) {
-            intentBuilder.setToolbarColor(ContextCompat.getColor(
-                    (context), R.color.darkPrimary));
-        } else {
-            intentBuilder.setToolbarColor(ContextCompat.getColor(
-                    (context), R.color.colorPrimary));
-        }
+        intentBuilder.setToolbarColor(ContextCompat.getColor((context), R.color.colorPrimary));
 
         intentBuilder.setShowTitle(true);
 

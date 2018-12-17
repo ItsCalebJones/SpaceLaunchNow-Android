@@ -75,11 +75,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        if (sharedPreference.isNightModeActive(this)) {
-            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
-        } else {
-            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-        }
+        statusColor = getCyanea().getPrimaryDark();
 
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         toolbarTitle = findViewById(R.id.title_text);

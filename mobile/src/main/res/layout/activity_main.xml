@@ -11,6 +11,8 @@
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?backgroundColorLight"
+        android:theme="?theme"
         tools:openDrawer="start">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +23,7 @@
                 android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/titleBarColor"
+                android:background="?attr/colorPrimary"
                 android:elevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -31,8 +33,9 @@
                     android:id="@+id/main_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:elevation="0dp"
-                    android:theme="@style/ThemeOverlay.MaterialComponents.Dark" />
+                    android:theme="?actionBarTheme"
+                    app:popupTheme="?popupTheme"
+                    android:elevation="0dp"/>
 
             </com.google.android.material.appbar.AppBarLayout>
 

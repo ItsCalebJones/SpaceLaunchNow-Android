@@ -177,11 +177,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             adapter = new CardAdapter(context);
         }
 
-        if (sharedPreference.isNightModeActive(context)) {
-            color = R.color.darkPrimary;
-        } else {
-            color = R.color.colorPrimary;
-        }
+        color = mainActivity.getCyanea().getPrimary();
 
         super.onCreateView(inflater, container, savedInstanceState);
 
@@ -190,7 +186,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         unbinder = ButterKnife.bind(this, view);
 
         setUpSwitches();
-        colorReveal.setBackgroundColor(ContextCompat.getColor(context, color));
+        colorReveal.setBackgroundColor(color);
         fabExtensionAnimator = new FabExtensionAnimator(fab);
         fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context,R.drawable.ic_notifications_white)), true);
         fab.setOnClickListener(v -> checkFilter());

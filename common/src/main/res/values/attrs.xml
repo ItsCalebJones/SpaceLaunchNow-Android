@@ -3,12 +3,6 @@
         <attr name="metaButtonBarStyle" format="reference" />
         <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
-
-    <attr name="navBarColor" format="reference" />
-    <attr name="titleBarColor" format="reference" />
-    <attr name="cardTitleBarColor" format="reference"/>
-    <attr name="recentBarColor" format="reference" />
     <attr name="shareIconColor" format="reference" />
-    <attr name="exploreIconColor" format="reference" />
-
+    <attr name="cardTitleBarColor" format="reference" />
 </resources>

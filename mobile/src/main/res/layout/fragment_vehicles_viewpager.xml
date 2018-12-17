@@ -16,8 +16,8 @@
         app:tabBackground="@color/colorPrimary"
         app:tabGravity="fill"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/dark_theme_primary_text_color"
-        app:tabTextColor="@color/dark_theme_secondary_text_color" />
+        app:tabSelectedTextColor="?android:attr/textColorPrimaryInverse"
+        app:tabTextColor="?android:attr/textColorSecondaryInverse" />
 
 
 

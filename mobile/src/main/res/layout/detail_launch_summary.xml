@@ -43,7 +43,7 @@
                     android:id="@+id/error_message"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="?attr/titleBarColor"
+                    android:background="?attr/colorPrimary"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:textAlignment="center"

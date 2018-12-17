@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:cardBackgroundColor="?attr/titleBarColor"
+    app:cardBackgroundColor="?attr/colorPrimary"
     app:cardCornerRadius="10dp"
     app:cardElevation="4dp">
 

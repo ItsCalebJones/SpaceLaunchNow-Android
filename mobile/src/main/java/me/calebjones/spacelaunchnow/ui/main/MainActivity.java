@@ -138,7 +138,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private int mNavItemId;
     private Snackbar snackbar;
-    public int statusColor;
 
     public void mayLaunchUrl(Uri parse) {
         if (customTabActivityHelper.mayLaunchUrl(parse, null, null)) {
@@ -183,17 +182,12 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         this.context = getApplicationContext();
         customTabActivityHelper = new CustomTabActivityHelper();
 
-        Timber.d("Checking if night mode active.");
-        if (listPreferences.isNightModeActive(this)) {
-            Timber.d("Night mode is active.");
-            switchPreferences.setNightModeStatus(true);
-            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
+        if (getCyanea().isDark()){
+            m_theme = R.style.BaseAppTheme_DarkBackground;
         } else {
-            Timber.d("Night mode is not active.");
-            switchPreferences.setNightModeStatus(false);
-            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
+            m_theme = R.style.BaseAppTheme_LightBackground;
         }
-        m_theme = R.style.BaseAppTheme;
+
         Timber.d("Setting theme.");
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
@@ -215,6 +209,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
+
+
 
         Timber.d("Building account header.");
         AccountHeader headerResult = new AccountHeaderBuilder()
@@ -489,13 +485,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             recreate();
         }
 
-        if (listPreferences.isNightModeActive(this)) {
-            switchPreferences.setNightModeStatus(true);
-            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
-        } else {
-            switchPreferences.setNightModeStatus(false);
-            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-        }
         // show GDPR Dialog if necessary, the library takes care about if and how to show it
         GDPR.getInstance().checkIfNeedsToBeShown(this, getGDPRSetup());
         configureAdState(GDPR.getInstance().getConsentState());
@@ -793,15 +782,16 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .title(R.string.feedback_title)
                 .autoDismiss(true)
                 .content(R.string.feedback_description)
-                .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .negativeColor(getCyanea().getAccent())
                 .negativeText(R.string.launch_data)
+
                 .onNegative((dialog, which) -> {
                     String url = getString(R.string.launch_library_reddit);
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     startActivity(i);
                 })
-                .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .positiveColor(getCyanea().getPrimary())
                 .positiveText(R.string.app_feedback)
                 .onPositive((dialog, which) -> dialog.getBuilder()
                         .title(R.string.need_support)
