@@ -11,11 +11,10 @@ buildscript {
     dependencies {
         classpath 'io.fabric.tools:gradle:1.25.4'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
-        classpath 'com.github.Triple-T:gradle-play-publisher:65964bc711'
     }
 }
 
-apply plugin: 'com.github.triplet.play'
+
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'org.moallemi.advanced-build-version'
@@ -111,11 +110,11 @@ android {
     }
 }
 
-play {
-    serviceAccountCredentials = rootProject.file("publisher-key.json")
-    track = "internal"
-    releaseStatus = "draft"
-}
+//play {
+//    serviceAccountCredentials = rootProject.file("publisher-key.json")
+//    track = "internal"
+//    releaseStatus = "draft"
+//}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

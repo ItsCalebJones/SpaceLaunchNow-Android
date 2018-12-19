@@ -19,13 +19,14 @@
         android:orientation="vertical">
 
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
             android:visibility="visible"
+            app:cardBackgroundColor="?backgroundColor"
             card_view:cardCornerRadius="4dp"
             card_view:cardElevation="@dimen/material_card_elevation_resting"
             card_view:cardPreventCornerOverlap="true"
@@ -166,7 +167,7 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <me.calebjones.spacelaunchnow.utils.views.custom.WeatherCard
             android:id="@+id/weather_card"
@@ -183,6 +184,7 @@
             android:paddingStart="@dimen/material_card_edge_margin"
             android:paddingTop="@dimen/material_card_edge_margin"
             android:visibility="gone"
+            app:cardBackgroundColor="?backgroundColor"
             app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"

@@ -97,7 +97,7 @@ public class UpcomingAgencyLaunchesFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_launch_list, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        adapter = new ListAdapter(context);
+        adapter = new ListAdapter(context, getCyanea().isDark());
         linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));

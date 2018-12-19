@@ -87,6 +87,7 @@ import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
 import me.calebjones.spacelaunchnow.news.ui.NewsViewPager;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
+import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
@@ -117,7 +118,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private NextLaunchFragment mUpcomingFragment;
     private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
-    private ISSFragment mIssFragment;
+    private AgencyDetailFragment mIssFragment;
     private EventsFragment mEventsFragment;
     private Drawer drawer = null;
     private SharedPreferences sharedPref;
@@ -138,6 +139,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private int mNavItemId;
     private Snackbar snackbar;
+    private String action;
 
     public void mayLaunchUrl(Uri parse) {
         if (customTabActivityHelper.mayLaunchUrl(parse, null, null)) {
@@ -164,7 +166,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
-        String action = intent.getAction();
+        action = intent.getAction();
 
         if ("me.calebjones.spacelaunchnow.NIGHTMODE".equals(action)) {
             Intent sendIntent = new Intent(this, SettingsActivity.class);
@@ -338,19 +340,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
             }
         });
-        if (getCyanea().getShouldTintStatusBar()){
-            String strColor = String.format("#%06X", 0xFFFFFF & getCyanea().getPrimary());
-            bottomNavigationView.setBarBackgroundColor(strColor);
-        } else {
-            bottomNavigationView.setBarBackgroundColor(getCyanea().getBackgroundColor());
-        }
-
-        if ("SHOW_FILTERS".equals(action)) {
-            navigate(R.id.menu_launches);
-        } else {
-            Timber.d("Navigate to initial fragment.");
-            navigate(mNavItemId);
-        }
     }
 
     private void navigateToTab(int position) {
@@ -433,6 +422,19 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     public void onResume() {
         super.onResume();
         Timber.v("onResume");
+        if ("SHOW_FILTERS".equals(action)) {
+            navigate(R.id.menu_launches);
+        } else {
+            Timber.d("Navigate to initial fragment.");
+            navigate(mNavItemId);
+        }
+        if (getCyanea().getShouldTintNavBar()){
+            String strColor = String.format("#%06X", 0xFFFFFF & getCyanea().getPrimary());
+            bottomNavigationView.setBarBackgroundColor(strColor);
+        } else {
+            String strColor = String.format("#%06X", 0xFFFFFF & getCyanea().getBackgroundColor());
+            bottomNavigationView.setBarBackgroundColor(strColor);
+        }
         if (rate != null) {
             rate.count();
         }
@@ -681,7 +683,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 addAppBarElevation();
                 hideBottomNavigation();
                 if (mIssFragment == null)
-                    mIssFragment = ISSFragment.newInstance();
+                    mIssFragment = AgencyDetailFragment.newInstance();
                 navigateToFragment(mIssFragment, ISS_TAG);
 
                 if (rate != null) {

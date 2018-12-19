@@ -42,7 +42,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private SimpleDateFormat sdf;
     private SimpleDateFormat df;
 
-    public ListAdapter(Context context) {
+    public ListAdapter(Context context, boolean night) {
         rightNow = Calendar.getInstance();
         launchList = new RealmList<>();
         sharedPreference = ListPreferences.getInstance(context);
@@ -62,7 +62,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             df.setTimeZone(TimeZone.getTimeZone("UTC"));
         }
 
-        night = sharedPreference.isNightModeActive(mContext);
+        this.night = night;
     }
 
     public void addItems(List<LaunchList> launchList) {

@@ -146,53 +146,9 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
 
     private void applyProfileBackdrop(String drawableURL) {
         Timber.d("OrbiterDetailActivity - Loading Backdrop Image url: %s ", drawableURL);
-        int palette;
-        if (ListPreferences.getInstance(context).isNightModeActive(context)) {
-            palette = GlidePalette.Profile.MUTED_DARK;
-        } else {
-            palette = GlidePalette.Profile.VIBRANT;
-        }
         GlideApp.with(this)
                 .load(drawableURL)
                 .centerCrop()
-                .listener(GlidePalette.with(drawableURL)
-                        .use(palette)
-                        .intoCallBack(palette1 -> {
-                            if (ListPreferences.getInstance(context).isNightModeActive(context)) {
-                                if (palette1 != null) {
-                                    Palette.Swatch color = null;
-                                    if (palette1.getDarkMutedSwatch() != null) {
-                                        color = palette1.getDarkMutedSwatch();
-                                    } else if (palette1.getDarkVibrantSwatch() != null) {
-                                        color = palette1.getDarkVibrantSwatch();
-                                    }
-                                    if (color != null) {
-                                        collapsingToolbar.setContentScrimColor(color.getRgb());
-                                        customOnOffsetChangedListener.updateStatusColor(color.getRgb());
-                                        appBarLayout.setBackgroundColor(color.getRgb());
-                                        adapter.updateColor(color.getRgb());
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                }
-                            } else {
-                                if (palette1 != null) {
-                                    Palette.Swatch color = null;
-                                    if (palette1.getVibrantSwatch() != null) {
-                                        color = palette1.getVibrantSwatch();
-                                    } else if (palette1.getMutedSwatch() != null) {
-                                        color = palette1.getMutedSwatch();
-                                    }
-                                    if (color != null) {
-                                        collapsingToolbar.setContentScrimColor(color.getRgb());
-                                        customOnOffsetChangedListener.updateStatusColor(color.getRgb());
-                                        appBarLayout.setBackgroundColor(color.getRgb());
-                                        adapter.updateColor(color.getRgb());
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                }
-                            }
-                        })
-                        .crossfade(true))
                 .into(detail_profile_backdrop);
 
     }

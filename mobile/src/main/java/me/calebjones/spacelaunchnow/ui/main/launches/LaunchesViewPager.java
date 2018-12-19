@@ -16,11 +16,12 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.local.common.BaseFragment;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import timber.log.Timber;
 
-public class LaunchesViewPager extends Fragment {
+public class LaunchesViewPager extends BaseFragment {
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;

@@ -143,8 +143,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
         unbinder = ButterKnife.bind(this, view);
         youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.youtube_view, youTubePlayerFragment).commit();
+//        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//        transaction.add(R.id.youtube_view, youTubePlayerFragment).commit();
 
         if (savedInstanceState != null) {
             youTubePlaying = savedInstanceState.getBoolean("youTubePlaying", false);

@@ -72,6 +72,7 @@ public class AgencyDetailFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
+        getCyanea().getBackgroundColor();
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         this.context = getContext();
         setScreenName("LauncherAgency Detail Fragment");

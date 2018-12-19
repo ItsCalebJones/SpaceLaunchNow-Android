@@ -80,7 +80,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         setHasOptionsMenu(true);
 
         if (adapter == null) {
-            adapter = new ListAdapter(getContext());
+            adapter = new ListAdapter(getContext(), getCyanea().isDark());
         }
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);

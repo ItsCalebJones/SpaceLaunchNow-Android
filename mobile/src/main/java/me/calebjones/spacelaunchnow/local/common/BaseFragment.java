@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jaredrummler.cyanea.app.CyaneaFragment;
+
 import androidx.fragment.app.Fragment;
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 
-public class BaseFragment extends Fragment {
+public class BaseFragment extends CyaneaFragment {
     private Realm realm;
     private String screenName = "Unknown (Name not set)";
 

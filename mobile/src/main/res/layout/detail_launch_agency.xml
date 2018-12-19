@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
@@ -14,7 +15,7 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/lsp_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,6 +28,7 @@
             android:paddingEnd="@dimen/material_card_edge_margin"
             android:paddingStart="@dimen/material_card_edge_margin"
             android:paddingTop="@dimen/material_card_edge_margin"
+            app:cardBackgroundColor="?backgroundColor"
             app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
@@ -202,6 +204,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/lsp_infoButton_one" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

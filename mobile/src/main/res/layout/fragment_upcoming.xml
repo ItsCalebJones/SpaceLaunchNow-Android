@@ -71,6 +71,7 @@
                         android:text="@string/view_more_launches"
                         android:textSize="12sp"
                         android:theme="@style/PrimaryButtonTheme"
+                        android:textColor="?android:textColorPrimary"
                         android:visibility="visible"
                         app:layout_anchor="@+id/recycler_view" />
 

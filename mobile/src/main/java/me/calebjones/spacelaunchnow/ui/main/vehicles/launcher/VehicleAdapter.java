@@ -34,18 +34,11 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
     private boolean night = false;
     private RequestOptions requestOptions;
     private int palette;
+    private int color;
 
     public VehicleAdapter(Context context) {
         agencies = new ArrayList();
         this.mContext = context;
-
-        night = ListPreferences.getInstance(mContext).isNightModeActive(mContext);
-
-        if (ListPreferences.getInstance(context).isNightModeActive(context)) {
-            palette = GlidePalette.Profile.MUTED_DARK;
-        } else {
-            palette = GlidePalette.Profile.VIBRANT;
-        }
 
         requestOptions = new RequestOptions()
                 .placeholder(R.drawable.placeholder)
@@ -82,32 +75,6 @@ public class VehicleAdapter extends RecyclerView.Adapter<VehicleAdapter.ViewHold
 
         GlideApp.with(mContext)
                 .load(launcher.getImageUrl())
-                .apply(requestOptions)
-                .listener(GlidePalette.with(launcher.getImageUrl())
-                        .use(palette)
-                        .intoCallBack(palette -> {
-                            Palette.Swatch color = null;
-                            if (palette != null) {
-                                if (night) {
-                                    if (palette.getDarkMutedSwatch() != null) {
-                                        color = palette.getDarkMutedSwatch();
-                                    } else if (palette.getDarkVibrantSwatch() != null) {
-                                        color = palette.getDarkVibrantSwatch();
-                                    }
-                                } else {
-                                    if (palette.getVibrantSwatch() != null) {
-                                        color = palette.getVibrantSwatch();
-                                    } else if (palette.getMutedSwatch() != null) {
-                                        color = palette.getMutedSwatch();
-                                    }
-                                }
-                                if (color != null) {
-                                    holder.textContainer.setBackgroundColor(color.getRgb());
-                                }
-                            }
-                        })
-                        .intoBackground(holder.textContainer, GlidePalette.Swatch.RGB)
-                        .crossfade(true))
                 .into(holder.picture);
         holder.subTitle.setText(launcher.getType());
         holder.name.setText(launcher.getName());

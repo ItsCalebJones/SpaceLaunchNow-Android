@@ -33,24 +33,10 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
     private List<Agency> agencies = new ArrayList<Agency>();
     private OnItemClickListener onItemClickListener;
     private boolean night = false;
-    private RequestOptions requestOptions;
-    private int palette;
 
     public OrbiterAdapter(Context context) {
         agencies = new ArrayList();
         this.mContext = context;
-
-        night = ListPreferences.getInstance(mContext).isNightModeActive(mContext);
-
-        if (ListPreferences.getInstance(context).isNightModeActive(context)) {
-            palette = GlidePalette.Profile.MUTED_DARK;
-        } else {
-            palette = GlidePalette.Profile.VIBRANT;
-        }
-
-        requestOptions = new RequestOptions()
-                .placeholder(R.drawable.placeholder)
-                .centerCrop();
     }
 
     public void addItems(List<Agency> items) {
@@ -90,31 +76,6 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
             if (firstOrbiter.getImageURL() != null) {
                 GlideApp.with(mContext)
                         .load(firstOrbiter.getImageURL())
-                        .apply(requestOptions)
-                        .listener(GlidePalette.with(firstOrbiter.getImageURL())
-                                .use(palette)
-                                .intoCallBack(palette -> {
-                                    Palette.Swatch color = null;
-                                    if (palette != null) {
-                                        if (night) {
-                                            if (palette.getDarkMutedSwatch() != null) {
-                                                color = palette.getDarkMutedSwatch();
-                                            } else if (palette.getDarkVibrantSwatch() != null) {
-                                                color = palette.getDarkVibrantSwatch();
-                                            }
-                                        } else {
-                                            if (palette.getVibrantSwatch() != null) {
-                                                color = palette.getVibrantSwatch();
-                                            } else if (palette.getMutedSwatch() != null) {
-                                                color = palette.getMutedSwatch();
-                                            }
-                                        }
-                                        if (color != null) {
-                                            holder.textContainer.setBackgroundColor(color.getRgb());
-                                        }
-                                    }
-                                })
-                                .crossfade(true))
                         .into(holder.picture);
             }
             holder.subTitle.setText(firstOrbiter.getName());

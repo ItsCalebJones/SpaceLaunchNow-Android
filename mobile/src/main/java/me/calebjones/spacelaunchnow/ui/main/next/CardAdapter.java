@@ -65,11 +65,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     private Context context;
     private SimpleDateFormat fullDate;
     private SimpleDateFormat shortDate;
+    private int color;
 
-
-    public CardAdapter(Context context) {
+    public CardAdapter(Context context, int color) {
         launchList = new RealmList<>();
         this.context = context;
+        this.color = color;
 
         if (DateFormat.is24HourFormat(context)) {
             fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
@@ -109,6 +110,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         Launch launchItem = launchList.get(i);
         Timber.i("Binding %s", launchItem.getName());
         String title;
+        holder.titleBackground.setBackgroundColor(color);
         try {
             if (launchItem.isValid()) {
                 if (launchItem.getRocket().getConfiguration() != null) {

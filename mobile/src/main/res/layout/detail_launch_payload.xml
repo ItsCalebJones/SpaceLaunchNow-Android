@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
@@ -13,12 +14,13 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
+            app:cardBackgroundColor="?backgroundColor"
             app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
@@ -158,14 +160,15 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
+            app:cardBackgroundColor="?backgroundColor"
             app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
@@ -526,7 +529,7 @@
                     app:layout_constraintStart_toEndOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/coreRecyclerView"

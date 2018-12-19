@@ -87,7 +87,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
         if (adapter == null) {
             Timber.v("Creating new ListAdapter");
-            adapter = new ListAdapter(getContext());
+            adapter = new ListAdapter(getContext(), getCyanea().isDark());
         }
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);

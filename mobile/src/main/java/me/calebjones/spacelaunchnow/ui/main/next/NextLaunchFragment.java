@@ -174,7 +174,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         filterViewShowing = false;
 
         if (adapter == null) {
-            adapter = new CardAdapter(context);
+            adapter = new CardAdapter(context, mainActivity.getCyanea().getPrimary());
         }
 
         color = mainActivity.getCyanea().getPrimary();
