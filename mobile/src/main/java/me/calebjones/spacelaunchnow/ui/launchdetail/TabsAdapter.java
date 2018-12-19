@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.ui.launchdetail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.ViewGroup;
 
@@ -9,6 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.mission.MissionDetailFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.SummaryDetailFragment;
@@ -20,9 +22,9 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
     public AgencyDetailFragment agencyFragment;
     private Context context;
 
-    public TabsAdapter(FragmentManager fragmentManager, Context context) {
-        super(fragmentManager);
-        this.context = context;
+    public TabsAdapter(LaunchDetailActivity activity) {
+        super(activity.getSupportFragmentManager());
+        this.context = activity;
     }
 
     @Override

@@ -20,6 +20,7 @@
 
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/summary_card"
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
