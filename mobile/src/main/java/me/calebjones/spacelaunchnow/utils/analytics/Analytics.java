@@ -54,12 +54,13 @@ public class Analytics {
 
     //Logging methods.
     public void sendScreenView(@NonNull String screenName, @NonNull String state) {
-
-        if (!screenName.equals(mLastScreenName)) {
-            mLastScreenName = screenName;
-            Answers.getInstance().logCustom(new UIEvent(screenName)
-                                                    .putState(state));
-            Timber.v("UI Event: %s - %s", screenName, state);
+        if (mLastScreenName != null) {
+            if (!screenName.equals(mLastScreenName)) {
+                mLastScreenName = screenName;
+                Answers.getInstance().logCustom(new UIEvent(screenName)
+                        .putState(state));
+                Timber.v("UI Event: %s - %s", screenName, state);
+            }
         }
     }
 

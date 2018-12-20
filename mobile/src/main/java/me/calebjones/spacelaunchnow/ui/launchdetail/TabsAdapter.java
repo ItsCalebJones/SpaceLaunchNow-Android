@@ -5,11 +5,8 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.AgencyDetailFragment;
 import me.calebjones.spacelaunchnow.ui.launchdetail.fragments.mission.MissionDetailFragment;

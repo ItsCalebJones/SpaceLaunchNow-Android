@@ -17,8 +17,8 @@
         android:elevation="12dp"
         app:tabGravity="fill"
         app:tabBackground="@color/colorPrimary"
-        app:tabTextColor="@color/dark_theme_secondary_text_color"
-        app:tabSelectedTextColor="@color/dark_theme_primary_text_color"
+        app:tabSelectedTextColor="@color/material_color_white"
+        app:tabTextColor="@color/material_color_white_70_percent"
         app:tabMode="fixed" />
 
     <androidx.viewpager.widget.ViewPager

@@ -127,8 +127,6 @@ public class LaunchDetailActivity extends BaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int m_theme;
-
         realm = getRealm();
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         context = getApplicationContext();
@@ -138,8 +136,6 @@ public class LaunchDetailActivity extends BaseActivity
 
         statusColor = getCyanea().getPrimaryDark();
 
-        m_theme = R.style.BaseAppTheme;
-
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
             SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
             editor.putBoolean("recreate", false);
@@ -147,8 +143,6 @@ public class LaunchDetailActivity extends BaseActivity
             recreate();
         }
 
-
-        setTheme(m_theme);
         setContentView(R.layout.activity_launch_detail);
         ButterKnife.bind(this);
         model = ViewModelProviders.of(this).get(DetailsViewModel.class);
@@ -196,7 +190,6 @@ public class LaunchDetailActivity extends BaseActivity
         mMaxScrollSize = appBarLayout.getTotalScrollRange();
 
         tabAdapter = new TabsAdapter(this);
-        getCyanea().getTinter().tint(tabLayout);
         viewPager.setAdapter(tabAdapter);
         viewPager.setOffscreenPageLimit(3);
 

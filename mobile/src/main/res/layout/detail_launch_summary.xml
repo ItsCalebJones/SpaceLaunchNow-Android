@@ -2,7 +2,6 @@
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/launch_summary"
     android:layout_width="match_parent"
@@ -13,11 +12,9 @@
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
-
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
-
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/summary_card"
@@ -28,10 +25,10 @@
             android:padding="@dimen/material_card_edge_margin"
             android:visibility="visible"
             app:cardBackgroundColor="?backgroundColor"
-            card_view:cardCornerRadius="4dp"
-            card_view:cardElevation="@dimen/material_card_elevation_resting"
-            card_view:cardPreventCornerOverlap="true"
-            card_view:cardUseCompatPadding="true">
+            app:cardCornerRadius="4dp"
+            app:cardElevation="@dimen/material_card_elevation_resting"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
 

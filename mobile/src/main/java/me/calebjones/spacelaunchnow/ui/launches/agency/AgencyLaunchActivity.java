@@ -146,14 +146,12 @@ public class AgencyLaunchActivity extends BaseActivity implements UpcomingAgency
                 .title(R.string.select_launch_agency)
                 .content(R.string.select_launch_agency_description)
                 .items(agencyList)
-                .buttonRippleColorRes(getCyanea().getAccentLight())
                 .itemsCallback((dialog, view, which, text) -> {
                     lspName = String.valueOf(text);
                     refresh();
                 })
                 .positiveText(R.string.filter)
                 .negativeText(R.string.close)
-                .icon(ContextCompat.getDrawable(this, R.mipmap.ic_launcher))
                 .show();
     }
 
