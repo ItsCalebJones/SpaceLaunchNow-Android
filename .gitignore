@@ -16,3 +16,4 @@ mobile/keystore.properties
 wear/src/main/res/values/api_keys.xml
 .idea/markdown-navigator.xml
 /.idea/*
+publisher-key.json
