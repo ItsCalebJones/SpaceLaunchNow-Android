@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.data.models.main;
+package me.calebjones.spacelaunchnow.data.models.main.launcher;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -21,7 +21,7 @@ public class Launcher extends RealmObject {
     @SerializedName("serial_number")
     @Expose
     public String serialNumber;
-    @SerializedName("status")
+    @SerializedName("launchStatus")
     @Expose
     public String status;
     @SerializedName("details")

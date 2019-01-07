@@ -35,11 +35,10 @@ import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.Stage;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.GlideApp;
@@ -136,19 +135,19 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
 
                 holder.landingView.setVisibility(View.INVISIBLE);
-                if (launchItem.getRocket().getFirstStage() != null && launchItem.getRocket().getFirstStage().size() >= 1) {
-                    if (launchItem.getRocket().getFirstStage().size() > 1) {
+                if (launchItem.getRocket().getLauncherStage() != null && launchItem.getRocket().getLauncherStage().size() >= 1) {
+                    if (launchItem.getRocket().getLauncherStage().size() > 1) {
                         StringBuilder stagesText = new StringBuilder();
-                        for (Stage stage : launchItem.getRocket().getFirstStage()) {
+                        for (LauncherStage stage : launchItem.getRocket().getLauncherStage()) {
                             if (stage.getLanding().getLandingLocation() != null) {
                                 stagesText.append(stage.getLanding().getLandingLocation().getAbbrev()).append(" ");
                             }
                         }
                         holder.landingView.setVisibility(View.VISIBLE);
                         holder.landing.setText(stagesText.toString());
-                    } else if (launchItem.getRocket().getFirstStage().size() == 1) {
-                        if (launchItem.getRocket().getFirstStage().first().getLanding() != null) {
-                            Landing landing = launchItem.getRocket().getFirstStage().first().getLanding();
+                    } else if (launchItem.getRocket().getLauncherStage().size() == 1) {
+                        if (launchItem.getRocket().getLauncherStage().first().getLanding() != null) {
+                            Landing landing = launchItem.getRocket().getLauncherStage().first().getLanding();
                             if (landing.getLandingLocation() != null) {
                                 holder.landingView.setVisibility(View.VISIBLE);
                                 holder.landing.setText(landing.getLandingLocation().getAbbrev());
@@ -182,7 +181,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 holder.countDownView.setLaunch(launchItem);
 
                 //Get launch date
-                if (launchItem.getStatus().getId() == 2) {
+                if (launchItem.getLaunchStatus().getId() == 2) {
 
                     if (launchItem.getNet() != null) {
                         //Get launch date

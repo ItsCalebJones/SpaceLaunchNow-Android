@@ -24,7 +24,7 @@ import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.local.common.RetroFitFragment;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Mission;
 import me.calebjones.spacelaunchnow.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
@@ -173,7 +173,7 @@ public class MissionDetailFragment extends RetroFitFragment {
             }
             configureLaunchVehicle(launch.getRocket().getConfiguration());
 
-            if (launch.getRocket().getFirstStage() != null && launch.getRocket().getFirstStage().size() > 0){
+            if (launch.getRocket().getLauncherStage() != null && launch.getRocket().getLauncherStage().size() > 0){
                 coreRecyclerView.setVisibility(View.VISIBLE);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
                 coreRecyclerView.setLayoutManager(layoutManager);

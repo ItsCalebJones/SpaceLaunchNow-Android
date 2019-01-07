@@ -44,7 +44,7 @@ public class StatusPillView extends FrameLayout {
     }
 
     public void setStatus(Launch launch) {
-        status.setText(LaunchStatus.getLaunchStatusTitle(context, launch.getStatus().getId()));
-        statusPill.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(context, launch.getStatus().getId()));
+        status.setText(LaunchStatus.getLaunchStatusTitle(context, launch.getLaunchStatus().getId()));
+        statusPill.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(context, launch.getLaunchStatus().getId()));
     }
 }

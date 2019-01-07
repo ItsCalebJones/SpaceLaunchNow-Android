@@ -21,8 +21,8 @@ import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.Launcher;
-import me.calebjones.spacelaunchnow.data.models.main.Stage;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.Launcher;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
 import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
 import timber.log.Timber;
 
@@ -31,13 +31,13 @@ import timber.log.Timber;
  */
 public class StageInformationAdapter extends RecyclerView.Adapter<StageInformationAdapter.ViewHolder> {
     public int position;
-    private List<Stage> launcherList;
+    private List<LauncherStage> launcherList;
     private Context context;
     private Launch launch;
 
     public StageInformationAdapter(Launch launch, Context context) {
         this.launch = launch;
-        launcherList = launch.getRocket().getFirstStage();
+        launcherList = launch.getRocket().getLauncherStage();
         this.context = context;
         notifyDataSetChanged();
     }
@@ -52,7 +52,7 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Stage stage = launcherList.get(position);
+        LauncherStage stage = launcherList.get(position);
         if (stage.getLauncher() != null) {
             Launcher launcher = stage.getLauncher();
             holder.viewCoreLaunches.setVisibility(View.VISIBLE);
@@ -64,7 +64,7 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
             });
             holder.coreInformation.setText(String.format("%s Information", launcher.getSerialNumber()));
             if (stage.getType() != null) {
-                holder.coreInformationSubtitle.setText(String.format("First Stage - %s", stage.getType()));
+                holder.coreInformationSubtitle.setText(String.format("First LauncherStage - %s", stage.getType()));
             }
             holder.details.setText(launcher.getDetails());
             holder.serialNumberText.setText(stage.getLauncher().getSerialNumber());

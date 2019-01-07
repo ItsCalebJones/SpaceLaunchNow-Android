@@ -34,7 +34,7 @@
     </style>
 
     <style name="BaseAppTheme.LightBackground" parent="BaseAppTheme">
-        <item name="material_drawer_background">?attr/backgroundColor</item>
+        <item name="material_drawer_background">?backgroundColor</item>
         <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
         <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
         <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>
@@ -46,7 +46,7 @@
     </style>
 
     <style name="BaseAppTheme.DarkBackground" parent="BaseAppTheme">
-        <item name="material_drawer_background">?attr/backgroundColor</item>
+        <item name="material_drawer_background">@color/material_drawer_dark_background</item>
         <item name="material_drawer_primary_text">@color/material_drawer_dark_primary_text</item>
         <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
         <item name="material_drawer_secondary_text">@color/material_drawer_dark_secondary_text</item>

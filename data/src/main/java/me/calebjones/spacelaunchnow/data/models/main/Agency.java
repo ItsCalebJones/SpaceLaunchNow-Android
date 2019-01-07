@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 
 public class Agency extends RealmObject {
 

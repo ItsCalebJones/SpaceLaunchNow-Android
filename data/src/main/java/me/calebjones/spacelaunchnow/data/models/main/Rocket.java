@@ -5,17 +5,20 @@ import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
+import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftStage;
 
 public class Rocket extends RealmObject {
     @SerializedName("configuration")
     @Expose
     public LauncherConfig configuration;
-    @SerializedName("first_stage")
+    @SerializedName("launcher_stage")
     @Expose
-    public RealmList<Stage> firstStage;
-    @SerializedName("second_stage")
+    public RealmList<LauncherStage> launcherStage;
+    @SerializedName("spacecraft_stage")
     @Expose
-    public Stage  secondStage;
+    public SpacecraftStage spacecraftStage;
     @SerializedName("reused")
     @Expose
     public Boolean reused;
@@ -36,19 +39,19 @@ public class Rocket extends RealmObject {
         this.configuration = configuration;
     }
 
-    public RealmList<Stage> getFirstStage() {
-        return firstStage;
+    public RealmList<LauncherStage> getLauncherStage() {
+        return launcherStage;
     }
 
-    public void setFirstStage(RealmList<Stage> firstStage) {
-        this.firstStage = firstStage;
+    public void setLauncherStage(RealmList<LauncherStage> launcherStage) {
+        this.launcherStage = launcherStage;
     }
 
-    public Stage getSecondStage() {
-        return secondStage;
+    public SpacecraftStage getSpacecraftStage() {
+        return spacecraftStage;
     }
 
-    public void setSecondStage(Stage secondStage) {
-        this.secondStage = secondStage;
+    public void setSpacecraftStage(SpacecraftStage spacecraftStage) {
+        this.spacecraftStage = spacecraftStage;
     }
 }

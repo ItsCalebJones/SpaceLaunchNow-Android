@@ -108,7 +108,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             }
         }
 
-        if (launchItem.getStatus() != null && launchItem.getStatus().getId() == 2) {
+        if (launchItem.getLaunchStatus() != null && launchItem.getLaunchStatus().getId() == 2) {
             //Get launch date
             launchDate = sdf.format(launchItem.getNet());
 
@@ -161,8 +161,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             holder.orbitCard.setVisibility(View.GONE);
         }
 
-        holder.status.setText(launchItem.getStatus().getName());
-        holder.statusCard.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(mContext, launchItem.getStatus().getId()));
+        holder.status.setText(launchItem.getLaunchStatus().getName());
+        holder.statusCard.setCardBackgroundColor(LaunchStatus.getLaunchStatusColor(mContext, launchItem.getLaunchStatus().getId()));
 
     }
 

@@ -5,10 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 
 public class LaunchList extends RealmObject {
 
@@ -22,9 +20,9 @@ public class LaunchList extends RealmObject {
     @SerializedName("name")
     @Expose
     public String name;
-    @SerializedName("status")
+    @SerializedName("launchStatus")
     @Expose
-    public Status status;
+    public LaunchStatus launchStatus;
     @SerializedName("net")
     @Expose
     public Date net;
@@ -99,12 +97,12 @@ public class LaunchList extends RealmObject {
         this.name = name;
     }
 
-    public Status getStatus() {
-        return status;
+    public LaunchStatus getLaunchStatus() {
+        return launchStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setLaunchStatus(LaunchStatus launchStatus) {
+        this.launchStatus = launchStatus;
     }
 
     public Date getNet() {

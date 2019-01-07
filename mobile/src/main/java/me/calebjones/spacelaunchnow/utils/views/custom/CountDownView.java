@@ -259,11 +259,11 @@ public class CountDownView extends ConstraintLayout {
 
         long timeToFinish = launchDate.getTimeInMillis() - now.getTimeInMillis();
         countdownGroup.setVisibility(VISIBLE);
-        if (timeToFinish > 0 && (launch.getStatus().getId() == 1 || launch.getStatus().getId() == 1)) {
+        if (timeToFinish > 0 && (launch.getLaunchStatus().getId() == 1 || launch.getLaunchStatus().getId() == 1)) {
             startLaunchCountdown(timeToFinish);
-        } else if (launch.getStatus().getId() == 3 || launch.getStatus().getId() == 4 || launch.getStatus().getId() == 7) {
+        } else if (launch.getLaunchStatus().getId() == 3 || launch.getLaunchStatus().getId() == 4 || launch.getLaunchStatus().getId() == 7) {
             setLaunchCountdownComplete();
-        } else if (launch.getStatus().getId() == 6 || launch.getStatus().getId() == 1) {
+        } else if (launch.getLaunchStatus().getId() == 6 || launch.getLaunchStatus().getId() == 1) {
             launchInFlight();
         } else {
             launchStatusUnknown();

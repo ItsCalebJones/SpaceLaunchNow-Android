@@ -1,11 +1,12 @@
-package me.calebjones.spacelaunchnow.data.models.main;
+package me.calebjones.spacelaunchnow.data.models.main.launcher;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
+import me.calebjones.spacelaunchnow.data.models.main.Landing;
 
-public class Stage extends RealmObject {
+public class LauncherStage extends RealmObject {
     @SerializedName("launcher")
     @Expose
     public Launcher launcher;
@@ -21,6 +22,18 @@ public class Stage extends RealmObject {
     @SerializedName("reused")
     @Expose
     public Boolean reused;
+
+    @SerializedName("launcher_flight_number")
+    @Expose
+    public Integer flightNumber;
+
+    public Integer getFlightNumber() {
+        return flightNumber;
+    }
+
+    public void setFlightNumber(Integer flightNumber) {
+        this.flightNumber = flightNumber;
+    }
 
     public String getType() {
         return type;

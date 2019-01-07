@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Status extends RealmObject {
+public class LaunchStatus extends RealmObject {
 
     @PrimaryKey
     @SerializedName("id")

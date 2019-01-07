@@ -8,5 +8,6 @@
     <item name="menu_favorite" type="id"/>
     <item name="menu_news" type="id"/>
     <item name="menu_iss" type="id"/>
+    <item name="menu_astronauts" type="id"/>
     <item name="menu_events" type="id"/>
 </resources>

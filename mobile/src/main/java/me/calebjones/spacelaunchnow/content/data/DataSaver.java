@@ -13,10 +13,8 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
-import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
-import me.calebjones.spacelaunchnow.data.models.main.Mission;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -61,7 +59,7 @@ public class DataSaver {
                                 .findFirst();
                         if (previous != null) {
                             if (isLaunchTimeChanged(previous, item)) {
-                                Timber.i("%s status has changed.", item.getName());
+                                Timber.i("%s launchStatus has changed.", item.getName());
                                 final LaunchNotification notification = mRealm1.where(LaunchNotification.class).equalTo("id", item.getId()).findFirst();
                                 if (notification != null) {
                                     notification.resetNotifiers();
@@ -103,7 +101,7 @@ public class DataSaver {
     private static boolean isLaunchTimeChanged(Launch previous, Launch item) {
         if ((Math.abs(previous.getNet().getTime() - item.getNet().getTime()) >= 360)) {
             return true;
-        } else if (previous.getStatus() != null && item.getStatus() != null && previous.getStatus().getId().intValue() != item.getStatus().getId().intValue()) {
+        } else if (previous.getLaunchStatus() != null && item.getLaunchStatus() != null && previous.getLaunchStatus().getId().intValue() != item.getLaunchStatus().getId().intValue()) {
             return true;
         }
         return false;

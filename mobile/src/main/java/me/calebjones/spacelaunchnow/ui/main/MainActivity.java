@@ -98,6 +98,7 @@ import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import me.spacelaunchnow.astronauts.AstronautListFragment;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, NextLaunchFragment.CallBackListener {
@@ -118,8 +119,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private NextLaunchFragment mUpcomingFragment;
     private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
-    private AgencyDetailFragment mIssFragment;
+    private ISSFragment mIssFragment;
     private EventsFragment mEventsFragment;
+    private AstronautListFragment mAstronautsListFragment;
     private Drawer drawer = null;
     private SharedPreferences sharedPref;
     private SwitchPreferences switchPreferences;
@@ -133,6 +135,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private static final String NEWS_TAG = "NEWS_FRAGMENT_VIEWPAGER";
     private static final String VEHICLE_TAG = "VEHICLE_VIEWPAGER";
     private static final String ISS_TAG = "ISS_TAG";
+    private static final String ASTRONAUT_TAG = "ASTRONAUT_TAG";
     private static final String EVENTS_TAG = "EVENTS_TAG";
 
     static final int SHOW_INTRO = 1;
@@ -251,19 +254,24 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withIdentifier(R.id.menu_iss)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_person_outline)
+                                .withName("Astronauts")
+                                .withIdentifier(R.id.menu_astronauts)
+                                .withSelectable(true),
+                        new PrimaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_event)
                                 .withName("Events")
                                 .withIdentifier(R.id.menu_events)
                                 .withSelectable(true),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem()
-                                .withIcon(GoogleMaterial.Icon.gmd_info_outline)
+                                .withIcon(CommunityMaterial.Icon.cmd_clipboard_outline)
                                 .withName(R.string.whats_new)
                                 .withIdentifier(R.id.menu_new)
                                 .withSelectable(false),
                         new PrimaryDrawerItem()
                                 .withName(R.string.about)
-                                .withIcon(GoogleMaterial.Icon.gmd_account_box)
+                                .withIcon(GoogleMaterial.Icon.gmd_info)
                                 .withIdentifier(R.id.about)
                                 .withSelectable(false),
                         new PrimaryDrawerItem()
@@ -683,8 +691,20 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 addAppBarElevation();
                 hideBottomNavigation();
                 if (mIssFragment == null)
-                    mIssFragment = AgencyDetailFragment.newInstance();
+                    mIssFragment = ISSFragment.newInstance();
                 navigateToFragment(mIssFragment, ISS_TAG);
+
+                if (rate != null) {
+                    rate.showRequest();
+                }
+                break;
+            case R.id.menu_astronauts:
+                setActionBarTitle("Astronauts");
+                addAppBarElevation();
+                hideBottomNavigation();
+                if (mAstronautsListFragment == null)
+                    mAstronautsListFragment = AstronautListFragment.newInstance();
+                navigateToFragment(mAstronautsListFragment, ASTRONAUT_TAG);
 
                 if (rate != null) {
                     rate.showRequest();
