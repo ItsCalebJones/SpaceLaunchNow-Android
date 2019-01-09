@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 
-public class VehicleResponse extends BaseResponse {
+public class LauncherConfigResponse extends BaseResponse {
 
     @SerializedName(value="results")
     private LauncherConfig[] vehicles;

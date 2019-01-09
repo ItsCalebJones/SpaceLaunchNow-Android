@@ -21,7 +21,7 @@ public class Launcher extends RealmObject {
     @SerializedName("serial_number")
     @Expose
     public String serialNumber;
-    @SerializedName("launchStatus")
+    @SerializedName("status")
     @Expose
     public String status;
     @SerializedName("details")

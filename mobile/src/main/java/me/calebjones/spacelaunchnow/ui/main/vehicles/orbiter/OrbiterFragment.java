@@ -42,7 +42,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
 
     private Context context;
     private View view;
-    private OrbiterAdapter adapter;
+    private SpacecraftConfigAdapter adapter;
     private GridLayoutManager layoutManager;
     private List<Agency> items = new ArrayList<Agency>();
 
@@ -61,7 +61,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        adapter = new OrbiterAdapter(context);
+        adapter = new SpacecraftConfigAdapter(context);
     }
 
     @Override
@@ -150,8 +150,8 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
 
                     } else {
                         statefulView.showEmpty();
-                        Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
-                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
+                        Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).getMessage());
+                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).getMessage());
                     }
                     hideLoading();
                 }

@@ -28,21 +28,21 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.main.Orbiter;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftConfig;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
-public class OrbiterDetailAdapter extends RecyclerView.Adapter<OrbiterDetailAdapter.ViewHolder> {
+public class SpacecraftConfigDetailAdapter extends RecyclerView.Adapter<SpacecraftConfigDetailAdapter.ViewHolder> {
 
     public int position;
     private Context context;
     private Activity activity;
-    private List<Orbiter> items;
+    private List<SpacecraftConfig> items;
     private RequestOptions requestOptions;
     private int backgroundColor = 0;
     private SimpleDateFormat sdf;
 
-    public OrbiterDetailAdapter(Context context, Activity activity) {
+    public SpacecraftConfigDetailAdapter(Context context, Activity activity) {
         items = new ArrayList<>();
         requestOptions = new RequestOptions()
                 .placeholder(R.drawable.placeholder)
@@ -53,7 +53,7 @@ public class OrbiterDetailAdapter extends RecyclerView.Adapter<OrbiterDetailAdap
         sdf.toLocalizedPattern();
     }
 
-    public void addItems(List<Orbiter> items) {
+    public void addItems(List<SpacecraftConfig> items) {
         if (this.items != null) {
             this.items.addAll(items);
         } else {
@@ -77,41 +77,41 @@ public class OrbiterDetailAdapter extends RecyclerView.Adapter<OrbiterDetailAdap
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
-        Orbiter orbiter = items.get(holder.getAdapterPosition());
+        SpacecraftConfig spacecraftConfig = items.get(holder.getAdapterPosition());
 
         //Set up vehicle card Information
-        holder.orbiterTitle.setText(orbiter.getName());
-        holder.orbiterSubtitle.setText(orbiter.getCapability());
+        holder.orbiterTitle.setText(spacecraftConfig.getName());
+        holder.orbiterSubtitle.setText(spacecraftConfig.getCapability());
 
-        holder.orbiterName.setText(String.format(context.getString(R.string.spacecraft_details), orbiter.getName()));
-        holder.orbiterDescription.setText(orbiter.getDetails());
+        holder.orbiterName.setText(String.format(context.getString(R.string.spacecraft_details), spacecraftConfig.getName()));
+        holder.orbiterDescription.setText(spacecraftConfig.getDetails());
 
-        holder.orbiterHistory.setText(String.format(context.getString(R.string.spacecraft_history), orbiter.getName()));
-        holder.orbiterHistoryDescription.setText(orbiter.getHistory());
+        holder.orbiterHistory.setText(String.format(context.getString(R.string.spacecraft_history), spacecraftConfig.getName()));
+        holder.orbiterHistoryDescription.setText(spacecraftConfig.getHistory());
 
         if (backgroundColor != 0) {
             holder.orbiterTitle.setBackgroundColor(backgroundColor);
             holder.orbiterSubtitle.setBackgroundColor(backgroundColor);
         }
 
-        if (orbiter.getDiameter() != null) {
-            holder.diameter.setText(String.format(context.getString(R.string.diameter_full), orbiter.getDiameter()));
+        if (spacecraftConfig.getDiameter() != null) {
+            holder.diameter.setText(String.format(context.getString(R.string.diameter_full), spacecraftConfig.getDiameter()));
         }
-        if (orbiter.getHeight() != null) {
-            holder.height.setText(String.format(context.getString(R.string.height_full), orbiter.getHeight()));
+        if (spacecraftConfig.getHeight() != null) {
+            holder.height.setText(String.format(context.getString(R.string.height_full), spacecraftConfig.getHeight()));
         }
-        if (orbiter.getPayloadCapacity() != null) {
-            holder.payload.setText(String.format(context.getString(R.string.payload), orbiter.getPayloadCapacity()));
+        if (spacecraftConfig.getPayloadCapacity() != null) {
+            holder.payload.setText(String.format(context.getString(R.string.payload), spacecraftConfig.getPayloadCapacity()));
         }
 
-        if (orbiter.getFlightLife() != null) {
+        if (spacecraftConfig.getFlightLife() != null) {
             holder.flightLife.setVisibility(View.VISIBLE);
-            holder.flightLife.setText(orbiter.getFlightLife());
+            holder.flightLife.setText(spacecraftConfig.getFlightLife());
         } else {
             holder.flightLife.setVisibility(View.GONE);
         }
 
-        if (orbiter.getInUse()){
+        if (spacecraftConfig.getInUse()){
             GlideApp.with(context)
                     .load(R.drawable.ic_checkmark)
                     .into(holder.activeIcon);
@@ -121,17 +121,17 @@ public class OrbiterDetailAdapter extends RecyclerView.Adapter<OrbiterDetailAdap
                     .into(holder.activeIcon);
         }
 
-        if (orbiter.getHumanRated() == null ){
+        if (spacecraftConfig.getHumanRated() == null ){
             GlideApp.with(context)
                     .load(R.drawable.ic_question_mark)
                     .into(holder.crewIcon);
             holder.crewCapacity.setVisibility(View.GONE);
-        } else if (orbiter.getHumanRated()){
+        } else if (spacecraftConfig.getHumanRated()){
             GlideApp.with(context)
                     .load(R.drawable.ic_checkmark)
                     .into(holder.crewIcon);
             holder.crewCapacity.setVisibility(View.VISIBLE);
-            holder.crewCapacity.setText(String.format(context.getString(R.string.crew_capacity), orbiter.getCrewCapacity()));
+            holder.crewCapacity.setText(String.format(context.getString(R.string.crew_capacity), spacecraftConfig.getCrewCapacity()));
         } else {
             holder.crewCapacity.setVisibility(View.GONE);
             GlideApp.with(context)
@@ -139,14 +139,14 @@ public class OrbiterDetailAdapter extends RecyclerView.Adapter<OrbiterDetailAdap
                     .into(holder.crewIcon);
         }
 
-        if (orbiter.getMaidenFlight() != null) {
-            holder.firstFlight.setText(sdf.format(orbiter.getMaidenFlight()));
+        if (spacecraftConfig.getMaidenFlight() != null) {
+            holder.firstFlight.setText(sdf.format(spacecraftConfig.getMaidenFlight()));
         } else {
             holder.firstFlight.setText(R.string.unknown);
         }
 
         GlideApp.with(context)
-                .load(orbiter.getImageURL())
+                .load(spacecraftConfig.getImageUrl())
                 .placeholder(R.drawable.placeholder)
                 .centerCrop()
                 .listener(new RequestListener<Drawable>() {
@@ -165,16 +165,16 @@ public class OrbiterDetailAdapter extends RecyclerView.Adapter<OrbiterDetailAdap
                 .into(holder.orbiterImage);
 
 
-        if (orbiter.getWikiLink() != null && orbiter.getWikiLink().length() > 0) {
+        if (spacecraftConfig.getWikiLink() != null && spacecraftConfig.getWikiLink().length() > 0) {
             holder.wikiButton.setVisibility(View.VISIBLE);
-            holder.wikiButton.setOnClickListener(v -> Utils.openCustomTab(activity, context, orbiter.getWikiLink()));
+            holder.wikiButton.setOnClickListener(v -> Utils.openCustomTab(activity, context, spacecraftConfig.getWikiLink()));
         } else {
             holder.wikiButton.setVisibility(View.GONE);
         }
 
-        if (orbiter.getInfoLink() != null && orbiter.getInfoLink().length() > 0) {
+        if (spacecraftConfig.getInfoLink() != null && spacecraftConfig.getInfoLink().length() > 0) {
             holder.infoButton.setVisibility(View.VISIBLE);
-            holder.infoButton.setOnClickListener(v -> Utils.openCustomTab(activity, context, orbiter.getInfoLink()));
+            holder.infoButton.setOnClickListener(v -> Utils.openCustomTab(activity, context, spacecraftConfig.getInfoLink()));
         } else {
             holder.infoButton.setVisibility(View.GONE);
         }

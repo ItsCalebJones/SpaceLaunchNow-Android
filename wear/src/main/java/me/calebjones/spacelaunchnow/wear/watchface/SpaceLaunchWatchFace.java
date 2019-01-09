@@ -104,7 +104,7 @@ public class SpaceLaunchWatchFace extends CanvasWatchFaceService {
     private static final long INTERACTIVE_UPDATE_RATE_MS = TimeUnit.SECONDS.toMillis(1);
 
     /**
-     * Handler message id for updating the time periodically in interactive mode.
+     * Handler getMessage id for updating the time periodically in interactive mode.
      */
     private static final int MSG_UPDATE_TIME = 0;
 

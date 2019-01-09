@@ -16,7 +16,6 @@ public class Launch extends RealmObject {
     @SerializedName("id")
     @Expose
     public String id;
-    @PrimaryKey
     @SerializedName("launch_library_id")
     @Expose
     public Integer launchLibraryId;
@@ -32,9 +31,9 @@ public class Launch extends RealmObject {
     @SerializedName("img_url")
     @Expose
     public String imgUrl;
-    @SerializedName("launchStatus")
+    @SerializedName("status")
     @Expose
-    public LaunchStatus launchStatus;
+    public LaunchStatus status;
     @SerializedName("net")
     @Expose
     public Date net;
@@ -148,12 +147,12 @@ public class Launch extends RealmObject {
         this.imgUrl = imgUrl;
     }
 
-    public LaunchStatus getLaunchStatus() {
-        return launchStatus;
+    public LaunchStatus getStatus() {
+        return status;
     }
 
-    public void setLaunchStatus(LaunchStatus launchStatus) {
-        this.launchStatus = launchStatus;
+    public void setStatus(LaunchStatus status) {
+        this.status = status;
     }
 
     public Date getNet() {

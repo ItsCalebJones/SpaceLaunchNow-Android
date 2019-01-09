@@ -20,6 +20,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import timber.log.Timber;
 
 
@@ -147,16 +148,16 @@ public class ListPreferences {
         return this.sharedPrefs.getBoolean(PREFS_DEBUG_SUPPORT, false);
     }
 
-    public void setDebugLaunch(boolean value) {
+    public void setNetworkEndpoint(String value) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_DEBUG, value);
+        this.prefsEditor.putString(PREFS_DEBUG, value);
         this.prefsEditor.apply();
     }
 
-    public boolean isDebugEnabled() {
+    public String getNetworkEndpoint() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_DEBUG, false);
+        return this.sharedPrefs.getString(PREFS_DEBUG, Constants.API_BASE_URL);
     }
 
     public void setFirstBoot(boolean value) {

@@ -49,7 +49,7 @@ public class SpacecraftConfig extends RealmObject {
     public Integer crewCapacity;
     @SerializedName("payload_capacity")
     @Expose
-    public Object payloadCapacity;
+    public Integer payloadCapacity;
     @SerializedName("flight_life")
     @Expose
     public String flightLife;
@@ -170,11 +170,11 @@ public class SpacecraftConfig extends RealmObject {
         this.crewCapacity = crewCapacity;
     }
 
-    public Object getPayloadCapacity() {
+    public Integer getPayloadCapacity() {
         return payloadCapacity;
     }
 
-    public void setPayloadCapacity(Object payloadCapacity) {
+    public void setPayloadCapacity(Integer payloadCapacity) {
         this.payloadCapacity = payloadCapacity;
     }
 

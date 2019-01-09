@@ -7,26 +7,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.request.RequestOptions;
-import com.github.florent37.glidepalette.GlidePalette;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
-import me.calebjones.spacelaunchnow.data.models.main.Orbiter;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftConfig;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import timber.log.Timber;
 
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to the UpcomingLaunchesFragment
  */
-public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHolder> {
+public class SpacecraftConfigAdapter extends RecyclerView.Adapter<SpacecraftConfigAdapter.ViewHolder> {
 
     public int position;
     private Context mContext;
@@ -34,7 +29,7 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
     private OnItemClickListener onItemClickListener;
     private boolean night = false;
 
-    public OrbiterAdapter(Context context) {
+    public SpacecraftConfigAdapter(Context context) {
         agencies = new ArrayList();
         this.mContext = context;
     }
@@ -70,15 +65,15 @@ public class OrbiterAdapter extends RecyclerView.Adapter<OrbiterAdapter.ViewHold
         holder.name.setText(agency.getName());
         holder.subTitle.setText(agency.getType());
 
-        if (agency.getOrbiters() != null && agency.getOrbiters().size() > 0) {
-            Orbiter firstOrbiter = agency.getOrbiters().get(0);
+        if (agency.getSpacecraftConfigs() != null && agency.getSpacecraftConfigs().size() > 0) {
+            SpacecraftConfig spacecraftConfig = agency.getSpacecraftConfigs().get(0);
 
-            if (firstOrbiter.getImageURL() != null) {
+            if (spacecraftConfig.getImageUrl() != null) {
                 GlideApp.with(mContext)
-                        .load(firstOrbiter.getImageURL())
+                        .load(spacecraftConfig.getImageUrl())
                         .into(holder.picture);
             }
-            holder.subTitle.setText(firstOrbiter.getName());
+            holder.subTitle.setText(spacecraftConfig.getName());
         }
 
     }

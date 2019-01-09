@@ -12,7 +12,7 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="BaseAppTheme" parent="Theme.Cyanea.Light">
+    <style name="BaseAppTheme" parent="Theme.Cyanea.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <!--<item name="colorPrimary">@color/colorPrimary</item>-->
         <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
@@ -34,7 +34,7 @@
     </style>
 
     <style name="BaseAppTheme.LightBackground" parent="BaseAppTheme">
-        <item name="material_drawer_background">?backgroundColor</item>
+        <item name="material_drawer_background">@color/material_drawer_background</item>
         <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
         <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
         <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>

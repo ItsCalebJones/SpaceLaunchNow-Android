@@ -496,9 +496,9 @@ public final class Rate {
         }
 
         /**
-         * Sets the message to show in the rating request.
+         * Sets the getMessage to show in the rating request.
          *
-         * @param message The message that asks the user for a rating
+         * @param message The getMessage that asks the user for a rating
          * @return The current {@link Builder}
          * @see #setMessage(int)
          */
@@ -509,9 +509,9 @@ public final class Rate {
         }
 
         /**
-         * Sets the message to show in the rating request.
+         * Sets the getMessage to show in the rating request.
          *
-         * @param resId The message that asks the user for a rating
+         * @param resId The getMessage that asks the user for a rating
          * @return The current {@link Builder}
          * @see #setMessage(CharSequence)
          */

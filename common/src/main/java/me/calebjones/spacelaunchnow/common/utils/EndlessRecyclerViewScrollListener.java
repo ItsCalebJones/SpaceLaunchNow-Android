@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.utils.views;
+package me.calebjones.spacelaunchnow.common.utils;
 
 
 import androidx.recyclerview.widget.GridLayoutManager;

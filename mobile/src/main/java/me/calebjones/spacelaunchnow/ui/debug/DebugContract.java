@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import androidx.annotation.NonNull;
 
+import androidx.appcompat.widget.AppCompatSpinner;
 import me.calebjones.spacelaunchnow.local.common.BaseNavigator;
 import me.calebjones.spacelaunchnow.local.common.BasePresenter;
 import me.calebjones.spacelaunchnow.local.common.BaseView;
@@ -30,8 +31,6 @@ public interface DebugContract {
 
         void setSupporterSwitch(boolean state);
 
-        void setDebugLaunches(boolean state);
-
         void showSnackbarMessage(String message);
 
     }
@@ -44,7 +43,7 @@ public interface DebugContract {
 
         void toggleSupporterSwitch(boolean selected);
 
-        void toggleDebugLaunchesClicked(boolean selected, Context context);
+        void endpointSelectorClicked(String selection);
 
         void syncNextLaunchClicked(Context context);
 
@@ -59,8 +58,6 @@ public interface DebugContract {
         void deleteFilesClicked(Context context);
 
         boolean getSupporterStatus();
-
-        boolean getDebugStatus();
 
     }
 }

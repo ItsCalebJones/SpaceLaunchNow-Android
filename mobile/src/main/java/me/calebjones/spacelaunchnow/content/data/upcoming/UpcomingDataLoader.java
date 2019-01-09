@@ -53,7 +53,7 @@ public class UpcomingDataLoader {
                     }
                 } else {
                     networkCallback.onNetworkFailure(response.code());
-                    dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
+                    dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseSpaceLaunchNowError(response)));
 
                 }
             }

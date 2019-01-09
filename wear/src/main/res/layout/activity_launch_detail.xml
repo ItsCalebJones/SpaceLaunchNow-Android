@@ -69,7 +69,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/launchStatus"
+                                android:id="@+id/status"
                                 style="@style/MaterialTypography.Locale.Subheading"
                                 android:textAlignment="center"
                                 android:layout_width="match_parent"

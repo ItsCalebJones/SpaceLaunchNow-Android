@@ -77,7 +77,7 @@ public class DataClientManager {
                 } else {
                     isNextLaunches = false;
 
-                    dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_MINI, false, call, ErrorUtil.parseLibraryError(response)));
+                    dataSaver.sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_MINI, false, call, ErrorUtil.parseSpaceLaunchNowError(response)));
 
                     nextLaunchTracker.runUpdate();
                 }

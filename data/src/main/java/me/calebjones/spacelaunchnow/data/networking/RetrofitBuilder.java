@@ -100,15 +100,9 @@ public class RetrofitBuilder {
     }
 
 
-    public static Retrofit getSpaceLaunchNowRetrofit(String token, boolean debug) {
+    public static Retrofit getSpaceLaunchNowRetrofit(String token, String endpoint) {
 
-        String BASE_URL;
-
-        if (debug) {
-            BASE_URL = Constants.API_DEBUG_BASE_URL;
-        } else {
-            BASE_URL = Constants.API_BASE_URL;
-        }
+        String BASE_URL = endpoint;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

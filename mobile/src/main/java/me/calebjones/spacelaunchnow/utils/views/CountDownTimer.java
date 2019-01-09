@@ -52,7 +52,7 @@ public abstract class CountDownTimer {
     private boolean mCancelled = false;
 
     /**
-     * Handler message code.
+     * Handler getMessage code.
      */
     private static final int MSG = 1;
 

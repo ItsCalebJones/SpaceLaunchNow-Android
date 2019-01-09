@@ -21,7 +21,7 @@ public class Spacestation extends RealmObject {
     @SerializedName("name")
     @Expose
     public String name;
-    @SerializedName("launchStatus")
+    @SerializedName("status")
     @Expose
     public SpacestationStatus status;
     @SerializedName("founded")

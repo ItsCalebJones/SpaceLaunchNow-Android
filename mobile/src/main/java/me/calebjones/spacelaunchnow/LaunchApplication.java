@@ -173,16 +173,7 @@ public class LaunchApplication extends MultiDexApplication {
 
 
     private void setupData(final boolean update) {
-        final String version;
-        boolean debug;
-        if (sharedPreference.isDebugEnabled()) {
-            version = "dev";
-            debug = true;
-        } else {
-            version = "1.3";
-            debug = false;
-        }
-        DataClient.create(version, getString(R.string.sln_token), debug);
+        DataClient.create(getString(R.string.sln_token), sharedPreference.getNetworkEndpoint());
         JobManager.create(context).addJobCreator(new DataJobCreator());
         startJobs();
     }

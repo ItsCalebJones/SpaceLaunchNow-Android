@@ -9,7 +9,7 @@ import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
-import me.calebjones.spacelaunchnow.data.networking.error.LibraryError;
+import me.calebjones.spacelaunchnow.data.networking.error.SpaceLaunchNowError;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,7 +25,7 @@ public class DetailsLaunchDataLoader {
         this.dataSaver = new DataSaver(context);
     }
 
-    public void getLaunch(int id, Realm realm, Callbacks.DetailsNetworkCallback networkCallback) {
+    public void getLaunch(String id, Realm realm, Callbacks.DetailsNetworkCallback networkCallback) {
         Timber.i("Running getLaunch");
 
         DataClient.getInstance().getLaunchById(id, new Callback<Launch>() {
@@ -37,7 +37,7 @@ public class DetailsLaunchDataLoader {
                     dataSaver.saveLaunchToRealm(launch);
                     networkCallback.onSuccess(launch);
                 } else {
-                    LibraryError error = ErrorUtil.parseLibraryError(response);
+                    SpaceLaunchNowError error = ErrorUtil.parseSpaceLaunchNowError(response);
                     if (error.getMessage() != null && error.getMessage().contains("None found")) {
                         final Launch launch = realm.where(Launch.class).equalTo("id", id).findFirst();
                         if (launch != null) {

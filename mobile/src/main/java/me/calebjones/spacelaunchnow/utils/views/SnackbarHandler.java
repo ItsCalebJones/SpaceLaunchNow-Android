@@ -33,7 +33,7 @@ public class SnackbarHandler {
                 .show();
     }
 
-    // Display Info snackbar from a message.
+    // Display Info snackbar from a getMessage.
     public static void showInfoSnackbar(Context context,  View view, String msg){
         Snackbar
                 .make(view, msg, Snackbar.LENGTH_SHORT)

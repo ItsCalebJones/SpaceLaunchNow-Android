@@ -51,13 +51,14 @@ public class NextLaunchDataLoader {
                     }
                 } else {
                     nextNetworkCallback.onNetworkFailure(response.code());
-                    dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseLibraryError(response)));
+                    dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, ErrorUtil.parseSpaceLaunchNowError(response)));
 
                 }
             }
 
             @Override
             public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                Timber.e(t);
                 nextNetworkCallback.onFailure(t);
                 dataSaver.sendResult(new Result(Constants.ACTION_GET_NEXT_LAUNCHES, false, call, t.getLocalizedMessage()));
             }

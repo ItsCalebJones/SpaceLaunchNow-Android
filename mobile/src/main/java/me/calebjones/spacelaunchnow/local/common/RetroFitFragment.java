@@ -35,7 +35,6 @@ abstract public class RetroFitFragment extends BaseFragment {
 
     private OkHttpClient client;
     private OkHttpClient newsClient;
-    private Retrofit libraryRetrofit;
     private Retrofit spaceLaunchNowRetrofit;
     private Retrofit newsRetrofit;
     private Context context;
@@ -96,21 +95,9 @@ abstract public class RetroFitFragment extends BaseFragment {
 
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
-        String version;
-        String BASE_URL;
-        String NEWS_URL;
+        String BASE_URL = sharedPreference.getNetworkEndpoint();
+        String NEWS_URL = Constants.NEWS_BASE_URL;
 
-        if (sharedPreference.isDebugEnabled()) {
-            NEWS_URL = Constants.NEWS_BASE_URL;
-            BASE_URL = Constants.API_DEBUG_BASE_URL;
-            version = "dev";
-        } else {
-            version = "1.2.1";
-            NEWS_URL = Constants.NEWS_BASE_URL;
-            BASE_URL = Constants.API_BASE_URL;
-        }
-
-        libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
         spaceLaunchNowRetrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(client)
@@ -134,10 +121,6 @@ abstract public class RetroFitFragment extends BaseFragment {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             getActivity().startActivityForResult(intent, requestCode, bundle);
         }
-    }
-
-    public Retrofit getLibraryRetrofit() {
-        return libraryRetrofit;
     }
 
     public Retrofit getSpaceLaunchNowRetrofit() {

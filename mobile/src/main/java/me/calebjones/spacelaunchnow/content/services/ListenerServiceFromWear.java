@@ -31,13 +31,10 @@ public class ListenerServiceFromWear extends WearableListenerService {
     public void onMessageReceived (MessageEvent messageEvent){
         Timber.v("Received!");
         if (messageEvent.getPath().equals(START_ACTIVITY_PATH)) {
-            byte[] arr = messageEvent.getData();
-            ByteBuffer wrapped = ByteBuffer.wrap(arr);
-            int num = wrapped.getInt();
-
+            final String message = new String(messageEvent.getData());
             Intent exploreIntent = new Intent(getApplicationContext(), LaunchDetailActivity.class);
             exploreIntent.putExtra("TYPE", "launch");
-            exploreIntent.putExtra("launchID", num);
+            exploreIntent.putExtra("launchID", message);
             startActivity(exploreIntent);
         } else if (messageEvent.getPath().equals(START_SUPPORTER_ACTIVITY_PATH)){
             if(!SupporterHelper.isSupporter()) {

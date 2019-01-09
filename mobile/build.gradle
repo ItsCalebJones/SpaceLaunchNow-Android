@@ -189,8 +189,9 @@ android {
 //}
 
 dependencies {
-    implementation project(path: ':data')
-    implementation project(path: ':common')
+    implementation project(':data')
+    implementation project(':common')
+    implementation project(':astronauts')
     implementation project(':news')
     implementation project(':iss')
     implementation project(':events')
@@ -297,7 +298,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
 
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.1.0'
-    compile project(path: ':astronauts')
+
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -181,7 +181,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 holder.countDownView.setLaunch(launchItem);
 
                 //Get launch date
-                if (launchItem.getLaunchStatus().getId() == 2) {
+                if (launchItem.getStatus().getId() == 2) {
 
                     if (launchItem.getNet() != null) {
                         //Get launch date

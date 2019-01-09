@@ -19,11 +19,12 @@ public class DockingEvent extends RealmObject {
     public String docking;
     @SerializedName("departure")
     @Expose
-    public Object departure;
+    public String departure;
     @SerializedName("flight_vehicle")
     @Expose
     public SpacecraftStage flightVehicle;
     @SerializedName("docking_location")
     @Expose
     public String dockingLocation;
+
 }

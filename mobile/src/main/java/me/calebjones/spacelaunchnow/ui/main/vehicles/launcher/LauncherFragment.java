@@ -157,8 +157,8 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
 
                     } else {
                         statefulView.showEmpty();
-                        Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
-                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
+                        Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).getMessage());
+                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).getMessage());
                     }
                     hideLoading();
                 }

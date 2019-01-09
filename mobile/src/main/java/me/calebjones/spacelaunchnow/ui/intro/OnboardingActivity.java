@@ -19,7 +19,7 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.BaseAppTheme);
+        setTheme(R.style.BaseAppTheme_LightBackground);
 
 
 

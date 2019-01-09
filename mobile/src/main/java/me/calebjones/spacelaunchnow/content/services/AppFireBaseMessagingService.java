@@ -29,7 +29,7 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
 
         Timber.d("From: %s", remoteMessage.getFrom());
 
-        // Check if message contains a data payload.
+        // Check if getMessage contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Timber.d("Message data payload: %s",remoteMessage.getData());
             Map<String, String> params = remoteMessage.getData();
@@ -45,7 +45,7 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
 
                 if (background.contains("true")) {
                     Launch launch = new Launch();
-                    launch.setId(Integer.valueOf(data.getString("launch_id")));
+                    launch.setId(data.getString("launch_uuid"));
                     launch.setNet(dateFormat.parse(data.getString("launch_net")));
                     launch.setName(data.getString("launch_name"));
 
@@ -68,7 +68,7 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
             }
         }
 
-        // Check if message contains a notification payload.
+        // Check if getMessage contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Timber.d("Message Notification Body: %s", remoteMessage.getNotification().getBody());
         }

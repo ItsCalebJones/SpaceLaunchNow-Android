@@ -49,7 +49,7 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
     private TextView toolbarSubTitle, toolbarTitle;
     private ImageView detail_profile_backdrop;
     private CircleImageView detail_profile_image;
-    private OrbiterDetailAdapter adapter;
+    private SpacecraftConfigDetailAdapter adapter;
     private RealmResults<LauncherConfig> rocketLaunches;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbar;
@@ -109,7 +109,7 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
         }
-        adapter = new OrbiterDetailAdapter(context, this);
+        adapter = new SpacecraftConfigDetailAdapter(context, this);
         mRecyclerView = findViewById(R.id.vehicle_detail_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -132,9 +132,9 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
         toolbarSubTitle.setText(agency.getType());
         toolbarTitle.setText(agency.getName());
 
-        if (agency.getOrbiters() != null) {
+        if (agency.getSpacecraftConfigs() != null) {
             adapter.clear();
-            adapter.addItems(agency.getOrbiters());
+            adapter.addItems(agency.getSpacecraftConfigs());
         }
 
         applyProfileBackdrop(agency.getImageUrl());

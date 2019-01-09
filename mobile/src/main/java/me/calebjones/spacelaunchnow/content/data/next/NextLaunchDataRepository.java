@@ -134,7 +134,7 @@ public class NextLaunchDataRepository {
             long lastUpdateDiffInHours = TimeUnit.MILLISECONDS.toHours(lastUpdateDiffInMs);
             if (netDiffInHours <= 168) {
                 if (lastUpdateDiffInHours > 24) {
-                    int id = launch.getId();
+                    String id = launch.getId();
                     DataClient.getInstance().getLaunchById(launch.getId(),  new Callback<Launch>() {
                         @Override
                         public void onResponse(Call<Launch> call, Response<Launch> response) {
@@ -150,7 +150,7 @@ public class NextLaunchDataRepository {
                                     dataLoader.getDataSaver().deleteLaunch(id);
                                 }
 
-                                dataLoader.getDataSaver().sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, ErrorUtil.parseLibraryError(response)));
+                                dataLoader.getDataSaver().sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, ErrorUtil.parseSpaceLaunchNowError(response)));
                             }
                         }
 

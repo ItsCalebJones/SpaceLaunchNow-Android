@@ -1,11 +1,13 @@
 package me.calebjones.spacelaunchnow.data.networking;
 
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.AstronautResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherConfigResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -14,23 +16,13 @@ public class DataClient {
 
     private final SpaceLaunchNowService spaceLaunchNowService;
     private static DataClient mInstance;
-    private Retrofit libraryRetrofit;
-    private Retrofit libraryRetrofitThreaded;
 
 
     private Retrofit spaceLaunchNowRetrofit;
 
-    private DataClient(String version, String token, boolean debug) {
-
-        libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
-        libraryRetrofitThreaded = RetrofitBuilder.getLibraryRetrofitThreaded(version);
-        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(token, debug);
+    private DataClient(String token, String endpoint) {
+        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(token, endpoint);
         spaceLaunchNowService = spaceLaunchNowRetrofit.create(SpaceLaunchNowService.class);
-
-    }
-
-    public Retrofit getLibraryRetrofit() {
-        return libraryRetrofit;
     }
 
     public Retrofit getSpaceLaunchNowRetrofit() {
@@ -40,14 +32,14 @@ public class DataClient {
     /**
      * Applications must call create to configure the DataClient singleton
      */
-    public static void create(String version, String token, boolean debug) {
-        mInstance = new DataClient(version, token, debug);
+    public static void create(String token, String endpoint) {
+        mInstance = new DataClient(token, endpoint);
     }
 
     /**
      * Singleton accessor
      * <p/>
-     * Will throw an exception if {@link #create(String version, String token, boolean debug)} was never called
+     * Will throw an exception if {@link #create(String token, String endpoint)} was never called
      *
      * @return the DataClient singleton
      */
@@ -58,7 +50,7 @@ public class DataClient {
         return mInstance;
     }
 
-    public Call<Launch> getLaunchById(int launchID, Callback<Launch> callback) {
+    public Call<Launch> getLaunchById(String launchID, Callback<Launch> callback) {
         Call<Launch> call;
 
         call = spaceLaunchNowService.getLaunchById(launchID, "detailed");
@@ -129,8 +121,8 @@ public class DataClient {
         return call;
     }
 
-    public Call<VehicleResponse> getVehiclesByAgency(String agency, Callback<VehicleResponse> callback) {
-        Call<VehicleResponse> call = spaceLaunchNowService.getVehiclesByAgency(agency);
+    public Call<LauncherConfigResponse> getVehiclesByAgency(String agency, Callback<LauncherConfigResponse> callback) {
+        Call<LauncherConfigResponse> call = spaceLaunchNowService.getLauncherConfigByAgency(agency);
 
         call.enqueue(callback);
 
@@ -139,6 +131,22 @@ public class DataClient {
 
     public Call<AgencyResponse> getFeaturedAgencies(Callback<AgencyResponse> callback) {
         Call<AgencyResponse> call = spaceLaunchNowService.getAgencies(true, "list");
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<AstronautResponse> getAstronauts(int limit, int offset, String search, Integer status, Callback<AstronautResponse> callback) {
+        Call<AstronautResponse> call = spaceLaunchNowService.getAstronauts(limit, offset, search, status);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Astronaut> getAstronautsById(int id, Callback<Astronaut> callback) {
+        Call<Astronaut> call = spaceLaunchNowService.getAstronautsById(id);
 
         call.enqueue(callback);
 

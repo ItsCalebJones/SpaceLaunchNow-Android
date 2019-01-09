@@ -61,6 +61,7 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
     private LaunchAdapter launchAdapter;
     private ContentManager contentManager;
     private int buttonState = BUTTON_REQUEST_HIGHBANDWIDTH;
+    private boolean networkStateShown = false;
 
     public LaunchFragment() {
         // Empty constructor required for fragment subclasses
@@ -139,14 +140,12 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
                 break;
 
             case UI_STATE_NETWORK_CONNECTED:
-                showConnectivityStatus();
+//                showConnectivityStatus();
                 checkHighBandwidth();
                 hideConnectivityRequest();
                 hideConnectivityStatus();
                 showContent();
-
                 mProgressBar.setVisibility(View.GONE);
-
                 break;
 
             case UI_STATE_CONNECTION_TIMEOUT:
@@ -186,19 +185,12 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
     }
 
     private void hideConnectivityStatus() {
-        mConnectivityIndicator.postDelayed(new Runnable() {
-            public void run() {
-                mConnectivityIndicator.setVisibility(View.GONE);
-            }
-        }, 3000);
+        mConnectivityIndicator.postDelayed(() -> mConnectivityIndicator.setVisibility(View.GONE), 3000);
     }
 
     private void showConnectivityStatus() {
-        mConnectivityIndicator.postDelayed(new Runnable() {
-            public void run() {
-                mConnectivityIndicator.setVisibility(View.VISIBLE);
-            }
-        }, 0);
+            mConnectivityIndicator.postDelayed(() -> mConnectivityIndicator.setVisibility(View.VISIBLE), 0);
+            networkStateShown = true;
     }
 
     private void showConnectivityWiFiRequest() {

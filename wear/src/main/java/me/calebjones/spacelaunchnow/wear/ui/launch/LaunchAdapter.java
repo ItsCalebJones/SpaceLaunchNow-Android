@@ -60,7 +60,7 @@ public class LaunchAdapter extends RecyclerView.Adapter<LaunchViewHolder>{
             holder.launchIcon.setImageResource(R.drawable.ic_unknown_white);
         }
 
-        if (launch.getLaunchStatus() != null && launch.getLaunchStatus().getId() == 2) {
+        if (launch.getStatus() != null && launch.getStatus().getId() == 2) {
             //Get launch date
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date date = launch.getNet();

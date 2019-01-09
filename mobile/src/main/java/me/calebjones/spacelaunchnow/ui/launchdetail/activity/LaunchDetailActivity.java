@@ -113,7 +113,7 @@ public class LaunchDetailActivity extends BaseActivity
     public String response;
     public Launch launch;
     private boolean fabShowable = false;
-    private int launchId = 0;
+    private String launchId;
     private Realm realm;
     private Rate rate;
     private DetailsDataRepository detailsDataRepository;
@@ -200,7 +200,7 @@ public class LaunchDetailActivity extends BaseActivity
         String type = mIntent.getStringExtra("TYPE");
 
         if (type != null && type.equals("launch")) {
-            launchId = mIntent.getIntExtra("launchID", 0);
+            launchId = mIntent.getStringExtra("launchUUID");
             fetchDataFromDatabaseForTitle(launchId);
             fetchDataFromNetwork(launchId);
         }
@@ -216,7 +216,7 @@ public class LaunchDetailActivity extends BaseActivity
         }
     }
 
-    private void fetchDataFromNetwork(int launchId) {
+    private void fetchDataFromNetwork(String launchId) {
         detailsDataRepository.getLaunchFromNetwork(launchId, new Callbacks.DetailsCallback() {
             @Override
             public void onLaunchLoaded(Launch launch) {
@@ -247,7 +247,7 @@ public class LaunchDetailActivity extends BaseActivity
         });
     }
 
-    private void fetchDataFromDatabase(int launchId) {
+    private void fetchDataFromDatabase(String launchId) {
         Launch launch = detailsDataRepository.getLaunch(launchId);
         if (launch != null) {
             updateViewModel(launch);
@@ -261,7 +261,7 @@ public class LaunchDetailActivity extends BaseActivity
         model.getLaunch().setValue(launch);
     }
 
-    private void fetchDataFromDatabaseForTitle(int launchId) {
+    private void fetchDataFromDatabaseForTitle(String launchId) {
         Launch launch = detailsDataRepository.getLaunch(launchId);
         if (launch != null) {
             setTitleView(launch);
@@ -620,7 +620,7 @@ public class LaunchDetailActivity extends BaseActivity
 
     @Override
     public void onRefresh() {
-        if (launchId != 0) {
+        if (!launchId.equals("")) {
             fetchDataFromNetwork(launchId);
         }
     }

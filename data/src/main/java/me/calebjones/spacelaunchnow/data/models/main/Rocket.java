@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.annotations.LinkingObjects;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftStage;

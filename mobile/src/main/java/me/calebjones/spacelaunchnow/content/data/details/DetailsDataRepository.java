@@ -25,7 +25,7 @@ public class DetailsDataRepository {
     }
 
     @UiThread
-    public Launch getLaunch(int launchId) {
+    public Launch getLaunch(String launchId) {
         Launch launch = realm.where(Launch.class).equalTo("id", launchId).findFirst();
         if (launch != null) {
             return launch;
@@ -35,7 +35,7 @@ public class DetailsDataRepository {
     }
 
     @UiThread
-    public void getLaunchFromNetwork(int launchId, Callbacks.DetailsCallback launchCallback) {
+    public void getLaunchFromNetwork(String launchId, Callbacks.DetailsCallback launchCallback) {
         launchCallback.onNetworkStateChanged(true);
         dataLoader.getLaunch(launchId, realm, new Callbacks.DetailsNetworkCallback() {
             @Override

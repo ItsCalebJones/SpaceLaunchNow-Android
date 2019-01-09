@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmList;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -51,11 +52,13 @@ public class ComplicationContentManager {
     private Context context;
     SharedPreferences.Editor prefsEditor;
 
+    // TODO FIX THIS
     public ComplicationContentManager(Context context, ContentCallback callback) {
         this.context = context;
         this.contentCallback = callback;
         realm = Realm.getDefaultInstance();
-        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(context.getString(R.string.sln_token), false);
+        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(context.getString(R.string.sln_token),
+                Constants.API_DEV_BASE_URL);
         sharedPreferences = context.getSharedPreferences("timestamp", 0);
         mConnectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }

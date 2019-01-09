@@ -81,17 +81,9 @@ public class DebugPresenter implements DebugContract.Presenter {
     }
 
     @Override
-    public void toggleDebugLaunchesClicked(boolean selected, final Context context) {
-        debugView.showDebugLaunchSnackbar(selected);
-        sharedPreference.setDebugLaunch(selected);
-        if (selected) {
-            sharedPreference.setDebugLaunch(true);
-            DataClient.create("dev", context.getString(R.string.sln_token), true);
-        } else {
-            sharedPreference.setDebugLaunch(false);
-            DataClient.create("1.3", context.getString(R.string.sln_token), false);
-        }
-
+    public void endpointSelectorClicked(String selection) {
+        sharedPreference.setNetworkEndpoint(selection);
+        DataClient.create(context.getString(R.string.sln_token), selection);
 
         //Delete from Database
         realm = Realm.getDefaultInstance();
@@ -156,11 +148,6 @@ public class DebugPresenter implements DebugContract.Presenter {
     @Override
     public boolean getSupporterStatus() {
         return sharedPreference.isDebugSupporterEnabled();
-    }
-
-    @Override
-    public boolean getDebugStatus() {
-        return sharedPreference.isDebugEnabled();
     }
 
     @Override

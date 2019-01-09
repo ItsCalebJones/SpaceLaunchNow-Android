@@ -43,8 +43,8 @@
           android:padding="@dimen/material_baseline_grid_1.5x"
           android:text="@string/supporter" />
 
-        <androidx.appcompat.widget.SwitchCompat
-          android:id="@+id/debug_launches_switch"
+        <androidx.appcompat.widget.AppCompatSpinner
+          android:id="@+id/debug_launches_spinner"
           android:layout_width="200dp"
           android:layout_height="wrap_content"
           android:layout_gravity="left"
