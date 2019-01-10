@@ -32,6 +32,8 @@ public class AstronautViewpagerFragment extends BaseFragment {
     private AstronautListFragment activeFragment;
     private AstronautListFragment retiredFragment;
     private AstronautListFragment lostFragment;
+    private AstronautListFragment inTrainingFragment;
+    private AstronautListFragment otherFragment;
 
     public static AstronautViewpagerFragment newInstance() {
         return new AstronautViewpagerFragment();
@@ -46,8 +48,10 @@ public class AstronautViewpagerFragment extends BaseFragment {
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("Active"));
-        tabLayout.addTab(tabLayout.newTab().setText("Retired"));
+        tabLayout.addTab(tabLayout.newTab().setText("In Training"));
         tabLayout.addTab(tabLayout.newTab().setText("Lost in Service"));
+        tabLayout.addTab(tabLayout.newTab().setText("Retired"));
+        tabLayout.addTab(tabLayout.newTab().setText("Other"));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter
@@ -55,6 +59,22 @@ public class AstronautViewpagerFragment extends BaseFragment {
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         return inflatedView;
     }
 
@@ -86,16 +106,28 @@ public class AstronautViewpagerFragment extends BaseFragment {
                         return AstronautListFragment.newInstance(new int[]{1});
                     }
                 case 1:
-                    if (retiredFragment != null) {
-                        return retiredFragment;
+                    if (inTrainingFragment != null) {
+                        return inTrainingFragment;
                     } else {
-                        return AstronautListFragment.newInstance(new int[]{2});
+                        return AstronautListFragment.newInstance(new int[]{3});
                     }
                 case 2:
                     if (lostFragment != null) {
                         return lostFragment;
                     } else {
                         return AstronautListFragment.newInstance(new int[]{4, 5});
+                    }
+                case 3:
+                    if (retiredFragment != null) {
+                        return retiredFragment;
+                    } else {
+                        return AstronautListFragment.newInstance(new int[]{2});
+                    }
+                case 4:
+                    if (otherFragment != null) {
+                        return otherFragment;
+                    } else {
+                        return AstronautListFragment.newInstance(new int[]{6,7,8,9,10});
                     }
                 default:
                     return null;
@@ -108,17 +140,20 @@ public class AstronautViewpagerFragment extends BaseFragment {
             Fragment createdFragment = (Fragment) super.instantiateItem(container, position);
             // save the appropriate reference depending on position
             switch (position) {
-//                case 0:
-//                    nextLaunchFragment = (NextLaunchFragment) createdFragment;
-//                    break;
                 case 0:
                     activeFragment = (AstronautListFragment) createdFragment;
                     break;
                 case 1:
-                    retiredFragment = (AstronautListFragment) createdFragment;
+                    inTrainingFragment = (AstronautListFragment) createdFragment;
                     break;
                 case 2:
                     lostFragment = (AstronautListFragment) createdFragment;
+                    break;
+                case 3:
+                    retiredFragment = (AstronautListFragment) createdFragment;
+                    break;
+                case 4:
+                    otherFragment = (AstronautListFragment) createdFragment;
                     break;
             }
             return createdFragment;

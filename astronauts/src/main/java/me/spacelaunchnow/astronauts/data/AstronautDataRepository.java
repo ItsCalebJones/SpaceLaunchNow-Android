@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.UiThread;
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmQuery;
@@ -36,7 +37,7 @@ public class AstronautDataRepository {
 
     @UiThread
     public void getAstronauts(int limit, int offset, boolean firstLaunch, boolean forceUpdate,
-                              String search, int[] statusIDs, Callbacks.AstronautListCallback callback) {
+                              String search, Integer[] statusIDs, Callbacks.AstronautListCallback callback) {
 
         final Date now = Calendar.getInstance().getTime();
 
@@ -45,7 +46,7 @@ public class AstronautDataRepository {
         calendar.add(Calendar.DAY_OF_WEEK, -1);
         Date old = calendar.getTime();
 
-        final RealmResults<Astronaut> astronauts = getAstronautsFromRealm(statusIDs);
+        final RealmResults<Astronaut> astronauts = getAstronautsFromRealm(statusIDs, search);
         Timber.v("Current count in DB: %s", astronauts.size());
         for (Astronaut astronaut : astronauts){
             if (astronaut.getLastUpdate() != null && astronaut.getLastUpdate().before(old)){
@@ -72,19 +73,34 @@ public class AstronautDataRepository {
         }
     }
 
-    public RealmResults<Astronaut> getAstronautsFromRealm(int[] statusIDs) {
-        RealmQuery<Astronaut> query = realm.where(Astronaut.class);
-
-        for (int i = 0; i < statusIDs.length; i++) {
-            query.equalTo("status.id", statusIDs[i]);
-            if (i != statusIDs.length - 1) {
-                query.or();
-            }
+    public RealmResults<Astronaut> getAstronautsFromRealm(Integer[] statusIDs, String searchTerm) {
+        RealmQuery<Astronaut> query = realm.where(Astronaut.class).isNotNull("id").and();
+        if (searchTerm != null){
+            query.beginGroup();
+            query.contains("name", searchTerm, Case.INSENSITIVE).or();
+            query.contains("agency.name", searchTerm, Case.INSENSITIVE).or();
+            query.contains("agency.abbrev", searchTerm, Case.INSENSITIVE);
+            query.endGroup().and();
         }
+
+        if (statusIDs != null && statusIDs.length > 0) {
+            boolean first = true;
+            for (int statusID : statusIDs) {
+                if (!first) {
+                    query.or();
+                } else {
+                    first = false;
+                    query.beginGroup();
+                }
+                query.equalTo("status.id", statusID);
+            }
+            query.endGroup();
+        }
+
         return query.sort("name", Sort.ASCENDING).findAll();
     }
 
-    private void getAstronautsFromNetwork(int limit, int offset, String search, final int[] statusIDs, final Callbacks.AstronautListCallback callback) {
+    private void getAstronautsFromNetwork(int limit, int offset, final String search, final Integer[] statusIDs, final Callbacks.AstronautListCallback callback) {
 
         callback.onNetworkStateChanged(true);
         dataLoader.getAstronautList(limit, offset, search, statusIDs, new Callbacks.AstronautListNetworkCallback() {
@@ -93,7 +109,7 @@ public class AstronautDataRepository {
                 moreDataAvailable = moreAvailable;
                 addAstronautsToRealm(astronauts);
                 callback.onNetworkStateChanged(false);
-                callback.onAstronautsLoaded(getAstronautsFromRealm(statusIDs), next, total);
+                callback.onAstronautsLoaded(getAstronautsFromRealm(statusIDs, search), next, total);
             }
 
             @Override
@@ -164,6 +180,9 @@ public class AstronautDataRepository {
 
             }
             astronaut.setLastUpdate(Calendar.getInstance().getTime());
+            if (astronaut.id == null){
+                Timber.v("WTF");
+            }
         }
 
         realm.executeTransaction(new Realm.Transaction() {

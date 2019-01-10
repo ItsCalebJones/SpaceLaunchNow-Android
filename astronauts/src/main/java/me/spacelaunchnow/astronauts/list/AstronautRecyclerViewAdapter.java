@@ -1,29 +1,37 @@
 package me.spacelaunchnow.astronauts.list;
 
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
-
-import io.realm.RealmList;
-import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
-import me.spacelaunchnow.astronauts.R;
-import me.spacelaunchnow.astronauts.list.AstronautListFragment.OnListFragmentInteractionListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
+import me.spacelaunchnow.astronauts.R;
+import me.spacelaunchnow.astronauts.R2;
+import me.spacelaunchnow.astronauts.list.AstronautListFragment.OnListFragmentInteractionListener;
+
 
 public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<AstronautRecyclerViewAdapter.ViewHolder> {
 
+
     private List<Astronaut> astronauts;
     private final OnListFragmentInteractionListener mListener;
+    private Context context;
 
-    public AstronautRecyclerViewAdapter(OnListFragmentInteractionListener listener) {
+    public AstronautRecyclerViewAdapter(OnListFragmentInteractionListener listener, Context context) {
         astronauts = new ArrayList<>();
         mListener = listener;
+        this.context = context;
     }
 
     public void addItems(List<Astronaut> astronauts) {
@@ -39,24 +47,32 @@ public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<Astronaut
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_astronaut, parent, false);
+                .inflate(R.layout.astronaut_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = astronauts.get(position);
-        holder.mIdView.setText(astronauts.get(position).getId().toString());
-        holder.mContentView.setText(astronauts.get(position).getName());
+        holder.astronautName.setText(holder.mItem.getName());
+        holder.astronautStatus.setText(holder.mItem.getStatus().getName());
+        String abbrev = "";
+        if (holder.mItem.getAgency() != null && holder.mItem.getAgency().getAbbrev() != null){
+            abbrev = holder.mItem.getAgency().getAbbrev();
+        }
+        holder.astronautNationality.setText(String.format("%s %s",
+                holder.mItem.getNationality(), abbrev));
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onAstronautClicked(holder.mItem);
-                }
+        GlideApp.with(context)
+                .load(holder.mItem.getProfileImageThumbnail())
+                .circleCrop()
+                .into(holder.astronautImage);
+
+        holder.rootview.setOnClickListener(v -> {
+            if (null != mListener) {
+                // Notify the active callbacks interface (the activity, if the
+                // fragment is attached to one) that an item has been selected.
+                mListener.onAstronautClicked(holder.mItem);
             }
         });
     }
@@ -67,21 +83,21 @@ public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<Astronaut
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
+        @BindView(R2.id.astronaut_image)
+        ImageView astronautImage;
+        @BindView(R2.id.astronaut_name)
+        TextView astronautName;
+        @BindView(R2.id.astronaut_nationality)
+        TextView astronautNationality;
+        @BindView(R2.id.astronaut_status)
+        TextView astronautStatus;
+        @BindView(R2.id.rootview)
+        ConstraintLayout rootview;
         public Astronaut mItem;
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
-        }
-
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            ButterKnife.bind(this, view);
         }
     }
 }

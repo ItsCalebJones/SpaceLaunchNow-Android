@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+
+import java.security.MessageDigest;
+
 import jp.wasabeef.glide.transformations.BitmapTransformation;
 
 
@@ -49,7 +52,18 @@ public class SaturationTransformation extends BitmapTransformation {
         return bitmap;
     }
 
-    @Override public String key() {
-        return "SaturationTransformation()";
+    @Override
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
     }
 }

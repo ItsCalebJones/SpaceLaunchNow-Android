@@ -448,4 +448,5 @@
     <string name="date_unconfirmed">Current date is a \'No Earlier Then\' estimation.</string>
     <string name="source">Select a Source</string>
     <string name="long_press_share">Long press an item to share.</string>
+    <string name="no_astronauts">No astronauts found.</string>
 </resources>

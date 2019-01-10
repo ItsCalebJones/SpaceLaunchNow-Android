@@ -30,16 +30,20 @@ public class AstronautDataLoader {
         this.context = context;
     }
 
-    public void getAstronautList(int limit, int offset, String search, int[] statusIDs,
+    public void getAstronautList(int limit, int offset, String search, Integer[] statusIDs,
                                  final Callbacks.AstronautListNetworkCallback networkCallback) {
         Timber.i("Running getUpcomingLaunchesList");
-        String stringStatusIDs = "";
-        for(int i = 0; i < statusIDs.length; i++){
-            stringStatusIDs += String.valueOf(statusIDs[i]);
-            if (i != statusIDs.length - 1){
-                stringStatusIDs += ",";
+        String stringStatusIDs = null;
+        if (statusIDs != null) {
+            stringStatusIDs = "";
+            for (int i = 0; i < statusIDs.length; i++) {
+                stringStatusIDs += String.valueOf(statusIDs[i]);
+                if (i != statusIDs.length - 1) {
+                    stringStatusIDs += ",";
+                }
             }
         }
+
         DataClient.getInstance().getAstronauts(limit, offset, search, null, stringStatusIDs, new Callback<AstronautResponse>() {
             @Override
             public void onResponse(Call<AstronautResponse> call, Response<AstronautResponse> response) {

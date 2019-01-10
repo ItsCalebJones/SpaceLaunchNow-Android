@@ -4,24 +4,34 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.utils.EndlessRecyclerViewScrollListener;
+import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
@@ -36,7 +46,7 @@ import timber.log.Timber;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class AstronautListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
+public class AstronautListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     private static final String ARG_STATUS_ID = "status-id";
     private String searchTerm;
@@ -52,8 +62,9 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
     private AstronautRecyclerViewAdapter adapter;
     private EndlessRecyclerViewScrollListener scrollListener;
     private LinearLayoutManager linearLayoutManager;
-    private int[] statusIDs;
+    private Integer[] statusIDs;
     private boolean limitReached;
+    private SearchView searchView;
 
     @BindView(R2.id.astronaut_recycler_view)
     RecyclerView recyclerView;
@@ -63,6 +74,8 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
     CoordinatorLayout coordinatorLayout;
     @BindView(R2.id.astronaut_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R2.id.astronaut_filter)
+    FloatingActionButton floatingActionButton;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -73,20 +86,12 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
 
     @SuppressWarnings("unused")
     public static AstronautListFragment newInstance(int[] statusIDs) {
-        AstronautListFragment fragment = new AstronautListFragment();
-        Bundle args = new Bundle();
-        args.putIntArray(ARG_STATUS_ID, statusIDs);
-        fragment.setArguments(args);
-        return fragment;
+        return new AstronautListFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            statusIDs = getArguments().getIntArray(ARG_STATUS_ID);
-        }
         dataRepository = new AstronautDataRepository(getContext(), getRealm());
     }
 
@@ -95,54 +100,66 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_astronaut_list, container, false);
         unbinder = ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
         // Set the adapter
         Context context = view.getContext();
-        adapter = new AstronautRecyclerViewAdapter(mListener);
+        adapter = new AstronautRecyclerViewAdapter(mListener, context);
         linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        statefulView.showProgress();
+        if(firstLaunch) {
+            statefulView.showProgress();
+        } else {
+            statefulView.showContent();
+        }
 
         canLoadMore = true;
         limitReached = false;
+        statefulView.setOfflineRetryOnClickListener(v -> onRefresh());
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 if (canLoadMore) {
-                    fetchData(false, false);
+                    boolean searchQuery = false;
+                    if (searchTerm != null) {
+                        searchQuery = true;
+                    }
+                    fetchData(false, false, searchQuery);
                 }
             }
         };
+        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         recyclerView.addOnScrollListener(scrollListener);
-        fetchData(false, firstLaunch);
+        fetchData(false, firstLaunch, false);
         firstLaunch = false;
         swipeRefreshLayout.setOnRefreshListener(this);
         return view;
     }
 
-    public void fetchData(boolean forceRefresh, boolean firstLaunch) {
+    private void fetchData(boolean forceRefresh, boolean firstLaunch, boolean searchQuery) {
         Timber.v("fetchData - getting astronauts");
         nextOffset = astronautCount;
         int limit = 40;
 
 
-        if (forceRefresh) {
+        if (forceRefresh || searchQuery) {
+            astronautCount = 0;
             limitReached = false;
             adapter.clear();
         }
 
-        if(!limitReached) {
-            dataRepository.getAstronauts(limit, astronautCount, firstLaunch, forceRefresh, null, statusIDs, new Callbacks.AstronautListCallback() {
+        if (!limitReached) {
+            dataRepository.getAstronauts(limit, astronautCount, firstLaunch, forceRefresh, searchTerm, statusIDs, new Callbacks.AstronautListCallback() {
                 @Override
                 public void onAstronautsLoaded(RealmResults<Astronaut> astronauts, int next, int total) {
                     Timber.v("Offset - %s", next);
-                    if(astronauts.size() == total){
+                    if (astronauts.size() == total) {
                         limitReached = true;
                         canLoadMore = false;
-                    }else {
+                    } else {
                         astronautCount = astronauts.size();
                         canLoadMore = true;
                     }
@@ -151,7 +168,7 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
 
                 @Override
                 public void onNetworkStateChanged(boolean refreshing) {
-                showNetworkLoading(refreshing);
+                    showNetworkLoading(refreshing);
                 }
 
                 @Override
@@ -166,6 +183,36 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
                 }
             });
         }
+    }
+
+    private void searchData(String query){
+        updateAdapter(dataRepository.getAstronautsFromRealm(statusIDs, query));
+    }
+
+    //Currently only used to debug
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.astronaut_menu, menu);
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnCloseListener(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_refresh) {
+            onRefresh();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showNetworkLoading(boolean refreshing) {
@@ -190,11 +237,6 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
         scrollListener.resetState();
     }
 
-    public void onRefresh(String searchTerm) {
-        this.searchTerm = searchTerm;
-        fetchData(true, false);
-    }
-
 
     @Override
     public void onAttach(Context context) {
@@ -215,19 +257,60 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
 
     @Override
     public void onRefresh() {
-        fetchData(true, false);
+        if (searchTerm != null || statusIDs != null) {
+            statusIDs = null;
+            searchTerm = null;
+            swipeRefreshLayout.setRefreshing(false);
+            fetchData(false, false, false);
+        } else {
+            fetchData(true, false, false);
+        }
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        searchTerm = query;
+        fetchData(false, false, true);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String query) {
+        searchTerm = query;
+        fetchData(false, false, true);
+        return false;
+    }
+
+    @Override
+    public boolean onClose() {
+        fetchData(false, true, false);
+        return false;
+    }
+
+    @OnClick(R2.id.astronaut_filter)
+    void filterClicked(){
+        new MaterialDialog.Builder(getContext())
+                .title("Astronaut Status")
+                .items(R.array.status)
+                .itemsCallbackMultiChoice(statusIDs, new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        /**
+                         * If you use alwaysCallMultiChoiceCallback(), which is discussed below,
+                         * returning false here won't allow the newly selected check box to actually be selected
+                         * (or the newly unselected check box to be unchecked).
+                         * See the limited multi choice dialog example in the sample project for details.
+                         **/
+                        statusIDs = which;
+                        fetchData(false, false, true);
+                        return true;
+                    }
+                })
+                .positiveText("Ok")
+                .show();
+    }
+
+
     public interface OnListFragmentInteractionListener {
         void onAstronautClicked(Astronaut item);
     }

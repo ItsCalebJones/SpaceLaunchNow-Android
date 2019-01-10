@@ -179,7 +179,7 @@ public interface SpaceLaunchNowService {
     @GET(version + "/astronaut/")
     Call<AstronautResponse> getAstronauts(@Query("limit") int amount, @Query("offset") int offset,
                                           @Query("search") String search, @Query("status") Integer status,
-                                          @Query("status_ids") String statuses);
+                                          @Query("status_ids") String statuses, @Query("ordering") String order);
 
     // Spacestation
     // GET: /spacestations/

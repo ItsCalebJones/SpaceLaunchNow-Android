@@ -252,7 +252,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
     implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.20'
-    implementation 'jp.wasabeef:glide-transformations:3.0.1'
+    implementation 'jp.wasabeef:glide-transformations:4.0.1'
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'at.blogc:expandabletextview:1.0.5'
     implementation 'com.52inc:scoops:1.0.0'

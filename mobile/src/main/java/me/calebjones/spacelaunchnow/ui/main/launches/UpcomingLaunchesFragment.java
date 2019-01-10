@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.ui.main.launches;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.MenuItemCompat;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import com.crashlytics.android.Crashlytics;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
@@ -54,6 +56,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     private int nextOffset = 0;
     private EndlessRecyclerViewScrollListener scrollListener;
     private String searchTerm = null;
+    private List<LaunchList> launches;
 
     @BindView(R.id.stateful_view)
     SimpleStatefulLayout statefulView;
@@ -84,6 +87,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         this.context = getContext();
         canLoadMore = true;
         setHasOptionsMenu(true);
+        launches = new ArrayList<>();
 
         if (adapter == null) {
             Timber.v("Creating new ListAdapter");

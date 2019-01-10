@@ -56,9 +56,28 @@ public class LaunchList extends RealmObject {
     @SerializedName("orbit")
     @Expose
     public String orbit;
+    @SerializedName("image")
+    @Expose
+    public String image;
     @SerializedName("landing_success")
     @Expose
     public Integer landingSuccess;
+
+    public Integer getLaunchLibraryId() {
+        return launchLibraryId;
+    }
+
+    public void setLaunchLibraryId(Integer launchLibraryId) {
+        this.launchLibraryId = launchLibraryId;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getOrbit() {
         return orbit;

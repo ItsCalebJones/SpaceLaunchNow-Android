@@ -4,26 +4,41 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.ListPreloader;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.util.ViewPreloadSizeProvider;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmList;
+import jp.wasabeef.glide.transformations.ColorFilterTransformation;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.content.data.LaunchStatus;
 import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
+import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
@@ -39,8 +54,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     private SharedPreferences sharedPref;
     private Boolean night;
     private static ListPreferences sharedPreference;
+    private final ListPreloader.PreloadSizeProvider sizeProvider = new ViewPreloadSizeProvider();
     private SimpleDateFormat sdf;
     private SimpleDateFormat df;
+    private int color;
 
     public ListAdapter(Context context, boolean night) {
         rightNow = Calendar.getInstance();
@@ -63,6 +80,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         }
 
         this.night = night;
+        if (night){
+            color = ContextCompat.getColor(mContext, R.color.white);
+        } else {
+            color = ContextCompat.getColor(mContext, R.color.black);
+        }
     }
 
     public void addItems(List<LaunchList> launchList) {
@@ -98,13 +120,29 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         position = i;
 
         //Retrieve missionType
-        if (launchItem.getMission() != null) {
-            Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMissionType(), night);
+        if (launchItem.getImage() != null) {
+            GlideApp.with(mContext)
+                    .load(launchItem.getImage())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .circleCrop()
+                    .into(holder.categoryIcon);
         } else {
-            if (night) {
-                holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+            if (launchItem.getMission() != null) {
+
+                GlideApp.with(mContext)
+                        .load(Utils.getCategoryIcon(launchItem.getMissionType()))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .circleCrop()
+                        .transform(new ColorFilterTransformation(color))
+                        .into(holder.categoryIcon);
+
             } else {
-                holder.categoryIcon.setImageResource(R.drawable.ic_unknown);
+                GlideApp.with(mContext)
+                        .load(R.drawable.ic_unknown)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .circleCrop()
+                        .transform(new ColorFilterTransformation(color))
+                        .into(holder.categoryIcon);
             }
         }
 

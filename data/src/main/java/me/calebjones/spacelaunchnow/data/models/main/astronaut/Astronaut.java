@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow.data.models.main.astronaut;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Date;
 
 import io.realm.RealmList;
@@ -50,6 +52,9 @@ public class Astronaut extends RealmObject {
     @SerializedName("profile_image")
     @Expose
     public String profileImage;
+    @SerializedName("profile_image_thumbnail")
+    @Expose
+    public String profileImageThumbnail;
     @SerializedName("wiki")
     @Expose
     public String wiki;
@@ -178,4 +183,13 @@ public class Astronaut extends RealmObject {
     public void setFlights(RealmList<Launch> flights) {
         this.flights = flights;
     }
+
+    public String getProfileImageThumbnail() {
+        return profileImageThumbnail;
+    }
+
+    public void setProfileImageThumbnail(String profileImageThumbnail) {
+        this.profileImageThumbnail = profileImageThumbnail;
+    }
+
 }

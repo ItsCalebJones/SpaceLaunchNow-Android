@@ -138,7 +138,7 @@ public class DataClient {
     }
 
     public Call<AstronautResponse> getAstronauts(int limit, int offset, String search, Integer status, String statuses, Callback<AstronautResponse> callback) {
-        Call<AstronautResponse> call = spaceLaunchNowService.getAstronauts(limit, offset, search, status, statuses);
+        Call<AstronautResponse> call = spaceLaunchNowService.getAstronauts(limit, offset, search, status, statuses, "name");
 
         call.enqueue(callback);
 

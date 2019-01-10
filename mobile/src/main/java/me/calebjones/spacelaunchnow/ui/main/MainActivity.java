@@ -118,7 +118,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private VehiclesViewPager mVehicleViewPager;
     private ISSFragment mIssFragment;
     private EventsFragment mEventsFragment;
-    private AstronautViewpagerFragment mAstronautsListFragment;
+    private AstronautListFragment mAstronautsListFragment;
     private Drawer drawer = null;
     private SharedPreferences sharedPref;
     private SwitchPreferences switchPreferences;
@@ -293,8 +293,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 ).withOnDrawerItemClickListener((view, position, drawerItem) -> {
                     if (drawerItem != null) {
                         if (mNavItemId != (int) drawerItem.getIdentifier()) {
-                            mNavItemId = (int) drawerItem.getIdentifier();
-                            navigate(mNavItemId);
+                            navigate((int) drawerItem.getIdentifier());
                         }
                     }
                     return false;
@@ -701,10 +700,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 break;
             case R.id.menu_astronauts:
                 setActionBarTitle("Astronauts");
-                addAppBarElevation();
+                removeAppBarElevation();
                 hideBottomNavigation();
                 if (mAstronautsListFragment == null)
-                    mAstronautsListFragment = AstronautViewpagerFragment.newInstance();
+                    mAstronautsListFragment = AstronautListFragment.newInstance(null);
                 navigateToFragment(mAstronautsListFragment, ASTRONAUT_TAG);
 
                 if (rate != null) {
@@ -1024,5 +1023,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     @Override
     public void onAstronautClicked(Astronaut item) {
         Timber.v("Hello");
+        Toast.makeText(context, String.format("Oh - you clicked %s?", item.getName()), Toast.LENGTH_SHORT).show();
     }
 }
