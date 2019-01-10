@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import io.realm.RealmList;
-import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
 import me.spacelaunchnow.astronauts.list.AstronautListFragment.OnListFragmentInteractionListener;
@@ -28,18 +27,12 @@ public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<Astronaut
     }
 
     public void addItems(List<Astronaut> astronauts) {
-
-        if (this.astronauts != null) {
-            this.astronauts.addAll(astronauts);
-        } else {
-            this.astronauts = new RealmList<>();
-            this.astronauts.addAll(astronauts);
-        }
+        this.astronauts = astronauts;
         this.notifyDataSetChanged();
     }
 
     public void clear() {
-        astronauts.clear();
+        astronauts = new ArrayList<>();
         notifyDataSetChanged();
     }
 
@@ -53,7 +46,7 @@ public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<Astronaut
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = astronauts.get(position);
-        holder.mIdView.setText(astronauts.get(position).getId());
+        holder.mIdView.setText(astronauts.get(position).getId().toString());
         holder.mContentView.setText(astronauts.get(position).getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +55,7 @@ public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<Astronaut
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onAstronautClicked(holder.mItem);
                 }
             }
         });

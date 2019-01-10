@@ -1022,7 +1022,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
 
     @Override
-    public void onListFragmentInteraction(Astronaut item) {
+    public void onAstronautClicked(Astronaut item) {
         Timber.v("Hello");
     }
 }

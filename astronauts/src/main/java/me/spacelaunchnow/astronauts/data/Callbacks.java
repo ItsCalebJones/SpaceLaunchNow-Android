@@ -3,18 +3,18 @@ package me.spacelaunchnow.astronauts.data;
 import java.util.List;
 
 import androidx.annotation.Nullable;
-import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 
 public class Callbacks {
     public interface AstronautListNetworkCallback {
-        void onSuccess(List<Astronaut> astronauts, int next, int total);
+        void onSuccess(List<Astronaut> astronauts, int next, int total, boolean moreAvailable);
         void onNetworkFailure(int code);
         void onFailure(Throwable throwable);
     }
 
     public interface AstronautListCallback {
-        void onLaunchesLoaded(List<Astronaut> astronauts, int nextOffset, int total);
+        void onAstronautsLoaded(RealmResults<Astronaut> astronauts, int nextOffset, int total);
         void onNetworkStateChanged(boolean refreshing);
         void onError(String message, @Nullable Throwable throwable);
     }

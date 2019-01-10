@@ -104,7 +104,11 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         recyclerView.setAdapter(adapter);
-        statefulView.showProgress();
+        if (adapter.getItemCount() == 0) {
+            statefulView.showProgress();
+        } else {
+            statefulView.showContent();
+        }
         statefulView.setOfflineRetryOnClickListener(v -> fetchData(true));
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override

@@ -4,8 +4,18 @@ package me.spacelaunchnow.astronauts.data;
 import android.content.Context;
 import android.net.Uri;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmList;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
+import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
+import me.calebjones.spacelaunchnow.data.networking.error.SpaceLaunchNowError;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AstronautResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,16 +30,23 @@ public class AstronautDataLoader {
         this.context = context;
     }
 
-    public void getAstronautList(int limit, int offset, String search, Integer status,
+    public void getAstronautList(int limit, int offset, String search, int[] statusIDs,
                                  final Callbacks.AstronautListNetworkCallback networkCallback) {
         Timber.i("Running getUpcomingLaunchesList");
-        DataClient.getInstance().getAstronauts(limit, offset, search, status, new Callback<AstronautResponse>() {
+        String stringStatusIDs = "";
+        for(int i = 0; i < statusIDs.length; i++){
+            stringStatusIDs += String.valueOf(statusIDs[i]);
+            if (i != statusIDs.length - 1){
+                stringStatusIDs += ",";
+            }
+        }
+        DataClient.getInstance().getAstronauts(limit, offset, search, null, stringStatusIDs, new Callback<AstronautResponse>() {
             @Override
             public void onResponse(Call<AstronautResponse> call, Response<AstronautResponse> response) {
                 if (response.isSuccessful()) {
                     AstronautResponse astronautResponse = response.body();
 
-                    Timber.v("UpcomingLaunches Count: %s", astronautResponse.getCount());
+                    Timber.v("Astronauts returned Count: %s", astronautResponse.getCount());
 
                     if (astronautResponse.getNext() != null) {
                         Uri uri = Uri.parse(astronautResponse.getNext());
@@ -37,11 +54,13 @@ public class AstronautDataLoader {
                         String nextOffset = uri.getQueryParameter("offset");
                         String total = uri.getQueryParameter("offset");
                         int next = Integer.valueOf(nextOffset);
-                        networkCallback.onSuccess(astronautResponse.getAstronauts(), next, astronautResponse.getCount());
+                        networkCallback.onSuccess(astronautResponse.getAstronauts(), next, astronautResponse.getCount(), true);
                     } else {
-                        networkCallback.onSuccess(astronautResponse.getAstronauts(), 0, astronautResponse.getCount());
+                        networkCallback.onSuccess(astronautResponse.getAstronauts(), 0, astronautResponse.getCount(), false);
                     }
                 } else {
+                    SpaceLaunchNowError error = ErrorUtil.parseSpaceLaunchNowError(response);
+                    Timber.e(error.getMessage());
                     networkCallback.onNetworkFailure(response.code());
 
                 }

@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow.data.models.main.astronaut;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -54,6 +56,16 @@ public class Astronaut extends RealmObject {
     @SerializedName("flights")
     @Expose
     public RealmList<Launch> flights = null;
+
+    private Date lastUpdate;
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
 
     public Integer getId() {
         return id;

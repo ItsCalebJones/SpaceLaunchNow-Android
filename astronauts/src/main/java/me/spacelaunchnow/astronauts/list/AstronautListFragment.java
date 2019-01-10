@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,14 +14,15 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.utils.EndlessRecyclerViewScrollListener;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
-import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
 import me.spacelaunchnow.astronauts.R2;
@@ -36,21 +36,24 @@ import timber.log.Timber;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class AstronautListFragment extends BaseFragment {
+public class AstronautListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private static final String ARG_STATUS_ID = "status-id";
-    private int statusId = 1;
     private String searchTerm;
     private OnListFragmentInteractionListener mListener;
     private AstronautDataRepository dataRepository;
     private List<Agency> agencies;
     private int nextOffset = 0;
-    public boolean canLoadMore;
+    private int astronautCount = 0;
+    private boolean canLoadMore;
     private boolean statefulStateContentShow = false;
+    private boolean firstLaunch = true;
     private Unbinder unbinder;
     private AstronautRecyclerViewAdapter adapter;
     private EndlessRecyclerViewScrollListener scrollListener;
     private LinearLayoutManager linearLayoutManager;
+    private int[] statusIDs;
+    private boolean limitReached;
 
     @BindView(R2.id.astronaut_recycler_view)
     RecyclerView recyclerView;
@@ -58,6 +61,8 @@ public class AstronautListFragment extends BaseFragment {
     SimpleStatefulLayout statefulView;
     @BindView(R2.id.astronaut_coordinator)
     CoordinatorLayout coordinatorLayout;
+    @BindView(R2.id.astronaut_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -67,10 +72,10 @@ public class AstronautListFragment extends BaseFragment {
     }
 
     @SuppressWarnings("unused")
-    public static AstronautListFragment newInstance(int statusId) {
+    public static AstronautListFragment newInstance(int[] statusIDs) {
         AstronautListFragment fragment = new AstronautListFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_STATUS_ID, statusId);
+        args.putIntArray(ARG_STATUS_ID, statusIDs);
         fragment.setArguments(args);
         return fragment;
     }
@@ -80,9 +85,9 @@ public class AstronautListFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            statusId = getArguments().getInt(ARG_STATUS_ID);
+            statusIDs = getArguments().getIntArray(ARG_STATUS_ID);
         }
-        dataRepository = new AstronautDataRepository(getContext());
+        dataRepository = new AstronautDataRepository(getContext(), getRealm());
     }
 
     @Override
@@ -95,70 +100,76 @@ public class AstronautListFragment extends BaseFragment {
         Context context = view.getContext();
         adapter = new AstronautRecyclerViewAdapter(mListener);
         linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
         statefulView.showProgress();
+
+        canLoadMore = true;
+        limitReached = false;
         scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
                 if (canLoadMore) {
-                    fetchData(false);
+                    fetchData(false, false);
                 }
             }
         };
-        dataRepository.getAstronauts(0, 20, searchTerm, statusId, new Callbacks.AstronautListCallback() {
-            @Override
-            public void onLaunchesLoaded(List<Astronaut> astronauts, int nextOffset, int total) {
-                updateAdapter(astronauts);
-            }
-
-            @Override
-            public void onNetworkStateChanged(boolean refreshing) {
-
-            }
-
-            @Override
-            public void onError(String message, @Nullable Throwable throwable) {
-
-            }
-        });
+        recyclerView.addOnScrollListener(scrollListener);
+        fetchData(false, firstLaunch);
+        firstLaunch = false;
+        swipeRefreshLayout.setOnRefreshListener(this);
         return view;
     }
 
-    public void fetchData(boolean forceRefresh) {
+    public void fetchData(boolean forceRefresh, boolean firstLaunch) {
         Timber.v("fetchData - getting astronauts");
+        nextOffset = astronautCount;
+        int limit = 40;
+
+
         if (forceRefresh) {
-            nextOffset = 0;
+            limitReached = false;
             adapter.clear();
         }
 
-        dataRepository.getAstronauts(20, nextOffset, null, statusId, new Callbacks.AstronautListCallback() {
-            @Override
-            public void onLaunchesLoaded(List<Astronaut> astronauts, int next, int total) {
-                Timber.v("Offset - %s", next);
-                nextOffset = next;
-                canLoadMore = next > 0;
-                updateAdapter(astronauts);
-            }
-
-            @Override
-            public void onNetworkStateChanged(boolean refreshing) {
-//                showNetworkLoading(refreshing);
-            }
-
-            @Override
-            public void onError(String message, @Nullable Throwable throwable) {
-                statefulView.showOffline();
-                statefulStateContentShow = false;
-                if (throwable != null) {
-                    Timber.e(throwable);
-                } else {
-                    Timber.e(message);
+        if(!limitReached) {
+            dataRepository.getAstronauts(limit, astronautCount, firstLaunch, forceRefresh, null, statusIDs, new Callbacks.AstronautListCallback() {
+                @Override
+                public void onAstronautsLoaded(RealmResults<Astronaut> astronauts, int next, int total) {
+                    Timber.v("Offset - %s", next);
+                    if(astronauts.size() == total){
+                        limitReached = true;
+                        canLoadMore = false;
+                    }else {
+                        astronautCount = astronauts.size();
+                        canLoadMore = true;
+                    }
+                    updateAdapter(astronauts);
                 }
-            }
-        });
+
+                @Override
+                public void onNetworkStateChanged(boolean refreshing) {
+                showNetworkLoading(refreshing);
+                }
+
+                @Override
+                public void onError(String message, @Nullable Throwable throwable) {
+                    statefulView.showOffline();
+                    statefulStateContentShow = false;
+                    if (throwable != null) {
+                        Timber.e(throwable);
+                    } else {
+                        Timber.e(message);
+                    }
+                }
+            });
+        }
+    }
+
+    private void showNetworkLoading(boolean refreshing) {
+        swipeRefreshLayout.setRefreshing(refreshing);
     }
 
     private void updateAdapter(List<Astronaut> astronauts) {
@@ -169,8 +180,6 @@ public class AstronautListFragment extends BaseFragment {
                 statefulStateContentShow = true;
             }
             adapter.addItems(astronauts);
-            adapter.notifyDataSetChanged();
-
         } else {
             statefulView.showEmpty();
             statefulStateContentShow = false;
@@ -183,7 +192,7 @@ public class AstronautListFragment extends BaseFragment {
 
     public void onRefresh(String searchTerm) {
         this.searchTerm = searchTerm;
-        fetchData(true);
+        fetchData(true, false);
     }
 
 
@@ -204,6 +213,11 @@ public class AstronautListFragment extends BaseFragment {
         mListener = null;
     }
 
+    @Override
+    public void onRefresh() {
+        fetchData(true, false);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -215,7 +229,6 @@ public class AstronautListFragment extends BaseFragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(Astronaut item);
+        void onAstronautClicked(Astronaut item);
     }
 }

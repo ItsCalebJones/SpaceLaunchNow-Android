@@ -31,6 +31,7 @@ public class AstronautViewpagerFragment extends BaseFragment {
     private Context context;
     private AstronautListFragment activeFragment;
     private AstronautListFragment retiredFragment;
+    private AstronautListFragment lostFragment;
 
     public static AstronautViewpagerFragment newInstance() {
         return new AstronautViewpagerFragment();
@@ -46,11 +47,12 @@ public class AstronautViewpagerFragment extends BaseFragment {
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("Active"));
         tabLayout.addTab(tabLayout.newTab().setText("Retired"));
+        tabLayout.addTab(tabLayout.newTab().setText("Lost in Service"));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount());
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         return inflatedView;
@@ -81,13 +83,19 @@ public class AstronautViewpagerFragment extends BaseFragment {
                     if (activeFragment != null) {
                         return activeFragment;
                     } else {
-                        return AstronautListFragment.newInstance(1);
+                        return AstronautListFragment.newInstance(new int[]{1});
                     }
                 case 1:
                     if (retiredFragment != null) {
                         return retiredFragment;
                     } else {
-                        return AstronautListFragment.newInstance(2);
+                        return AstronautListFragment.newInstance(new int[]{2});
+                    }
+                case 2:
+                    if (lostFragment != null) {
+                        return lostFragment;
+                    } else {
+                        return AstronautListFragment.newInstance(new int[]{4, 5});
                     }
                 default:
                     return null;
@@ -108,6 +116,9 @@ public class AstronautViewpagerFragment extends BaseFragment {
                     break;
                 case 1:
                     retiredFragment = (AstronautListFragment) createdFragment;
+                    break;
+                case 2:
+                    lostFragment = (AstronautListFragment) createdFragment;
                     break;
             }
             return createdFragment;

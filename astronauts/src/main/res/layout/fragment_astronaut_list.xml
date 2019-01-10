@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/astronaut_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,16 +13,17 @@
         app:emptyLayout="@layout/empty_launches"
         app:progressLayout="@layout/custom_progress">
 
-        <LinearLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/astronaut_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:paddingTop="5dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/astronaut_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </LinearLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </cz.kinst.jakub.view.SimpleStatefulLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
