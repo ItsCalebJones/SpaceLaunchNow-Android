@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.local.common.RetroFitFragment;
+import me.calebjones.spacelaunchnow.common.base.RetroFitFragment;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -32,7 +32,7 @@ import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyRespons
 import me.calebjones.spacelaunchnow.ui.orbiter.OrbiterDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
+import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

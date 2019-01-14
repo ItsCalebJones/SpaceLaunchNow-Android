@@ -172,7 +172,7 @@ public interface SpaceLaunchNowService {
     // Astronaut
     // GET: /astronaut/
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
-    @GET(version + "/astronaut/{id}/")
+    @GET(version + "/astronaut/{id}/?mode=list")
     Call<Astronaut> getAstronautsById(@Path("id") int id);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})

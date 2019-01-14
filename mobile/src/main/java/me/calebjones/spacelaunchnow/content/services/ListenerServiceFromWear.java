@@ -9,15 +9,13 @@ import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import java.nio.ByteBuffer;
 import java.util.Set;
 
-import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
-import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
-import me.calebjones.spacelaunchnow.content.wear.WearWatchfaceManager;
-import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
+import me.calebjones.spacelaunchnow.common.content.wear.WearWatchfaceManager;
+import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import timber.log.Timber;
 
 

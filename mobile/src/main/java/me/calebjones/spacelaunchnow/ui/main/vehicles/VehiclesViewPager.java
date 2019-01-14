@@ -18,10 +18,10 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.local.common.BaseFragment;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.launcher.LauncherFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.orbiter.OrbiterFragment;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 
 public class VehiclesViewPager extends BaseFragment {
 

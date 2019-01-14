@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.MenuItemCompat;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -43,14 +45,11 @@ import timber.log.Timber;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
  */
 public class AstronautListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener, SearchView.OnCloseListener {
 
     private static final String ARG_STATUS_ID = "status-id";
     private String searchTerm;
-    private OnListFragmentInteractionListener mListener;
     private AstronautDataRepository dataRepository;
     private List<Agency> agencies;
     private int nextOffset = 0;
@@ -62,7 +61,8 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
     private AstronautRecyclerViewAdapter adapter;
     private EndlessRecyclerViewScrollListener scrollListener;
     private LinearLayoutManager linearLayoutManager;
-    private Integer[] statusIDs;
+    private List<Integer> statusIDs;
+    private Integer[] statusIDsSelection;
     private boolean limitReached;
     private SearchView searchView;
 
@@ -85,7 +85,7 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
     }
 
     @SuppressWarnings("unused")
-    public static AstronautListFragment newInstance(int[] statusIDs) {
+    public static AstronautListFragment newInstance() {
         return new AstronautListFragment();
     }
 
@@ -104,7 +104,7 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
 
         // Set the adapter
         Context context = view.getContext();
-        adapter = new AstronautRecyclerViewAdapter(mListener, context);
+        adapter = new AstronautRecyclerViewAdapter(context);
         linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
@@ -156,29 +156,35 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
                 @Override
                 public void onAstronautsLoaded(RealmResults<Astronaut> astronauts, int next, int total) {
                     Timber.v("Offset - %s", next);
-                    if (astronauts.size() == total) {
-                        limitReached = true;
-                        canLoadMore = false;
-                    } else {
-                        astronautCount = astronauts.size();
-                        canLoadMore = true;
+                    if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                        if (astronauts.size() == total) {
+                            limitReached = true;
+                            canLoadMore = false;
+                        } else {
+                            astronautCount = astronauts.size();
+                            canLoadMore = true;
+                        }
+                        updateAdapter(astronauts);
                     }
-                    updateAdapter(astronauts);
                 }
 
                 @Override
                 public void onNetworkStateChanged(boolean refreshing) {
-                    showNetworkLoading(refreshing);
+                    if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                        showNetworkLoading(refreshing);
+                    }
                 }
 
                 @Override
                 public void onError(String message, @Nullable Throwable throwable) {
-                    statefulView.showOffline();
-                    statefulStateContentShow = false;
-                    if (throwable != null) {
-                        Timber.e(throwable);
-                    } else {
-                        Timber.e(message);
+                    if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                        statefulView.showOffline();
+                        statefulStateContentShow = false;
+                        if (throwable != null) {
+                            Timber.e(throwable);
+                        } else {
+                            Timber.e(message);
+                        }
                     }
                 }
             });
@@ -241,18 +247,11 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -292,7 +291,7 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
         new MaterialDialog.Builder(getContext())
                 .title("Astronaut Status")
                 .items(R.array.status)
-                .itemsCallbackMultiChoice(statusIDs, new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(statusIDsSelection, new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         /**
@@ -301,17 +300,16 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
                          * (or the newly unselected check box to be unchecked).
                          * See the limited multi choice dialog example in the sample project for details.
                          **/
-                        statusIDs = which;
+                        statusIDsSelection = which;
+                        statusIDs = new ArrayList<>();
+                        for (Integer integer: statusIDsSelection){
+                            statusIDs.add(integer + 1);
+                        }
                         fetchData(false, false, true);
                         return true;
                     }
                 })
                 .positiveText("Ok")
                 .show();
-    }
-
-
-    public interface OnListFragmentInteractionListener {
-        void onAstronautClicked(Astronaut item);
     }
 }

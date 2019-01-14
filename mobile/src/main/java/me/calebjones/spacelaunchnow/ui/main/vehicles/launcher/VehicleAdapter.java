@@ -8,15 +8,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.request.RequestOptions;
-import com.github.florent37.glidepalette.GlidePalette;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;

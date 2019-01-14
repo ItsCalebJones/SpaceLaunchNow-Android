@@ -1,6 +1,7 @@
 package me.spacelaunchnow.astronauts.list;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,23 +15,22 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
 import me.spacelaunchnow.astronauts.R2;
-import me.spacelaunchnow.astronauts.list.AstronautListFragment.OnListFragmentInteractionListener;
+import me.spacelaunchnow.astronauts.detail.AstronautDetailsActivity;
 
 
 public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<AstronautRecyclerViewAdapter.ViewHolder> {
 
 
     private List<Astronaut> astronauts;
-    private final OnListFragmentInteractionListener mListener;
     private Context context;
 
-    public AstronautRecyclerViewAdapter(OnListFragmentInteractionListener listener, Context context) {
+    public AstronautRecyclerViewAdapter(Context context) {
         astronauts = new ArrayList<>();
-        mListener = listener;
         this.context = context;
     }
 
@@ -67,14 +67,6 @@ public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<Astronaut
                 .load(holder.mItem.getProfileImageThumbnail())
                 .circleCrop()
                 .into(holder.astronautImage);
-
-        holder.rootview.setOnClickListener(v -> {
-            if (null != mListener) {
-                // Notify the active callbacks interface (the activity, if the
-                // fragment is attached to one) that an item has been selected.
-                mListener.onAstronautClicked(holder.mItem);
-            }
-        });
     }
 
     @Override
@@ -98,6 +90,15 @@ public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<Astronaut
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        @OnClick(R2.id.rootview)
+        void onClick(View v){
+            final int position = getAdapterPosition();
+            Astronaut astronaut = astronauts.get(position);
+            Intent exploreIntent = new Intent(context, AstronautDetailsActivity.class);
+            exploreIntent.putExtra("astronautId", astronaut.getId());
+            context.startActivity(exploreIntent);
         }
     }
 }

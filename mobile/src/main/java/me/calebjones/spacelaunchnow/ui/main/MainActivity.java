@@ -73,13 +73,12 @@ import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.iss.ISSFragment;
 import me.calebjones.spacelaunchnow.events.EventsFragment;
 import me.calebjones.spacelaunchnow.local.common.BaseActivity;
-import me.calebjones.spacelaunchnow.local.common.customviews.generate.Rate;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
+import me.calebjones.spacelaunchnow.common.ui.generate.Rate;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
 import me.calebjones.spacelaunchnow.news.ui.NewsViewPager;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
@@ -87,18 +86,17 @@ import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
-import me.calebjones.spacelaunchnow.ui.settings.AboutActivity;
-import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
-import me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.ui.AboutActivity;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.common.ui.settings.fragments.AppearanceFragment;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
-import me.spacelaunchnow.astronauts.AstronautViewpagerFragment;
 import me.spacelaunchnow.astronauts.list.AstronautListFragment;
 import timber.log.Timber;
 
-public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, NextLaunchFragment.CallBackListener, AstronautListFragment.OnListFragmentInteractionListener {
+public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, NextLaunchFragment.CallBackListener {
 
     private static final String NAV_ITEM_ID = "navItemId";
     private static ListPreferences listPreferences;
@@ -134,6 +132,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private static final String ISS_TAG = "ISS_TAG";
     private static final String ASTRONAUT_TAG = "ASTRONAUT_TAG";
     private static final String EVENTS_TAG = "EVENTS_TAG";
+    private static final String ASTRONAUT_DETAIL_TAG = "ASTRONAUT_DETAIL_TAG";
 
     static final int SHOW_INTRO = 1;
 
@@ -162,7 +161,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
 
         int m_theme;
-        if (getCyanea().isDark()){
+        if (getCyanea().isDark()) {
             m_theme = R.style.BaseAppTheme_DarkBackground;
         } else {
             m_theme = R.style.BaseAppTheme_LightBackground;
@@ -193,7 +192,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         customTabActivityHelper = new CustomTabActivityHelper();
 
 
-
         Timber.d("Setting theme.");
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
@@ -215,7 +213,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
-
 
 
         Timber.d("Building account header.");
@@ -351,7 +348,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     }
 
     private void navigateToTab(int position) {
-        switch(position){
+        switch (position) {
             case 0:
                 mNavItemId = R.id.menu_favorite;
                 break;
@@ -368,11 +365,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         navigate(mNavItemId);
     }
 
-    public void hideBottomNavigation(){
+    public void hideBottomNavigation() {
         bottomNavigationView.setVisibility(View.GONE);
     }
 
-    public void showBottomNavigation(){
+    public void showBottomNavigation() {
         bottomNavigationView.setVisibility(View.VISIBLE);
     }
 
@@ -436,7 +433,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             Timber.d("Navigate to initial fragment.");
             navigate(mNavItemId);
         }
-        if (getCyanea().getShouldTintNavBar()){
+        if (getCyanea().getShouldTintNavBar()) {
             String strColor = String.format("#%06X", 0xFFFFFF & getCyanea().getPrimary());
             bottomNavigationView.setBarBackgroundColor(strColor);
         } else {
@@ -619,6 +616,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, CyaneaSettingsActivity.class));
@@ -703,7 +705,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 removeAppBarElevation();
                 hideBottomNavigation();
                 if (mAstronautsListFragment == null)
-                    mAstronautsListFragment = AstronautListFragment.newInstance(null);
+                    mAstronautsListFragment = AstronautListFragment.newInstance();
                 navigateToFragment(mAstronautsListFragment, ASTRONAUT_TAG);
 
                 if (rate != null) {
@@ -870,7 +872,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         int m_theme;
-        if (getCyanea().isDark()){
+        if (getCyanea().isDark()) {
             m_theme = R.style.BaseAppTheme_DarkBackground;
         } else {
             m_theme = R.style.BaseAppTheme_LightBackground;
@@ -1017,12 +1019,5 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     @Override
     public void onNavigateToLaunches() {
         drawer.setSelection(R.id.menu_launches);
-    }
-
-
-    @Override
-    public void onAstronautClicked(Astronaut item) {
-        Timber.v("Hello");
-        Toast.makeText(context, String.format("Oh - you clicked %s?", item.getName()), Toast.LENGTH_SHORT).show();
     }
 }

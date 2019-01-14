@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="me.calebjones.spacelaunchnow.common.ui.settings.fragments.GeneralFragment"
+        android:icon="@drawable/ic_settings_black"
+        android:title="@string/general"
+        android:summary="@string/general_settings"
+        android:breadCrumbTitle="@string/general" />
+    <header
+        android:fragment="me.calebjones.spacelaunchnow.common.ui.settings.fragments.NotificationsFragment"
+        android:icon="@drawable/ic_notifications"
+        android:title="@string/notifications"
+        android:summary="@string/notifications_settings"
+        android:breadCrumbTitle="@string/notifications"/>
+    <header
+        android:fragment="me.calebjones.spacelaunchnow.common.ui.settings.fragments.AppearanceFragment"
+        android:icon="@drawable/ic_appearance"
+        android:title="@string/appearance"
+        android:summary="@string/appearance_settings"
+        android:breadCrumbTitle="@string/appearance"/>
+    <header
+        android:fragment="me.calebjones.spacelaunchnow.common.ui.settings.fragments.WearFragment"
+        android:icon="@drawable/ic_wear"
+        android:title="@string/wear"
+        android:summary="@string/wear_settings"
+        android:breadCrumbTitle="@string/wear"/>
+    <header
+        android:icon="@drawable/ic_about_black"
+        android:summary="@string/about_settings"
+        android:title="@string/about">
+        <intent
+            android:targetClass="me.calebjones.spacelaunchnow.ui.settings.AboutActivity"
+            android:targetPackage="me.calebjones.spacelaunchnow"/>
+    </header>
+    <header
+        android:icon="@drawable/ic_translate"
+        android:summary="@string/translate_settings"
+        android:title="@string/translate">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="https://goo.gl/forms/Pt4QA5JNznF2MiKu1"
+            />
+    </header>
+    <header
+        android:icon="@drawable/ic_support_black"
+        android:summary="@string/support_settings"
+        android:title="@string/Support">
+        <intent
+            android:targetClass="me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity"
+            android:targetPackage="me.calebjones.spacelaunchnow"/>
+    </header>
+
+</preference-headers>

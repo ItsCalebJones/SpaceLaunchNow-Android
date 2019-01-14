@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
+import me.calebjones.spacelaunchnow.common.content.jobs.SyncJob;
 
 public class OnUpgradeReceiver extends BroadcastReceiver {
 

@@ -26,7 +26,7 @@ public class Callbacks {
     }
 
     public interface AstronautCallback {
-        void onLaunchesLoaded(Astronaut astronaut);
+        void onAstronautLoaded(Astronaut astronaut);
         void onNetworkStateChanged(boolean refreshing);
         void onError(String message, @Nullable Throwable throwable);
     }

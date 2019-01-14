@@ -12,6 +12,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 
 public class Astronaut extends RealmObject {
 
@@ -60,7 +61,7 @@ public class Astronaut extends RealmObject {
     public String wiki;
     @SerializedName("flights")
     @Expose
-    public RealmList<Launch> flights = null;
+    public RealmList<LaunchList> flights = null;
 
     private Date lastUpdate;
 
@@ -176,11 +177,11 @@ public class Astronaut extends RealmObject {
         this.wiki = wiki;
     }
 
-    public RealmList<Launch> getFlights() {
+    public RealmList<LaunchList> getFlights() {
         return flights;
     }
 
-    public void setFlights(RealmList<Launch> flights) {
+    public void setFlights(RealmList<LaunchList> flights) {
         this.flights = flights;
     }
 

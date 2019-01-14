@@ -30,15 +30,15 @@ public class AstronautDataLoader {
         this.context = context;
     }
 
-    public void getAstronautList(int limit, int offset, String search, Integer[] statusIDs,
+    public void getAstronautList(int limit, int offset, String search, List<Integer> statusIDs,
                                  final Callbacks.AstronautListNetworkCallback networkCallback) {
         Timber.i("Running getUpcomingLaunchesList");
         String stringStatusIDs = null;
         if (statusIDs != null) {
             stringStatusIDs = "";
-            for (int i = 0; i < statusIDs.length; i++) {
-                stringStatusIDs += String.valueOf(statusIDs[i]);
-                if (i != statusIDs.length - 1) {
+            for (int i = 0; i < statusIDs.size(); i++) {
+                stringStatusIDs += String.valueOf(statusIDs.get(i));
+                if (i != statusIDs.size() - 1) {
                     stringStatusIDs += ",";
                 }
             }

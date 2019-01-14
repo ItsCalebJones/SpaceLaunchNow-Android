@@ -35,28 +35,25 @@ import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.util.DialogAdapter;
+import me.calebjones.spacelaunchnow.common.ui.views.DialogAdapter;
 import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
-import me.calebjones.spacelaunchnow.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
-import me.calebjones.spacelaunchnow.utils.views.CountDownTimer;
-import me.calebjones.spacelaunchnow.utils.views.custom.CountDownView;
-import me.calebjones.spacelaunchnow.utils.youtube.YouTubeAPIHelper;
-import me.calebjones.spacelaunchnow.utils.youtube.models.Video;
-import me.calebjones.spacelaunchnow.utils.youtube.models.VideoResponse;
+import me.calebjones.spacelaunchnow.common.ui.views.CountDownTimer;
+import me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView;
+import me.calebjones.spacelaunchnow.common.youtube.YouTubeAPIHelper;
+import me.calebjones.spacelaunchnow.common.youtube.models.Video;
+import me.calebjones.spacelaunchnow.common.youtube.models.VideoResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-/**
- * Adapts UpcomingLaunch data to the LaunchFragment
- */
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> implements SectionIndexer {
 
     public int position;

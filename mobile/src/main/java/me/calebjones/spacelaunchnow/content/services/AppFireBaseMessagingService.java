@@ -15,7 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
+import me.calebjones.spacelaunchnow.common.content.notifications.NotificationBuilder;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Location;

@@ -2,9 +2,6 @@ package me.calebjones.spacelaunchnow.content.data.next;
 
 import android.content.Context;
 
-import com.crashlytics.android.Crashlytics;
-
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,14 +9,12 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.UiThread;
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.util.FilterBuilder;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
+import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
+import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
+import me.calebjones.spacelaunchnow.common.content.util.FilterBuilder;
+import me.calebjones.spacelaunchnow.common.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;

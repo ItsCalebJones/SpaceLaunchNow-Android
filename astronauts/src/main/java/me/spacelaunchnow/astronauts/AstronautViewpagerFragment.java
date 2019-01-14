@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+
 public class AstronautViewpagerFragment extends BaseFragment {
 
     private AstronautListViewModel mViewModel;
@@ -103,31 +105,31 @@ public class AstronautViewpagerFragment extends BaseFragment {
                     if (activeFragment != null) {
                         return activeFragment;
                     } else {
-                        return AstronautListFragment.newInstance(new int[]{1});
+                        return AstronautListFragment.newInstance();
                     }
                 case 1:
                     if (inTrainingFragment != null) {
                         return inTrainingFragment;
                     } else {
-                        return AstronautListFragment.newInstance(new int[]{3});
+                        return AstronautListFragment.newInstance();
                     }
                 case 2:
                     if (lostFragment != null) {
                         return lostFragment;
                     } else {
-                        return AstronautListFragment.newInstance(new int[]{4, 5});
+                        return AstronautListFragment.newInstance();
                     }
                 case 3:
                     if (retiredFragment != null) {
                         return retiredFragment;
                     } else {
-                        return AstronautListFragment.newInstance(new int[]{2});
+                        return AstronautListFragment.newInstance();
                     }
                 case 4:
                     if (otherFragment != null) {
                         return otherFragment;
                     } else {
-                        return AstronautListFragment.newInstance(new int[]{6,7,8,9,10});
+                        return AstronautListFragment.newInstance();
                     }
                 default:
                     return null;

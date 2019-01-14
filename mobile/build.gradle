@@ -195,6 +195,7 @@ dependencies {
     implementation project(':news')
     implementation project(':iss')
     implementation project(':events')
+    implementation project(':widgets')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'com.android.support:multidex:1.0.3'
 
@@ -244,7 +245,6 @@ dependencies {
     implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
     implementation 'com.jaredrummler:colorpicker:1.0.5'
     implementation 'com.jaredrummler:cyanea:1.0.1'
-    implementation 'com.andkulikov:transitionseverywhere:1.8.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation 'com.github.florent37:glidepalette:2.1.2'
@@ -255,19 +255,17 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:4.0.1'
     implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
     implementation 'at.blogc:expandabletextview:1.0.5'
-    implementation 'com.52inc:scoops:1.0.0'
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
     implementation "com.mikepenz:materialdrawer:6.1.0"
+    implementation 'android.zetterstrom.com.forecast:forecast:1.2.0'
 
 
     // HTTP Related libraries
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.github.renaudcerrato:static-maps-api:1.0.4'
     implementation 'com.google.code.gson:gson:2.8.4'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'android.zetterstrom.com.forecast:forecast:1.2.0'
     implementation 'it.macisamuele:calendarprovider-lib:0.0.1'
 
     // DO NOT UPDATE - v5.0.+ not working well.
@@ -298,6 +296,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
 
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.1.0'
+    compile project(path: ':widgets')
 
 }
 

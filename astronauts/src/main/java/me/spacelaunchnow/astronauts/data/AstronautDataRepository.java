@@ -37,7 +37,7 @@ public class AstronautDataRepository {
 
     @UiThread
     public void getAstronauts(int limit, int offset, boolean firstLaunch, boolean forceUpdate,
-                              String search, Integer[] statusIDs, Callbacks.AstronautListCallback callback) {
+                              String search, List<Integer> statusIDs, Callbacks.AstronautListCallback callback) {
 
         final Date now = Calendar.getInstance().getTime();
 
@@ -58,12 +58,7 @@ public class AstronautDataRepository {
         if (firstLaunch || forceUpdate || astronauts.size() == 0 || astronauts.size() < limit + offset) {
             if (forceUpdate) {
                 //delete cache first
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
-                        astronauts.deleteAllFromRealm();
-                    }
-                });
+                realm.executeTransaction(realm -> astronauts.deleteAllFromRealm());
                 offset = 0;
             }
             Timber.v("Getting from network!");
@@ -73,7 +68,7 @@ public class AstronautDataRepository {
         }
     }
 
-    public RealmResults<Astronaut> getAstronautsFromRealm(Integer[] statusIDs, String searchTerm) {
+    public RealmResults<Astronaut> getAstronautsFromRealm(List<Integer> statusIDs, String searchTerm) {
         RealmQuery<Astronaut> query = realm.where(Astronaut.class).isNotNull("id").and();
         if (searchTerm != null){
             query.beginGroup();
@@ -83,7 +78,7 @@ public class AstronautDataRepository {
             query.endGroup().and();
         }
 
-        if (statusIDs != null && statusIDs.length > 0) {
+        if (statusIDs != null && statusIDs.size() > 0) {
             boolean first = true;
             for (int statusID : statusIDs) {
                 if (!first) {
@@ -100,7 +95,12 @@ public class AstronautDataRepository {
         return query.sort("name", Sort.ASCENDING).findAll();
     }
 
-    private void getAstronautsFromNetwork(int limit, int offset, final String search, final Integer[] statusIDs, final Callbacks.AstronautListCallback callback) {
+    public Astronaut getAstronautByIdFromRealm(int id) {
+        return realm.where(Astronaut.class).equalTo("id", id).findFirst();
+    }
+
+
+    private void getAstronautsFromNetwork(int limit, int offset, final String search, final List<Integer> statusIDs, final Callbacks.AstronautListCallback callback) {
 
         callback.onNetworkStateChanged(true);
         dataLoader.getAstronautList(limit, offset, search, statusIDs, new Callbacks.AstronautListNetworkCallback() {
@@ -128,6 +128,7 @@ public class AstronautDataRepository {
 
     @UiThread
     public void getAstronautById(int id, Callbacks.AstronautCallback callback) {
+        callback.onAstronautLoaded(getAstronautByIdFromRealm(id));
         getAstronautByIdFromNetwork(id, callback);
     }
 
@@ -139,7 +140,7 @@ public class AstronautDataRepository {
             public void onSuccess(Astronaut astronaut) {
 
                 callback.onNetworkStateChanged(false);
-                callback.onLaunchesLoaded(astronaut);
+                callback.onAstronautLoaded(astronaut);
             }
 
             @Override
@@ -165,20 +166,6 @@ public class AstronautDataRepository {
                 }
             }
 
-            if (astronaut.getFlights() != null && !astronaut.getFlights().isEmpty()) {
-                RealmList<Launch> launches = new RealmList<>();
-                for (Launch launch : astronaut.getFlights()) {
-                    Launch existingLaunch = realm.where(Launch.class).equalTo("id", launch.getId()).findFirst();
-                    if (existingLaunch == null) {
-                        launches.add(launch);
-                    } else {
-                        launches.add(existingLaunch);
-                    }
-                }
-
-                astronaut.setFlights(launches);
-
-            }
             astronaut.setLastUpdate(Calendar.getInstance().getTime());
             if (astronaut.id == null){
                 Timber.v("WTF");
