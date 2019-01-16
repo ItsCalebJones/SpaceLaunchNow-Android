@@ -41,6 +41,8 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -354,7 +356,7 @@ public class Utils {
     }
 
     public static Bitmap getBitMapFromUrl(Context context, String imageURL) throws ExecutionException, InterruptedException {
-        return GlideApp.with(context)
+        return Glide.with(context)
                 .asBitmap()
                 .load(imageURL)
                 .submit(200, 200)

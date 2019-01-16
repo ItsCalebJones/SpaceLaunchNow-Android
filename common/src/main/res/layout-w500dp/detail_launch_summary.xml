@@ -6,9 +6,9 @@
     android:id="@+id/launch_summary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
     android:tag="launch_summary"
     android:textAlignment="center"
-    android:layout_gravity="center"
     android:transitionGroup="true"
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -20,7 +20,6 @@
 
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/summary_card"
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -28,7 +27,6 @@
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
             android:visibility="visible"
-            app:cardBackgroundColor="?backgroundColor"
             card_view:cardCornerRadius="4dp"
             card_view:cardElevation="@dimen/material_card_elevation_resting"
             card_view:cardPreventCornerOverlap="true"
@@ -46,7 +44,7 @@
                     android:id="@+id/error_message"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="?attr/colorPrimary"
+                    android:background="?colorPrimary"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:textAlignment="center"
@@ -59,7 +57,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Failed" />
 
-                <FrameLayout
+                <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
                     android:id="@+id/youtube_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,19 +65,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/error_message" />
-
-
-                <ImageView
-                    android:id="@+id/map_view_summary"
-                    android:layout_width="0dp"
-                    android:layout_height="180dp"
-                    android:clickable="true"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/youtube_view"
-                    tools:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    tools:src="@drawable/placeholder" />
 
 
                 <me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView
@@ -91,7 +76,7 @@
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/map_view_summary" />
+                    app:layout_constraintTop_toBottomOf="@+id/youtube_view" />
 
 
                 <TextView
@@ -120,15 +105,15 @@
 
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginEnd="24dp"
                     android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="6dp"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:paddingBottom="2dp"
                     android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
                     android:paddingTop="2dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="2dp"
                     android:singleLine="false"
                     android:text="@string/unknown_launch_date"
                     android:textAlignment="center"
@@ -143,8 +128,8 @@
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:text="@string/watch_launch"
@@ -162,12 +147,13 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:visibility="gone"
                     android:text="@string/no_live_stream_available"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/watchButton" />
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -177,21 +163,20 @@
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/material_baseline_grid_4x"
-            android:layout_marginEnd="@dimen/material_card_edge_margin"
             android:layout_marginStart="@dimen/material_card_edge_margin"
             android:layout_marginTop="@dimen/material_card_edge_margin"
+            android:layout_marginEnd="@dimen/material_card_edge_margin"
+            android:layout_marginBottom="@dimen/material_baseline_grid_4x"
             android:animateLayoutChanges="true"
-            android:paddingBottom="@dimen/material_baseline_grid_4x"
-            android:paddingEnd="@dimen/material_card_edge_margin"
             android:paddingStart="@dimen/material_card_edge_margin"
             android:paddingTop="@dimen/material_card_edge_margin"
+            android:paddingEnd="@dimen/material_card_edge_margin"
+            android:paddingBottom="@dimen/material_baseline_grid_4x"
             android:visibility="gone"
-            app:cardBackgroundColor="?backgroundColor"
             app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
-            app:cardUseCompatPadding="true"/>
+            app:cardUseCompatPadding="true" />
 
     </LinearLayout>
 

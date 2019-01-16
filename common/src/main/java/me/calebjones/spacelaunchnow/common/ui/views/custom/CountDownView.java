@@ -26,7 +26,7 @@ import timber.log.Timber;
 
 public class CountDownView extends ConstraintLayout {
 
-    @BindView(R2.id.countdown_layout)
+    @BindView(R2.id.common_countdown_layout)
     ConstraintLayout constraintLayout;
     @BindView(R2.id.countdown_days)
     TextView countdownDays;
@@ -40,7 +40,7 @@ public class CountDownView extends ConstraintLayout {
     TextView countdownStatus;
     @BindView(R2.id.status_pill)
     StatusPillView statusPill;
-    @BindView(R2.id.status_reason)
+    @BindView(R2.id.common_status_reason)
     TextView statusReason;
     @BindView(R2.id.countdown_view_group)
     Group countdownGroup;
@@ -67,6 +67,7 @@ public class CountDownView extends ConstraintLayout {
 
     private void init(Context context) {
         inflate(context, R.layout.countdown_layout_view, this);
+        ButterKnife.setDebug(true);
         ButterKnife.bind(this);
         this.context = context;
     }
@@ -274,14 +275,14 @@ public class CountDownView extends ConstraintLayout {
     private void setReasonConstraintToBottom() {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.status_reason, ConstraintSet.TOP, R.id.bottom_divider, ConstraintSet.BOTTOM,20);
+        constraintSet.connect(R.id.common_status_reason, ConstraintSet.TOP, R.id.bottom_divider, ConstraintSet.BOTTOM,20);
         constraintSet.applyTo(constraintLayout);
     }
 
     private void setReasonConstraintToStatusPill() {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.status_reason, ConstraintSet.TOP, R.id.status_pill, ConstraintSet.BOTTOM,20);
+        constraintSet.connect(R.id.common_status_reason, ConstraintSet.TOP, R.id.status_pill, ConstraintSet.BOTTOM,20);
         constraintSet.applyTo(constraintLayout);
     }
 

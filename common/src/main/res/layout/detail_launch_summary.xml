@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/launch_summary"
     android:layout_width="match_parent"
@@ -12,23 +13,23 @@
     tools:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <LinearLayout
+
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
+
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/summary_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
             android:visibility="visible"
-            app:cardBackgroundColor="?backgroundColor"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="@dimen/material_card_elevation_resting"
-            app:cardPreventCornerOverlap="true"
-            app:cardUseCompatPadding="true">
+            card_view:cardCornerRadius="4dp"
+            card_view:cardElevation="@dimen/material_card_elevation_resting"
+            card_view:cardPreventCornerOverlap="true"
+            card_view:cardUseCompatPadding="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -42,7 +43,7 @@
                     android:id="@+id/error_message"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="?attr/colorPrimary"
+                    android:background="?colorPrimary"
                     android:ellipsize="end"
                     android:gravity="center"
                     android:textAlignment="center"
@@ -55,7 +56,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Failed" />
 
-                <FrameLayout
+                <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
                     android:id="@+id/youtube_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,19 +64,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/error_message" />
-
-
-                <ImageView
-                    android:id="@+id/map_view_summary"
-                    android:layout_width="0dp"
-                    android:layout_height="180dp"
-                    android:clickable="true"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/youtube_view"
-                    tools:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    tools:src="@drawable/placeholder" />
 
 
                 <me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView
@@ -86,7 +74,7 @@
                     android:layout_marginBottom="6dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/map_view_summary" />
+                    app:layout_constraintTop_toBottomOf="@+id/youtube_view" />
 
                 <TextView
                     android:id="@+id/date"
@@ -182,12 +170,10 @@
             android:paddingStart="@dimen/material_card_edge_margin"
             android:paddingTop="@dimen/material_card_edge_margin"
             android:visibility="gone"
-            app:cardBackgroundColor="?backgroundColor"
             app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
             app:cardUseCompatPadding="true"/>
 
     </LinearLayout>
-
 </androidx.core.widget.NestedScrollView>

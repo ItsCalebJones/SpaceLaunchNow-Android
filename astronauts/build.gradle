@@ -46,8 +46,16 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.afollestad.material-dialogs:core:0.9.4.3'
     implementation 'com.afollestad.material-dialogs:commons:0.9.3.0'
+
+    // Iconography
+    implementation 'com.mikepenz:iconics-core:3.1.0@aar'
+    implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
+    implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
+    implementation 'com.mikepenz:fontawesome-typeface:5.0.13.0@aar'
+
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation "com.google.android.gms:play-services-ads:16.0.0"
     implementation 'com.google.android.material:material:1.0.0-alpha1'

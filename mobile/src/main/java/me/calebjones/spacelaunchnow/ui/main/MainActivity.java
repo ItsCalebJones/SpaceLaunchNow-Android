@@ -702,6 +702,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 break;
             case R.id.menu_astronauts:
                 setActionBarTitle("Astronauts");
+                mNavItemId = R.id.menu_astronauts;
                 removeAppBarElevation();
                 hideBottomNavigation();
                 if (mAstronautsListFragment == null)

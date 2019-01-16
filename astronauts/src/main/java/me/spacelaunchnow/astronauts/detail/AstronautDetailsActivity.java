@@ -16,9 +16,13 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -30,11 +34,14 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
 import me.spacelaunchnow.astronauts.R2;
@@ -42,7 +49,7 @@ import me.spacelaunchnow.astronauts.data.AstronautDataRepository;
 import me.spacelaunchnow.astronauts.data.Callbacks;
 import timber.log.Timber;
 
-public class AstronautDetailsActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
+public class AstronautDetailsActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R2.id.astronaut_profile_backdrop)
@@ -88,6 +95,8 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private AstronautDataRepository astronautDataRepository;
     private AstronautDetailViewModel viewModel;
+    private Astronaut astronaut;
+    private int astronautId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +108,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
+        astronautDetailSwipeRefresh.setOnRefreshListener(this);
         viewPager.setAdapter(mSectionsPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
         tabs.addTab(tabs.newTab().setText("Profile"));
@@ -112,7 +121,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
 
         //Grab information from Intent
         Intent mIntent = getIntent();
-        int astronautId = mIntent.getIntExtra("astronautId", 0);
+        astronautId = mIntent.getIntExtra("astronautId", 0);
 
         fetchData(astronautId);
 
@@ -159,7 +168,9 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
     }
 
     private void updateViews(Astronaut astronaut) {
+        this.astronaut = astronaut;
         astronautTitle.setText(astronaut.getName());
+        astronautSubtitle.setText(astronaut.getNationality());
         GlideApp.with(this)
                 .load(astronaut.getProfileImage())
                 .thumbnail(GlideApp.with(this)
@@ -169,6 +180,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
     }
 
     private void updateViewModel(Astronaut astronaut) {
+
         viewModel.getAstronaut().setValue(astronaut);
     }
 
@@ -237,6 +249,20 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R2.id.astronaut_fab_share)
+    void fabClicked(){
+        ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setChooserTitle(astronaut.getName())
+                .setText(astronaut.getUrl())
+                .startChooser();
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchData(astronautId);
     }
 
     /**

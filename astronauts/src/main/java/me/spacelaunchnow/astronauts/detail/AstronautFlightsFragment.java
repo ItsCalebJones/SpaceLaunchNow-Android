@@ -53,6 +53,7 @@ public class AstronautFlightsFragment extends BaseFragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.astronaut_flight_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
+        linearLayoutManager = new LinearLayoutManager(context);
         adapter = new ListAdapter(context, getCyanea().isDark());
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
