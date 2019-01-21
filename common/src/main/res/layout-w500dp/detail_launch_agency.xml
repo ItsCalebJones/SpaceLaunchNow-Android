@@ -192,6 +192,7 @@
                     android:padding="@dimen/material_card_edge_margin"
                     android:text="@string/view_upcoming_launches"
                     android:textSize="12sp"
+                    android:textColor="?colorPrimary"
                     android:theme="@style/PrimaryButtonTheme"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

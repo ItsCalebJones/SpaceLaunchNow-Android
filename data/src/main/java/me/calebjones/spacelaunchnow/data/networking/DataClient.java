@@ -4,12 +4,14 @@ import java.io.IOException;
 
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AstronautResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherConfigResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.SpacestationResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -146,6 +148,22 @@ public class DataClient {
 
     public Call<Astronaut> getAstronautsById(int id, Callback<Astronaut> callback) {
         Call<Astronaut> call = spaceLaunchNowService.getAstronautsById(id);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<SpacestationResponse> getSpacestations(int limit, int offset, String search, Integer status, Callback<SpacestationResponse> callback) {
+        Call<SpacestationResponse> call = spaceLaunchNowService.getSpacestations(limit, offset, search, status);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Spacestation> getSpacestationById(int id, Callback<Spacestation> callback) {
+        Call<Spacestation> call = spaceLaunchNowService.getSpacestationById(id);
 
         call.enqueue(callback);
 

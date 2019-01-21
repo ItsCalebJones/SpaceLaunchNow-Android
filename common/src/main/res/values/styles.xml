@@ -84,7 +84,7 @@
     </style>
 
     <style name="PrimaryButtonTheme" parent="BaseAppTheme">
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">?colorPrimary</item>
     </style>
 
     <style name="ExploreButtonTheme" parent="BaseAppTheme">

@@ -339,7 +339,6 @@
                     android:text="@string/view_upcoming_launches"
                     android:textSize="12sp"
                     android:textColor="?colorPrimary"
-                    android:theme="@style/PrimaryButtonTheme"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

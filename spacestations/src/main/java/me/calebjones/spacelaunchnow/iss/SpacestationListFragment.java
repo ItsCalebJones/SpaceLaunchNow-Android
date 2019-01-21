@@ -12,12 +12,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ISSFragment extends Fragment {
+public class SpacestationListFragment extends Fragment {
 
-    private IssViewModel mViewModel;
+    private SpacestationListViewModel mViewModel;
 
-    public static ISSFragment newInstance() {
-        return new ISSFragment();
+    public static SpacestationListFragment newInstance() {
+        return new SpacestationListFragment();
     }
 
     @Override
@@ -29,8 +29,8 @@ public class ISSFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(IssViewModel.class);
-        // TODO: Use the ViewModel
+        mViewModel = ViewModelProviders.of(this).get(SpacestationListViewModel.class);
+
     }
 
 }

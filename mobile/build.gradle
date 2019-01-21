@@ -193,7 +193,7 @@ dependencies {
     implementation project(':common')
     implementation project(':astronauts')
     implementation project(':news')
-    implementation project(':iss')
+    implementation project(':spacestations')
     implementation project(':events')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'com.android.support:multidex:1.0.3'
