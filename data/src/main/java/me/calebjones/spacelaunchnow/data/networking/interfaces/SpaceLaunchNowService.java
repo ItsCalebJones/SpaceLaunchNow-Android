@@ -66,7 +66,7 @@ public interface SpaceLaunchNowService {
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/agencies/")
-    Call<AgencyResponse> getAgenciesWithOrbiters(@Query("spacecraftConfigs") boolean orbiters);
+    Call<AgencyResponse> getAgenciesWithOrbiters(@Query("spacecraft") boolean orbiters);
 
 
     // Launches
@@ -202,7 +202,7 @@ public interface SpaceLaunchNowService {
     @GET(version + "/spacecraft/")
     Call<SpacecraftResponse> getSpacecraft(@Query("limit") int amount, @Query("offset") int offset,
                                            @Query("search") String search, @Query("status") Integer status,
-                                           @Query("spacecraft_config") Integer spacecraftConfig);
+                                           @Query("spacecraft_config") Integer spacecraft);
 
     // Spacecraft Flight
     // GET: /spacecraft/flight/

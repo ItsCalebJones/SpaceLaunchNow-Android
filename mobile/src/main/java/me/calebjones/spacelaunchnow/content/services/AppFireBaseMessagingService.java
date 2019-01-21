@@ -75,7 +75,6 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
 
     }
 
-    //TODO break this out into calling various methods inside NotificationBuilder for various types instead of returning a boolean
     private void checkNotificationType(Launch launch, String notificationType, boolean webcastAvailable) {
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);

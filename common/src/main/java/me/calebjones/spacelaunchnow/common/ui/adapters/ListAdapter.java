@@ -233,6 +233,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             super(view);
             ButterKnife.bind(this, view);
 
+            categoryIcon.setOnClickListener(this);
             title.setOnClickListener(this);
             location.setOnClickListener(this);
             launch_date.setOnClickListener(this);

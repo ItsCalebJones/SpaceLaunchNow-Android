@@ -67,7 +67,7 @@ public class Agency extends RealmObject {
     @SerializedName("launcher_list")
     @Expose
     public RealmList<LauncherConfig> launcherConfigs;
-    @SerializedName("orbiter_list")
+    @SerializedName("spacecraft_list")
     @Expose
     public RealmList<SpacecraftConfig> spacecraftConfigs;
 

@@ -60,7 +60,7 @@ public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<Astronaut
         if (holder.mItem.getAgency() != null && holder.mItem.getAgency().getAbbrev() != null){
             abbrev = holder.mItem.getAgency().getAbbrev();
         }
-        holder.astronautNationality.setText(String.format("%s %s",
+        holder.astronautNationality.setText(String.format("%s (%s)",
                 holder.mItem.getNationality(), abbrev));
 
         GlideApp.with(context)

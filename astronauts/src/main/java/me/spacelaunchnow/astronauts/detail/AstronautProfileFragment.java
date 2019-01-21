@@ -1,15 +1,24 @@
 package me.spacelaunchnow.astronauts.detail;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -101,50 +110,120 @@ public class AstronautProfileFragment extends BaseFragment {
         astronautInstagramButton.setImageDrawable(new IconicsDrawable(context).icon(FontAwesome.Icon.faw_instagram).sizeDp(24));
         astronautWikiButton.setImageDrawable(new IconicsDrawable(context).icon(FontAwesome.Icon.faw_wikipedia_w).sizeDp(24));
         astronautTwitterButton.setImageDrawable(new IconicsDrawable(context).icon(FontAwesome.Icon.faw_twitter).sizeDp(24));
+
+        if (astronaut.getWiki() != null){
+            astronautWikiButton.setVisibility(View.VISIBLE);
+            astronautWikiButton.setOnClickListener(v -> {
+                try {
+                    Uri webpage = Uri.parse(astronaut.getWiki());
+                    Intent myIntent = new Intent(Intent.ACTION_VIEW, webpage);
+                    startActivity(myIntent);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+        } else {
+            astronautWikiButton.setVisibility(View.GONE);
+        }
+
+        if (astronaut.getInstagram() != null){
+            astronautInstagramButton.setVisibility(View.VISIBLE);
+            astronautInstagramButton.setOnClickListener(v -> {
+                try {
+                    Uri webpage = Uri.parse(astronaut.getInstagram());
+                    Intent myIntent = new Intent(Intent.ACTION_VIEW, webpage);
+                    startActivity(myIntent);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+        } else {
+            astronautInstagramButton.setVisibility(View.GONE);
+        }
+
+        if (astronaut.getTwitter() != null){
+            astronautTwitterButton.setVisibility(View.VISIBLE);
+            astronautTwitterButton.setOnClickListener(v -> {
+                try {
+                    Uri webpage = Uri.parse(astronaut.getTwitter());
+                    Intent myIntent = new Intent(Intent.ACTION_VIEW, webpage);
+                    startActivity(myIntent);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+        } else {
+            astronautTwitterButton.setVisibility(View.GONE);
+        }
+
+        String bornDate = null;
+        String deathDate = null;
+
         if (astronaut.getDateOfBirth() != null) {
-            astronautBorn.setText(String.format("Born: %s", astronaut.getDateOfBirth()));
+            bornDate = DateFormat.getDateInstance(DateFormat.LONG).format(astronaut.getDateOfBirth());
         }
         if (astronaut.getDateOfDeath() != null) {
-            astronautBorn.setText(String.format("Born: %s", astronaut.getDateOfDeath()));
+            deathDate = DateFormat.getDateInstance(DateFormat.LONG).format(astronaut.getDateOfDeath());
+        }
+
+
+
+
+        if (bornDate != null && deathDate == null) {
+            int bornYear = astronaut.getDateOfBirth().getYear();
+            int currentYear = Calendar.getInstance().getTime().getYear();
+            astronautBorn.setText(String.format("Born: %s (%s)", bornDate, currentYear - bornYear));
+            astronautDied.setVisibility(View.GONE);
+        }
+        if (deathDate != null && bornDate != null) {
+            int bornYear = astronaut.getDateOfBirth().getYear();
+            int diedYear =  astronaut.getDateOfDeath().getYear();
+            astronautBorn.setText(String.format("Born: %s", bornDate));
+            astronautDied.setText(String.format("Died: %s (%s)", bornDate, diedYear - bornYear));
+            astronautDied.setVisibility(View.VISIBLE);
         }
 
         try {
             Agency agency = astronaut.getAgency();
 
             Timber.v("Setting up views...");
-            lspCard.setVisibility(View.VISIBLE);
+            if (agency != null) {
+                lspCard.setVisibility(View.VISIBLE);
 
-            lspAgency.setText(String.format(this.getString(me.calebjones.spacelaunchnow.common.R.string.view_rocket_launches), agency.getName()));
-            if (agency.getLogoUrl() != null) {
-                lspLogo.setVisibility(View.VISIBLE);
-                GlideApp.with(context)
-                        .load(agency.getLogoUrl())
-                        .centerInside()
-                        .into(lspLogo);
-            } else {
-                lspLogo.setVisibility(View.GONE);
-            }
-            lspName.setText(agency.getName());
-            lspType.setText(agency.getType());
-            if (agency.getAdministrator() != null) {
-                lspAdministrator.setText(String.format("%s", agency.getAdministrator()));
-            } else {
-                lspAdministrator.setText(me.calebjones.spacelaunchnow.common.R.string.unknown_administrator);
-            }
-            if (agency.getFoundingYear() != null) {
-                lspFoundedYear.setText(String.format(getString(me.calebjones.spacelaunchnow.common.R.string.founded_in), agency.getFoundingYear()));
-            } else {
-                lspFoundedYear.setText(me.calebjones.spacelaunchnow.common.R.string.unknown_year);
-            }
-            lspSummary.setText(agency.getDescription());
-            if (agency.getInfoUrl() == null) {
-                lspInfoButtonOne.setVisibility(View.GONE);
-            }
+                lspAgency.setText(String.format(this.getString(me.calebjones.spacelaunchnow.common.R.string.view_rocket_launches), agency.getName()));
+                if (agency.getLogoUrl() != null) {
+                    lspLogo.setVisibility(View.VISIBLE);
+                    GlideApp.with(context)
+                            .load(agency.getLogoUrl())
+                            .centerInside()
+                            .into(lspLogo);
+                } else {
+                    lspLogo.setVisibility(View.GONE);
+                }
+                lspName.setText(agency.getName());
+                lspType.setText(agency.getType());
+                if (agency.getAdministrator() != null) {
+                    lspAdministrator.setText(String.format("%s", agency.getAdministrator()));
+                } else {
+                    lspAdministrator.setText(me.calebjones.spacelaunchnow.common.R.string.unknown_administrator);
+                }
+                if (agency.getFoundingYear() != null) {
+                    lspFoundedYear.setText(String.format(getString(me.calebjones.spacelaunchnow.common.R.string.founded_in), agency.getFoundingYear()));
+                } else {
+                    lspFoundedYear.setText(me.calebjones.spacelaunchnow.common.R.string.unknown_year);
+                }
+                lspSummary.setText(agency.getDescription());
+                if (agency.getInfoUrl() == null) {
+                    lspInfoButtonOne.setVisibility(View.GONE);
+                }
 
-            if (agency.getWikiUrl() == null) {
-                lspWikiButtonOne.setVisibility(View.GONE);
+                if (agency.getWikiUrl() == null) {
+                    lspWikiButtonOne.setVisibility(View.GONE);
+                }
+                lspAgency.setVisibility(View.VISIBLE);
+            } else {
+                lspCard.setVisibility(View.GONE);
             }
-            lspAgency.setVisibility(View.VISIBLE);
 
         } catch (NullPointerException e) {
             Timber.e(e);

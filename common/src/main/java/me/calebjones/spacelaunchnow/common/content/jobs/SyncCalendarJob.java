@@ -45,7 +45,6 @@ public class SyncCalendarJob extends Job {
         builder.build().schedule();
     }
 
-    //TODO
     @NonNull
     @Override
     protected Result onRunJob(Params params) {
@@ -70,6 +69,7 @@ public class SyncCalendarJob extends Job {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                return Result.FAILURE;
             }
         }
         return Result.SUCCESS;

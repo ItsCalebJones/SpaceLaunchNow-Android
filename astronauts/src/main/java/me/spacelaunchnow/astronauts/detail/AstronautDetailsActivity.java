@@ -1,20 +1,26 @@
 package me.spacelaunchnow.astronauts.detail;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -217,7 +223,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
             mIsAvatarShown = false;
             astronautProfileImage.animate()
                     .scaleY(0).scaleX(0)
-                    .setDuration(200)
+                    .setDuration(300)
                     .start();
         }
 
@@ -252,7 +258,8 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_astronaut_details, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.info_menu, menu);
         return true;
     }
 
@@ -263,9 +270,29 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
+            onBackPressed();
             return true;
+        }
+
+        if (id == R.id.info) {
+            new MaterialDialog.Builder(this)
+                    .title(me.calebjones.spacelaunchnow.common.R.string.improve_our_data)
+                    .icon(new IconicsDrawable(this)
+                            .icon(FontAwesome.Icon.faw_discord)
+                            .color(Color.rgb(114, 137, 218))
+                            .sizeDp(24))
+                    .content(R.string.improve_our_data_content)
+                    .negativeText(R.string.button_no)
+                    .positiveText(R.string.ok)
+                    .onNegative((dialog, which) -> dialog.dismiss())
+                    .onPositive((dialog, which) -> {
+                        String discordUrl = getString(R.string.discord_url);
+                        Intent discordIntent = new Intent(Intent.ACTION_VIEW);
+                        discordIntent.setData(Uri.parse(discordUrl));
+                        startActivity(discordIntent);
+                    })
+                    .show();
         }
 
         return super.onOptionsItemSelected(item);

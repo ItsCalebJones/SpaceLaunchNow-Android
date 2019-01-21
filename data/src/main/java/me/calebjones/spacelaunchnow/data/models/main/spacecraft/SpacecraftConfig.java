@@ -3,8 +3,11 @@ package me.calebjones.spacelaunchnow.data.models.main.spacecraft;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 
 public class SpacecraftConfig extends RealmObject {
 
@@ -19,7 +22,7 @@ public class SpacecraftConfig extends RealmObject {
     public String name;
     @SerializedName("agency")
     @Expose
-    public String agency;
+    public Agency agency;
     @SerializedName("in_use")
     @Expose
     public Boolean inUse;
@@ -34,7 +37,7 @@ public class SpacecraftConfig extends RealmObject {
     public String details;
     @SerializedName("maiden_flight")
     @Expose
-    public String maidenFlight;
+    public Date maidenFlight;
     @SerializedName("height")
     @Expose
     public Double height;
@@ -90,11 +93,11 @@ public class SpacecraftConfig extends RealmObject {
         this.name = name;
     }
 
-    public String getAgency() {
+    public Agency getAgency() {
         return agency;
     }
 
-    public void setAgency(String agency) {
+    public void setAgency(Agency agency) {
         this.agency = agency;
     }
 
@@ -130,11 +133,11 @@ public class SpacecraftConfig extends RealmObject {
         this.details = details;
     }
 
-    public String getMaidenFlight() {
+    public Date getMaidenFlight() {
         return maidenFlight;
     }
 
-    public void setMaidenFlight(String maidenFlight) {
+    public void setMaidenFlight(Date maidenFlight) {
         this.maidenFlight = maidenFlight;
     }
 
