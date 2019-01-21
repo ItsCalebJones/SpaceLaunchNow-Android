@@ -73,7 +73,7 @@ import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.iss.ISSFragment;
+import me.calebjones.spacelaunchnow.iss.SpacestationListFragment;
 import me.calebjones.spacelaunchnow.events.EventsFragment;
 import me.calebjones.spacelaunchnow.local.common.BaseActivity;
 import me.calebjones.spacelaunchnow.common.ui.generate.Rate;
@@ -114,7 +114,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private NextLaunchFragment mUpcomingFragment;
     private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
-    private ISSFragment mIssFragment;
+    private SpacestationListFragment mSpacestationListFragment;
     private EventsFragment mEventsFragment;
     private AstronautListFragment mAstronautsListFragment;
     private Drawer drawer = null;
@@ -248,7 +248,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_satellite)
-                                .withName("ISS")
+                                .withName("Spacestations")
                                 .withIdentifier(R.id.menu_iss)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
@@ -692,9 +692,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 setActionBarTitle("International Space Station");
                 addAppBarElevation();
                 hideBottomNavigation();
-                if (mIssFragment == null)
-                    mIssFragment = ISSFragment.newInstance();
-                navigateToFragment(mIssFragment, ISS_TAG);
+                if (mSpacestationListFragment == null)
+                    mSpacestationListFragment = SpacestationListFragment.newInstance();
+                navigateToFragment(mSpacestationListFragment, ISS_TAG);
 
                 if (rate != null) {
                     rate.showRequest();
