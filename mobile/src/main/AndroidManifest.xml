@@ -139,7 +139,7 @@
             </intent-filter>
         </service>
         <service
-            android:name="LaunchListWidgetService"
+            android:name=".widgets.launchlist.LaunchListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service
             android:name="com.evernote.android.job.v21.PlatformJobService"
@@ -168,10 +168,48 @@
         </receiver>
 
         <service
-            android:name="WidgetJobService"
+            android:name=".widgets.WidgetJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <receiver android:name="WidgetBroadcastReceiver" />
+        <receiver android:name=".widgets.WidgetBroadcastReceiver" />
+
+        <receiver
+            android:name=".widgets.launchcard.LaunchCardCompactWidgetProvider"
+            android:label="Compact Card">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider.ACTION_WIDGET_REFRESH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_card_compact_info" />
+        </receiver>
+        <receiver
+            android:name=".widgets.wordtimer.LaunchWordTimerWidgetProvider"
+            android:label="Launch Timer">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH" />
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_word_timer_info" />
+        </receiver>
+        <receiver
+            android:name=".widgets.launchlist.LaunchListWidgetProvider"
+            android:label="Launch List (Supporters)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchListWidgetProvider.ACTION_WIDGET_REFRESH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_list_info" />
+        </receiver>
 
         <service
             android:name="com.evernote.android.job.gcm.PlatformGcmService"

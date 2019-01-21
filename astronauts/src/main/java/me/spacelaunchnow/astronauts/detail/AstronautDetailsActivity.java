@@ -111,6 +111,20 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         astronautDetailSwipeRefresh.setOnRefreshListener(this);
         viewPager.setAdapter(mSectionsPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
+        viewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled( int position, float v, int i1 ) {
+            }
+
+            @Override
+            public void onPageSelected( int position ) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged( int state ) {
+                enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+            }
+        } );
         tabs.addTab(tabs.newTab().setText("Profile"));
         tabs.addTab(tabs.newTab().setText("Flights"));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
@@ -137,6 +151,12 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         viewModel = ViewModelProviders.of(this).get(AstronautDetailViewModel.class);
         // update UI
         viewModel.getAstronaut().observe(this, this::updateViews);
+    }
+
+    private void enableDisableSwipeRefresh(boolean enable) {
+        if (astronautDetailSwipeRefresh != null) {
+            astronautDetailSwipeRefresh.setEnabled(enable);
+        }
     }
 
     private void fetchData(int astronautId) {

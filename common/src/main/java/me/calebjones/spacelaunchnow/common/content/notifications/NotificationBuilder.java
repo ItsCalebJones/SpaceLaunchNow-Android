@@ -84,7 +84,7 @@ public class NotificationBuilder {
         if (Once.beenDone("SHOW_FILTER_SETTINGS", Amount.lessThan(10))) {
             Intent intent;
             try {
-                intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.MainActivity"));
+                intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
             } catch (ClassNotFoundException e) {
                 Timber.e(e);
                 return;

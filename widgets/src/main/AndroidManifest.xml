@@ -2,7 +2,7 @@
     package="me.calebjones.spacelaunchnow.widgets" >
     <application>
         <receiver
-            android:name="LaunchCardCompactWidgetProvider"
+            android:name=".launchcard.LaunchCardCompactWidgetProvider"
             android:label="Compact Card">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -14,7 +14,7 @@
                 android:resource="@xml/widget_launch_card_compact_info" />
         </receiver>
         <receiver
-            android:name="LaunchWordTimerWidgetProvider"
+            android:name=".wordtimer.LaunchWordTimerWidgetProvider"
             android:label="Launch Timer">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -27,7 +27,7 @@
                 android:resource="@xml/widget_launch_word_timer_info" />
         </receiver>
         <receiver
-            android:name="LaunchListWidgetProvider"
+            android:name=".launchlist.LaunchListWidgetProvider"
             android:label="Launch List (Supporters)">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

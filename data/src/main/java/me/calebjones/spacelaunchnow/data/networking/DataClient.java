@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.data.networking;
 
+import java.io.IOException;
+
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -60,11 +62,8 @@ public class DataClient {
         return call;
     }
 
-    public Call<LaunchResponse> getNextUpcomingLaunchesForWidgets(int limit, int offset, Callback<LaunchResponse> callback) {
+    public Call<LaunchResponse> getNextUpcomingLaunchesForWidgets(int limit, int offset) {
         Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null, null, null);
-
-        call.enqueue(callback);
-
         return call;
     }
 

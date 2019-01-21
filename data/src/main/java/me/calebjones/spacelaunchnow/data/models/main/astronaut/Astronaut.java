@@ -34,10 +34,10 @@ public class Astronaut extends RealmObject {
     public Agency agency;
     @SerializedName("date_of_birth")
     @Expose
-    public String dateOfBirth;
+    public Date dateOfBirth;
     @SerializedName("date_of_death")
     @Expose
-    public String dateOfDeath;
+    public Date dateOfDeath;
     @SerializedName("nationality")
     @Expose
     public String nationality;
@@ -113,19 +113,19 @@ public class Astronaut extends RealmObject {
         this.agency = agency;
     }
 
-    public String getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getDateOfDeath() {
+    public Date getDateOfDeath() {
         return dateOfDeath;
     }
 
-    public void setDateOfDeath(String dateOfDeath) {
+    public void setDateOfDeath(Date dateOfDeath) {
         this.dateOfDeath = dateOfDeath;
     }
 

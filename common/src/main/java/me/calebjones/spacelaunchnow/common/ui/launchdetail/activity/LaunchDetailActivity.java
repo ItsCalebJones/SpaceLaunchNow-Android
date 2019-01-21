@@ -188,6 +188,20 @@ public class LaunchDetailActivity extends BaseActivity
         tabAdapter = new TabsAdapter(this);
         viewPager.setAdapter(tabAdapter);
         viewPager.setOffscreenPageLimit(3);
+        viewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled( int position, float v, int i1 ) {
+            }
+
+            @Override
+            public void onPageSelected( int position ) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged( int state ) {
+                enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+            }
+        } );
 
         tabLayout.setupWithViewPager(viewPager);
 
@@ -209,6 +223,12 @@ public class LaunchDetailActivity extends BaseActivity
                 getSupportActionBar().setHomeButtonEnabled(true);
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
             }
+        }
+    }
+
+    private void enableDisableSwipeRefresh(boolean enable) {
+        if (detailSwipeRefresh != null) {
+            detailSwipeRefresh.setEnabled(enable);
         }
     }
 

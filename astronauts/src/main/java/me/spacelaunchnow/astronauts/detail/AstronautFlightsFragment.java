@@ -71,6 +71,7 @@ public class AstronautFlightsFragment extends BaseFragment {
 
     private void setAstronaut(Astronaut astronaut) {
         if (astronaut != null && astronaut.getFlights() != null){
+            adapter.clear();
             adapter.addItems(astronaut.getFlights());
         }
     }

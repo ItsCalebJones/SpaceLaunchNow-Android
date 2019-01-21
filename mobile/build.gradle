@@ -195,7 +195,6 @@ dependencies {
     implementation project(':news')
     implementation project(':iss')
     implementation project(':events')
-    implementation project(':widgets')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'com.android.support:multidex:1.0.3'
 
@@ -227,7 +226,6 @@ dependencies {
 
     // Billing
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
-
     implementation 'com.evernote:android-job:1.2.6'
 
 

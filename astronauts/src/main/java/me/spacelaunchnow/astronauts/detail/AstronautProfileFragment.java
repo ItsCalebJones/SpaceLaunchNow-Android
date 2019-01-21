@@ -22,13 +22,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
 import me.spacelaunchnow.astronauts.R2;
 import timber.log.Timber;
 
-public class AstronautProfileFragment extends Fragment {
+public class AstronautProfileFragment extends BaseFragment {
 
     @BindView(R2.id.astronaut_bio_text)
     TextView astronautBio;
@@ -60,6 +61,10 @@ public class AstronautProfileFragment extends Fragment {
     TextView lspFoundedYear;
     @BindView(R2.id.lsp_agency)
     AppCompatButton lspAgency;
+    @BindView(R2.id.astronaut_born)
+    TextView astronautBorn;
+    @BindView(R2.id.astronaut_died)
+    TextView astronautDied;
     private AstronautDetailViewModel mViewModel;
     private Unbinder unbinder;
     private Context context;
@@ -96,6 +101,12 @@ public class AstronautProfileFragment extends Fragment {
         astronautInstagramButton.setImageDrawable(new IconicsDrawable(context).icon(FontAwesome.Icon.faw_instagram).sizeDp(24));
         astronautWikiButton.setImageDrawable(new IconicsDrawable(context).icon(FontAwesome.Icon.faw_wikipedia_w).sizeDp(24));
         astronautTwitterButton.setImageDrawable(new IconicsDrawable(context).icon(FontAwesome.Icon.faw_twitter).sizeDp(24));
+        if (astronaut.getDateOfBirth() != null) {
+            astronautBorn.setText(String.format("Born: %s", astronaut.getDateOfBirth()));
+        }
+        if (astronaut.getDateOfDeath() != null) {
+            astronautBorn.setText(String.format("Born: %s", astronaut.getDateOfDeath()));
+        }
 
         try {
             Agency agency = astronaut.getAgency();

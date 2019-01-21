@@ -48,7 +48,7 @@ class DbArticleRepository(
         body!!.let { posts ->
             db.runInTransaction {
                 var start = db.posts().getNextArticleIndex()
-                val items = posts.mapIndexed { index, child ->
+                val items = posts.mapIndexed { _, child ->
                     child.indexInResponse = start
                     child
                 }

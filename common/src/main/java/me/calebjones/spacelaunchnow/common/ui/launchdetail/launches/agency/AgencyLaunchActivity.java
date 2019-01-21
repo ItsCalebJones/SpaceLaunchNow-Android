@@ -92,9 +92,29 @@ public class AgencyLaunchActivity extends BaseActivity implements UpcomingAgency
 
         // Set up the ViewPager with the sections adapter.
         viewPager.setAdapter(mSectionsPagerAdapter);
+        viewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled( int position, float v, int i1 ) {
+            }
+
+            @Override
+            public void onPageSelected( int position ) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged( int state ) {
+                enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+            }
+        } );
         tabLayout.setupWithViewPager(viewPager);
         swipeRefresh.setOnRefreshListener(this);
         getFeaturedAgencies();
+    }
+
+    private void enableDisableSwipeRefresh(boolean enable) {
+        if (swipeRefresh != null) {
+            swipeRefresh.setEnabled(enable);
+        }
     }
 
     @Override

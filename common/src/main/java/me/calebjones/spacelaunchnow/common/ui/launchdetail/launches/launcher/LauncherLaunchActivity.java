@@ -94,12 +94,32 @@ public class LauncherLaunchActivity extends BaseActivity implements UpcomingLaun
 
         // Set up the ViewPager with the sections adapter.
         viewPager.setAdapter(mSectionsPagerAdapter);
+        viewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled( int position, float v, int i1 ) {
+            }
+
+            @Override
+            public void onPageSelected( int position ) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged( int state ) {
+                enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+            }
+        } );
         tabLayout.setupWithViewPager(viewPager);
         swipeRefresh.setOnRefreshListener(this);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         menu.setVisibility(View.GONE);
+    }
+
+    private void enableDisableSwipeRefresh(boolean enable) {
+        if (swipeRefresh != null) {
+            swipeRefresh.setEnabled(enable);
+        }
     }
 
     @Override

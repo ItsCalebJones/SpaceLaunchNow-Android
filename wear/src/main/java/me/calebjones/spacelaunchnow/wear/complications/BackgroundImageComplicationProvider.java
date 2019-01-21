@@ -34,6 +34,8 @@ public class BackgroundImageComplicationProvider extends ComplicationProviderSer
     private int dataType;
     private DataClient dataClient;
 
+
+    // TODO replace with actual image from launches
     @Override
     public void onComplicationUpdate(final int complicationId, int dataType, final ComplicationManager complicationManager) {
         this.dataType = dataType;
@@ -54,27 +56,24 @@ public class BackgroundImageComplicationProvider extends ComplicationProviderSer
                                 Timber.v("Retrieving Asset...");
                                 Asset profileAsset = dataMap.getAsset(BACKGROUND_KEY);
                                 Task<DataClient.GetFdForAssetResponse> assetInputStream = Wearable.getDataClient(getApplicationContext()).getFdForAsset(profileAsset);
-                                assetInputStream.addOnCompleteListener(new OnCompleteListener<DataClient.GetFdForAssetResponse>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataClient.GetFdForAssetResponse> task) {
-                                        if (task.isSuccessful()){
-                                            InputStream assetInputStream = task.getResult().getInputStream();
-                                            if (assetInputStream != null) {
-                                                Bitmap bitmap = BitmapFactory.decodeStream(assetInputStream);
-                                                Icon icon = Icon.createWithBitmap(bitmap);
-                                                complicationData = new ComplicationData.Builder(ComplicationData.TYPE_LARGE_IMAGE)
-                                                        .setLargeImage(icon)
-                                                        .build();
-                                            }
+                                assetInputStream.addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()){
+                                        InputStream assetInputStream1 = task1.getResult().getInputStream();
+                                        if (assetInputStream1 != null) {
+                                            Bitmap bitmap = BitmapFactory.decodeStream(assetInputStream1);
+                                            Icon icon = Icon.createWithBitmap(bitmap);
+                                            complicationData = new ComplicationData.Builder(ComplicationData.TYPE_LARGE_IMAGE)
+                                                    .setLargeImage(icon)
+                                                    .build();
                                         }
-                                        if (complicationData != null) {
-                                            complicationManager.updateComplicationData(complicationId, complicationData);
+                                    }
+                                    if (complicationData != null) {
+                                        complicationManager.updateComplicationData(complicationId, complicationData);
 
-                                        } else {
-                                            // If no data is sent, we still need to inform the ComplicationManager, so
-                                            // the update job can finish and the wake lock isn't held any longer.
-                                            complicationManager.noUpdateRequired(complicationId);
-                                        }
+                                    } else {
+                                        // If no data is sent, we still need to inform the ComplicationManager, so
+                                        // the update job can finish and the wake lock isn't held any longer.
+                                        complicationManager.noUpdateRequired(complicationId);
                                     }
                                 });
                             }

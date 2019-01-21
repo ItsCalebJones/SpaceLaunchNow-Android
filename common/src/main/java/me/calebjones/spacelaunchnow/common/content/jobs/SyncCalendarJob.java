@@ -4,12 +4,14 @@ import android.content.Context;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobRequest;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 
+import me.calebjones.spacelaunchnow.common.content.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.common.content.util.FilterBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -48,28 +50,28 @@ public class SyncCalendarJob extends Job {
     @Override
     protected Result onRunJob(Params params) {
         Timber.d("Running job ID: %s Tag: %s", params.getId(), params.getTag());
-//        if (Prefs.getBoolean("calendar_sync_state", false)) {
-//            Context context = getContext();
-//            DataSaver dataSaver = new DataSaver(context);
-//            String locationIds = FilterBuilder.getLocationIds(context);
-//            String lspIds = FilterBuilder.getLSPIds(context);
-//            int count = 10;
-//            Call<LaunchResponse> call = DataClient.getInstance().getNextUpcomingLaunchesSynchronous(count, 0, locationIds, lspIds);
-//            try {
-//                Response<LaunchResponse> response = call.execute();
-//                if (response.isSuccessful()) {
-//                    LaunchResponse launchResponse = response.body();
-//                    if (launchResponse != null) {
-//                        Timber.v("UpcomingLaunches Count: %s", launchResponse.getCount());
-//                        dataSaver.saveLaunchesToRealm(launchResponse.getLaunches(), false);
-//                        CalendarSyncManager calendarSyncManager = new CalendarSyncManager(getContext());
-//                        calendarSyncManager.resyncAllEvents();
-//                    }
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        if (Prefs.getBoolean("calendar_sync_state", false)) {
+            Context context = getContext();
+            DataSaver dataSaver = new DataSaver(context);
+            String locationIds = FilterBuilder.getLocationIds(context);
+            String lspIds = FilterBuilder.getLSPIds(context);
+            int count = 10;
+            Call<LaunchResponse> call = DataClient.getInstance().getNextUpcomingLaunchesSynchronous(count, 0, locationIds, lspIds);
+            try {
+                Response<LaunchResponse> response = call.execute();
+                if (response.isSuccessful()) {
+                    LaunchResponse launchResponse = response.body();
+                    if (launchResponse != null) {
+                        Timber.v("UpcomingLaunches Count: %s", launchResponse.getCount());
+                        dataSaver.saveLaunchesToRealm(launchResponse.getLaunches(), false);
+                        CalendarSyncManager calendarSyncManager = new CalendarSyncManager(getContext());
+                        calendarSyncManager.resyncAllEvents();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return Result.SUCCESS;
     }
 }

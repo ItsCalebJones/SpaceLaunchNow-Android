@@ -21,7 +21,8 @@
         android:label="${applicationLabel}"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault"
-        tools:replace="label">
+        tools:replace="label"
+        tools:ignore="GoogleAppIndexingWarning">
         <uses-library
             android:name="com.google.android.wearable"
             android:required="true" />
@@ -29,27 +30,6 @@
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
-
-        <service
-            android:name=".watchface.SpaceLaunchWatchFace"
-            android:label="${applicationLabel}"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <meta-data
-                android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/square_preview" />
-            <meta-data
-                android:name="com.google.android.wearable.watchface.preview_circular"
-                android:resource="@drawable/circle_preview" />
-
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
-            </intent-filter>
-        </service>
 
         <meta-data
             android:name="com.google.android.gms.version"

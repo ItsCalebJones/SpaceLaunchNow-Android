@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow.data.models.main.spacecraft;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
@@ -19,7 +21,7 @@ public class SpacecraftStage extends RealmObject {
     public String url;
     @SerializedName("splashdown")
     @Expose
-    public String splashdown;
+    public Date splashdown;
     @SerializedName("destination")
     @Expose
     public String destination;

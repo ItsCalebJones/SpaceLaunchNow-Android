@@ -104,138 +104,140 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
-        Timber.i("Binding %s", launchItem.getName());
-        String title;
-        holder.titleBackground.setBackgroundColor(color);
-        try {
-            if (launchItem.isValid()) {
-                if (launchItem.getRocket().getConfiguration() != null) {
-                    if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
-                        title = launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getName() + " | " + (launchItem.getRocket().getConfiguration().getName());
-                    } else {
-                        title = launchItem.getRocket().getConfiguration().getName();
-                    }
-                } else if (launchItem.getName() != null) {
-                    title = launchItem.getName();
-                } else {
-                    Timber.e("Error - launch item is effectively null.");
-                    title = context.getString(R.string.error_unknown_launch);
-                }
-
-                holder.title.setText(title);
-
-                //Retrieve missionType
-                if (launchItem.getMission() != null) {
-                    Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName(), true);
-                } else {
-                    holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
-                }
-
-                holder.landingView.setVisibility(View.INVISIBLE);
-                if (launchItem.getRocket().getLauncherStage() != null && launchItem.getRocket().getLauncherStage().size() >= 1) {
-                    if (launchItem.getRocket().getLauncherStage().size() > 1) {
-                        StringBuilder stagesText = new StringBuilder();
-                        for (LauncherStage stage : launchItem.getRocket().getLauncherStage()) {
-                            if (stage.getLanding().getLandingLocation() != null) {
-                                stagesText.append(stage.getLanding().getLandingLocation().getAbbrev()).append(" ");
-                            }
-                        }
-                        holder.landingView.setVisibility(View.VISIBLE);
-                        holder.landing.setText(stagesText.toString());
-                    } else if (launchItem.getRocket().getLauncherStage().size() == 1) {
-                        if (launchItem.getRocket().getLauncherStage().first().getLanding() != null) {
-                            Landing landing = launchItem.getRocket().getLauncherStage().first().getLanding();
-                            if (landing.getLandingLocation() != null) {
-                                holder.landingView.setVisibility(View.VISIBLE);
-                                holder.landing.setText(landing.getLandingLocation().getAbbrev());
-                            }
-                        }
-                    }
-                }
-
-                if (launchItem.getRocket().getConfiguration().getImageUrl() != null) {
-                    holder.launchImage.setVisibility(View.VISIBLE);
-                    GlideApp.with(context)
-                            .load(launchItem.getRocket().getConfiguration().getImageUrl())
-                            .placeholder(R.drawable.placeholder)
-                            .into(holder.launchImage);
-                } else if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null && launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getImageUrl() != null) {
-                    holder.launchImage.setVisibility(View.VISIBLE);
-                    GlideApp.with(context)
-                            .load(launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getImageUrl())
-                            .placeholder(R.drawable.placeholder)
-                            .into(holder.launchImage);
-                } else if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null && launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl() != null) {
-                    holder.launchImage.setVisibility(View.VISIBLE);
-                    GlideApp.with(context)
-                            .load(launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl())
-                            .placeholder(R.drawable.placeholder)
-                            .into(holder.launchImage);
-                } else {
-                    holder.launchImage.setVisibility(View.GONE);
-                }
-
-                holder.countDownView.setLaunch(launchItem);
-
-                //Get launch date
-                if (launchItem.getStatus().getId() == 2) {
-
-                    if (launchItem.getNet() != null) {
-                        //Get launch date
-
-
-                        Date date = launchItem.getNet();
-                        String launchTime = shortDate.format(date);
-                        if (launchItem.getTbddate()) {
-                            launchTime = launchTime + " " + context.getString(R.string.unconfirmed);
-                        }
-                        holder.launchDateCompact.setText(launchTime);
-                    }
-                } else {
-                    Date date = launchItem.getNet();
-                    holder.launchDateCompact.setText(fullDate.format(date));
-                }
-
-                if (launchItem.getVidURLs() != null) {
-                    if (launchItem.getVidURLs().size() == 0) {
-                        holder.watchButton.setVisibility(View.GONE);
-                    } else {
-                        holder.watchButton.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    holder.watchButton.setVisibility(View.GONE);
-                }
-
-
-                if (launchItem.getMission() != null) {
-                    holder.contentMission.setText(launchItem.getMission().getName());
-                    String description = launchItem.getMission().getDescription();
-                    if (description.length() > 0) {
-                        holder.contentMissionDescription.setText(description);
-                    }
-                } else {
-                    String[] separated = launchItem.getName().split(" \\| ");
-                    try {
-                        if (separated.length > 0 && separated[1].length() > 4) {
-                            holder.contentMission.setText(separated[1].trim());
+        if (launchItem.isValid()) {
+            Timber.i("Binding %s", launchItem.getName());
+            String title;
+            holder.titleBackground.setBackgroundColor(color);
+            try {
+                if (launchItem.isValid()) {
+                    if (launchItem.getRocket().getConfiguration() != null) {
+                        if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
+                            title = launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getName() + " | " + (launchItem.getRocket().getConfiguration().getName());
                         } else {
+                            title = launchItem.getRocket().getConfiguration().getName();
+                        }
+                    } else if (launchItem.getName() != null) {
+                        title = launchItem.getName();
+                    } else {
+                        Timber.e("Error - launch item is effectively null.");
+                        title = context.getString(R.string.error_unknown_launch);
+                    }
+
+                    holder.title.setText(title);
+
+                    //Retrieve missionType
+                    if (launchItem.getMission() != null) {
+                        Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName(), true);
+                    } else {
+                        holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
+                    }
+
+                    holder.landingView.setVisibility(View.INVISIBLE);
+                    if (launchItem.getRocket().getLauncherStage() != null && launchItem.getRocket().getLauncherStage().size() >= 1) {
+                        if (launchItem.getRocket().getLauncherStage().size() > 1) {
+                            StringBuilder stagesText = new StringBuilder();
+                            for (LauncherStage stage : launchItem.getRocket().getLauncherStage()) {
+                                if (stage.getLanding().getLandingLocation() != null) {
+                                    stagesText.append(stage.getLanding().getLandingLocation().getAbbrev()).append(" ");
+                                }
+                            }
+                            holder.landingView.setVisibility(View.VISIBLE);
+                            holder.landing.setText(stagesText.toString());
+                        } else if (launchItem.getRocket().getLauncherStage().size() == 1) {
+                            if (launchItem.getRocket().getLauncherStage().first().getLanding() != null) {
+                                Landing landing = launchItem.getRocket().getLauncherStage().first().getLanding();
+                                if (landing.getLandingLocation() != null) {
+                                    holder.landingView.setVisibility(View.VISIBLE);
+                                    holder.landing.setText(landing.getLandingLocation().getAbbrev());
+                                }
+                            }
+                        }
+                    }
+
+                    if (launchItem.getRocket().getConfiguration().getImageUrl() != null) {
+                        holder.launchImage.setVisibility(View.VISIBLE);
+                        GlideApp.with(context)
+                                .load(launchItem.getRocket().getConfiguration().getImageUrl())
+                                .placeholder(R.drawable.placeholder)
+                                .into(holder.launchImage);
+                    } else if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null && launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getImageUrl() != null) {
+                        holder.launchImage.setVisibility(View.VISIBLE);
+                        GlideApp.with(context)
+                                .load(launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getImageUrl())
+                                .placeholder(R.drawable.placeholder)
+                                .into(holder.launchImage);
+                    } else if (launchItem.getRocket().getConfiguration().getLaunchServiceProvider() != null && launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl() != null) {
+                        holder.launchImage.setVisibility(View.VISIBLE);
+                        GlideApp.with(context)
+                                .load(launchItem.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl())
+                                .placeholder(R.drawable.placeholder)
+                                .into(holder.launchImage);
+                    } else {
+                        holder.launchImage.setVisibility(View.GONE);
+                    }
+
+                    holder.countDownView.setLaunch(launchItem);
+
+                    //Get launch date
+                    if (launchItem.getStatus().getId() == 2) {
+
+                        if (launchItem.getNet() != null) {
+                            //Get launch date
+
+
+                            Date date = launchItem.getNet();
+                            String launchTime = shortDate.format(date);
+                            if (launchItem.getTbddate()) {
+                                launchTime = launchTime + " " + context.getString(R.string.unconfirmed);
+                            }
+                            holder.launchDateCompact.setText(launchTime);
+                        }
+                    } else {
+                        Date date = launchItem.getNet();
+                        holder.launchDateCompact.setText(fullDate.format(date));
+                    }
+
+                    if (launchItem.getVidURLs() != null) {
+                        if (launchItem.getVidURLs().size() == 0) {
+                            holder.watchButton.setVisibility(View.GONE);
+                        } else {
+                            holder.watchButton.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        holder.watchButton.setVisibility(View.GONE);
+                    }
+
+
+                    if (launchItem.getMission() != null) {
+                        holder.contentMission.setText(launchItem.getMission().getName());
+                        String description = launchItem.getMission().getDescription();
+                        if (description.length() > 0) {
+                            holder.contentMissionDescription.setText(description);
+                        }
+                    } else {
+                        String[] separated = launchItem.getName().split(" \\| ");
+                        try {
+                            if (separated.length > 0 && separated[1].length() > 4) {
+                                holder.contentMission.setText(separated[1].trim());
+                            } else {
+                                holder.contentMission.setText("Unknown Mission");
+                            }
+                        } catch (ArrayIndexOutOfBoundsException exception) {
                             holder.contentMission.setText("Unknown Mission");
                         }
-                    } catch (ArrayIndexOutOfBoundsException exception) {
-                        holder.contentMission.setText("Unknown Mission");
+                    }
+
+                    //If pad and agency_menu exist add it to location, otherwise get whats always available
+                    if (launchItem.getPad().getLocation() != null) {
+                        holder.location.setText(launchItem.getPad().getLocation().getName());
+                    } else {
+                        holder.location.setText("");
                     }
                 }
-
-                //If pad and agency_menu exist add it to location, otherwise get whats always available
-                if (launchItem.getPad().getLocation() != null) {
-                    holder.location.setText(launchItem.getPad().getLocation().getName());
-                } else {
-                    holder.location.setText("");
-                }
+            } catch (NullPointerException e) {
+                Timber.e(e);
+                Crashlytics.logException(e);
             }
-        } catch (NullPointerException e) {
-            Timber.e(e);
-            Crashlytics.logException(e);
         }
     }
 

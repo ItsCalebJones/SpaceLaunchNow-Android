@@ -29,7 +29,7 @@
             android:id="@+id/cb_never"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/view_margins"
+            android:layout_margin="@dimen/material_increment_1x"
             android:layout_weight="1"
             android:checked="true"
             android:text="@string/button_dont_ask"/>
@@ -42,10 +42,10 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="end|center_vertical"
-            android:paddingEnd="@dimen/view_margins"
-            android:paddingLeft="@dimen/view_margins"
-            android:paddingRight="@dimen/view_margins"
-            android:paddingStart="@dimen/view_margins"
+            android:paddingEnd="@dimen/material_increment_1x"
+            android:paddingLeft="@dimen/material_increment_1x"
+            android:paddingRight="@dimen/material_increment_1x"
+            android:paddingStart="@dimen/material_increment_1x"
             android:text="@string/button_feedback"/>
     </LinearLayout>
 

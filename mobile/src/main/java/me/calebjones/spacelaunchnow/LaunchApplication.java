@@ -50,7 +50,6 @@ import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.common.content.jobs.DataJobCreator;
 import me.calebjones.spacelaunchnow.common.content.jobs.SyncCalendarJob;
-import me.calebjones.spacelaunchnow.common.content.jobs.SyncJob;
 import me.calebjones.spacelaunchnow.common.content.jobs.SyncWearJob;
 import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper;
@@ -63,6 +62,7 @@ import me.calebjones.spacelaunchnow.common.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
+import me.calebjones.spacelaunchnow.widgets.WidgetJobCreator;
 import timber.log.Timber;
 
 public class LaunchApplication extends MultiDexApplication {
@@ -174,6 +174,7 @@ public class LaunchApplication extends MultiDexApplication {
     private void setupData(final boolean update) {
         DataClient.create(getString(R.string.sln_token), sharedPreference.getNetworkEndpoint());
         JobManager.create(context).addJobCreator(new DataJobCreator());
+        JobManager.instance().addJobCreator(new WidgetJobCreator());
         startJobs();
     }
 
@@ -462,7 +463,6 @@ public class LaunchApplication extends MultiDexApplication {
 
     private void startJobs() {
         new Thread(() -> {
-            SyncJob.schedulePeriodicJob(context);
             SyncWearJob.scheduleJob();
             UpdateWearJob.scheduleJobNow();
             SyncCalendarJob.scheduleDailyJob();
