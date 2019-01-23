@@ -93,7 +93,7 @@ import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
-import me.spacelaunchnow.astronauts.list.AstronautListFragment;
+import me.calebjones.spacelaunchnow.astronauts.list.AstronautListFragment;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, NextLaunchFragment.CallBackListener {

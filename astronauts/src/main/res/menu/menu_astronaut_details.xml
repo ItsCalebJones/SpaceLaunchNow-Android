@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="me.spacelaunchnow.astronauts.detail.AstronautDetailsActivity">
+    tools:context="me.spacelaunchnow.astronauts.me.calebjones.spacelaunchnow.astronauts.detail.AstronautDetailsActivity">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

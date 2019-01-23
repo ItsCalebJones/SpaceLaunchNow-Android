@@ -4,7 +4,7 @@
 
     <application>
         <activity
-            android:name=".detail.AstronautDetailsActivity"
+            android:name="me.calebjones.spacelaunchnow.astronauts.detail.AstronautDetailsActivity"
             android:label="@string/title_activity_astronaut_details"
             android:theme="@style/BaseAppTheme" />
     </application>

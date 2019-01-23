@@ -33,7 +33,7 @@ public class SpacestationDataRepository {
 
     @UiThread
     public void getSpacestations(int limit, int offset, boolean forceUpdate,
-                                 String search, List<Integer> statusIDs,
+                                 String search,
                                  Callbacks.SpacestationListCallback callback) {
 
         final Date now = Calendar.getInstance().getTime();

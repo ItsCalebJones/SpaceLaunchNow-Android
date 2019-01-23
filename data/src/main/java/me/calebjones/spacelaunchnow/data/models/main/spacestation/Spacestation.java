@@ -26,15 +26,33 @@ public class Spacestation extends RealmObject {
     @SerializedName("status")
     @Expose
     public SpacestationStatus status;
+    @SerializedName("type")
+    @Expose
+    public SpacestationType type;
     @SerializedName("founded")
     @Expose
     public String founded;
     @SerializedName("description")
     @Expose
     public String description;
+    @SerializedName("height")
+    @Expose
+    public Float height;
+    @SerializedName("width")
+    @Expose
+    public Float width;
+    @SerializedName("mass")
+    @Expose
+    public Float mass;
+    @SerializedName("volume")
+    @Expose
+    public Integer volume;
     @SerializedName("orbit")
     @Expose
     public String orbit;
+    @SerializedName("image_url")
+    @Expose
+    public String imageUrl;
     @SerializedName("onboard_crew")
     @Expose
     public Integer onboardCrew;
@@ -144,5 +162,53 @@ public class Spacestation extends RealmObject {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public SpacestationType getType() {
+        return type;
+    }
+
+    public void setType(SpacestationType type) {
+        this.type = type;
+    }
+
+    public Float getHeight() {
+        return height;
+    }
+
+    public void setHeight(Float height) {
+        this.height = height;
+    }
+
+    public Float getWidth() {
+        return width;
+    }
+
+    public void setWidth(Float width) {
+        this.width = width;
+    }
+
+    public Float getMass() {
+        return mass;
+    }
+
+    public void setMass(Float mass) {
+        this.mass = mass;
+    }
+
+    public Integer getVolume() {
+        return volume;
+    }
+
+    public void setVolume(Integer volume) {
+        this.volume = volume;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
