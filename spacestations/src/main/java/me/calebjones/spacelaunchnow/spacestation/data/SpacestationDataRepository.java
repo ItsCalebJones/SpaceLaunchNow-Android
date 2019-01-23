@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.iss.data;
+package me.calebjones.spacelaunchnow.spacestation.data;
 
 import android.content.Context;
 

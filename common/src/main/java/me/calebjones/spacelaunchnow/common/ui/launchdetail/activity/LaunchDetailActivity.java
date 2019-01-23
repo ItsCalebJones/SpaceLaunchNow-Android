@@ -51,6 +51,7 @@ import me.calebjones.spacelaunchnow.common.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.common.ui.generate.Rate;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.data.Callbacks;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.data.DetailsDataRepository;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
@@ -560,10 +561,9 @@ public class LaunchDetailActivity extends BaseActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            // TODO
-//            Intent intent = new Intent(this, SettingsActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            startActivity(intent);
+            Intent intent = new Intent(this, SettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             return true;
         }
         if (id == android.R.id.home) {

@@ -73,7 +73,7 @@ import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.iss.SpacestationListFragment;
+import me.calebjones.spacelaunchnow.spacestation.SpacestationListFragment;
 import me.calebjones.spacelaunchnow.events.EventsFragment;
 import me.calebjones.spacelaunchnow.local.common.BaseActivity;
 import me.calebjones.spacelaunchnow.common.ui.generate.Rate;

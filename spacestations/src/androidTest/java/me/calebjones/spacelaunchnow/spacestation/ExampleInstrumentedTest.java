@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.iss;
+package me.calebjones.spacelaunchnow.spacestation;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
