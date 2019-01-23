@@ -36,6 +36,7 @@ import io.reactivex.disposables.Disposable;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.ui.views.DialogAdapter;
+import me.calebjones.spacelaunchnow.common.youtube.models.VideoListItem;
 import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
@@ -335,12 +336,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                 if (longClick) {
                                     Intent sendIntent1 = new Intent();
                                     sendIntent1.setAction(Intent.ACTION_SEND);
-                                    sendIntent1.putExtra(Intent.EXTRA_TEXT, launch.getVidURLs().get(index).getVal()); // Simple text and URL to share
+                                    sendIntent1.putExtra(Intent.EXTRA_TEXT, item.getVideoURL().toString()); // Simple text and URL to share
                                     sendIntent1.setType("text/plain");
                                     context.startActivity(sendIntent1);
                                     Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
                                 } else {
-                                    Uri watchUri = Uri.parse(launch.getVidURLs().get(index).getVal());
+                                    Uri watchUri = Uri.parse(item.getVideoURL().toString());
                                     Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
                                     context.startActivity(i);
                                     Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
@@ -361,8 +362,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                     name = "YouTube";
                                     String youTubeURL = getYouTubeID(s.getVal());
                                     if (youTubeURL.contains("spacex/live")){
-                                        adapter.add(new MaterialSimpleListItem.Builder(context)
+                                        adapter.add(new VideoListItem.Builder(context)
                                                 .content("YouTube - SpaceX Livestream")
+                                                .videoURL(s.getVal())
                                                 .build());
                                     } else {
                                         youTubeAPIHelper.getVideoById(youTubeURL,
@@ -374,43 +376,50 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                                         List<Video> videos = response.body().getVideos();
                                                         if (videos.size() > 0) {
                                                             try {
-                                                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                adapter.add(new VideoListItem.Builder(context)
                                                                         .content(videos.get(0).getSnippet().getTitle())
+                                                                        .videoURL(s.getVal())
                                                                         .build());
                                                             } catch (Exception e){
-                                                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                                adapter.add(new VideoListItem.Builder(context)
                                                                         .content(name)
+                                                                        .videoURL(s.getVal())
                                                                         .build());
                                                             }
                                                         } else {
-                                                            adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                            adapter.add(new VideoListItem.Builder(context)
                                                                     .content(name)
+                                                                    .videoURL(s.getVal())
                                                                     .build());
                                                         }
                                                     } else {
-                                                        adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                        adapter.add(new VideoListItem.Builder(context)
                                                                 .content(name)
+                                                                .videoURL(s.getVal())
                                                                 .build());
                                                     }
                                                 } else {
-                                                    adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                    adapter.add(new VideoListItem.Builder(context)
                                                             .content(name)
+                                                            .videoURL(s.getVal())
                                                             .build());
                                                 }
                                             }
 
                                             @Override
                                             public void onFailure(Call<VideoResponse> call, Throwable t) {
-                                                adapter.add(new MaterialSimpleListItem.Builder(context)
+                                                adapter.add(new VideoListItem.Builder(context)
                                                         .content(name)
+                                                        .videoURL(s.getVal())
                                                         .build());
                                             }
                                         });
                                     }
                                 } else {
                                     name = uri.getHost();
-                                    adapter.add(new MaterialSimpleListItem.Builder(context)
+                                    adapter.add(new VideoListItem.Builder(context)
                                             .content(name)
+                                            .videoURL(s.getVal())
                                             .build());
                                 }
 

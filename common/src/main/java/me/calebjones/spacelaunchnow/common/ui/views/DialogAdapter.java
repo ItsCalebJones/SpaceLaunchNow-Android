@@ -9,22 +9,22 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.internal.MDAdapter;
-import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.common.R;
+import me.calebjones.spacelaunchnow.common.youtube.models.VideoListItem;
 
 public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.SimpleListVH> implements MDAdapter {
 
     public interface Callback {
-        void onListItemSelected(int index, MaterialSimpleListItem item, boolean longClick);
+        void onListItemSelected(int index, VideoListItem item, boolean longClick);
     }
 
     private MaterialDialog dialog;
-    private List<MaterialSimpleListItem> mItems;
+    private List<VideoListItem> mItems;
     private Callback mCallback;
 
     public DialogAdapter(Callback callback) {
@@ -32,7 +32,7 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.SimpleList
         mCallback = callback;
     }
 
-    public void add(MaterialSimpleListItem item) {
+    public void add(VideoListItem item) {
         mItems.add(item);
         notifyItemInserted(mItems.size() - 1);
     }
@@ -42,7 +42,7 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.SimpleList
         notifyDataSetChanged();
     }
 
-    public MaterialSimpleListItem getItem(int index) {
+    public VideoListItem getItem(int index) {
         return mItems.get(index);
     }
 
@@ -61,7 +61,7 @@ public class DialogAdapter extends RecyclerView.Adapter<DialogAdapter.SimpleList
     @Override
     public void onBindViewHolder(SimpleListVH holder, int position) {
         if (dialog != null) {
-            final MaterialSimpleListItem item = mItems.get(position);
+            final VideoListItem item = mItems.get(position);
             if (item.getIcon() != null) {
                 holder.icon.setImageDrawable(item.getIcon());
                 holder.icon.setPadding(item.getIconPadding(), item.getIconPadding(),

@@ -138,8 +138,8 @@ public class RetrofitBuilder {
 
     private static final String[] DATE_FORMATS = new String[] {
             "MMMM dd, yyyy HH:mm:ss zzz",
-            "yyyy-MM-dd",
-            "yyyy-MM-dd'T'HH:mm:ss'Z'"
+            "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "yyyy-MM-dd"
     };
 
 
