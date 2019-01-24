@@ -97,7 +97,12 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
             case ListItem.TYPE_ACTIVE_EXPEDITION:
                 view = LayoutInflater
                         .from(viewGroup.getContext())
-                        .inflate(R.layout.item_docking_event, viewGroup, false);
+                        .inflate(R.layout.item_active_expedition, viewGroup, false);
+                return new ViewHolderActiveExpedition(view);
+            case ListItem.TYPE_PAST_EXPEDITION:
+                view = LayoutInflater
+                        .from(viewGroup.getContext())
+                        .inflate(R.layout.item_past_expedition, viewGroup, false);
                 return new ViewHolderActiveExpedition(view);
         }
         return null;
