@@ -43,8 +43,9 @@ import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.spacestation.R;
 import me.calebjones.spacelaunchnow.spacestation.data.Callbacks;
 import me.calebjones.spacelaunchnow.spacestation.data.SpacestationDataRepository;
-import me.calebjones.spacelaunchnow.spacestation.detail.dockings.SpacestationDockedVehiclesFragment;
-import me.calebjones.spacelaunchnow.spacestation.detail.expeditions.SpacestationExpeditionFragment;
+import me.calebjones.spacelaunchnow.spacestation.detail.fragments.SpacestationDockedVehiclesFragment;
+import me.calebjones.spacelaunchnow.spacestation.detail.fragments.SpacestationExpeditionFragment;
+import me.calebjones.spacelaunchnow.spacestation.detail.fragments.SpacestationDetailFragment;
 import timber.log.Timber;
 
 public class SpacestationDetailsActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener, SwipeRefreshLayout.OnRefreshListener {
@@ -121,8 +122,9 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
                 enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
             }
         } );
-        tabs.addTab(tabs.newTab().setText("Profile"));
-        tabs.addTab(tabs.newTab().setText("Flights"));
+        tabs.addTab(tabs.newTab().setText("Details"));
+        tabs.addTab(tabs.newTab().setText("Expeditions"));
+        tabs.addTab(tabs.newTab().setText("Docked"));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         spacestationDataRepository = new SpacestationDataRepository(this, getRealm());
 
@@ -131,7 +133,7 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
 
         //Grab information from Intent
         Intent mIntent = getIntent();
-        spacestationId = mIntent.getIntExtra("astronautId", 0);
+        spacestationId = mIntent.getIntExtra("spacestationId", 0);
 
         fetchData(spacestationId);
 
@@ -146,7 +148,7 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
 
         viewModel = ViewModelProviders.of(this).get(SpacestationDetailViewModel.class);
         // update UI
-        viewModel.getAstronaut().observe(this, this::updateViews);
+        viewModel.getSpacestation().observe(this, this::updateViews);
     }
 
     private void enableDisableSwipeRefresh(boolean enable) {
@@ -195,7 +197,7 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
 
     private void updateViewModel(Spacestation spacestation) {
 
-        viewModel.getAstronaut().setValue(spacestation);
+        viewModel.getSpacestation().setValue(spacestation);
     }
 
     @Override
@@ -349,7 +351,7 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
                 case 1:
                     return "Expeditions";
                 case 2:
-                    return "Docking Events";
+                    return "Docked Vehicles";
             }
             return "";
         }

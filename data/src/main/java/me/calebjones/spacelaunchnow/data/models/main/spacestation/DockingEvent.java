@@ -27,4 +27,51 @@ public class DockingEvent extends RealmObject {
     @Expose
     public String dockingLocation;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getDocking() {
+        return docking;
+    }
+
+    public void setDocking(String docking) {
+        this.docking = docking;
+    }
+
+    public String getDeparture() {
+        return departure;
+    }
+
+    public void setDeparture(String departure) {
+        this.departure = departure;
+    }
+
+    public SpacecraftStage getFlightVehicle() {
+        return flightVehicle;
+    }
+
+    public void setFlightVehicle(SpacecraftStage flightVehicle) {
+        this.flightVehicle = flightVehicle;
+    }
+
+    public String getDockingLocation() {
+        return dockingLocation;
+    }
+
+    public void setDockingLocation(String dockingLocation) {
+        this.dockingLocation = dockingLocation;
+    }
 }

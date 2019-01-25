@@ -1,10 +1,13 @@
-package me.calebjones.spacelaunchnow.spacestation.detail.dockings;
+package me.calebjones.spacelaunchnow.spacestation.detail.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,14 +17,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import me.calebjones.spacelaunchnow.spacestation.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
-import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.spacestation.R;
+import me.calebjones.spacelaunchnow.spacestation.R2;
 import me.calebjones.spacelaunchnow.spacestation.detail.SpacestationDetailViewModel;
+import me.calebjones.spacelaunchnow.spacestation.detail.adapter.ExpeditionItem;
+import me.calebjones.spacelaunchnow.spacestation.detail.adapter.ListItem;
+import me.calebjones.spacelaunchnow.spacestation.detail.adapter.SpacestationAdapter;
 
-public class SpacestationDockedVehiclesFragment extends BaseFragment {
+public class SpacestationExpeditionFragment extends BaseFragment {
 
     @BindView(R2.id.recycler_view)
     RecyclerView recyclerView;
@@ -29,11 +35,11 @@ public class SpacestationDockedVehiclesFragment extends BaseFragment {
     private SpacestationDetailViewModel mViewModel;
     private Unbinder unbinder;
     private LinearLayoutManager linearLayoutManager;
-    private DockingVehiclesAdapter adapter;
+    private SpacestationAdapter adapter;
     private Context context;
 
-    public static SpacestationDockedVehiclesFragment newInstance() {
-        return new SpacestationDockedVehiclesFragment();
+    public static SpacestationExpeditionFragment newInstance() {
+        return new SpacestationExpeditionFragment();
     }
 
     @Override
@@ -45,12 +51,11 @@ public class SpacestationDockedVehiclesFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.spacestation_docking_fragment, container, false);
+        View view = inflater.inflate(R.layout.spacestation_expedition_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         linearLayoutManager = new LinearLayoutManager(context);
-        adapter = new DockingVehiclesAdapter(context, getCyanea().isDark());
+        adapter = new SpacestationAdapter();
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         recyclerView.setAdapter(adapter);
         return view;
     }
@@ -64,9 +69,14 @@ public class SpacestationDockedVehiclesFragment extends BaseFragment {
     }
 
     private void setSpacestation(Spacestation spacestation) {
-        if (spacestation != null && spacestation.getDockedVehicles() != null){
+        if (spacestation != null && spacestation.getActiveExpeditions() != null){
+            List<ListItem> items = new ArrayList<>();
+            for (Expedition expedition: spacestation.getActiveExpeditions()){
+                ExpeditionItem item = new ExpeditionItem(expedition);
+                items.add(item);
+            }
             adapter.clear();
-            adapter.addItems(spacestation.getDockedVehicles());
+            adapter.addItems(items);
         }
     }
 }

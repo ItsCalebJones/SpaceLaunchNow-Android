@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.spacestation.detail.expeditions;
+package me.calebjones.spacelaunchnow.spacestation.detail.adapter;
 
 
 public interface ListItem {

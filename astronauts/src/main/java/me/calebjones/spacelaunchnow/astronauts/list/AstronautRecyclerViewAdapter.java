@@ -94,8 +94,7 @@ public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<Astronaut
 
         @OnClick(R2.id.rootview)
         void onClick(View v){
-            final int position = getAdapterPosition();
-            Astronaut astronaut = astronauts.get(position);
+            Astronaut astronaut = astronauts.get(getAdapterPosition());
             Intent exploreIntent = new Intent(context, AstronautDetailsActivity.class);
             exploreIntent.putExtra("astronautId", astronaut.getId());
             context.startActivity(exploreIntent);
