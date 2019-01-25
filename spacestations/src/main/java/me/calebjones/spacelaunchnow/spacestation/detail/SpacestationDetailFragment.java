@@ -30,8 +30,8 @@ import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
-import me.calebjones.spacelaunchnow.spacestation.R;
 import me.calebjones.spacelaunchnow.spacestation.R2;
+import timber.log.Timber;
 
 public class SpacestationDetailFragment extends BaseFragment {
 
@@ -86,7 +86,7 @@ public class SpacestationDetailFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.spacestation_detail_fragment, container, false);
+        View view = inflater.inflate(R.layout.astronaut_profile_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
