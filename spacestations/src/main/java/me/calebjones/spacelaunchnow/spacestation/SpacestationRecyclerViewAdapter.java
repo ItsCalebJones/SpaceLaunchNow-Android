@@ -1,10 +1,12 @@
 package me.calebjones.spacelaunchnow.spacestation;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Space;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
+import me.calebjones.spacelaunchnow.spacestation.detail.SpacestationDetailsActivity;
 
 
 public class SpacestationRecyclerViewAdapter extends RecyclerView.Adapter<SpacestationRecyclerViewAdapter.ViewHolder> {
@@ -78,10 +81,10 @@ public class SpacestationRecyclerViewAdapter extends RecyclerView.Adapter<Spaces
             spacestationDescription = view.findViewById(R.id.spacestation_description);
             button = view.findViewById(R.id.spacestation_button);
             button.setOnClickListener(v -> {
-//            Astronaut astronaut = astronauts.get(position);
-//            Intent exploreIntent = new Intent(context, SpacestationDetailsActivity.class);
-//            exploreIntent.putExtra("astronautId", astronaut.getId());
-//            context.startActivity(exploreIntent);
+            Spacestation spacestation = spacestations.get(getAdapterPosition());
+            Intent exploreIntent = new Intent(context, SpacestationDetailsActivity.class);
+            exploreIntent.putExtra("spacestationId", spacestation.getId());
+            context.startActivity(exploreIntent);
             });
         }
 

@@ -44,4 +44,83 @@ public class SpacecraftStage extends RealmObject {
     @Expose
     public RealmList<DockingEvent> dockingEvents = null;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Date getSplashdown() {
+        return splashdown;
+    }
+
+    public void setSplashdown(Date splashdown) {
+        this.splashdown = splashdown;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public void setDestination(String destination) {
+        this.destination = destination;
+    }
+
+    public RealmList<Astronaut> getLaunchCrew() {
+        return launchCrew;
+    }
+
+    public void setLaunchCrew(RealmList<Astronaut> launchCrew) {
+        this.launchCrew = launchCrew;
+    }
+
+    public RealmList<Astronaut> getOnboardCrew() {
+        return onboardCrew;
+    }
+
+    public void setOnboardCrew(RealmList<Astronaut> onboardCrew) {
+        this.onboardCrew = onboardCrew;
+    }
+
+    public RealmList<Astronaut> getLandingCrew() {
+        return landingCrew;
+    }
+
+    public void setLandingCrew(RealmList<Astronaut> landingCrew) {
+        this.landingCrew = landingCrew;
+    }
+
+    public Spacecraft getSpacecraft() {
+        return spacecraft;
+    }
+
+    public void setSpacecraft(Spacecraft spacecraft) {
+        this.spacecraft = spacecraft;
+    }
+
+    public Launch getLaunch() {
+        return launch;
+    }
+
+    public void setLaunch(Launch launch) {
+        this.launch = launch;
+    }
+
+    public RealmList<DockingEvent> getDockingEvents() {
+        return dockingEvents;
+    }
+
+    public void setDockingEvents(RealmList<DockingEvent> dockingEvents) {
+        this.dockingEvents = dockingEvents;
+    }
 }

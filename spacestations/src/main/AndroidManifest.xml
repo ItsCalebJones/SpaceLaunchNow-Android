@@ -1,2 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.calebjones.spacelaunchnow.spacestation" />
+    package="me.calebjones.spacelaunchnow.spacestation" >
+    <application>
+        <activity
+            android:name="me.calebjones.spacelaunchnow.spacestation.detail.SpacestationDetailsActivity"
+            android:label="Spacestations"
+            android:theme="@style/BaseAppTheme" />
+    </application>
+</manifest>
