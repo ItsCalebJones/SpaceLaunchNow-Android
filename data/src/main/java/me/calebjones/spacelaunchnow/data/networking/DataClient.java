@@ -4,13 +4,17 @@ import java.io.IOException;
 
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
+import me.calebjones.spacelaunchnow.data.models.main.spacecraft.Spacecraft;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AstronautResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.ExpeditionResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherConfigResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.SpacecraftResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.SpacestationResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -155,7 +159,7 @@ public class DataClient {
     }
 
     public Call<SpacestationResponse> getSpacestations(int limit, int offset, String search, Integer status, Callback<SpacestationResponse> callback) {
-        Call<SpacestationResponse> call = spaceLaunchNowService.getSpacestations(limit, offset, search, status);
+        Call<SpacestationResponse> call = spaceLaunchNowService.getSpacestations(limit, offset, search, status, "status");
 
         call.enqueue(callback);
 
@@ -164,6 +168,38 @@ public class DataClient {
 
     public Call<Spacestation> getSpacestationById(int id, Callback<Spacestation> callback) {
         Call<Spacestation> call = spaceLaunchNowService.getSpacestationById(id);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<ExpeditionResponse> getExpeditions(int limit, int offset, Integer astronaut, Integer agency, Integer spacestation, String endDate, Callback<ExpeditionResponse> callback) {
+        Call<ExpeditionResponse> call = spaceLaunchNowService.getExpedition(limit, offset, astronaut, agency, spacestation, endDate);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Expedition> getExpeditionById(int id, Callback<Expedition> callback) {
+        Call<Expedition> call = spaceLaunchNowService.getExpeditionById(id);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<SpacecraftResponse> getSpacecraft(int limit, int offset, Callback<SpacecraftResponse> callback) {
+        Call<SpacecraftResponse> call = spaceLaunchNowService.getSpacecraft(limit, offset, null, null, null);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Spacecraft> getSpacecraftById(int id, Callback<Spacecraft> callback) {
+        Call<Spacecraft> call = spaceLaunchNowService.getSpacecraftById(id);
 
         call.enqueue(callback);
 

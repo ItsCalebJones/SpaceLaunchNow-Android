@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.orbiter;
+package me.calebjones.spacelaunchnow.ui.spacecraft;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,10 +27,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.RealmList;
-import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.R;
+import me.calebjones.spacelaunchnow.common.R2;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftConfig;
-import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class SpacecraftConfigDetailAdapter extends RecyclerView.Adapter<SpacecraftConfigDetailAdapter.ViewHolder> {
 
@@ -197,43 +198,43 @@ public class SpacecraftConfigDetailAdapter extends RecyclerView.Adapter<Spacecra
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.orbiter_image)
+        @BindView(R2.id.orbiter_image)
         ImageView orbiterImage;
-        @BindView(R.id.in_use_icon)
+        @BindView(R2.id.in_use_icon)
         ImageView activeIcon;
-        @BindView(R.id.human_rated_icon)
+        @BindView(R2.id.human_rated_icon)
         ImageView crewIcon;
-        @BindView(R.id.orbiter_title)
+        @BindView(R2.id.orbiter_title)
         TextView orbiterTitle;
-        @BindView(R.id.orbiter_subtitle)
+        @BindView(R2.id.orbiter_subtitle)
         TextView orbiterSubtitle;
-        @BindView(R.id.orbiter_name)
+        @BindView(R2.id.orbiter_name)
         TextView orbiterName;
-        @BindView(R.id.orbiter_description_expand)
+        @BindView(R2.id.orbiter_description_expand)
         View orbiterDescriptionExpand;
-        @BindView(R.id.orbiter_description)
+        @BindView(R2.id.orbiter_description)
         ExpandableTextView orbiterDescription;
-        @BindView(R.id.orbiter_history)
+        @BindView(R2.id.orbiter_history)
         TextView orbiterHistory;
-        @BindView(R.id.orbiter_history_description)
+        @BindView(R2.id.orbiter_history_description)
         ExpandableTextView orbiterHistoryDescription;
-        @BindView(R.id.orbiter_history_expand)
+        @BindView(R2.id.orbiter_history_expand)
         View orbiterHistoryExpand;
-        @BindView(R.id.wikiButton)
+        @BindView(R2.id.wikiButton)
         AppCompatButton wikiButton;
-        @BindView(R.id.infoButton)
+        @BindView(R2.id.infoButton)
         AppCompatButton infoButton;
-        @BindView(R.id.diameter)
+        @BindView(R2.id.diameter)
         TextView diameter;
-        @BindView(R.id.height)
+        @BindView(R2.id.height)
         TextView height;
-        @BindView(R.id.payload)
+        @BindView(R2.id.payload)
         TextView payload;
-        @BindView(R.id.crew_capacity)
+        @BindView(R2.id.crew_capacity)
         TextView crewCapacity;
-        @BindView(R.id.flight_life)
+        @BindView(R2.id.flight_life)
         TextView flightLife;
-        @BindView(R.id.first_flight_text)
+        @BindView(R2.id.first_flight_text)
         TextView firstFlight;
 
         //Add content to the card
@@ -242,7 +243,7 @@ public class SpacecraftConfigDetailAdapter extends RecyclerView.Adapter<Spacecra
             ButterKnife.bind(this, view);
         }
 
-        @OnClick(R.id.orbiter_history_expand)
+        @OnClick(R2.id.orbiter_history_expand)
         public void onHistoryViewClicked() {
             orbiterHistoryDescription.toggle();
             if (orbiterHistoryDescription.isExpanded()) {
@@ -252,7 +253,7 @@ public class SpacecraftConfigDetailAdapter extends RecyclerView.Adapter<Spacecra
             }
         }
 
-        @OnClick(R.id.orbiter_description_expand)
+        @OnClick(R2.id.orbiter_description_expand)
         public void onDescriptionViewClicked() {
             orbiterDescription.toggle();
             if (orbiterDescription.isExpanded()) {

@@ -55,7 +55,7 @@ public class SpacestationDockedVehiclesFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.spacestation_docking_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         linearLayoutManager = new LinearLayoutManager(context);
-        adapter = new SpacestationAdapter();
+        adapter = new SpacestationAdapter(context);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         recyclerView.setAdapter(adapter);

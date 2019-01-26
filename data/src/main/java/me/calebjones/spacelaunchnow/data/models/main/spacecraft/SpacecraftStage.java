@@ -8,6 +8,7 @@ import java.util.Date;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.DockingEvent;
 
@@ -39,7 +40,7 @@ public class SpacecraftStage extends RealmObject {
     public Spacecraft spacecraft;
     @SerializedName("launch")
     @Expose
-    public Launch launch;
+    public LaunchList launch;
     @SerializedName("docking_events")
     @Expose
     public RealmList<DockingEvent> dockingEvents = null;
@@ -108,11 +109,11 @@ public class SpacecraftStage extends RealmObject {
         this.spacecraft = spacecraft;
     }
 
-    public Launch getLaunch() {
+    public LaunchList getLaunch() {
         return launch;
     }
 
-    public void setLaunch(Launch launch) {
+    public void setLaunch(LaunchList launch) {
         this.launch = launch;
     }
 

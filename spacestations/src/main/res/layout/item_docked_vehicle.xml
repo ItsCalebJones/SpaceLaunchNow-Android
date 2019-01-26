@@ -1,11 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<com.google.android.material.card.MaterialCardView android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/material_baseline_grid_2x"
+    android:layout_marginTop="@dimen/material_baseline_grid_1x"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/txtView"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:visibility="visible">
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/orbiter_image"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/placeholder" />
+
+        <TextView
+            android:id="@+id/spacestation_docked_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?colorAccent"
+            android:gravity="center"
+            android:lines="1"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingRight="8dp"
+            android:textAlignment="center"
+            android:textColor="@color/dark_primary_text_color_selector"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/spacestation_docked_subtitle"
+            app:layout_constraintStart_toStartOf="@+id/spacestation_docked_subtitle"
+            app:layout_constraintTop_toBottomOf="@+id/orbiter_image"
+            tools:text="Soyuz TM-2"
+            tools:background="@color/colorAccent" />
+
+        <TextView
+            android:id="@+id/spacestation_docked_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?colorAccent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:lines="1"
+            android:paddingLeft="8dp"
+            android:paddingTop="4dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="8dp"
+            android:singleLine="false"
+            android:textAlignment="center"
+            android:textColor="@color/dark_primary_text_color_selector"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spacestation_docked_title"
+            tools:background="@color/colorAccent"
+            android:text="Single Use" />
+
+        <TextView
+            android:id="@+id/in_use"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:singleLine="false"
+            android:text="Docked: "
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spacestation_docked_subtitle"
+            tools:text="Docked: " />
+
+        <ImageView
+            android:id="@+id/in_use_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:src="@drawable/ic_checkmark"
+            app:layout_constraintEnd_toEndOf="@+id/human_rated_icon"
+            app:layout_constraintStart_toStartOf="@+id/human_rated_icon"
+            app:layout_constraintTop_toTopOf="@+id/in_use" />
+
+        <TextView
+            android:id="@+id/human_rated"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:singleLine="false"
+            android:text="Human Rated: "
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/in_use"
+            tools:text="Human Rated: " />
+
+        <ImageView
+            android:id="@+id/human_rated_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_question_mark"
+            app:layout_constraintBottom_toBottomOf="@+id/human_rated"
+            app:layout_constraintStart_toEndOf="@+id/human_rated"
+            app:layout_constraintTop_toTopOf="@+id/human_rated" />
+
+        <TextView
+            android:id="@+id/docked_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Location"
+            android:textAppearance="@style/MaterialTypography.Regular.Title"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/in_use_icon"
+            app:layout_constraintTop_toBottomOf="@+id/spacestation_docked_subtitle" />
+
+        <TextView
+            android:id="@+id/docked_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/docked_title"
+            app:layout_constraintTop_toBottomOf="@+id/docked_title"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="PMA-12" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

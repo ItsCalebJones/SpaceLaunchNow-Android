@@ -29,7 +29,7 @@ import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
-import me.calebjones.spacelaunchnow.ui.orbiter.OrbiterDetailActivity;
+import me.calebjones.spacelaunchnow.ui.spacecraft.OrbiterDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
 import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
@@ -185,12 +185,9 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
 
     private OnItemClickListener recyclerRowClickListener = (v, position) -> {
         Analytics.getInstance().sendButtonClicked("Launcher clicked", items.get(position).getName());
-        Gson gson = new Gson();
-        String jsonItem = gson.toJson(items.get(position));
 
         Intent intent = new Intent(getActivity(), OrbiterDetailActivity.class);
-        intent.putExtra("name", items.get(position).getName());
-        intent.putExtra("json", jsonItem);
+        intent.putExtra("id", items.get(position).getId());
         startActivity(intent);
     };
 

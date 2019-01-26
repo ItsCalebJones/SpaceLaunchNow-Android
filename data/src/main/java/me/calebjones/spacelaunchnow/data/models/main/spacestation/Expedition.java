@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.data.models.main.spacestation;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
 import java.util.List;
 
 import io.realm.RealmList;
@@ -24,10 +25,10 @@ public class Expedition extends RealmObject {
     public String name;
     @SerializedName("start")
     @Expose
-    public String start;
+    public Date start;
     @SerializedName("end")
     @Expose
-    public String end;
+    public Date end;
     @SerializedName("spacestation")
     @Expose
     public Spacestation spacestation;
@@ -59,19 +60,19 @@ public class Expedition extends RealmObject {
         this.name = name;
     }
 
-    public String getStart() {
+    public Date getStart() {
         return start;
     }
 
-    public void setStart(String start) {
+    public void setStart(Date start) {
         this.start = start;
     }
 
-    public String getEnd() {
+    public Date getEnd() {
         return end;
     }
 
-    public void setEnd(String end) {
+    public void setEnd(Date end) {
         this.end = end;
     }
 

@@ -9,10 +9,13 @@ import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
@@ -51,12 +54,30 @@ public class SpacestationRecyclerViewAdapter extends RecyclerView.Adapter<Spaces
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = spacestations.get(position);
         holder.spacestationTitle.setText(holder.mItem.getName());
-        holder.spacestationSubtitle.setText(holder.mItem.getOwners().first().getName());
+        holder.spacestationSubtitle.setText(holder.mItem.getType().getName());
         holder.spacestationDescription.setText(holder.mItem.getDescription());
+        holder.orbitlPillText.setText(holder.mItem.getOrbit());
+
+        if (holder.mItem.getStatus() != null){
+            holder.statusPillText.setText(holder.mItem.getStatus().getName());
+            switch (holder.mItem.getStatus().getId()){
+                case 1:
+                    holder.statusPill.setCardBackgroundColor(ContextCompat.getColor(context, R.color.material_color_green_500));
+                    break;
+                case 2:
+                    holder.statusPill.setCardBackgroundColor(ContextCompat.getColor(context, R.color.material_color_red_500));
+                    break;
+                case 3:
+                    holder.statusPill.setCardBackgroundColor(ContextCompat.getColor(context, R.color.material_color_deep_orange_500));
+                    break;
+                default:
+                    holder.statusPill.setCardBackgroundColor(ContextCompat.getColor(context, R.color.cyanea_primary));
+                    break;
+            }
+        }
 
         GlideApp.with(context)
                 .load(holder.mItem.getImageUrl())
-                .fitCenter()
                 .into(holder.spacestationImage);
     }
 
@@ -70,6 +91,10 @@ public class SpacestationRecyclerViewAdapter extends RecyclerView.Adapter<Spaces
         private TextView spacestationTitle;
         private TextView spacestationSubtitle;
         private TextView spacestationDescription;
+        private CardView orbitPill;
+        private TextView orbitlPillText;
+        private CardView statusPill;
+        private TextView statusPillText;
         private AppCompatButton button;
         public Spacestation mItem;
 
@@ -79,6 +104,11 @@ public class SpacestationRecyclerViewAdapter extends RecyclerView.Adapter<Spaces
             spacestationTitle = view.findViewById(R.id.spacestation_title);
             spacestationSubtitle = view.findViewById(R.id.spacestaion_subtitle);
             spacestationDescription = view.findViewById(R.id.spacestation_description);
+            orbitPill = view.findViewById(R.id.orbit_pill_layout);
+            orbitlPillText = view.findViewById(R.id.orbit_text);
+            statusPill = view.findViewById(R.id.status_pill_layout);
+            statusPillText = view.findViewById(R.id.status_text);
+
             button = view.findViewById(R.id.spacestation_button);
             button.setOnClickListener(v -> {
             Spacestation spacestation = spacestations.get(getAdapterPosition());

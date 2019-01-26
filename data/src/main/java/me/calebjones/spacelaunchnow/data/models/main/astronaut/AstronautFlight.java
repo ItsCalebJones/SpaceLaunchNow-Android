@@ -13,4 +13,20 @@ public class AstronautFlight extends RealmObject {
     @SerializedName("astronaut")
     @Expose
     public Astronaut astronaut;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Astronaut getAstronaut() {
+        return astronaut;
+    }
+
+    public void setAstronaut(Astronaut astronaut) {
+        this.astronaut = astronaut;
+    }
 }

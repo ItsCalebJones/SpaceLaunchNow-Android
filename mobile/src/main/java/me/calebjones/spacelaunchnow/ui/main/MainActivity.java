@@ -689,7 +689,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 }
                 break;
             case R.id.menu_iss:
-                setActionBarTitle("International Space Station");
+                setActionBarTitle("Spacestations");
+                mNavItemId = R.id.menu_iss;
                 addAppBarElevation();
                 hideBottomNavigation();
                 if (mSpacestationListFragment == null)

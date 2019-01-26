@@ -1,15 +1,30 @@
 package me.calebjones.spacelaunchnow.spacestation.detail.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftStage;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.DockingEvent;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
 import me.calebjones.spacelaunchnow.spacestation.R;
+import me.calebjones.spacelaunchnow.spacestation.detail.fragments.expeditions.CrewAdapter;
 
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to RecyclerView
@@ -17,9 +32,11 @@ import me.calebjones.spacelaunchnow.spacestation.R;
 public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapter.ViewHolder> {
 
     public int position;
+    private Context context;
     private List<ListItem> items;
 
-    public SpacestationAdapter() {
+    public SpacestationAdapter(Context context) {
+        this.context = context;
         items = new ArrayList<>();
     }
 
@@ -92,16 +109,51 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
     }
 
     public class ViewHolderDockedVehicle extends ViewHolder {
-        private final TextView mTextView;
+        private ImageView image;
+        private TextView title;
+        private TextView subtitle;
+        private ImageView humanRated;
+        private TextView dockedLocation;
 
         public ViewHolderDockedVehicle(View itemView) {
             super(itemView);
 
-            mTextView = (TextView) itemView.findViewById(R.id.txtView);
+            image = itemView.findViewById(R.id.orbiter_image);
+            title = itemView.findViewById(R.id.spacestation_docked_title);
+            subtitle = itemView.findViewById(R.id.spacestation_docked_subtitle);
+            humanRated = itemView.findViewById(R.id.human_rated_icon);
+            dockedLocation = itemView.findViewById(R.id.docked_text);
         }
 
         public void bindType(ListItem item) {
-            mTextView.setText(((DockedVehicleItem) item).getDockedVehicle().getId());
+            DockedVehicleItem dockedVehicleItem = (DockedVehicleItem) item;
+            SpacecraftStage spacecraft = dockedVehicleItem.getDockedVehicle();
+            List<DockingEvent> dockingEvents = spacecraft.getDockingEvents();
+            for (DockingEvent dockingEvent: dockingEvents){
+                if (dockingEvent.getDeparture() == null){
+                    dockedLocation.setText(dockingEvent.getDockingLocation());
+                }
+            }
+            GlideApp.with(context)
+                    .load(spacecraft.getSpacecraft().getConfiguration().getImageUrl())
+                    .placeholder(R.drawable.placeholder)
+                    .into(image);
+
+            title.setText(spacecraft.getSpacecraft().getName());
+            subtitle.setText(spacecraft.getSpacecraft().getSerialNumber());
+            if (spacecraft.getSpacecraft().getConfiguration().getHumanRated() == null ){
+                GlideApp.with(context)
+                        .load(R.drawable.ic_question_mark)
+                        .into(humanRated);
+            } else if (spacecraft.getSpacecraft().getConfiguration().getHumanRated()){
+                GlideApp.with(context)
+                        .load(R.drawable.ic_checkmark)
+                        .into(humanRated);
+                } else {
+                GlideApp.with(context)
+                        .load(R.drawable.ic_failed)
+                        .into(humanRated);
+            }
         }
     }
 
@@ -115,21 +167,49 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
         }
 
         public void bindType(ListItem item) {
-            mTextView.setText(((DockingEventItem) item).getDockingEvent().getId());
+            DockingEventItem dockingEventItem = (DockingEventItem) item;
+            mTextView.setText(((DockingEventItem) item).getDockingEvent().getDockingLocation());
         }
     }
 
     public class ViewHolderActiveExpedition extends ViewHolder {
         private final TextView mTextView;
+        private RecyclerView crewRecyler;
+        private TextView title;
+        private TextView subtitle;
+        private TextView start;
+        private TextView end;
 
         public ViewHolderActiveExpedition(View itemView) {
             super(itemView);
 
             mTextView = itemView.findViewById(R.id.txtView);
+            crewRecyler = itemView.findViewById(R.id.crew_recycler_view);
+            title = itemView.findViewById(R.id.spacestation_active_title);
+            subtitle = itemView.findViewById(R.id.spacestaion_active_subtitle);
+            start = itemView.findViewById(R.id.start_date);
+            end = itemView.findViewById(R.id.end_date);
         }
 
         public void bindType(ListItem item) {
-            mTextView.setText(((ActiveExpeditionItem) item).getExpedition().getId());
+            Expedition expedition = ((ActiveExpeditionItem) item).getExpedition();
+            title.setText(expedition.getName());
+            if (expedition.getStart() != null) {
+                start.setVisibility(View.VISIBLE);
+                start.setText(String.format("Start: %s", DateFormat.getDateInstance(DateFormat.LONG).format(expedition.getStart())));
+            } else {
+                start.setVisibility(View.GONE);
+            }
+
+            if (expedition.getEnd() != null) {
+                end.setVisibility(View.VISIBLE);
+                end.setText(String.format("End: %s", DateFormat.getDateInstance(DateFormat.LONG).format(expedition.getEnd())));
+            } else {
+                end.setVisibility(View.GONE);
+            }
+
+            crewRecyler.setLayoutManager(new LinearLayoutManager(context));
+            crewRecyler.setAdapter(new CrewAdapter(context, expedition.getCrew()));
         }
     }
 
@@ -143,7 +223,7 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
         }
 
         public void bindType(ListItem item) {
-            mTextView.setText(((ActiveExpeditionItem) item).getExpedition().getId());
+            mTextView.setText(((ActiveExpeditionItem) item).getExpedition().getName());
         }
     }
 }

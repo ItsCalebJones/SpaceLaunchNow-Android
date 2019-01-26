@@ -69,7 +69,7 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/CustomPreferenceTheme" />
         <activity
-            android:name=".ui.orbiter.OrbiterDetailActivity"
+            android:name=".common.ui.spacecraft.OrbiterDetailActivity"
             android:theme="@style/BaseAppTheme"/>
         <activity
             android:name=".ui.launcher.LauncherDetailActivity"

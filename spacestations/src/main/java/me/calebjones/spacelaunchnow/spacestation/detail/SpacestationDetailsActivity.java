@@ -44,8 +44,8 @@ import me.calebjones.spacelaunchnow.spacestation.R;
 import me.calebjones.spacelaunchnow.spacestation.data.Callbacks;
 import me.calebjones.spacelaunchnow.spacestation.data.SpacestationDataRepository;
 import me.calebjones.spacelaunchnow.spacestation.detail.fragments.SpacestationDockedVehiclesFragment;
-import me.calebjones.spacelaunchnow.spacestation.detail.fragments.SpacestationExpeditionFragment;
-import me.calebjones.spacelaunchnow.spacestation.detail.fragments.SpacestationDetailFragment;
+import me.calebjones.spacelaunchnow.spacestation.detail.fragments.expeditions.SpacestationExpeditionFragment;
+import me.calebjones.spacelaunchnow.spacestation.detail.fragments.detail.SpacestationDetailFragment;
 import timber.log.Timber;
 
 public class SpacestationDetailsActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener, SwipeRefreshLayout.OnRefreshListener {
@@ -188,7 +188,7 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
     private void updateViews(Spacestation spacestation) {
         this.spacestation = spacestation;
         spacestationTitle.setText(spacestation.getName());
-        spacestationSubtitle.setText(spacestation.getOwners().first().getName());
+        spacestationSubtitle.setText(spacestation.getType().getName());
         GlideApp.with(this)
                 .load(spacestation.getImageUrl())
                 .placeholder(R.drawable.placeholder)

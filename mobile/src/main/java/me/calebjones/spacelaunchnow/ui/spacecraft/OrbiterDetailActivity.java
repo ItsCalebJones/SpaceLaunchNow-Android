@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.ui.orbiter;
+package me.calebjones.spacelaunchnow.ui.spacecraft;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,15 +28,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
-import me.calebjones.spacelaunchnow.local.common.BaseActivity;
+
+import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.R;
+import me.calebjones.spacelaunchnow.common.base.BaseActivity;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
-import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 

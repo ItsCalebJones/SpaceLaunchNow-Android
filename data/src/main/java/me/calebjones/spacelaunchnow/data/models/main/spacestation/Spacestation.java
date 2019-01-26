@@ -31,7 +31,10 @@ public class Spacestation extends RealmObject {
     public SpacestationType type;
     @SerializedName("founded")
     @Expose
-    public String founded;
+    public Date founded;
+    @SerializedName("deorbited")
+    @Expose
+    public Date deorbited;
     @SerializedName("description")
     @Expose
     public String description;
@@ -100,12 +103,20 @@ public class Spacestation extends RealmObject {
         this.status = status;
     }
 
-    public String getFounded() {
+    public Date getFounded() {
         return founded;
     }
 
-    public void setFounded(String founded) {
+    public void setFounded(Date founded) {
         this.founded = founded;
+    }
+
+    public Date getDeorbited() {
+        return deorbited;
+    }
+
+    public void setDeorbited(Date deorbited) {
+        this.deorbited = deorbited;
     }
 
     public String getDescription() {

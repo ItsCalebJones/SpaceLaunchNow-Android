@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow.data.models.main.spacestation;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftStage;
 
@@ -16,10 +18,10 @@ public class DockingEvent extends RealmObject {
     public String url;
     @SerializedName("docking")
     @Expose
-    public String docking;
+    public Date docking;
     @SerializedName("departure")
     @Expose
-    public String departure;
+    public Date departure;
     @SerializedName("flight_vehicle")
     @Expose
     public SpacecraftStage flightVehicle;
@@ -43,19 +45,19 @@ public class DockingEvent extends RealmObject {
         this.url = url;
     }
 
-    public String getDocking() {
+    public Date getDocking() {
         return docking;
     }
 
-    public void setDocking(String docking) {
+    public void setDocking(Date docking) {
         this.docking = docking;
     }
 
-    public String getDeparture() {
+    public Date getDeparture() {
         return departure;
     }
 
-    public void setDeparture(String departure) {
+    public void setDeparture(Date departure) {
         this.departure = departure;
     }
 

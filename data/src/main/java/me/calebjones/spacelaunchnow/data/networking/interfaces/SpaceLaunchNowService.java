@@ -190,7 +190,8 @@ public interface SpaceLaunchNowService {
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/spacestation/")
     Call<SpacestationResponse> getSpacestations(@Query("limit") int amount, @Query("offset") int offset,
-                                               @Query("search") String search, @Query("status") Integer status);
+                                               @Query("search") String search, @Query("status") Integer status,
+                                                @Query("ordering") String ordering);
 
     // Spacecraft
     // GET: /spacecraft/
@@ -226,7 +227,8 @@ public interface SpaceLaunchNowService {
     Call<ExpeditionResponse> getExpedition(@Query("limit") int amount, @Query("offset") int offset,
                                            @Query("crew__astronaut") Integer astronaut,
                                            @Query("crew__astronaut__agency") Integer agency,
-                                           @Query("space_station") Integer spacestation);
+                                           @Query("space_station") Integer spacestation,
+                                           @Query("end__gte") String endDate);
 
 
     // Launcher
