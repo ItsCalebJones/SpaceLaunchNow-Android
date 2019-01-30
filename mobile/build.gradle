@@ -28,7 +28,7 @@ apply plugin: 'com.getkeepsafe.dexcount'
 
 advancedVersioning {
     nameOptions {
-        versionMajor app.versionMajor
+        versionMajor rootProject.ext.app.versionMajor
         versionMinor app.versionMinor
         versionPatch app.versionPatch
         versionBuild versionCode
@@ -195,7 +195,6 @@ dependencies {
     implementation project(':news')
     implementation project(':spacestations')
     implementation project(':events')
-    implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'com.android.support:multidex:1.0.3'
 
     // Android Official Libraries
@@ -210,7 +209,7 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "com.google.firebase:firebase-core:16.0.5"
+    implementation "com.google.firebase:firebase-core:16.0.6"
     implementation "com.google.android.gms:play-services-wearable:16.0.1"
     implementation "com.google.android.gms:play-services-ads:16.0.0"
 

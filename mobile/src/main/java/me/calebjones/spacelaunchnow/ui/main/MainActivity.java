@@ -1020,6 +1020,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     @Override
     public void onNavigateToLaunches() {
-        drawer.setSelection(R.id.menu_launches);
+        bottomNavigationView.selectTab(1);
     }
 }
