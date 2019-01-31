@@ -33,87 +33,83 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':data')
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "com.mikepenz:materialdrawer:6.1.0"
-    implementation 'com.afollestad.material-dialogs:core:0.9.4.3'
-    implementation 'com.afollestad.material-dialogs:commons:0.9.3.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'com.jaredrummler:cyanea:1.0.1'
-    implementation "com.google.android.gms:play-services-ads:16.0.0"
+    implementation deps.appcompat
+    implementation deps.legacySupportv4
+    implementation deps.lifecycleExtensions
+    implementation deps.browser
+    implementation deps.constraintLayout
 
-    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
-    implementation 'com.evernote:android-job:1.2.6'
+    implementation deps.playWearable
+    implementation deps.material
+    implementation deps.playAds
+
+    implementation deps.kotlin_stdlib_jdk7
+
+    implementation deps.materialdrawer
+    implementation deps.materialDialogCore
+    implementation deps.materialDialogCommons
+    implementation deps.cyanea
+
+    implementation deps.inAppbilling
+    implementation deps.evernoteJob
 
     // Iconography
-    implementation 'com.mikepenz:iconics-core:3.1.0@aar'
-    implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
-    implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
-    implementation 'com.github.pwittchen:weathericonview:1.1.0'
-    implementation 'com.mikepenz:fontawesome-typeface:5.0.13.0@aar'
+    implementation deps.iconicsCore
+    implementation deps.googleMaterialTypeface
+    implementation deps.communityMaterialTypeface
+    implementation deps.weathericon
+    implementation deps.fontawesomeTypeface
 
-    implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
-    implementation 'at.blogc:expandabletextview:1.0.5'
-    implementation "com.google.android.gms:play-services-wearable:16.0.1"
-    implementation 'android.zetterstrom.com.forecast:forecast:1.2.0'
+    implementation deps.expandableLayout
+    implementation deps.expandableTextview
 
-    implementation 'com.karumi:dexter:4.2.0'
+    implementation deps.forecast
 
-    implementation 'com.pixplicity.easyprefs:library:1.9.0'
+    implementation deps.dexter
 
-    implementation 'com.github.renaudcerrato:static-maps-api:1.0.4'
-    implementation 'com.jonathanfinerty.once:once:1.2.2'
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation deps.easyprefs
 
-    implementation 'it.macisamuele:calendarprovider-lib:0.0.1'
-    // DO NOT UPDATE - v5.0.+ not working well.
-    implementation 'com.github.michael-rapp:android-preference-activity:4.2.11'
-    implementation 'androidx.browser:browser:1.0.0'
+    implementation deps.staticMaps
+    implementation deps.once
+    implementation deps.circleImageView
 
-    implementation "com.google.firebase:firebase-core:16.0.5"
+    implementation deps.calendarprovider
+    implementation deps.androidPreference
+
+
     // Firebase Messaging
-    implementation "com.google.firebase:firebase-messaging:17.3.4"
+    implementation deps.firebaseCore
+    implementation deps.firebaseMessaging
 
     // HTTP Related libraries
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.google.code.gson:gson:2.8.4'
+    implementation deps.retrofit
+    implementation deps.converter_gson
+    implementation deps.gson
 
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    kapt 'com.github.bumptech.glide:compiler:4.8.0'
+    implementation deps.glide
+    kapt deps.glideCompiler
+    implementation deps.glideTransformation
 
-    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation deps.timber
 
-    implementation 'com.jakewharton:butterknife:10.0.0'
-    kapt 'com.jakewharton:butterknife-compiler:10.0.0'
+    implementation deps.butterknife
+    kapt deps.butterknifeCompiler
 
-    implementation 'blue.aodev:material-values:1.1.1'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation deps.materialValue
 
-    implementation 'com.jaredrummler:cyanea:1.0.1'
 
-    implementation 'jp.wasabeef:glide-transformations:4.0.1'
-    
-    implementation "com.google.auto.value:auto-value-annotations:1.6.2"
+    implementation deps.autoValue
+    annotationProcessor deps.autoValueProcessor
 
-    implementation 'cz.kinst.jakub:android-stateful-layout-simple:2.0.7'
+    implementation deps.statefulLayout
 
     // YouTube Player
-    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1'
-    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.15'
+    implementation deps.androidyoutubeplayer_core
+    implementation deps.androidyoutubeplayer_chromecast
 
-    implementation "io.reactivex.rxjava2:rxjava:2.1.15"
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation deps.rxjava
+    implementation deps.rxandroid
 
-    implementation 'blue.aodev:material-values:1.1.1'
-
-    implementation 'com.andkulikov:transitionseverywhere:1.8.0'
-    annotationProcessor "com.google.auto.value:auto-value:1.6.2"
+    implementation deps.transitionseverywhere
 
 }

@@ -38,38 +38,38 @@ dependencies {
     def room_version = "2.0.0-rc01"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    api "androidx.paging:paging-runtime-ktx:2.1.0-beta01"
-    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion" // use kapt for Kotlin
+    implementation deps.cardview
+    implementation deps.appcompat
 
-    implementation 'com.google.android.material:material:1.0.0'
+    api deps.paging
+    implementation deps.lifecycleExtensions
+    implementation deps.room
+    kapt deps.roomCompiler
 
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.google.code.gson:gson:2.8.4'
-    implementation 'cz.kinst.jakub:android-stateful-layout-simple:2.0.7'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation deps.kotlin_stdlib_jdk7
+
+    implementation deps.material
+
+    implementation deps.retrofit
+    implementation deps.converter_gson
+    implementation deps.gson
+
+    implementation deps.statefulLayout
+    implementation deps.okhttp
+    implementation deps.okhttpLogging
+    implementation deps.constraintLayout
 
     //Twitter
-    implementation 'com.twitter.sdk.android:twitter-core:3.3.0'
-    implementation 'com.twitter.sdk.android:tweet-ui:3.3.0'
+    implementation deps.twitterCore
+    implementation deps.twitterUi
 
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation deps.glide
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
 
-    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation deps.timber
 
-    implementation 'com.jakewharton:butterknife:10.0.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+    implementation deps.butterknife
+    annotationProcessor deps.butterknifeCompiler
 }
 repositories {
     mavenCentral()

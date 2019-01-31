@@ -119,26 +119,28 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':data')
-    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
-    compileOnly 'com.google.android.wearable:wearable:2.4.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
-        transitive = true
-    }
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.google.code.gson:gson:2.8.4'
-    implementation 'com.pixplicity.easyprefs:library:1.9.0'
-    implementation 'com.evernote:android-job:1.2.6'
-    implementation 'androidx.wear:wear:1.0.0'
-    implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.media:media:1.0.0'
-    implementation 'com.google.android.support:wearable:2.4.0'
-    implementation "com.google.android.gms:play-services-wearable:16.0.1"
-    implementation 'com.jakewharton.timber:timber:4.7.1'
-    implementation 'blue.aodev:material-values:1.1.1'
+    implementation deps.butterknife
+    annotationProcessor deps.butterknifeCompiler
+    compileOnly deps.supportWearable
+    implementation deps.crashlytics
+
+    //Networking
+    implementation deps.retrofit
+    implementation deps.converter_gson
+    implementation deps.gson
+    implementation deps.okhttp
+
+
+    implementation deps.easyprefs
+    implementation deps.evernoteJob
+    implementation deps.wear
+    implementation deps.palette
+    implementation deps.percentlayout
+    implementation deps.appcompat
+    implementation deps.legacySupportv4
+    implementation deps.media
+    implementation deps.supportWearable
+    implementation deps.playWearable
+    implementation deps.timber
+    implementation deps.materialValue
 }
