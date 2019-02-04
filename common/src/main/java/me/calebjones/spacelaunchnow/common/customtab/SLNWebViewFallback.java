@@ -9,7 +9,7 @@ import me.calebjones.spacelaunchnow.common.customtab.webview.WebViewFallbackActi
 /**
  * A Fallback that opens a Webview when Custom Tabs is not available
  */
-public class WebViewFallback implements CustomTabActivityHelper.CustomTabFallback {
+public class SLNWebViewFallback implements CustomTabActivityHelper.CustomTabFallback {
     @Override
     public void openUri(Activity activity, Uri uri) {
         Intent intent = new Intent(activity, WebViewFallbackActivity.class);

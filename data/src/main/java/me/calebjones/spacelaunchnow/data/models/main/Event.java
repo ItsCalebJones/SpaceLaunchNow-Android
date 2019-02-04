@@ -6,9 +6,11 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-public class Event extends RealmObject  {
+public class Event extends RealmObject {
 
+    @PrimaryKey
     @SerializedName("id")
     @Expose
     public Integer id;
@@ -18,6 +20,9 @@ public class Event extends RealmObject  {
     @SerializedName("name")
     @Expose
     public String name;
+    @SerializedName("type")
+    @Expose
+    public EventType type;
     @SerializedName("description")
     @Expose
     public String description;
@@ -27,9 +32,38 @@ public class Event extends RealmObject  {
     @SerializedName("feature_image")
     @Expose
     public String featureImage;
+    @SerializedName("news_url")
+    @Expose
+    public String newsUrl;
     @SerializedName("date")
     @Expose
     public Date date;
+
+    private Date lastUpdate;
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public EventType getType() {
+        return type;
+    }
+
+    public void setType(EventType type) {
+        this.type = type;
+    }
+
+    public String getNewsUrl() {
+        return newsUrl;
+    }
+
+    public void setNewsUrl(String newsUrl) {
+        this.newsUrl = newsUrl;
+    }
 
     public Integer getId() {
         return id;

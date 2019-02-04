@@ -103,6 +103,7 @@ ext.deps = [
         expandableLayout               : "net.cachapa.expandablelayout:expandablelayout:2.9.2",
         expandableTextview             : "at.blogc:expandabletextview:1.0.5",
         circleImageView                : "de.hdodenhof:circleimageview:2.2.0",
+        customtabs                     : "saschpe.android:customtabs:2.0.0",
         // DO NOT UPDATE - v5.0.+ not working well.
         androidPreference              : 'com.github.michael-rapp:android-preference-activity:4.2.11',
         transitionseverywhere          : "com.andkulikov:transitionseverywhere:1.8.0",

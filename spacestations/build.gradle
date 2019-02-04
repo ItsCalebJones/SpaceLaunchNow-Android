@@ -4,11 +4,9 @@ apply plugin: 'com.jakewharton.butterknife'
 android {
     compileSdkVersion 28
 
-
-
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 28
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -39,6 +37,9 @@ dependencies {
     implementation deps.material
     implementation deps.circleImageView
     implementation deps.reyclerview
+    implementation deps.materialDialogCore
+    implementation deps.materialDialogCommons
+
     //Networking
     implementation deps.retrofit
     implementation deps.converter_gson

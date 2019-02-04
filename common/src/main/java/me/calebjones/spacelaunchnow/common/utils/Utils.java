@@ -50,10 +50,11 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import androidx.browser.customtabs.CustomTabsIntent;
-import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.customtab.CustomTabActivityHelper;
-import me.calebjones.spacelaunchnow.common.customtab.WebViewFallback;
+import me.calebjones.spacelaunchnow.common.customtab.SLNWebViewFallback;
+import saschpe.android.customtabs.CustomTabsHelper;
+import saschpe.android.customtabs.WebViewFallback;
 
 public class Utils {
 
@@ -147,10 +148,26 @@ public class Utils {
                 android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
         if (URLUtil.isValidUrl(url)) {
-            CustomTabActivityHelper.openCustomTab(activity, intentBuilder.build(), Uri.parse(url), new WebViewFallback());
+            CustomTabActivityHelper.openCustomTab(activity, intentBuilder.build(), Uri.parse(url), new SLNWebViewFallback());
         } else {
             Toast.makeText(activity, "ERROR: URL is malformed - sorry! " + url, Toast.LENGTH_SHORT);
         }
+    }
+
+    public static void openCustomTab(Context context, String url) {
+        CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                .addDefaultShareMenuItem()
+                .setToolbarColor(context.getResources().getColor(R.color.colorPrimary))
+                .setShowTitle(true)
+                .build();
+
+        // This is optional but recommended
+        CustomTabsHelper.addKeepAliveExtra(context, customTabsIntent.intent);
+
+        // This is where the magic happens...
+        CustomTabsHelper.openCustomTab(context, customTabsIntent,
+                Uri.parse(url),
+                new WebViewFallback());
     }
 
     private static PendingIntent createPendingShareIntent(Context context, String url) {

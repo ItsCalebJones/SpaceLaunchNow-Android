@@ -55,11 +55,6 @@ import com.mikepenz.materialdrawer.holder.ImageHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.concurrent.TimeUnit;
 
 import androidx.fragment.app.Fragment;
@@ -73,13 +68,12 @@ import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.events.list.EventListFragment;
 import me.calebjones.spacelaunchnow.spacestation.SpacestationListFragment;
-import me.calebjones.spacelaunchnow.events.EventsFragment;
 import me.calebjones.spacelaunchnow.local.common.BaseActivity;
 import me.calebjones.spacelaunchnow.common.ui.generate.Rate;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
 import me.calebjones.spacelaunchnow.news.ui.NewsViewPager;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
@@ -115,7 +109,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
     private SpacestationListFragment mSpacestationListFragment;
-    private EventsFragment mEventsFragment;
+    private EventListFragment mEventsFragment;
     private AstronautListFragment mAstronautsListFragment;
     private Drawer drawer = null;
     private SharedPreferences sharedPref;
@@ -408,14 +402,12 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         Timber.v("MainActivity onStart!");
         customTabActivityHelper.bindCustomTabsService(this);
         mayLaunchUrl(Uri.parse("https://launchlibrary.net/"));
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         Timber.v("MainActivity onStop!");
         customTabActivityHelper.unbindCustomTabsService(this);
-        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
@@ -715,11 +707,12 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 }
                 break;
             case R.id.menu_events:
-                setActionBarTitle("Space Launch Events");
+                setActionBarTitle("Events");
+                mNavItemId = R.id.menu_events;
                 addAppBarElevation();
                 hideBottomNavigation();
                 if (mEventsFragment == null)
-                    mEventsFragment = EventsFragment.newInstance();
+                    mEventsFragment = EventListFragment.newInstance();
                 navigateToFragment(mEventsFragment, EVENTS_TAG);
 
                 if (rate != null) {
@@ -858,17 +851,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 //        if (adviewEnabled && adView.getVisibility() == View.GONE) {
 //            adView.setVisibility(View.VISIBLE);
 //        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(FilterViewEvent event) {
-        if (!SupporterHelper.isSupporter()) {
-            if (event.isOpened) {
-                hideAd();
-            } else {
-                showAd();
-            }
-        }
     }
 
     @Override

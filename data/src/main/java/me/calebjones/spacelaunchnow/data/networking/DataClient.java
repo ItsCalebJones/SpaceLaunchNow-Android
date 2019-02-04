@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.data.networking;
 
 import java.io.IOException;
 
+import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.Spacecraft;
@@ -10,6 +11,7 @@ import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AstronautResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.EventResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.ExpeditionResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
@@ -200,6 +202,22 @@ public class DataClient {
 
     public Call<Spacecraft> getSpacecraftById(int id, Callback<Spacecraft> callback) {
         Call<Spacecraft> call = spaceLaunchNowService.getSpacecraftById(id);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<EventResponse> getUpcomingEvents(int limit, int offset, Callback<EventResponse> callback) {
+        Call<EventResponse> call = spaceLaunchNowService.getUpcomingEvents(limit, offset);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Event> getEventById(int id, Callback<Event> callback) {
+        Call<Event> call = spaceLaunchNowService.getEventById(id);
 
         call.enqueue(callback);
 

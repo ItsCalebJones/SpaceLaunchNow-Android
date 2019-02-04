@@ -4,7 +4,7 @@ package me.calebjones.spacelaunchnow.events.data;
 import android.content.Context;
 import android.net.Uri;
 
-import me.calebjones.spacelaunchnow.data.models.main.spacestation.Event;
+import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.error.SpaceLaunchNowError;
@@ -22,11 +22,10 @@ public class EventDataLoader {
         this.context = context;
     }
 
-    public void getEventList(int limit, int offset, String search,
-                                 final Callbacks.EventListNetworkCallback networkCallback) {
+    public void getEventList(int limit, int offset, final Callbacks.EventListNetworkCallback networkCallback) {
         Timber.i("Running getUpcomingLaunchesList");
 
-        DataClient.getInstance().getEvents(limit, offset, search, null, new Callback<EventResponse>() {
+        DataClient.getInstance().getUpcomingEvents(limit, offset, new Callback<EventResponse>() {
             @Override
             public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
                 if (response.isSuccessful()) {
@@ -65,8 +64,8 @@ public class EventDataLoader {
             @Override
             public void onResponse(Call<Event> call, Response<Event> response) {
                 if (response.isSuccessful()) {
-                    Event spacestation = response.body();
-                    networkCallback.onSuccess(spacestation);
+                    Event event = response.body();
+                    networkCallback.onSuccess(event);
 
                 } else {
                     networkCallback.onNetworkFailure(response.code());

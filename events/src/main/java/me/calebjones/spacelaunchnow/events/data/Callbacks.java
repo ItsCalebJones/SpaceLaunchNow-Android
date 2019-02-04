@@ -4,7 +4,7 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import io.realm.RealmResults;
-import me.calebjones.spacelaunchnow.common.content.calendar.model.Event;
+import me.calebjones.spacelaunchnow.data.models.main.Event;
 
 public class Callbacks {
     public interface EventListNetworkCallback {

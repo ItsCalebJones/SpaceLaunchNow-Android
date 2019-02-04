@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.data.networking.interfaces;
 
 import me.calebjones.spacelaunchnow.data.BuildConfig;
+import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
@@ -12,6 +13,7 @@ import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AstronautResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.EventResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.ExpeditionResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
@@ -245,4 +247,14 @@ public interface SpaceLaunchNowService {
                                              @Query("launcher_config") Integer launcherConfig,
                                              @Query("launcher_config__launch_agency") Integer agency);
 
+
+    // Events
+    // GET: /event
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/event/upcoming/")
+    Call<EventResponse> getUpcomingEvents(@Query("limit") int amount, @Query("offset") int offset);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/event/{id}/")
+    Call<Event> getEventById(@Path("id") int id);
 }

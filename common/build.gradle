@@ -8,8 +8,8 @@ apply plugin: 'com.jakewharton.butterknife'
 android {
     compileSdkVersion 28
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 28
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -111,5 +111,6 @@ dependencies {
     implementation deps.rxandroid
 
     implementation deps.transitionseverywhere
+    implementation deps.customtabs
 
 }

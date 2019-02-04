@@ -12,7 +12,6 @@ import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
-import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import timber.log.Timber;
 
 /**
@@ -33,9 +32,7 @@ public class EventDataRepository {
     }
 
     @UiThread
-    public void getSpacestations(int limit, int offset, boolean forceUpdate,
-                                 String search,
-                                 Callbacks.EventListCallback callback) {
+    public void getEvents(int limit, int offset, boolean forceUpdate, Callbacks.EventListCallback callback) {
 
         final Date now = Calendar.getInstance().getTime();
 
@@ -44,48 +41,49 @@ public class EventDataRepository {
         calendar.add(Calendar.DAY_OF_WEEK, -1);
         Date old = calendar.getTime();
 
-        final RealmResults<Event> spacestations = getSpacestationsFromRealm();
-        Timber.v("Current count in DB: %s", spacestations.size());
-        for (Spacestation spacestation : spacestations) {
-            if (spacestation.getLastUpdate() != null && spacestation.getLastUpdate().before(old)) {
+        final RealmResults<Event> events = getEventsFromRealm();
+        Timber.v("Current count in DB: %s", events.size());
+        for (Event event : events) {
+            if (event.getLastUpdate() != null && event.getLastUpdate().before(old)) {
                 forceUpdate = true;
             }
         }
 
         Timber.v("Limit: %s Offset: %s", limit, offset);
-        if (forceUpdate || spacestations.size() == 0 || spacestations.size() < limit + offset) {
+        if (forceUpdate || events.size() == 0 || events.size() < limit + offset) {
             if (forceUpdate) {
                 //delete cache first
-                realm.executeTransaction(realm -> spacestations.deleteAllFromRealm());
+                realm.executeTransaction(realm -> events.deleteAllFromRealm());
                 offset = 0;
             }
             Timber.v("Getting from network!");
-            getSpacestationsFromNetwork(limit, offset, search, callback);
+            getEventsFromNetwork(limit, offset, callback);
         } else {
-            callback.onEventsLoaded(spacestations, limit, offset);
+            callback.onEventsLoaded(events, limit, offset);
         }
     }
 
-    public RealmResults<Event> getSpacestationsFromRealm() {
-        RealmQuery<Spacestation> query = realm.where(Spacestation.class).isNotNull("id");
-        return query.sort("status.name", Sort.ASCENDING).findAll();
+    //TODO fix query
+    public RealmResults<Event> getEventsFromRealm() {
+        RealmQuery<Event> query = realm.where(Event.class).isNotNull("id");
+        return query.sort("date", Sort.ASCENDING).findAll();
     }
 
-    public Spacestation getSpacestationByIdFromRealm(int id) {
-        return realm.where(Spacestation.class).equalTo("id", id).findFirst();
+    public Event getEventByIdFromRealm(int id) {
+        return realm.where(Event.class).equalTo("id", id).findFirst();
     }
 
 
-    private void getSpacestationsFromNetwork(int limit, int offset, final String search, final Callbacks.SpacestationListCallback callback) {
+    private void getEventsFromNetwork(int limit, int offset, final Callbacks.EventListCallback callback) {
 
         callback.onNetworkStateChanged(true);
-        dataLoader.getSpacestationList(limit, offset, search, new Callbacks.SpacestationListNetworkCallback() {
+        dataLoader.getEventList(limit, offset, new Callbacks.EventListNetworkCallback() {
             @Override
-            public void onSuccess(List<Spacestation> astronauts, int next, int total, boolean moreAvailable) {
+            public void onSuccess(List<Event> events, int next, int total, boolean moreAvailable) {
                 moreDataAvailable = moreAvailable;
-                addSpacestationsToRealm(astronauts);
+                addEventsToRealm(events);
                 callback.onNetworkStateChanged(false);
-                callback.onSpacestationsLoaded(getSpacestationsFromRealm(), next, total);
+                callback.onEventsLoaded(getEventsFromRealm(), next, total);
             }
 
             @Override
@@ -103,20 +101,20 @@ public class EventDataRepository {
     }
 
     @UiThread
-    public void getSpacestationById(int id, Callbacks.SpacestationCallback callback) {
-        callback.onSpacestationLoaded(getSpacestationByIdFromRealm(id));
-        getSpacestationByIdFromNetwork(id, callback);
+    public void getEventById(int id, Callbacks.EventCallback callback) {
+        callback.onEventLoaded(getEventByIdFromRealm(id));
+        getEventByIdFromNetwork(id, callback);
     }
 
-    private void getSpacestationByIdFromNetwork(int id, final Callbacks.SpacestationCallback callback) {
+    private void getEventByIdFromNetwork(int id, final Callbacks.EventCallback callback) {
 
         callback.onNetworkStateChanged(true);
-        dataLoader.getSpacestation(id, new Callbacks.SpacestationNetworkCallback() {
+        dataLoader.getEvent(id, new Callbacks.EventNetworkCallback() {
             @Override
-            public void onSuccess(Spacestation astronaut) {
+            public void onSuccess(Event event) {
 
                 callback.onNetworkStateChanged(false);
-                callback.onSpacestationLoaded(astronaut);
+                callback.onEventLoaded(event);
             }
 
             @Override
@@ -133,8 +131,8 @@ public class EventDataRepository {
         });
     }
 
-    public void addSpacestationsToRealm(final List<Spacestation> astronauts) {
-        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(astronauts));
+    public void addEventsToRealm(final List<Event> events) {
+        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(events));
     }
 }
 
