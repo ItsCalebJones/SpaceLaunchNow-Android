@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import android.widget.Toast;
 
 import com.jaredrummler.android.colorpicker.ColorPreference;
-import com.jaredrummler.cyanea.prefs.CyaneaSettingsActivity;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -170,19 +169,14 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
             weather.setEnabled(false);
             weather.setSelectable(false);
 
-            Preference themes = findPreference("custom_themes");
-            themes.setEnabled(false);
-            themes.setSelectable(false);
-            themes.setTitle(themes.getTitle() + " " + getString(R.string.supporter_feature));
-
             PreferenceCategory prefCatWeather = (PreferenceCategory) findPreference("weather_category");
-            prefCatWeather.setTitle(prefCatWeather.getTitle() + " " +  getString(R.string.supporter_feature));
+            prefCatWeather.setTitle(prefCatWeather.getTitle() + getString(R.string.supporter_feature));
             Preference measurement = findPreference("weather_US_SI");
             measurement.setEnabled(false);
             measurement.setSelectable(false);
 
             PreferenceCategory prefCatWidget = (PreferenceCategory) findPreference("widget_category");
-            prefCatWidget.setTitle(prefCatWidget.getTitle() + " " + getString(R.string.supporter_feature));
+            prefCatWidget.setTitle(prefCatWidget.getTitle() + getString(R.string.supporter_feature));
 
 
             widgetPresets.setEnabled(false);
@@ -211,12 +205,6 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
 
             widgetHideSettings.setEnabled(false);
             widgetHideSettings.setSelectable(false);
-        } else {
-            Preference themes = findPreference("custom_themes");
-            themes.setOnPreferenceClickListener(preference -> {
-                startActivity(new Intent(context, CyaneaSettingsActivity.class));
-                return true;
-            });
         }
         Preference localTime = findPreference("local_time");
         localTime.setOnPreferenceChangeListener(createLocalTimeListener());

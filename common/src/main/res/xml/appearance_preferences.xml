@@ -2,11 +2,6 @@
 <PreferenceScreen android:title="@string/appearance"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <Preference
-        android:key="custom_themes"
-        android:title="Theme Customization"
-        android:summary="Set primary, accent and background colors!">
-    </Preference>
     <SwitchPreference
         android:defaultValue="true"
         android:key="local_time"
@@ -19,7 +14,21 @@
         android:summaryOff="@string/time_format_off"
         android:summaryOn="@string/time_format_on"
         android:title="@string/time_format" />
-
+    <PreferenceCategory android:title="@string/night_mode"
+        android:key="night_category">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="theme"
+            android:summaryOff="@string/night_mode_off"
+            android:summaryOn="@string/night_mode_on"
+            android:title="@string/night_mode" />
+        <SwitchPreference
+            android:dependency="theme"
+            android:defaultValue="false"
+            android:key="theme_auto"
+            android:summary="@string/automatic_daynight_summary"
+            android:title="@string/automatic_daynight" />
+        </PreferenceCategory>
     <PreferenceCategory android:title="@string/widgets"
         android:key="widget_category">
         <ListPreference
