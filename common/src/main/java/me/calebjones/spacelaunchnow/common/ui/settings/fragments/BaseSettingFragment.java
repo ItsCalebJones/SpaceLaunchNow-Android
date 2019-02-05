@@ -14,10 +14,11 @@
 package me.calebjones.spacelaunchnow.common.ui.settings.fragments;
 
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
+
+import androidx.preference.PreferenceFragmentCompat;
 
 
-public abstract class BaseSettingFragment extends PreferenceFragment {
+public abstract class BaseSettingFragment extends PreferenceFragmentCompat {
 
     private String name = "Unknown (Name not set)";
 

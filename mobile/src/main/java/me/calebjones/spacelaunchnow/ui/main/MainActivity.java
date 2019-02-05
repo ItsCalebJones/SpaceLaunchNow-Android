@@ -615,10 +615,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this, CyaneaSettingsActivity.class));
-//            Intent intent = new Intent(this, SettingsActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            startActivity(intent);
+//            startActivity(new Intent(this, CyaneaSettingsActivity.class));
+            Intent intent = new Intent(this, SettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
             return true;
         }
 

@@ -1,13 +1,20 @@
 package me.calebjones.spacelaunchnow.common.ui.settings;
 
 import android.os.Bundle;
+
+import com.jaredrummler.cyanea.app.CyaneaPreferenceActivity;
+
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
 import androidx.appcompat.app.ActionBar;
 
-import de.mrapp.android.preference.activity.PreferenceActivity;
+import androidx.appcompat.widget.Toolbar;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.BuildConfig;
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends CyaneaPreferenceActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -24,12 +31,25 @@ public class SettingsActivity extends PreferenceActivity {
         super.onStart();
     }
 
+    /**
+     * Populate the activity with the top-level headers.
+     */
     @Override
-    protected final void onCreatePreferenceHeaders() {
+    public void onBuildHeaders(List<Header> target) {
         if (BuildConfig.DEBUG){
-            addPreferenceHeadersFromResource(R.xml.preference_headers_debug);
+            loadHeadersFromResource(R.xml.preference_headers_debug, target);
         } else {
-            addPreferenceHeadersFromResource(R.xml.preference_headers);
+            loadHeadersFromResource(R.xml.preference_headers, target);
         }
+    }
+
+    @Override
+    public void setSupportActionBar(@Nullable Toolbar toolbar) {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }
