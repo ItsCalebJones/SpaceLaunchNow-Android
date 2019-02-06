@@ -65,6 +65,7 @@ public class AstronautRecyclerViewAdapter extends RecyclerView.Adapter<Astronaut
 
         GlideApp.with(context)
                 .load(holder.mItem.getProfileImageThumbnail())
+                .placeholder(R.drawable.placeholder)
                 .circleCrop()
                 .into(holder.astronautImage);
     }
