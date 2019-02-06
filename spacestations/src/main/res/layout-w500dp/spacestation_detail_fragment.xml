@@ -7,9 +7,10 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/max_width"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
         android:paddingStart="8dp"
         android:paddingTop="4dp"
         android:paddingEnd="8dp"

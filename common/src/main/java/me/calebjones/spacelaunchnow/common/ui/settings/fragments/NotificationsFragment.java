@@ -5,7 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
+
+import androidx.preference.Preference;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.pixplicity.easyprefs.library.Prefs;
@@ -23,9 +24,8 @@ import timber.log.Timber;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_REMINDER;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_REMINDER_NAME;
 
-public class NotificationsFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class NotificationsFragment extends BaseSettingsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private SwitchPreferences switchPreferences;
     private Context context;
     private FirebaseMessaging firebaseMessaging;
 
@@ -33,11 +33,28 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseMessaging = FirebaseMessaging.getInstance();
+
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.notification_preferences);
-        Preference testPreference =  findPreference("notifications_new_message_test");
+        Preference testPreference = findPreference("notifications_new_message_test");
         testPreference.setOnPreferenceClickListener(preference -> {
             Thread t = new Thread(this::sendTestNotification);
             t.start();
+            return true;
+        });
+        Preference filterPreference = findPreference("notification_filters");
+        filterPreference.setOnPreferenceClickListener(preference -> {
+            Intent intent = null;
+            try {
+                intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
+                intent.setAction("SHOW_FILTERS");
+                context.startActivity(intent);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             return true;
         });
         setName("Notifications Fragment");
@@ -48,7 +65,7 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Preference manageNotifications =  findPreference("manage_notification_channel");
+            Preference manageNotifications = findPreference("manage_notification_channel");
             manageNotifications.setOnPreferenceClickListener(preference -> {
                 Intent notificationSettings = new Intent();
                 notificationSettings.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
@@ -83,72 +100,72 @@ public class NotificationsFragment extends BaseSettingFragment implements Shared
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Timber.i("Notifications preference %s changed.", key);
-        if (key.equals("notificationEnabled")){
-            if (Prefs.getBoolean(key, true)){
+        if (key.equals("notificationEnabled")) {
+            if (Prefs.getBoolean(key, true)) {
                 firebaseMessaging.subscribeToTopic("notificationEnabled");
             } else {
                 firebaseMessaging.unsubscribeFromTopic("notificationEnabled");
             }
         }
 
-        if (key.equals("netstampChanged")){
-            if (Prefs.getBoolean(key, true)){
+        if (key.equals("netstampChanged")) {
+            if (Prefs.getBoolean(key, true)) {
                 firebaseMessaging.subscribeToTopic("netstampChanged");
             } else {
                 firebaseMessaging.unsubscribeFromTopic("netstampChanged");
             }
         }
 
-        if (key.equals("webcastOnly")){
-            if (Prefs.getBoolean(key, true)){
+        if (key.equals("webcastOnly")) {
+            if (Prefs.getBoolean(key, true)) {
                 firebaseMessaging.subscribeToTopic("webcastOnly");
             } else {
                 firebaseMessaging.unsubscribeFromTopic("webcastOnly");
             }
         }
 
-        if (key.equals("twentyFourHour")){
-            if (Prefs.getBoolean(key, true)){
+        if (key.equals("twentyFourHour")) {
+            if (Prefs.getBoolean(key, true)) {
                 firebaseMessaging.subscribeToTopic("twentyFourHour");
             } else {
                 firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
             }
         }
 
-        if (key.equals("oneHour")){
-            if (Prefs.getBoolean(key, true)){
+        if (key.equals("oneHour")) {
+            if (Prefs.getBoolean(key, true)) {
                 firebaseMessaging.subscribeToTopic("oneHour");
             } else {
                 firebaseMessaging.unsubscribeFromTopic("oneHour");
             }
         }
 
-        if (key.equals("tenMinutes")){
-            if (Prefs.getBoolean(key, true)){
+        if (key.equals("tenMinutes")) {
+            if (Prefs.getBoolean(key, true)) {
                 firebaseMessaging.subscribeToTopic("tenMinutes");
             } else {
                 firebaseMessaging.unsubscribeFromTopic("tenMinutes");
             }
         }
 
-        if (key.equals("oneMinute")){
-            if (Prefs.getBoolean(key, true)){
+        if (key.equals("oneMinute")) {
+            if (Prefs.getBoolean(key, true)) {
                 firebaseMessaging.subscribeToTopic("oneMinute");
             } else {
                 firebaseMessaging.unsubscribeFromTopic("oneMinute");
             }
         }
 
-        if (key.equals("inFlight")){
-            if (Prefs.getBoolean(key, true)){
+        if (key.equals("inFlight")) {
+            if (Prefs.getBoolean(key, true)) {
                 firebaseMessaging.subscribeToTopic("inFlight");
             } else {
                 firebaseMessaging.unsubscribeFromTopic("inFlight");
             }
         }
 
-        if (key.equals("success")){
-            if (Prefs.getBoolean(key, true)){
+        if (key.equals("success")) {
+            if (Prefs.getBoolean(key, true)) {
                 firebaseMessaging.subscribeToTopic("success");
             } else {
                 firebaseMessaging.unsubscribeFromTopic("success");

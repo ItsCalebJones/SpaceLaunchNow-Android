@@ -31,6 +31,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.button.MaterialButton;
 
 import androidx.core.widget.NestedScrollView;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -44,6 +45,7 @@ import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.ui.settings.CyaneaSettingsActivity;
 import me.calebjones.spacelaunchnow.local.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
@@ -54,7 +56,6 @@ import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.settings.fragments.NotificationsFragment;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
@@ -420,6 +421,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 if (!filterViewShowing) {
                     new Handler().postDelayed(this::checkFilter, 500);
                 }
+                bundle.clear();
             }
         }
     }
@@ -653,9 +655,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @OnClick(R.id.action_notification_settings)
     public void onNotificationSettingsClicked() {
-        Intent intent = new Intent(context, SettingsActivity.class);
+        Intent intent = new Intent(context, CyaneaSettingsActivity.class);
         intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, NotificationsFragment.class.getName());
-        intent.putExtra(PreferenceActivity.EXTRA_NO_HEADERS, true);
+        intent.putExtra(PreferenceActivity.EXTRA_HIDE_NAVIGATION, true);
         startActivity(intent);
     }
 
@@ -691,6 +693,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @OnClick({R.id.view_more_launches, R.id.view_more_launches2})
     public void onViewClicked() {
         callBackListener.onNavigateToLaunches();
+    }
+
+    public void showFilters() {
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            if (!isFilterShown()) {
+                showView();
+            }
+        }
     }
 
     public interface CallBackListener {

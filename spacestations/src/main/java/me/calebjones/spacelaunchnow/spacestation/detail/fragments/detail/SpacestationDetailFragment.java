@@ -101,7 +101,7 @@ public class SpacestationDetailFragment extends BaseFragment {
         if (spacestation.getDeorbited() != null) {
             deorbitedView.setVisibility(View.VISIBLE);
             String deorbited = DateFormat.getDateInstance(DateFormat.LONG).format(spacestation.getDeorbited());
-            deorbitedView.setText(String.format("De-orbited: %s", deorbited));
+            deorbitedView.setText(String.format(getString(R.string.deorbited), deorbited));
         } else {
             deorbitedView.setVisibility(View.GONE);
         }
@@ -109,55 +109,55 @@ public class SpacestationDetailFragment extends BaseFragment {
         if (spacestation.getFounded() != null) {
             foundedView.setVisibility(View.VISIBLE);
             String founded = DateFormat.getDateInstance(DateFormat.LONG).format(spacestation.getFounded());
-            foundedView.setText(String.format("Founded: %s", founded));
+            foundedView.setText(String.format(getString(R.string.founded), founded));
         } else {
             foundedView.setVisibility(View.GONE);
         }
 
-        spacestaionDetailSubtitle.setText(String.format("Status: %s", spacestation.getStatus().getName()));
+        spacestaionDetailSubtitle.setText(String.format(getString(R.string.status), spacestation.getStatus().getName()));
         descriptionView.setText(spacestation.getDescription());
 
         List<SpacestationSpecItem> specs = new ArrayList<>();
         if (spacestation.getHeight() != null) {
-            specs.add(new SpacestationSpecItem("Height",
-                    String.format("%s m", spacestation.getHeight().toString()),
+            specs.add(new SpacestationSpecItem(getString(R.string.height_plain),
+                    String.format(getString(R.string.height_unit), spacestation.getHeight().toString()),
                     new IconicsDrawable(context)
                             .icon(GoogleMaterial.Icon.gmd_swap_vert)
                             .sizeDp(24)));
         }
 
         if (spacestation.getWidth() != null) {
-            specs.add(new SpacestationSpecItem("Width",
-                    String.format("%s m", spacestation.getWidth().toString()),
+            specs.add(new SpacestationSpecItem(getString(R.string.width_plain),
+                    String.format(getString(R.string.width_unit), spacestation.getWidth().toString()),
                     new IconicsDrawable(context)
                             .icon(GoogleMaterial.Icon.gmd_swap_horiz)
                             .sizeDp(24)));
         }
 
         if (spacestation.getMass() != null) {
-            specs.add(new SpacestationSpecItem("Mass",
-                    String.format("%s T", spacestation.getMass().toString()),
+            specs.add(new SpacestationSpecItem(getString(R.string.mass_plain),
+                    String.format(getString(R.string.mass_unit), spacestation.getMass().toString()),
                     new IconicsDrawable(context)
                             .icon(FontAwesome.Icon.faw_weight)
                             .sizeDp(24)));
         }
 
         if (spacestation.getVolume() != null) {
-            specs.add(new SpacestationSpecItem("Volume",
-                    String.format("%s m³", spacestation.getVolume().toString()),
+            specs.add(new SpacestationSpecItem(getString(R.string.volume_plain),
+                    String.format(getString(R.string.volume_unit), spacestation.getVolume().toString()),
                     new IconicsDrawable(context)
                             .icon(FontAwesome.Icon.faw_cubes)
                             .sizeDp(24)));
         }
         if (spacestation.getVolume() != null) {
-            specs.add(new SpacestationSpecItem("Crew",
+            specs.add(new SpacestationSpecItem(getString(R.string.crew_plain),
                     String.format("%s", spacestation.getOnboardCrew()),
                     new IconicsDrawable(context)
                             .icon(FontAwesome.Icon.faw_user_astronaut)
                             .sizeDp(24)));
         }
         if (spacestation.getVolume() != null) {
-            specs.add(new SpacestationSpecItem("Orbit",
+            specs.add(new SpacestationSpecItem(getString(R.string.orbit),
                     String.format("%s", spacestation.getOrbit()),
                     new IconicsDrawable(context)
                             .icon(FontAwesome.Icon.faw_globe)
@@ -165,8 +165,8 @@ public class SpacestationDetailFragment extends BaseFragment {
         }
         adapter.addItems(specs);
         ownerAdapter.addItems(spacestation.getOwners());
-        spacestationDetailTitle.setText(String.format("%s Details", spacestation.getName()));
-        spacestaionOwnerSubtitle.setText(String.format("Total: %s", spacestation.getOwners().size()));
+        spacestationDetailTitle.setText(String.format(getString(R.string.details_fill), spacestation.getName()));
+        spacestaionOwnerSubtitle.setText(String.format(getString(R.string.total_fill), spacestation.getOwners().size()));
 
     }
 }

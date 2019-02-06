@@ -10,5 +10,7 @@
         <activity
             android:name=".customtab.webview.WebViewFallbackActivity"
             android:theme="@style/BaseAppTheme"/>
+        <activity android:name=".ui.settings.CyaneaSettingsActivity"
+            android:theme="@style/BaseAppTheme"/>
     </application>
 </manifest>

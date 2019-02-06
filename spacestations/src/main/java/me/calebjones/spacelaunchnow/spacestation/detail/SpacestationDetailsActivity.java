@@ -122,9 +122,9 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
                 enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
             }
         } );
-        tabs.addTab(tabs.newTab().setText("Details"));
-        tabs.addTab(tabs.newTab().setText("Expeditions"));
-        tabs.addTab(tabs.newTab().setText("Docked"));
+        tabs.addTab(tabs.newTab().setText(getString(R.string.details)));
+        tabs.addTab(tabs.newTab().setText(getString(R.string.expeditions)));
+        tabs.addTab(tabs.newTab().setText(getString(R.string.docked)));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         spacestationDataRepository = new SpacestationDataRepository(this, getRealm());
 

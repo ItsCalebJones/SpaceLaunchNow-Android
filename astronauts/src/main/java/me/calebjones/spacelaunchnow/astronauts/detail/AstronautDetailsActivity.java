@@ -124,8 +124,8 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
                 enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
             }
         } );
-        tabs.addTab(tabs.newTab().setText("Profile"));
-        tabs.addTab(tabs.newTab().setText("Flights"));
+        tabs.addTab(tabs.newTab().setText(getString(R.string.profile)));
+        tabs.addTab(tabs.newTab().setText(getString(R.string.flights)));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         astronautDataRepository = new AstronautDataRepository(this, getRealm());
 

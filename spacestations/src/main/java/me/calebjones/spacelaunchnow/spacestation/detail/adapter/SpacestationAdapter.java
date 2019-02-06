@@ -196,14 +196,14 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
             title.setText(expedition.getName());
             if (expedition.getStart() != null) {
                 start.setVisibility(View.VISIBLE);
-                start.setText(String.format("Start: %s", DateFormat.getDateInstance(DateFormat.LONG).format(expedition.getStart())));
+                start.setText(String.format(context.getString(R.string.start_fill), DateFormat.getDateInstance(DateFormat.LONG).format(expedition.getStart())));
             } else {
                 start.setVisibility(View.GONE);
             }
 
             if (expedition.getEnd() != null) {
                 end.setVisibility(View.VISIBLE);
-                end.setText(String.format("End: %s", DateFormat.getDateInstance(DateFormat.LONG).format(expedition.getEnd())));
+                end.setText(String.format(context.getString(R.string.end_fill), DateFormat.getDateInstance(DateFormat.LONG).format(expedition.getEnd())));
             } else {
                 end.setVisibility(View.GONE);
             }

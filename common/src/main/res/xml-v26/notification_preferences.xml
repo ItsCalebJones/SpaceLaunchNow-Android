@@ -9,6 +9,11 @@
             android:summaryOff="@string/enable_notifications_off"
             android:summaryOn="@string/enable_notifications_on"
             android:title="@string/enable_notifications" />
+        <Preference
+            android:defaultValue="true"
+            android:key="notification_filters"
+            android:summary="@string/notification_filter_description"
+            android:title="@string/notification_filters" />
         <SwitchPreference
             android:defaultValue="true"
             android:dependency="notificationEnabled"
@@ -34,23 +39,6 @@
             android:key="webcastOnly"
             android:summary="@string/webcast_only_summary"
             android:title="@string/webcast_only" />
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/do_not_disturb">
-        <SwitchPreference
-            android:key="do_not_disturb_status"
-            android:summary="@string/do_not_disturb_summary"
-            android:title="@string/do_not_disturb_enable" />
-        <me.calebjones.spacelaunchnow.local.common.customviews.TimePreference
-            android:defaultValue="22:00"
-            android:dependency="do_not_disturb_status"
-            android:key="do_not_disturb_start_time"
-            android:title="@string/start_time" />
-        <me.calebjones.spacelaunchnow.local.common.customviews.TimePreference
-            android:defaultValue="08:00"
-            android:dependency="do_not_disturb_status"
-            android:key="do_not_disturb_end_time"
-            android:title="@string/end_time" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/notification_preferences">

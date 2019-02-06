@@ -23,6 +23,7 @@
 
 -dontwarn android.databinding.**
 -keep class android.databinding.** { *; }
+-keep class androidx.preference.**
 
 -dontwarn android.support.**
 -dontwarn com.google.android.gms.internal.**

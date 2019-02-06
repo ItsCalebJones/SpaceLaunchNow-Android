@@ -28,7 +28,7 @@
             android:summary="@string/auto_calendar_summary"
             android:title="@string/auto_calendar" />
 
-        <com.afollestad.materialdialogs.prefs.MaterialListPreference
+        <ListPreference
             android:defaultValue="0"
             android:dependency="calendar_sync_state"
             android:dialogMessage="@string/calendar_account_dialog"
@@ -38,7 +38,7 @@
             android:summary="@string/calendar_account_summary"
             android:title="@string/calendar_account" />
 
-        <com.afollestad.materialdialogs.prefs.MaterialMultiSelectListPreference
+        <MultiSelectListPreference
             android:defaultValue="@array/multi_calendar_reminder_default"
             android:dependency="calendar_sync_state"
             android:dialogMessage="Set custom reminders for calendar notifications."

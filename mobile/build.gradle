@@ -205,7 +205,6 @@ dependencies {
     implementation deps.palette
     implementation deps.lifecycleExtensions
     implementation deps.material
-    implementation deps.preference
     implementation deps.vectordrawable
     implementation deps.percentlayout
     implementation deps.legacySupportv4

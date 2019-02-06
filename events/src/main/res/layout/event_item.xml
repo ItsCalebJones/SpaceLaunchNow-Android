@@ -115,7 +115,7 @@
             android:layout_marginBottom="16dp"
             android:gravity="center"
             android:padding="@dimen/material_card_edge_margin"
-            android:text="Details"
+            android:text="@string/details"
             android:textColor="?colorPrimary"
             android:textSize="12sp"
             android:theme="@style/PrimaryButtonTheme"

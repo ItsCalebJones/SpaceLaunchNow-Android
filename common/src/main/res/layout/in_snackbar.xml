@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/swipe_to_dismiss"
-        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textColor="?android:attr/textColorPrimary"
         android:textSize="12sp" />
 
     <TextView
@@ -60,10 +60,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:paddingEnd="@dimen/material_increment_2x"
-                android:paddingLeft="@dimen/material_increment_2x"
-                android:paddingRight="@dimen/material_increment_2x"
-                android:paddingStart="@dimen/material_increment_2x"
+                android:paddingEnd="@dimen/material_baseline_grid_2x"
+                android:paddingLeft="@dimen/material_baseline_grid_2x"
+                android:paddingRight="@dimen/material_baseline_grid_2x"
+                android:paddingStart="@dimen/material_baseline_grid_2x"
                 android:text="@string/button_feedback"
                 android:textColor="?android:attr/textColorSecondary"
                 android:visibility="gone"

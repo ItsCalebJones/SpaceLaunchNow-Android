@@ -6,13 +6,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.SwitchPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.SwitchPreference;
 import androidx.appcompat.app.AppCompatDelegate;
 import android.widget.Toast;
 
 import com.jaredrummler.android.colorpicker.ColorPreference;
+import com.jaredrummler.android.colorpicker.ColorPreferenceCompat;
+import com.jaredrummler.cyanea.prefs.CyaneaSettingsActivity;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -25,17 +27,17 @@ import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import timber.log.Timber;
 
-public class AppearanceFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class AppearanceFragment extends BaseSettingsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private SwitchPreferences switchPreferences;
     private Context context;
     private Preference widgetPresets;
-    private ColorPreference widgetBackgroundColor;
-    private ColorPreference widgetTextColor;
-    private ColorPreference widgetSecondaryTextColor;
-    private ColorPreference widgetIconColor;
-    private ColorPreference widgetAccentColor;
-    private ColorPreference widgetTitleColor;
+    private ColorPreferenceCompat widgetBackgroundColor;
+    private ColorPreferenceCompat widgetTextColor;
+    private ColorPreferenceCompat widgetSecondaryTextColor;
+    private ColorPreferenceCompat widgetIconColor;
+    private ColorPreferenceCompat widgetAccentColor;
+    private ColorPreferenceCompat widgetTitleColor;
     private SwitchPreference widgetRoundCorners;
     private SwitchPreference widgetHideSettings;
     private boolean isCustomColor = false;
@@ -48,6 +50,11 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.appearance_preferences);
         switchPreferences = SwitchPreferences.getInstance(getActivity());
         context = getActivity();
@@ -112,25 +119,39 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
         }
-// TODO
-//        if (key.equals("widget_background_color") || key.equals("widget_text_color") || key.equals("widget_secondary_text_color") || key.equals("widget_icon_color") || key.equals("widget_title_text_color") || key.equals("widget_list_accent_color") || key.equals("widget_refresh_enabled")) {
-//            Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
-//            nextIntent.putExtra("updateUIOnly", true);
-//            context.sendBroadcast(nextIntent);
-//        }
-//
-//        if  (key.equals("widget_theme_round_corner")){
-//            Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
-//            nextIntent.putExtra("updateUIOnly", true);
-//            context.sendBroadcast(nextIntent);
-//        }
-//
-//        if (key.equals("widget_presets")) {
-//            checkWidgetPreset(Integer.parseInt(sharedPreferences.getString("widget_presets", "2")));
-//            Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
-//            nextIntent.putExtra("updateUIOnly", true);
-//            context.sendBroadcast(nextIntent);
-//        }
+        if (key.equals("widget_background_color") || key.equals("widget_text_color") || key.equals("widget_secondary_text_color") || key.equals("widget_icon_color") || key.equals("widget_title_text_color") || key.equals("widget_list_accent_color") || key.equals("widget_refresh_enabled")) {
+            Intent intent = null;
+            try {
+                intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.widgets.WidgetBroadcastReceiver"));
+                intent.putExtra("updateUIOnly", true);
+                context.sendBroadcast(intent);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if  (key.equals("widget_theme_round_corner")){
+            Intent intent = null;
+            try {
+                intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.widgets.WidgetBroadcastReceiver"));
+                intent.putExtra("updateUIOnly", true);
+                context.sendBroadcast(intent);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (key.equals("widget_presets")) {
+            checkWidgetPreset(Integer.parseInt(sharedPreferences.getString("widget_presets", "2")));
+            Intent intent = null;
+            try {
+                intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.widgets.WidgetBroadcastReceiver"));
+                intent.putExtra("updateUIOnly", true);
+                context.sendBroadcast(intent);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void checkWidgetPreset(Integer arrayPosition) {
@@ -156,27 +177,32 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
 
     private void setupPreferences() {
         widgetPresets = findPreference("widget_presets");
-        widgetBackgroundColor = (ColorPreference) findPreference("widget_background_color");
-        widgetTextColor = (ColorPreference) findPreference("widget_text_color");
-        widgetSecondaryTextColor = (ColorPreference) findPreference("widget_secondary_text_color");
-        widgetIconColor = (ColorPreference) findPreference("widget_icon_color");
+        widgetBackgroundColor = (ColorPreferenceCompat) findPreference("widget_background_color");
+        widgetTextColor = (ColorPreferenceCompat) findPreference("widget_text_color");
+        widgetSecondaryTextColor = (ColorPreferenceCompat) findPreference("widget_secondary_text_color");
+        widgetIconColor = (ColorPreferenceCompat) findPreference("widget_icon_color");
         widgetRoundCorners = (SwitchPreference) findPreference("widget_theme_round_corner");
-        widgetAccentColor = (ColorPreference) findPreference("widget_list_accent_color");
-        widgetTitleColor = (ColorPreference) findPreference("widget_title_text_color");
+        widgetAccentColor = (ColorPreferenceCompat) findPreference("widget_list_accent_color");
+        widgetTitleColor = (ColorPreferenceCompat) findPreference("widget_title_text_color");
         widgetHideSettings = (SwitchPreference) findPreference("widget_refresh_enabled");
         if (!SupporterHelper.isSupporter()) {
+            Preference themes = findPreference("custom_themes");
+            themes.setEnabled(false);
+            themes.setSelectable(false);
+            themes.setTitle(themes.getTitle() + " " + getString(R.string.supporter_feature));
+
             Preference weather = findPreference("weather");
             weather.setEnabled(false);
             weather.setSelectable(false);
 
             PreferenceCategory prefCatWeather = (PreferenceCategory) findPreference("weather_category");
-            prefCatWeather.setTitle(prefCatWeather.getTitle() + getString(R.string.supporter_feature));
+            prefCatWeather.setTitle(prefCatWeather.getTitle() + " " + getString(R.string.supporter_feature));
             Preference measurement = findPreference("weather_US_SI");
             measurement.setEnabled(false);
             measurement.setSelectable(false);
 
             PreferenceCategory prefCatWidget = (PreferenceCategory) findPreference("widget_category");
-            prefCatWidget.setTitle(prefCatWidget.getTitle() + getString(R.string.supporter_feature));
+            prefCatWidget.setTitle(prefCatWidget.getTitle() + " " + getString(R.string.supporter_feature));
 
 
             widgetPresets.setEnabled(false);
@@ -205,6 +231,14 @@ public class AppearanceFragment extends BaseSettingFragment implements SharedPre
 
             widgetHideSettings.setEnabled(false);
             widgetHideSettings.setSelectable(false);
+        } else {
+            Preference themes = findPreference("custom_themes");
+            themes.setOnPreferenceClickListener(preference -> {
+                Intent intent = new Intent(context, CyaneaSettingsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                context.startActivity(intent);
+                return true;
+            });
         }
         Preference localTime = findPreference("local_time");
         localTime.setOnPreferenceChangeListener(createLocalTimeListener());

@@ -6,10 +6,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceCategory;
-import android.preference.SwitchPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.SwitchPreference;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
@@ -36,7 +36,7 @@ import me.calebjones.spacelaunchnow.common.ui.settings.util.CalendarPermissionLi
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import timber.log.Timber;
 
-public class GeneralFragment extends BaseSettingFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class GeneralFragment extends BaseSettingsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Context context;
     private Realm mRealm;
@@ -47,7 +47,10 @@ public class GeneralFragment extends BaseSettingFragment implements SharedPrefer
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.general_preferences);
 
         context = getActivity();

@@ -68,7 +68,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spacestation_docked_title"
             tools:background="@color/colorAccent"
-            android:text="Single Use" />
+            android:text="@string/single_use" />
 
         <TextView
             android:id="@+id/in_use"
@@ -79,7 +79,7 @@
             android:ellipsize="end"
             android:gravity="start"
             android:singleLine="false"
-            android:text="Docked: "
+            android:text="@string/docked"
             android:textAlignment="viewStart"
             android:textAppearance="@style/MaterialTypography.Regular.Subheading"
             app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +105,7 @@
             android:ellipsize="end"
             android:gravity="start"
             android:singleLine="false"
-            android:text="Human Rated: "
+            android:text="@string/human_rated"
             android:textAlignment="viewStart"
             android:textAppearance="@style/MaterialTypography.Regular.Subheading"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -130,7 +130,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:text="Location"
+            android:text="@string/location"
             android:textAppearance="@style/MaterialTypography.Regular.Title"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"

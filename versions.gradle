@@ -54,7 +54,6 @@ ext.deps = [
         multidex                       : "com.android.support:multidex:1.0.3",
         cardview                       : "androidx.cardview:cardview:1.0.0",
         palette                        : "androidx.palette:palette:1.0.0",
-        preference                     : "androidx.preference:preference:1.0.0",
         vectordrawable                 : "androidx.vectordrawable:vectordrawable-animated:1.0.0",
         percentlayout                  : "androidx.percentlayout:percentlayout:1.0.0",
         wear                           : "androidx.wear:wear:1.0.0",
@@ -105,7 +104,7 @@ ext.deps = [
         circleImageView                : "de.hdodenhof:circleimageview:2.2.0",
         customtabs                     : "saschpe.android:customtabs:2.0.0",
         // DO NOT UPDATE - v5.0.+ not working well.
-        androidPreference              : 'com.github.michael-rapp:android-preference-activity:4.2.11',
+        androidPreference              : "com.github.michael-rapp:android-preference-activity:7.0.1",
         transitionseverywhere          : "com.andkulikov:transitionseverywhere:1.8.0",
         androidyoutubeplayer_core      : "com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1",
         androidyoutubeplayer_chromecast: "com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.15",
