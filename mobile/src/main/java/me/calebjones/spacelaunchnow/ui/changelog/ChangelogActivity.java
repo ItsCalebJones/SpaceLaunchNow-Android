@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 import com.mukesh.MarkdownView;
 
 import butterknife.BindView;
@@ -12,7 +13,7 @@ import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
-public class ChangelogActivity extends AppCompatActivity {
+public class ChangelogActivity extends CyaneaAppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;

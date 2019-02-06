@@ -46,7 +46,7 @@
                     android:maxLines="1"
                     android:paddingTop="4dp"
                     android:text="@string/unknown_mission"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
                     android:textSize="16sp"
                     android:textStyle="normal" />
 
@@ -61,7 +61,7 @@
                     android:paddingRight="8dp"
                     android:singleLine="false"
                     android:text="@string/unknown_launch_vehicle"
-                    android:textColor="@color/dark_theme_secondary_text_color"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="12sp" />
 
                 <TextView
@@ -75,7 +75,7 @@
                     android:paddingRight="8dp"
                     android:singleLine="false"
                     android:text="@string/unknown_launch_location"
-                    android:textColor="@color/dark_theme_secondary_text_color"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="12sp" />
 
                 <TextView
@@ -89,7 +89,7 @@
                     android:paddingRight="8dp"
                     android:singleLine="false"
                     android:text="@string/unknown_launch_date"
-                    android:textColor="@color/dark_theme_secondary_text_color"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="12sp" />
 
             </LinearLayout>

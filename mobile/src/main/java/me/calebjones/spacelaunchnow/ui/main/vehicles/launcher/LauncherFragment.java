@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.RetroFitFragment;
+import me.calebjones.spacelaunchnow.common.base.RetroFitFragment;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -31,8 +32,7 @@ import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyRespons
 import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
-import okhttp3.CacheControl;
+import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -102,7 +102,6 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         adapter.setOnItemClickListener(recyclerRowClickListener);
         mRecyclerView.setAdapter(adapter);
         Timber.v("Returning view.");
-        statefulView.showProgress();
         statefulView.setOfflineRetryOnClickListener(v -> loadJSON(false));
         return view;
     }
@@ -121,12 +120,17 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
     public void onResume() {
         super.onResume();
         Timber.v("onResume");
-        new Handler().postDelayed(() -> loadJSON(false), 100);
+        if (adapter.getItemCount() == 0) {
+            statefulView.showProgress();
+            new Handler().postDelayed(() -> loadJSON(false), 100);
+        }
     }
 
     private void loadJSON(boolean forceRefresh) {
         Timber.v("Loading vehicles...");
-        showLoading();
+        if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+            showLoading();
+        }
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
         Call<AgencyResponse> call = request.getAgencies(true, "detailed");
@@ -142,28 +146,32 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
                     Timber.v("Response pulled from network.");
                 }
 
-                if (response.isSuccessful()) {
-                    AgencyResponse jsonResponse = response.body();
-                    Timber.v("Success %s", response.message());
-                    items = jsonResponse.getAgencies();
-                    adapter.addItems(items);
-                    statefulView.showContent();
-                    Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
+                if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    if (response.isSuccessful()) {
+                        AgencyResponse jsonResponse = response.body();
+                        Timber.v("Success %s", response.message());
+                        items = jsonResponse.getAgencies();
+                        adapter.addItems(items);
+                        statefulView.showContent();
+                        Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
-                } else {
-                    statefulView.showEmpty();
-                    Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
-                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
+                    } else {
+                        statefulView.showEmpty();
+                        Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).getMessage());
+                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).getMessage());
+                    }
+                    hideLoading();
                 }
-                hideLoading();
             }
 
             @Override
             public void onFailure(Call<AgencyResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
-                hideLoading();
-                statefulView.showOffline();
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    hideLoading();
+                    statefulView.showOffline();
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
+                }
                 Analytics.getInstance().sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });

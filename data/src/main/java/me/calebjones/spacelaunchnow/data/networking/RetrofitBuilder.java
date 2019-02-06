@@ -6,6 +6,10 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -14,6 +18,11 @@ import com.google.gson.stream.JsonWriter;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -53,62 +62,10 @@ public class RetrofitBuilder {
         }
     };
 
-    public static Retrofit getLibraryRetrofit(String version) {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(defaultClient())
-                .baseUrl(Constants.LIBRARY_BASE_URL + version + "/")
-                .addConverterFactory(GsonConverterFactory.create(getGson()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build();
-        return retrofit;
-    }
+    public static Retrofit getSpaceLaunchNowRetrofit(String token, String endpoint) {
 
-    public static Retrofit getLibraryRetrofitThreaded(String version) {
-        Executor httpExecutor = Executors.newCachedThreadPool(new ThreadFactory() {
-            @Override
-            public Thread newThread(final Runnable r) {
-                return new Thread(() -> {
-                    android.os.Process.setThreadPriority(THREAD_PRIORITY_BACKGROUND);
-                    r.run();
-                }, "Retrofit-Idle-Background");
-            }
-        });
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.LIBRARY_BASE_URL + version + "/")
-                .client(defaultClient())
-                .addConverterFactory(GsonConverterFactory.create(getGson()))
-                .callbackExecutor(httpExecutor)
-                .build();
-        return retrofit;
-    }
-
-    public static Retrofit getLibraryRetrofitLowestThreaded(String version) {
-        Executor httpExecutor = Executors.newCachedThreadPool(r -> new Thread(() -> {
-            android.os.Process.setThreadPriority(THREAD_PRIORITY_MORE_FAVORABLE);
-            r.run();
-        }, "Retrofit-Idle-Background"));
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.LIBRARY_BASE_URL + version + "/")
-                .client(defaultClient())
-                .addConverterFactory(GsonConverterFactory.create(getGson()))
-                .callbackExecutor(httpExecutor)
-                .build();
-        return retrofit;
-    }
-
-
-    public static Retrofit getSpaceLaunchNowRetrofit(String token, boolean debug) {
-
-        String BASE_URL;
-
-        if (debug) {
-            BASE_URL = Constants.API_DEBUG_BASE_URL;
-        } else {
-            BASE_URL = Constants.API_BASE_URL;
-        }
+        String BASE_URL = endpoint;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -170,12 +127,36 @@ public class RetrofitBuilder {
                         return list;
                     }
                 })
+                .registerTypeAdapter(Date.class, new DateDeserializer())
                 .create();
     }
 
     private static Type getToken() {
         return new TypeToken<RealmList<RealmStr>>() {
         }.getType();
+    }
+
+    private static final String[] DATE_FORMATS = new String[] {
+            "MMMM dd, yyyy HH:mm:ss zzz",
+            "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "yyyy-MM-dd"
+    };
+
+
+    private static class DateDeserializer implements JsonDeserializer<Date> {
+
+        @Override
+        public Date deserialize(JsonElement jsonElement, Type typeOF,
+                                JsonDeserializationContext context) throws JsonParseException {
+            for (String format : DATE_FORMATS) {
+                try {
+                    return new SimpleDateFormat(format, Locale.US).parse(jsonElement.getAsString());
+                } catch (ParseException e) {
+                }
+            }
+            throw new JsonParseException("Unparseable date: \"" + jsonElement.getAsString()
+                    + "\". Supported formats: " + Arrays.toString(DATE_FORMATS));
+        }
     }
 }
 

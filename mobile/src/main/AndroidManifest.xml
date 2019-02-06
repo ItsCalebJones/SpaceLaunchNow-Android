@@ -49,7 +49,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.launchdetail.activity.LaunchDetailActivity"
+            android:name=".common.ui.launchdetail.activity.LaunchDetailActivity"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/BaseAppTheme" />
         <activity
@@ -64,12 +64,16 @@
             android:value="@string/GoogleMapsKey" />
 
         <activity
-            android:name=".ui.settings.SettingsActivity"
+            android:name=".common.ui.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/CustomPreferenceTheme" />
-        <activity android:name=".ui.orbiter.OrbiterDetailActivity" />
-        <activity android:name=".ui.launcher.LauncherDetailActivity" />
+        <activity
+            android:name=".common.ui.spacecraft.OrbiterDetailActivity"
+            android:theme="@style/BaseAppTheme"/>
+        <activity
+            android:name=".ui.launcher.LauncherDetailActivity"
+            android:theme="@style/BaseAppTheme"/>
 
         <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver">
             <intent-filter>
@@ -85,7 +89,7 @@
         </receiver>
 
         <activity
-            android:name=".ui.settings.AboutActivity"
+            android:name=".ui.AboutActivity"
             android:theme="@style/BaseAppTheme" />
 
         <meta-data
@@ -96,58 +100,22 @@
             android:name=".ui.imageviewer.FullscreenImageActivity"
             android:label="@string/title_activity_fullscreen_image"
             android:parentActivityName=".ui.main.MainActivity"
-            android:theme="@style/LightTheme.Transparent">
+            android:theme="@style/BaseAppTheme.Transparent">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.main.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.supporter.SupporterActivity"
+            android:name=".common.ui.supporter.SupporterActivity"
             android:theme="@style/BaseAppTheme" />
-        <activity android:name=".common.BaseActivity" />
+        <activity android:name=".local.common.BaseActivity" />
         <activity
             android:name=".ui.webview.WebViewFallbackActivity"
             android:label="@string/title_activity_web_view_fallback"
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/BaseAppTheme" />
 
-        <receiver
-            android:name=".widget.launchcard.LaunchCardCompactWidgetProvider"
-            android:label="Compact Card">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider.ACTION_WIDGET_REFRESH" />
-            </intent-filter>
 
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_launch_card_compact_info" />
-        </receiver>
-        <receiver
-            android:name=".widget.wordtimer.LaunchWordTimerWidgetProvider"
-            android:label="Launch Timer">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH" />
-                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_launch_word_timer_info" />
-        </receiver>
-        <receiver
-            android:name=".widget.launchlist.LaunchListWidgetProvider"
-            android:label="Launch List (Supporters)">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchListWidgetProvider.ACTION_WIDGET_REFRESH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_launch_list_info" />
-        </receiver>
 
         <service android:name=".content.services.ListenerServiceFromWear">
             <intent-filter>
@@ -171,7 +139,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".widget.launchlist.LaunchListWidgetService"
+            android:name=".widgets.launchlist.LaunchListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
         <service
             android:name="com.evernote.android.job.v21.PlatformJobService"
@@ -200,10 +168,48 @@
         </receiver>
 
         <service
-            android:name=".widget.WidgetJobService"
+            android:name=".widgets.WidgetJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <receiver android:name=".widget.WidgetBroadcastReceiver" />
+        <receiver android:name=".widgets.WidgetBroadcastReceiver" />
+
+        <receiver
+            android:name=".widgets.launchcard.LaunchCardCompactWidgetProvider"
+            android:label="Compact Card">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider.ACTION_WIDGET_REFRESH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_card_compact_info" />
+        </receiver>
+        <receiver
+            android:name=".widgets.wordtimer.LaunchWordTimerWidgetProvider"
+            android:label="Launch Timer">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH" />
+                <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_CLICK" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_word_timer_info" />
+        </receiver>
+        <receiver
+            android:name=".widgets.launchlist.LaunchListWidgetProvider"
+            android:label="Launch List (Supporters)">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="me.calebjones.spacelaunchnow.widget.LaunchListWidgetProvider.ACTION_WIDGET_REFRESH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_launch_list_info" />
+        </receiver>
 
         <service
             android:name="com.evernote.android.job.gcm.PlatformGcmService"
@@ -248,10 +254,10 @@
             android:value="me.calebjones.spacelaunchnow.LAUNCH_UPDATE" />
 
         <activity
-            android:name=".ui.launches.launcher.LauncherLaunchActivity"
+            android:name=".common.ui.launchdetail.launches.launcher.LauncherLaunchActivity"
             android:theme="@style/BaseAppTheme" />
         <activity
-            android:name=".ui.launches.agency.AgencyLaunchActivity"
+            android:name=".common.ui.launchdetail.launches.agency.AgencyLaunchActivity"
             android:theme="@style/BaseAppTheme" />
 
     </application>

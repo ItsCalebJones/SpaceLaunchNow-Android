@@ -7,6 +7,8 @@ import com.google.gson.annotations.SerializedName;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
+import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftConfig;
 
 public class Agency extends RealmObject {
 
@@ -65,9 +67,9 @@ public class Agency extends RealmObject {
     @SerializedName("launcher_list")
     @Expose
     public RealmList<LauncherConfig> launcherConfigs;
-    @SerializedName("orbiter_list")
+    @SerializedName("spacecraft_list")
     @Expose
-    public RealmList<Orbiter> orbiters;
+    public RealmList<SpacecraftConfig> spacecraftConfigs;
 
 
     public RealmList<LauncherConfig> getLauncherConfigs() {
@@ -118,12 +120,12 @@ public class Agency extends RealmObject {
         this.launchers_string = launchers_string;
     }
 
-    public RealmList<Orbiter> getOrbiters() {
-        return orbiters;
+    public RealmList<SpacecraftConfig> getSpacecraftConfigs() {
+        return spacecraftConfigs;
     }
 
-    public void setOrbiters(RealmList<Orbiter> orbiters) {
-        this.orbiters = orbiters;
+    public void setSpacecraftConfigs(RealmList<SpacecraftConfig> spacecraftConfigs) {
+        this.spacecraftConfigs = spacecraftConfigs;
     }
 
     public String getDescription() {

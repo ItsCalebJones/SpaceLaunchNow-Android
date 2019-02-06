@@ -20,10 +20,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'com.palantir.git-version' version '0.9.1'
-}
-
 apply plugin: 'org.moallemi.advanced-build-version'
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
@@ -32,14 +28,14 @@ apply plugin: 'com.getkeepsafe.dexcount'
 
 advancedVersioning {
     nameOptions {
-        versionMajor app.versionMajor
+        versionMajor rootProject.ext.app.versionMajor
         versionMinor app.versionMinor
         versionPatch app.versionPatch
         versionBuild versionCode
     }
     codeOptions {
         versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
-        dependsOnTasks 'release'
+        dependsOnTasks 'release', 'publishReleaseApk'
 
     }
 
@@ -113,7 +109,7 @@ android {
         }
     }
 
-    def appVersionCode = app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
+    def appVersionCode = 1000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
     flavorDimensions "release"
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion '28.0.3'
@@ -160,19 +156,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.releaseConfig
         }
-
-        validation.initWith(debug)
-        validation {
-            debuggable false
-            renderscriptOptimLevel 3
-            applicationIdSuffix ".test"
-            versionNameSuffix "-test"
-            minifyEnabled true
-            useProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
-            testProguardFile('proguard-rules-test.pro')
-            matchingFallbacks = ['debug', 'release']
-        }
     }
     lintOptions {
         abortOnError false
@@ -184,6 +167,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
+
+//play {
+//    serviceAccountCredentials = rootProject.file("publisher-key.json")
+//    track = "internal"
+//    releaseStatus = "draft"
+//}
 
 //// map for the version code that gives each ABI a value. make sure to list all ABIs mentioned in splits block, an keep the order.
 //ext.versionCodes = ['armeabi': 3, 'armeabi-v7a': 4, 'arm64-v8a': 5, mips: 6, 'x86': 7, 'x86_64': 8]
@@ -200,107 +189,109 @@ android {
 //}
 
 dependencies {
-
-
-    implementation project(path: ':data')
-    implementation files('libs/YouTubeAndroidPlayerApi.jar')
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation project(':data')
+    implementation project(':common')
+    implementation project(':astronauts')
+    implementation project(':news')
+    implementation project(':spacestations')
+    implementation project(':events')
+    implementation deps.multidex
 
     // Android Official Libraries
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation 'androidx.appcompat:appcompat:1.0.1'
-    implementation 'androidx.browser:browser:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.palette:palette:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.preference:preference:1.0.0'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
-    implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation "com.google.firebase:firebase-core:16.0.5"
-    implementation "com.google.android.gms:play-services-wearable:16.0.1"
-    implementation "com.google.android.gms:play-services-ads:16.0.0"
+    implementation deps.archcore_coreRuntime
+    implementation deps.appcompat
+    implementation deps.browser
+    implementation deps.cardview
+    implementation deps.palette
+    implementation deps.lifecycleExtensions
+    implementation deps.material
+    implementation deps.vectordrawable
+    implementation deps.percentlayout
+    implementation deps.legacySupportv4
+    implementation deps.firebaseCore
+    implementation deps.playWearable
+    implementation deps.playAds
+    implementation deps.constraintLayout
 
-    implementation 'com.pixplicity.easyprefs:library:1.9.0'
+    implementation deps.easyprefs
 
     // Architecture and Tools
-    implementation 'com.jonathanfinerty.once:once:1.2.2'
-    implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
-    implementation 'com.jakewharton.timber:timber:4.6.0'
-    implementation 'com.karumi:dexter:4.2.0'
-    implementation 'cz.kinst.jakub:android-stateful-layout-simple:2.0.7'
+    implementation deps.once
+    implementation deps.crashlytics
+
+    implementation deps.dexter
+    implementation deps.statefulLayout
 
     // Billing
-    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
+    implementation deps.inAppbilling
 
-    implementation 'com.evernote:android-job:1.2.5'
-    implementation 'blue.aodev:material-values:1.1.1'
+    implementation deps.evernoteJob
+
 
     // Views and Animations
-    implementation 'com.afollestad.material-dialogs:core:0.9.4.3'
-    implementation 'com.afollestad.material-dialogs:commons:0.9.3.0'
-    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+    implementation deps.materialDialogCore
+    implementation deps.materialDialogCommons
+    implementation deps.photoView
 
-    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
+    implementation deps.GDPRDialog
 
-    implementation 'com.github.ItsCalebJones:GDPRDialog:54231db'
+    implementation deps.transitionseverywhere
 
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.andkulikov:transitionseverywhere:1.8.0'
-
-    implementation 'com.github.jrvansuita:MaterialAbout:0.2.3'
-    implementation 'com.github.mukeshsolanki:MarkdownView-Android:1.0.4'
-    implementation 'com.jaredrummler:colorpicker:1.0.1'
-    implementation 'com.andkulikov:transitionseverywhere:1.8.0'
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-    implementation 'com.github.florent37:glidepalette:2.1.2'
-    implementation 'com.codemybrainsout.onboarding:onboarder:1.0.4'
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
-    implementation 'com.borax12.materialdaterangepicker:library:1.9'
-    implementation 'com.simplecityapps:recyclerview-fastscroll:1.0.18'
-    implementation 'jp.wasabeef:glide-transformations:3.0.1'
-    implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
-    implementation 'at.blogc:expandabletextview:1.0.5'
-
-    // If you want to use the GPU Filters
-    implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
-    implementation "com.mikepenz:materialdrawer:6.1.0"
+    implementation deps.materialAbout
+    implementation deps.markdownView
+    implementation deps.colorpicker
+    implementation deps.cyanea
+    implementation deps.glide
+    annotationProcessor deps.glideCompiler
+    implementation deps.glidepalette
+    implementation deps.onboarding
+    implementation deps.circleImageView
+    implementation deps.materialdaterangepicker
+    implementation deps.recyclerview_fastscroll
+    implementation deps.glideTransformation
+    implementation deps.expandableLayout
+    implementation deps.expandableTextview
+    implementation deps.gpuImageLibrary
+    implementation deps.materialdrawer
+    implementation deps.forecast
 
 
     // HTTP Related libraries
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.github.renaudcerrato:static-maps-api:1.0.4'
-    implementation 'com.google.code.gson:gson:2.8.4'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'android.zetterstrom.com.forecast:forecast:1.2.0'
-    implementation 'it.macisamuele:calendarprovider-lib:0.0.1'
+    implementation deps.retrofit
+    implementation deps.okhttp
+    implementation deps.converter_gson
+    implementation deps.gson
+    implementation deps.calendarprovider
 
     // DO NOT UPDATE - v5.0.+ not working well.
-    implementation 'com.github.michael-rapp:android-preference-activity:4.2.11'
+    implementation deps.androidPreference
 
     // Iconography
-    implementation 'com.mikepenz:iconics-core:3.1.0@aar'
-    implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
-    implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
-    implementation 'com.github.pwittchen:weathericonview:1.1.0'
-    implementation 'com.mikepenz:fontawesome-typeface:5.0.13.0@aar'
+    implementation deps.iconicsCore
+    implementation deps.googleMaterialTypeface
+    implementation deps.communityMaterialTypeface
+    implementation deps.weathericon
+    implementation deps.fontawesomeTypeface
+
+    implementation deps.rxjava
+    implementation deps.rxandroid
+
+    implementation deps.badge
 
     //Twitter
-    implementation 'com.twitter.sdk.android:twitter-core:3.1.1'
-    implementation 'com.twitter.sdk.android:tweet-ui:3.1.1'
-
-    implementation "io.reactivex.rxjava2:rxjava:2.1.15"
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    //Rich Links
-    implementation 'com.github.nekocode:Badge:2.0'
+    implementation deps.twitterCore
+    implementation deps.twitterUi
 
     // Firebase Messaging
-    implementation "com.google.firebase:firebase-messaging:17.3.4"
+    implementation deps.firebaseMessaging
+
+    implementation deps.timber
+
+    implementation deps.butterknife
+    annotationProcessor deps.butterknifeCompiler
+
+    implementation deps.bottomNavigation
+
 }
 
 apply plugin: 'com.google.gms.google-services'

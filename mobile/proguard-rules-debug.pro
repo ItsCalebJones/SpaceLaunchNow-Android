@@ -244,6 +244,7 @@ public *;
 -dontwarn com.evernote.android.job.gcm.**
 -dontwarn com.evernote.android.job.util.GcmAvailableHelper
 
+-keep class com.evernote.android.job.gcm.PlatformGcmService { *; }
 -keep public class com.evernote.android.job.v21.PlatformJobService
 -keep public class com.evernote.android.job.v14.PlatformAlarmService
 -keep public class com.evernote.android.job.v14.PlatformAlarmReceiver

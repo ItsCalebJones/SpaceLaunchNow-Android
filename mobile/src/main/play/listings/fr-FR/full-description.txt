@@ -1,0 +1,18 @@
+Découvrez <b>Space Launch Now</b>, la meilleure application pour rester informé de tous vos lancements de fusée favoris à travers le monde.
+
+<b><u>Fonctionnalités :</u></b>
+- Notification pour les lancements à venir
+- Histoire des vols spatiaux jusqu'au premier vol habité
+- Caractéristiques des lanceurs courants
+- Recherche avancée et filtres pour trouver des lancements spécifiques
+- Thème clair/sombre
+- Cadran Android Wear avec compte à rebours
+
+<b>Suivi des lancements</b>
+Suivez les lancements de SpaceX, ULA, ainsi que Orbital/ATK tout comme les lancements internationaux de la NASA, ROSCOSMOS, ISRO, JAXA et de l'ESA.
+
+<b>Missions scientifiques</b>
+Suivez les missions de ravitaillement de la Station Spatiale Internationale, les lancements de satellites commerciaux de fournisseurs comme IRIDIUM et les missions spatiales comme le James Webb Space Telescope !
+
+<b>Informations du véhicule de lancement</b>
+Découvrez toutes les lanceur orbitaux comme les Soyuz, Atlas, Delta, Ariane, Proton ainsi que les véhicules de lancement de la famille Falcon.

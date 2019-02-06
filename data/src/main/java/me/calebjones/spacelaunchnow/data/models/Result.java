@@ -35,7 +35,7 @@ public class Result {
     }
 
     public Result(String action, boolean successful, Call call, SpaceLaunchNowError error) {
-        this.errorMessage = error.status() + " - " + error.message();
+        this.errorMessage = error.status() + " - " + error.getMessage();
         this.successful = successful;
         this.requestURL = call.request().url().toString();
         this.action = action;

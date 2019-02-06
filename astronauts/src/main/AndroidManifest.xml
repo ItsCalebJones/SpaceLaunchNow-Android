@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="me.spacelaunchnow.astronauts">
+
+    <application>
+        <activity
+            android:name="me.calebjones.spacelaunchnow.astronauts.detail.AstronautDetailsActivity"
+            android:label="@string/title_activity_astronaut_details"
+            android:theme="@style/BaseAppTheme" />
+    </application>
+
+</manifest>

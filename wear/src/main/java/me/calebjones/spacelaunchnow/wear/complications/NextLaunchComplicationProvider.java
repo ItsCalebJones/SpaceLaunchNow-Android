@@ -47,7 +47,7 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
         return PendingIntent.getActivity(context, complicationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
-    static PendingIntent getOpenLaunchDetail(Context context, int launchId, int complicationId) {
+    static PendingIntent getOpenLaunchDetail(Context context, String launchId, int complicationId) {
         Intent intent = new Intent(context, LaunchDetail.class);
         intent.putExtra("launchId", launchId);
 

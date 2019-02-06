@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="Notifications">
+    <PreferenceCategory android:title="@string/general">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="notificationEnabled"
+            android:summaryOff="@string/enable_notifications_off"
+            android:summaryOn="@string/enable_notifications_on"
+            android:title="@string/enable_notifications" />
+        <Preference
+            android:defaultValue="true"
+            android:key="notification_filters"
+            android:summary="@string/notification_filter_description"
+            android:title="@string/notification_filters" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notificationEnabled"
+            android:key="netstampChanged"
+            android:summaryOff="@string/status_updates_off"
+            android:summaryOn="@string/status_updates_on"
+            android:title="@string/status_updates" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notificationEnabled"
+            android:key="inFlight"
+            android:summary="@string/settings_in_flight_summary"
+            android:title="@string/settings_in_flight" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notificationEnabled"
+            android:key="success"
+            android:summary="@string/settings_success_summary"
+            android:title="@string/settings_success" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="notificationEnabled"
+            android:key="webcastOnly"
+            android:summary="@string/webcast_only_summary"
+            android:title="@string/webcast_only" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/notification_preferences">
+        <RingtonePreference
+            android:defaultValue="content://settings/system/notification_sound"
+            android:dependency="notificationEnabled"
+            android:key="notifications_new_message_ringtone"
+            android:ringtoneType="notification"
+            android:summary="@string/ringtone_summary"
+            android:title="@string/ringtone" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="notificationEnabled"
+            android:key="notifications_new_message_heads_up"
+            android:summary="@string/priority_summary"
+            android:title="@string/priority" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="notificationEnabled"
+            android:key="notifications_new_message_vibrate"
+            android:summary="@string/vibration_summary"
+            android:title="@string/vibration" />
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="notificationEnabled"
+            android:key="notifications_new_message_led"
+            android:summary="@string/led_summary"
+            android:title="@string/led" />
+
+        <Preference
+            android:defaultValue="true"
+            android:dependency="notificationEnabled"
+            android:key="notifications_new_message_test"
+            android:summary="@string/test_notification_summary"
+            android:title="@string/test_notification" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:dependency="notificationEnabled"
+        android:summary="@string/notification_interval_summary"
+        android:title="@string/notification_interval">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="twentyFourHour"
+            android:summaryOff="@string/twenty_four_hour_off"
+            android:summaryOn="@string/twenty_four_hour_on"
+            android:title="@string/twenty_four_hour_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="oneHour"
+            android:summaryOff="@string/one_hour_off"
+            android:summaryOn="@string/one_hour_on"
+            android:title="@string/one_hour_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="tenMinutes"
+            android:summaryOff="@string/ten_minutes_off"
+            android:summaryOn="@string/ten_minutes_on"
+            android:title="@string/ten_minutes_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="oneMinute"
+            android:summaryOff="@string/settings_one_minute_off"
+            android:summaryOn="@string/settings_one_minute_on"
+            android:title="@string/settings_one_minute" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/vehicle_container"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="8dp"
+    android:paddingTop="4dp"
+    android:paddingEnd="8dp"
+    android:paddingBottom="4dp"
+    android:textAlignment="center"
+    android:transitionGroup="true">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/spacestation_image"
+                android:layout_width="wrap_content"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/placeholder" />
+
+            <TextView
+                android:id="@+id/spacestation_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?colorAccent"
+                android:gravity="center"
+                android:lines="1"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/launch_vehicle_summary"
+                android:textAlignment="center"
+                android:textColor="@color/dark_primary_text_color_selector"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/spacestaion_subtitle"
+                app:layout_constraintStart_toStartOf="@+id/spacestaion_subtitle"
+                app:layout_constraintTop_toBottomOf="@+id/spacestation_image"
+                tools:background="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/spacestaion_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?colorAccent"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lines="1"
+                android:paddingLeft="8dp"
+                android:paddingTop="4dp"
+                android:paddingRight="8dp"
+                android:paddingBottom="8dp"
+                android:singleLine="false"
+                android:text="@string/unknown_launch_vehicle"
+                android:textAlignment="center"
+                android:textColor="@color/dark_primary_text_color_selector"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spacestation_title"
+                tools:background="@color/colorAccent" />
+
+
+            <TextView
+                android:id="@+id/spacestation_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:minHeight="60dp"
+                android:textAppearance="@style/MaterialTypography.Regular.Body1"
+                android:textColor="?android:textColorSecondary"
+                android:visibility="visible"
+                app:layout_constraintEnd_toStartOf="@+id/status_pill_layout"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spacestaion_subtitle"
+                tools:text="test sets set setsetse set set set set set " />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/orbit_pill_layout"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/material_baseline_grid_1x"
+                android:layout_marginTop="8dp"
+                android:padding="@dimen/material_baseline_grid_1x"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/status_pill_layout">
+
+                <TextView
+                    android:id="@+id/orbit_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:paddingStart="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="2dp"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textAppearance="@style/MaterialTypography.Locale.Caption"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    tools:text="Low Earth Orbit" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/status_pill_layout"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/material_baseline_grid_1x"
+                android:layout_marginTop="8dp"
+                android:padding="@dimen/material_baseline_grid_1x"
+                app:cardBackgroundColor="?attr/colorPrimary"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spacestaion_subtitle">
+
+                <TextView
+                    android:id="@+id/status_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="2dp"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:paddingStart="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="2dp"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textAppearance="@style/MaterialTypography.Locale.Caption"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    tools:text="Active" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/spacestation_button"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                android:drawableStart="@drawable/ic_explore"
+                android:drawablePadding="4dp"
+                android:singleLine="true"
+                android:text="@string/explore"
+                android:textColor="?android:textColorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spacestation_description"
+                app:layout_constraintWidth_max="150dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -48,7 +48,7 @@
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center"
                     android:maxLines="2"
-                    android:textColor="@color/dark_theme_secondary_text_color"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="24sp" />
             </LinearLayout>
 
@@ -72,7 +72,7 @@
                     android:paddingBottom="8dp"
                     android:scaleX="1.0"
                     android:scaleY="1.0"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
                     android:textSize="36sp"
                     android:text="- -"
                     android:paddingRight="8dp" />
@@ -85,7 +85,7 @@
                     android:lines="1"
                     android:paddingTop="8dp"
                     android:text="@string/lower_days"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
                     android:textSize="20sp" />
 
                 <TextView
@@ -97,7 +97,7 @@
                     android:paddingLeft="8dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
                     android:textSize="36sp"
                     android:text="- -"
                     android:paddingRight="8dp" />
@@ -110,7 +110,7 @@
                     android:lines="1"
                     android:paddingTop="8dp"
                     android:text="@string/lower_hours"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
                     android:textSize="20sp" />
             </LinearLayout>
 

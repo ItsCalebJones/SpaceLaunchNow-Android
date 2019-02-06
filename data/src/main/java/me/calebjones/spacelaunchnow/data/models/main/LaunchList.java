@@ -5,17 +5,18 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 
 public class LaunchList extends RealmObject {
 
     @PrimaryKey
     @SerializedName("id")
     @Expose
-    public Integer id;
+    public String id;
+    @SerializedName("launch_library_id")
+    @Expose
+    public Integer launchLibraryId;
     @SerializedName("url")
     @Expose
     public String url;
@@ -24,7 +25,7 @@ public class LaunchList extends RealmObject {
     public String name;
     @SerializedName("status")
     @Expose
-    public Status status;
+    public LaunchStatus status;
     @SerializedName("net")
     @Expose
     public Date net;
@@ -55,9 +56,28 @@ public class LaunchList extends RealmObject {
     @SerializedName("orbit")
     @Expose
     public String orbit;
+    @SerializedName("image")
+    @Expose
+    public String image;
     @SerializedName("landing_success")
     @Expose
     public Integer landingSuccess;
+
+    public Integer getLaunchLibraryId() {
+        return launchLibraryId;
+    }
+
+    public void setLaunchLibraryId(Integer launchLibraryId) {
+        this.launchLibraryId = launchLibraryId;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public String getOrbit() {
         return orbit;
@@ -75,11 +95,11 @@ public class LaunchList extends RealmObject {
         this.landingSuccess = landingSuccess;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -99,11 +119,11 @@ public class LaunchList extends RealmObject {
         this.name = name;
     }
 
-    public Status getStatus() {
+    public LaunchStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(LaunchStatus status) {
         this.status = status;
     }
 

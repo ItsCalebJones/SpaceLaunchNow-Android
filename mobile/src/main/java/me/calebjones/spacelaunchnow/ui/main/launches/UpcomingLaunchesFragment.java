@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.ui.main.launches;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.MenuItemCompat;
@@ -17,9 +18,11 @@ import android.view.ViewGroup;
 import com.crashlytics.android.Crashlytics;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -28,16 +31,17 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
-import me.calebjones.spacelaunchnow.common.customviews.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
+import me.calebjones.spacelaunchnow.common.utils.EndlessRecyclerViewScrollListener;
+import me.calebjones.spacelaunchnow.local.common.BaseFragment;
+import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 
-import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
-import me.calebjones.spacelaunchnow.content.data.upcoming.UpcomingDataRepository;
+import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
+import me.calebjones.spacelaunchnow.common.content.data.upcoming.UpcomingDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.utils.views.EndlessRecyclerViewScrollListener;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.filter.LaunchFilterDialog;
-import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
+import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import timber.log.Timber;
 
 /**
@@ -53,6 +57,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     private int nextOffset = 0;
     private EndlessRecyclerViewScrollListener scrollListener;
     private String searchTerm = null;
+    private List<LaunchList> launches;
 
     @BindView(R.id.stateful_view)
     SimpleStatefulLayout statefulView;
@@ -79,16 +84,23 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Timber.v("onCreateView");
         this.context = getContext();
         canLoadMore = true;
         setHasOptionsMenu(true);
-        adapter = new ListAdapter(getContext());
+        launches = new ArrayList<>();
+
+        if (adapter == null) {
+            Timber.v("Creating new ListAdapter");
+            adapter = new ListAdapter(getContext(), getCyanea().isDark());
+        }
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.getInitialPrefetchItemCount();
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         mRecyclerView.setAdapter(adapter);
@@ -105,7 +117,6 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             }
         };
         mRecyclerView.addOnScrollListener(scrollListener);
-        statefulView.showProgress();
         statefulView.setOfflineRetryOnClickListener(v -> fetchData(true));
         return view;
     }
@@ -160,28 +171,34 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             @Override
             public void onLaunchesLoaded(List<LaunchList> launches, int next, int total) {
                 Timber.v("Offset - %s", next);
-                nextOffset = next;
-                canLoadMore = next > 0;
-                updateAdapter(launches);
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    nextOffset = next;
+                    canLoadMore = next > 0;
+                    updateAdapter(launches);
+                }
             }
 
             @Override
             public void onNetworkStateChanged(boolean refreshing) {
-                showNetworkLoading(refreshing);
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    showNetworkLoading(refreshing);
+                }
             }
 
             @Override
             public void onError(String message, @Nullable Throwable throwable) {
-                statefulView.showOffline();
-                statefulStateContentShow = false;
-                showNetworkLoading(false);
-                if (throwable != null) {
-                    Timber.e(throwable);
-                } else {
-                    Timber.e(message);
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    statefulView.showOffline();
+                    statefulStateContentShow = false;
+                    showNetworkLoading(false);
+                    if (throwable != null) {
+                        Timber.e(throwable);
+                    } else {
+                        Timber.e(message);
+                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
+                    }
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
             }
         });
     }
@@ -196,12 +213,12 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
     private void showLoading() {
         Timber.v("Show Loading...");
-        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+        mSwipeRefreshLayout.setRefreshing(true);
     }
 
     private void hideLoading() {
         Timber.v("Hide Loading...");
-        mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
 
@@ -209,6 +226,8 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     public void onResume() {
         Timber.d("OnResume!");
         if (adapter.getItemCount() == 0) {
+            statefulStateContentShow = false;
+            statefulView.showProgress();
             fetchData(false);
         }
         super.onResume();

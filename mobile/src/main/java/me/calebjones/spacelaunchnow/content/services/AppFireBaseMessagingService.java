@@ -11,18 +11,16 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Locale;
 import java.util.Map;
 
 import me.calebjones.spacelaunchnow.BuildConfig;
-import me.calebjones.spacelaunchnow.content.notifications.NotificationBuilder;
+import me.calebjones.spacelaunchnow.common.content.notifications.NotificationBuilder;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Location;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.main.Rocket;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
 public class AppFireBaseMessagingService extends FirebaseMessagingService {
@@ -31,7 +29,7 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
 
         Timber.d("From: %s", remoteMessage.getFrom());
 
-        // Check if message contains a data payload.
+        // Check if getMessage contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Timber.d("Message data payload: %s",remoteMessage.getData());
             Map<String, String> params = remoteMessage.getData();
@@ -47,7 +45,7 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
 
                 if (background.contains("true")) {
                     Launch launch = new Launch();
-                    launch.setId(Integer.valueOf(data.getString("launch_id")));
+                    launch.setId(data.getString("launch_uuid"));
                     launch.setNet(dateFormat.parse(data.getString("launch_net")));
                     launch.setName(data.getString("launch_name"));
 
@@ -70,14 +68,13 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
             }
         }
 
-        // Check if message contains a notification payload.
+        // Check if getMessage contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Timber.d("Message Notification Body: %s", remoteMessage.getNotification().getBody());
         }
 
     }
 
-    //TODO break this out into calling various methods inside NotificationBuilder for various types instead of returning a boolean
     private void checkNotificationType(Launch launch, String notificationType, boolean webcastAvailable) {
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);

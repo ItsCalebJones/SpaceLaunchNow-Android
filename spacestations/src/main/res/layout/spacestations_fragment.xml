@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="me.calebjones.spacelaunchnow.spacestation.SpacestationListFragment">
+
+    <cz.kinst.jakub.view.SimpleStatefulLayout
+        android:id="@+id/spacestation_stateful_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:emptyLayout="@layout/empty_astronauts"
+        app:progressLayout="@layout/custom_progress">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/spacestation_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/spacestation_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </cz.kinst.jakub.view.SimpleStatefulLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

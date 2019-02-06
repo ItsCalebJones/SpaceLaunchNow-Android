@@ -20,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -63,10 +64,12 @@ public class ContentManager {
     private Context context;
     SharedPreferences.Editor prefsEditor;
 
+    // TODO FIX THIS
     public ContentManager(Context context, ContentCallback callback) {
         this.context = context;
         realm = Realm.getDefaultInstance();
-        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(context.getString(R.string.sln_token), false);
+        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(context.getString(R.string.sln_token),
+                Constants.API_DEV_BASE_URL);
         sharedPreferences = context.getSharedPreferences("timestamp", 0);
         this.contentCallback = callback;
     }
@@ -115,7 +118,7 @@ public class ContentManager {
         Date date = calendar.getTime();
 
         if (category > 0) {
-            return realm.where(Launch.class).equalTo("lsp.id", category).greaterThanOrEqualTo("net", date).sort("net").findAll();
+            return realm.where(Launch.class).equalTo("rocket.configuration.launchServiceProvider.id", category).greaterThanOrEqualTo("net", date).sort("net").findAll();
         } else {
             return realm.where(Launch.class).greaterThanOrEqualTo("net", date).sort("net").findAll();
         }

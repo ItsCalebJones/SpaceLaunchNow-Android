@@ -1,11 +1,23 @@
 package me.calebjones.spacelaunchnow.data.networking;
 
+import java.io.IOException;
+
+import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
+import me.calebjones.spacelaunchnow.data.models.main.spacecraft.Spacecraft;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.AstronautResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.EventResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.ExpeditionResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchListResponse;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.VehicleResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LauncherConfigResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.SpacecraftResponse;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.SpacestationResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -14,23 +26,13 @@ public class DataClient {
 
     private final SpaceLaunchNowService spaceLaunchNowService;
     private static DataClient mInstance;
-    private Retrofit libraryRetrofit;
-    private Retrofit libraryRetrofitThreaded;
 
 
     private Retrofit spaceLaunchNowRetrofit;
 
-    private DataClient(String version, String token, boolean debug) {
-
-        libraryRetrofit = RetrofitBuilder.getLibraryRetrofit(version);
-        libraryRetrofitThreaded = RetrofitBuilder.getLibraryRetrofitThreaded(version);
-        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(token, debug);
+    private DataClient(String token, String endpoint) {
+        spaceLaunchNowRetrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(token, endpoint);
         spaceLaunchNowService = spaceLaunchNowRetrofit.create(SpaceLaunchNowService.class);
-
-    }
-
-    public Retrofit getLibraryRetrofit() {
-        return libraryRetrofit;
     }
 
     public Retrofit getSpaceLaunchNowRetrofit() {
@@ -40,14 +42,14 @@ public class DataClient {
     /**
      * Applications must call create to configure the DataClient singleton
      */
-    public static void create(String version, String token, boolean debug) {
-        mInstance = new DataClient(version, token, debug);
+    public static void create(String token, String endpoint) {
+        mInstance = new DataClient(token, endpoint);
     }
 
     /**
      * Singleton accessor
      * <p/>
-     * Will throw an exception if {@link #create(String version, String token, boolean debug)} was never called
+     * Will throw an exception if {@link #create(String token, String endpoint)} was never called
      *
      * @return the DataClient singleton
      */
@@ -58,7 +60,7 @@ public class DataClient {
         return mInstance;
     }
 
-    public Call<Launch> getLaunchById(int launchID, Callback<Launch> callback) {
+    public Call<Launch> getLaunchById(String launchID, Callback<Launch> callback) {
         Call<Launch> call;
 
         call = spaceLaunchNowService.getLaunchById(launchID, "detailed");
@@ -68,11 +70,8 @@ public class DataClient {
         return call;
     }
 
-    public Call<LaunchResponse> getNextUpcomingLaunchesForWidgets(int limit, int offset, Callback<LaunchResponse> callback) {
+    public Call<LaunchResponse> getNextUpcomingLaunchesForWidgets(int limit, int offset) {
         Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null, null, null);
-
-        call.enqueue(callback);
-
         return call;
     }
 
@@ -129,8 +128,8 @@ public class DataClient {
         return call;
     }
 
-    public Call<VehicleResponse> getVehiclesByAgency(String agency, Callback<VehicleResponse> callback) {
-        Call<VehicleResponse> call = spaceLaunchNowService.getVehiclesByAgency(agency);
+    public Call<LauncherConfigResponse> getVehiclesByAgency(String agency, Callback<LauncherConfigResponse> callback) {
+        Call<LauncherConfigResponse> call = spaceLaunchNowService.getLauncherConfigByAgency(agency);
 
         call.enqueue(callback);
 
@@ -139,6 +138,86 @@ public class DataClient {
 
     public Call<AgencyResponse> getFeaturedAgencies(Callback<AgencyResponse> callback) {
         Call<AgencyResponse> call = spaceLaunchNowService.getAgencies(true, "list");
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<AstronautResponse> getAstronauts(int limit, int offset, String search, Integer status, String statuses, Callback<AstronautResponse> callback) {
+        Call<AstronautResponse> call = spaceLaunchNowService.getAstronauts(limit, offset, search, status, statuses, "name");
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Astronaut> getAstronautsById(int id, Callback<Astronaut> callback) {
+        Call<Astronaut> call = spaceLaunchNowService.getAstronautsById(id);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<SpacestationResponse> getSpacestations(int limit, int offset, String search, Integer status, Callback<SpacestationResponse> callback) {
+        Call<SpacestationResponse> call = spaceLaunchNowService.getSpacestations(limit, offset, search, status, "status");
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Spacestation> getSpacestationById(int id, Callback<Spacestation> callback) {
+        Call<Spacestation> call = spaceLaunchNowService.getSpacestationById(id);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<ExpeditionResponse> getExpeditions(int limit, int offset, Integer astronaut, Integer agency, Integer spacestation, String endDate, Callback<ExpeditionResponse> callback) {
+        Call<ExpeditionResponse> call = spaceLaunchNowService.getExpedition(limit, offset, astronaut, agency, spacestation, endDate);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Expedition> getExpeditionById(int id, Callback<Expedition> callback) {
+        Call<Expedition> call = spaceLaunchNowService.getExpeditionById(id);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<SpacecraftResponse> getSpacecraft(int limit, int offset, Callback<SpacecraftResponse> callback) {
+        Call<SpacecraftResponse> call = spaceLaunchNowService.getSpacecraft(limit, offset, null, null, null);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Spacecraft> getSpacecraftById(int id, Callback<Spacecraft> callback) {
+        Call<Spacecraft> call = spaceLaunchNowService.getSpacecraftById(id);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<EventResponse> getUpcomingEvents(int limit, int offset, Callback<EventResponse> callback) {
+        Call<EventResponse> call = spaceLaunchNowService.getUpcomingEvents(limit, offset);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Event> getEventById(int id, Callback<Event> callback) {
+        Call<Event> call = spaceLaunchNowService.getEventById(id);
 
         call.enqueue(callback);
 

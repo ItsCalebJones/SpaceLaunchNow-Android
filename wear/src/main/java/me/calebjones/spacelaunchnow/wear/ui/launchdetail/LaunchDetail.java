@@ -8,7 +8,6 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import androidx.annotation.NonNull;
-import androidx.core.widget.SwipeRefreshLayout;
 import androidx.appcompat.widget.AppCompatButton;
 import android.support.wearable.activity.ConfirmationActivity;
 import android.support.wearable.activity.WearableActivity;
@@ -31,13 +30,16 @@ import com.google.android.wearable.playstore.PlayStoreAvailability;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.Set;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
+import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
@@ -70,8 +72,8 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     SwipeRefreshLayout swipeRefresh;
     @BindView(R.id.TitleCard)
     LinearLayout titleCard;
-    @BindView(R.id.launchStatus)
-    TextView launchStatus;
+    @BindView(R.id.status)
+    TextView status;
     @BindView(R.id.countdown_view)
     LinearLayout countdownView;
     @BindView(R.id.explore_button)
@@ -87,6 +89,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     private static final String START_ACTIVITY_CAPABILITY = "start_activity";
     private static final String PLAY_STORE_APP_URI = "market://details?id=me.calebjones.spacelaunchnow";
 
+    // TODO FIX THIS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,14 +97,15 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
         ButterKnife.bind(this);
         context = this;
         realm = Realm.getDefaultInstance();
-        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(this.getString(R.string.sln_token), false);
+        retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(this.getString(R.string.sln_token),
+                Constants.API_DEV_BASE_URL);
         swipeRefresh.setOnRefreshListener(this);
 
         // Get the Intent that started this activity and extract the string
         Intent intent = getIntent();
-        int launchID = 0;
+        String launchID = "";
         if (intent.getExtras() != null) {
-            launchID = intent.getIntExtra("launchId", 0);
+            launchID = intent.getStringExtra("launchId");
         }
 
         loadData(launchID);
@@ -112,7 +116,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
         checkCompanionInstalled();
     }
 
-    private void loadData(int launchID) {
+    private void loadData(String launchID) {
         RealmResults<Launch> launches = realm.where(Launch.class).equalTo("id", launchID).findAll();
         if (launches.size() > 0){
             launch = launches.first();
@@ -201,7 +205,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
     private void setupView(Launch launch) {
         launchTitle.setText(launch.getRocket().getConfiguration().getName());
 
-        launchStatus.setText(getStatus(launch.getStatus().getId()));
+        status.setText(getStatus(launch.getStatus().getId()));
 
         if (launch.getMission() != null) {
             launchMission.setText(launch.getMission().getName());
@@ -330,38 +334,27 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
         return bestNodeId;
     }
 
-    private void sendMessage(final int launchID) {
+
+    // TODO fix alllll this
+    private void sendMessage(final String launchID) {
         if (nodeId != null) {
-            ByteBuffer b = ByteBuffer.allocate(4);
-            b.putInt(launchID);
-
-            byte[] result = b.array();
             Task<Integer> sendTask = Wearable.getMessageClient(getApplicationContext()).sendMessage(
-                    nodeId, START_ACTIVITY, result);
+                    nodeId, START_ACTIVITY, launchID.getBytes(Charset.forName("UTF-8")));
 
-            sendTask.addOnSuccessListener(new OnSuccessListener<Integer>() {
-                @Override
-                public void onSuccess(Integer integer) {
-                    Timber.v("Successfully sent!");
-                    Intent openOnPhoneIntent = new Intent(context, ConfirmationActivity.class);
-                    openOnPhoneIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    openOnPhoneIntent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
-                            ConfirmationActivity.OPEN_ON_PHONE_ANIMATION);
-                    startActivity(openOnPhoneIntent);
-                }
+            sendTask.addOnSuccessListener(integer -> {
+                Timber.v("Successfully sent!");
+                Intent openOnPhoneIntent = new Intent(context, ConfirmationActivity.class);
+                openOnPhoneIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                openOnPhoneIntent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,
+                        ConfirmationActivity.OPEN_ON_PHONE_ANIMATION);
+                startActivity(openOnPhoneIntent);
             });
-            sendTask.addOnCompleteListener(new OnCompleteListener<Integer>() {
-                @Override
-                public void onComplete(@NonNull Task<Integer> task) {
-                    Timber.v("Successfully Completed!");
-                }
-            });
-            sendTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(LaunchDetail.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                    Timber.e(e);
-                }
+
+            sendTask.addOnCompleteListener(task -> Timber.v("Successfully Completed!"));
+
+            sendTask.addOnFailureListener(e -> {
+                Toast.makeText(LaunchDetail.this, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                Timber.e(e);
             });
         } else {
             openAppInStoreOnPhone();

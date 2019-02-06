@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
@@ -25,6 +24,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.jaredrummler.cyanea.Cyanea;
 import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
@@ -45,24 +45,24 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import jonathanfinerty.once.Once;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
-import me.calebjones.spacelaunchnow.content.jobs.SyncCalendarJob;
-import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
-import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
-import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
-import me.calebjones.spacelaunchnow.content.notifications.NotificationHelper;
+import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
+import me.calebjones.spacelaunchnow.common.content.jobs.DataJobCreator;
+import me.calebjones.spacelaunchnow.common.content.jobs.SyncCalendarJob;
+import me.calebjones.spacelaunchnow.common.content.jobs.SyncWearJob;
+import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
+import me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.utils.Connectivity;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
+import me.calebjones.spacelaunchnow.widgets.WidgetJobCreator;
 import timber.log.Timber;
 
 public class LaunchApplication extends MultiDexApplication {
@@ -86,7 +86,7 @@ public class LaunchApplication extends MultiDexApplication {
         super.onCreate();
         context = this;
         firebaseMessaging = FirebaseMessaging.getInstance();
-
+        Cyanea.init(this, getResources());
         setupAndCheckOnce();
         setupAds();
         setupPreferences();
@@ -172,17 +172,9 @@ public class LaunchApplication extends MultiDexApplication {
 
 
     private void setupData(final boolean update) {
-        final String version;
-        boolean debug;
-        if (sharedPreference.isDebugEnabled()) {
-            version = "dev";
-            debug = true;
-        } else {
-            version = "1.3";
-            debug = false;
-        }
-        DataClient.create(version, getString(R.string.sln_token), debug);
+        DataClient.create(getString(R.string.sln_token), sharedPreference.getNetworkEndpoint());
         JobManager.create(context).addJobCreator(new DataJobCreator());
+        JobManager.instance().addJobCreator(new WidgetJobCreator());
         startJobs();
     }
 
@@ -471,7 +463,6 @@ public class LaunchApplication extends MultiDexApplication {
 
     private void startJobs() {
         new Thread(() -> {
-            SyncJob.schedulePeriodicJob(context);
             SyncWearJob.scheduleJob();
             UpdateWearJob.scheduleJobNow();
             SyncCalendarJob.scheduleDailyJob();

@@ -1,0 +1,106 @@
+package me.calebjones.spacelaunchnow.events.list;
+
+import android.content.Context;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
+import me.calebjones.spacelaunchnow.data.models.main.Event;
+import me.calebjones.spacelaunchnow.events.R;
+import me.calebjones.spacelaunchnow.events.R2;
+
+
+public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> {
+
+
+    private List<Event> events;
+    private Context context;
+
+    public EventRecyclerViewAdapter(Context context) {
+        events = new ArrayList<>();
+        this.context = context;
+    }
+
+    public void addItems(List<Event> events) {
+        this.events = events;
+        this.notifyDataSetChanged();
+    }
+
+    public void clear() {
+        events = new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.event_item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        holder.mItem = events.get(position);
+        holder.eventTitle.setText(holder.mItem.getName());
+        holder.eventDate.setText(DateFormat.getDateInstance(DateFormat.LONG).format(holder.mItem.getDate()));
+        holder.eventDescription.setText(holder.mItem.getDescription());
+        holder.eventType.setText(holder.mItem.getType().getName());
+
+        if (holder.mItem.getNewsUrl() != null){
+            holder.details.setVisibility(View.VISIBLE);
+        } else {
+            holder.details.setVisibility(View.GONE);
+        }
+
+        GlideApp.with(context)
+                .load(holder.mItem.getFeatureImage())
+                .placeholder(R.drawable.placeholder)
+                .into(holder.eventImage);
+    }
+
+    @Override
+    public int getItemCount() {
+        return events.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R2.id.event_image)
+        ImageView eventImage;
+        @BindView(R2.id.event_description)
+        TextView eventDescription;
+        @BindView(R2.id.event_title)
+        TextView eventTitle;
+        @BindView(R2.id.event_date)
+        TextView eventDate;
+        @BindView(R2.id.event_type)
+        TextView eventType;
+        @BindView(R2.id.details)
+        AppCompatButton details;
+        public Event mItem;
+
+        public ViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+
+        @OnClick(R2.id.details)
+        void onClick(View v){
+            Event event = events.get(getAdapterPosition());
+            Utils.openCustomTab(context, event.getNewsUrl());
+        }
+    }
+}

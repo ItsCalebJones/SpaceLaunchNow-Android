@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.wear.model;
 
-import androidx.appcompat.graphics.Target;
+
+import androidx.palette.graphics.Target;
 
 public final class WearConstants {
 

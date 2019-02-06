@@ -53,7 +53,8 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 
@@ -136,13 +137,7 @@ public class Utils {
 
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
-        if (sharedPreference.isNightModeActive(context)) {
-            intentBuilder.setToolbarColor(ContextCompat.getColor(
-                    (context), R.color.darkPrimary));
-        } else {
-            intentBuilder.setToolbarColor(ContextCompat.getColor(
-                    (context), R.color.colorPrimary));
-        }
+        intentBuilder.setToolbarColor(ContextCompat.getColor((context), R.color.colorPrimary));
 
         intentBuilder.setShowTitle(true);
 

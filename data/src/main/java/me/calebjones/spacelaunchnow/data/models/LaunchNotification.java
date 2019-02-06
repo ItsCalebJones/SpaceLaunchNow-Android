@@ -6,16 +6,16 @@ import io.realm.annotations.PrimaryKey;
 public class LaunchNotification extends RealmObject {
 
     @PrimaryKey
-    private Integer id;
+    private String id;
     private boolean isNotifiedDay = false;
     private boolean isNotifiedHour = false;
     private boolean isNotifiedTenMinute = false;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

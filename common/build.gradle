@@ -1,0 +1,116 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
+apply plugin: 'com.jakewharton.butterknife'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        debug {}
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildToolsVersion '28.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(path: ':data')
+    implementation deps.appcompat
+    implementation deps.legacySupportv4
+    implementation deps.lifecycleExtensions
+    implementation deps.browser
+    implementation deps.constraintLayout
+
+    implementation deps.playWearable
+    implementation deps.material
+    implementation deps.playAds
+
+    implementation deps.kotlin_stdlib_jdk7
+
+    implementation deps.materialdrawer
+    implementation deps.materialDialogCore
+    implementation deps.materialDialogCommons
+    implementation deps.cyanea
+
+    implementation deps.inAppbilling
+    implementation deps.evernoteJob
+
+    // Iconography
+    implementation deps.iconicsCore
+    implementation deps.googleMaterialTypeface
+    implementation deps.communityMaterialTypeface
+    implementation deps.weathericon
+    implementation deps.fontawesomeTypeface
+
+    implementation deps.expandableLayout
+    implementation deps.expandableTextview
+
+    implementation deps.forecast
+
+    implementation deps.dexter
+
+    implementation deps.easyprefs
+
+    implementation deps.staticMaps
+    implementation deps.once
+    implementation deps.circleImageView
+
+    implementation deps.calendarprovider
+    implementation deps.androidPreference
+
+
+    // Firebase Messaging
+    implementation deps.firebaseCore
+    implementation deps.firebaseMessaging
+
+    // HTTP Related libraries
+    implementation deps.retrofit
+    implementation deps.converter_gson
+    implementation deps.gson
+
+    implementation deps.glide
+    kapt deps.glideCompiler
+    implementation deps.glideTransformation
+
+    implementation deps.timber
+
+    implementation deps.butterknife
+    kapt deps.butterknifeCompiler
+
+    implementation deps.materialValue
+
+
+    implementation deps.autoValue
+    annotationProcessor deps.autoValueProcessor
+
+    implementation deps.statefulLayout
+
+    // YouTube Player
+    implementation deps.androidyoutubeplayer_core
+    implementation deps.androidyoutubeplayer_chromecast
+
+    implementation deps.rxjava
+    implementation deps.rxandroid
+
+    implementation deps.transitionseverywhere
+    implementation deps.customtabs
+
+}
