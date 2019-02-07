@@ -143,5 +143,5 @@ dependencies {
     implementation deps.playWearable
     implementation deps.timber
     implementation deps.materialValue
-    implementation deps.wearable
+    compileOnly deps.wearable
 }

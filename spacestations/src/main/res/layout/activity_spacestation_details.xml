@@ -131,7 +131,7 @@
                     android:elevation="6dp"
                     android:visibility="gone"
                     ads:adSize="SMART_BANNER"
-                    ads:adUnitId="ca-app-pub-9824528399164059/8930231940"
+                    ads:adUnitId="ca-app-pub-9824528399164059/2268266421"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
             </RelativeLayout>
