@@ -11,7 +11,7 @@
         android:id="@+id/spacestation_stateful_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:emptyLayout="@layout/empty_astronauts"
+        app:emptyLayout="@layout/empty_spacestations"
         app:progressLayout="@layout/custom_progress">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

@@ -486,4 +486,7 @@
     <string name="news">News</string>
     <string name="vehicles">Vehicles</string>
     <string name="show_me">Show Me</string>
+    <string name="docked_alt">Docked</string>
+    <string name="no_spacestations">No Spacestations Found</string>
+    <string name="no_events">No Events Found</string>
 </resources>

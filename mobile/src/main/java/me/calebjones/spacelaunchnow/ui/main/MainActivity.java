@@ -853,9 +853,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private void showAd() {
         Timber.v("Showing Ad!");
-//        if (adviewEnabled && adView.getVisibility() == View.GONE) {
-//            adView.setVisibility(View.VISIBLE);
-//        }
+        if (adviewEnabled && adView.getVisibility() == View.GONE) {
+            adView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
