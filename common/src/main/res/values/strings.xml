@@ -457,7 +457,6 @@
     <string name="single_use">Single Use</string>
     <string name="docked">Docked:</string>
     <string name="human_rated">Human Rated:</string>
-    <string name="location">Location</string>
     <string name="no_active_expeditions">No Active Expeditions</string>
     <string name="past_expeditions">Past Expeditions</string>
     <string name="expeditions">Expeditions</string>
@@ -482,8 +481,5 @@
     <string name="astronauts">Astronauts</string>
     <string name="events">Events</string>
     <string name="favorites">Favorites</string>
-    <string name="launches">Launches</string>
-    <string name="news">News</string>
-    <string name="vehicles">Vehicles</string>
     <string name="show_me">Show Me</string>
 </resources>

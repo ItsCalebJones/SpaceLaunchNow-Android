@@ -50,6 +50,8 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     private static String PREFS_SWITCH_SPACEX;
     private static String PREFS_SWITCH_ROSCOSMOS;
     private static String PREFS_SWITCH_ULA;
+    private static String PREFS_SWITCH_BO;
+    private static String PREFS_SWITCH_RL;
     private static String PREFS_SWITCH_ARIANE;
     private static String PREFS_SWITCH_CASC;
     private static String PREFS_SWITCH_ISRO;
@@ -83,6 +85,8 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         PREFS_SWITCH_SPACEX = "SWITCH_SPACEX";
         PREFS_SWITCH_ROSCOSMOS = "SWITCH_ROSCOSMOS";
         PREFS_SWITCH_ULA = "SWITCH_ULA";
+        PREFS_SWITCH_BO = "SWITCH_BO";
+        PREFS_SWITCH_RL = "SWITCH_RL";
         PREFS_SWITCH_ARIANE = "SWITCH_ARIANE";
         PREFS_SWITCH_CASC = "SWITCH_CASC";
         PREFS_SWITCH_ISRO = "SWITCH_ISRO";
@@ -596,6 +600,43 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
             firebaseMessaging.subscribeToTopic("ula");
         } else {
             firebaseMessaging.unsubscribeFromTopic("ula");
+        }
+    }
+
+
+    //BO Switch
+    public boolean getSwitchBO() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_BO, true);
+    }
+
+    public void setSwitchBO(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_BO, key);
+        this.prefsEditor.apply();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("blueOrigin");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("blueOrigin");
+        }
+    }
+
+    //Rocket Lab Switch
+    public boolean getSwitchRL() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_RL, true);
+    }
+
+    public void setSwitchRL(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_RL, key);
+        this.prefsEditor.apply();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("rocketLab");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("rocketLab");
         }
     }
 

@@ -58,6 +58,7 @@ ext.deps = [
         percentlayout                  : "androidx.percentlayout:percentlayout:1.0.0",
         wear                           : "androidx.wear:wear:1.0.0",
         media                          : "androidx.media:media:1.0.0",
+        wearable                       : "com.google.android.wearable:wearable:2.4.0",
         supportWearable                : "com.google.android.support:wearable:2.4.0",
         room                           : "androidx.room:room-runtime:$roomVersion",
         roomCompiler                   : "androidx.room:room-compiler:$roomVersion",

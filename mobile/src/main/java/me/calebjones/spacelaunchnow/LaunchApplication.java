@@ -304,6 +304,8 @@ public class LaunchApplication extends MultiDexApplication {
         boolean roscosmos = switchPreferences.getSwitchRoscosmos();
         boolean spacex = switchPreferences.getSwitchSpaceX();
         boolean nasa = switchPreferences.getSwitchNasa();
+        boolean blueOrigin = switchPreferences.getSwitchBO();
+        boolean rocketLab = switchPreferences.getSwitchRL();
 
         if (all) {
             firebaseMessaging.subscribeToTopic("all");
@@ -345,6 +347,18 @@ public class LaunchApplication extends MultiDexApplication {
             firebaseMessaging.subscribeToTopic("ariane");
         } else {
             firebaseMessaging.unsubscribeFromTopic("ariane");
+        }
+
+        if (blueOrigin) {
+            firebaseMessaging.subscribeToTopic("blueOrigin");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("blueOrigin");
+        }
+
+        if (rocketLab) {
+            firebaseMessaging.subscribeToTopic("rocketLab");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("rocketLab");
         }
 
         if (ula) {

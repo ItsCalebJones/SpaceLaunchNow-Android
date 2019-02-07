@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.spacestation.detail.fragments.expeditions;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.AstronautFlight;
 import me.calebjones.spacelaunchnow.spacestation.R;
 
@@ -44,7 +46,8 @@ public class CrewAdapter extends RecyclerView.Adapter<CrewAdapter.ViewHolder> {
         holder.title.setText(item.getAstronaut().getName());
         holder.subtitle.setText(item.getRole());
         GlideApp.with(context)
-                .load(item.getAstronaut().getProfileImage())
+                .load(item.getAstronaut().getProfileImageThumbnail())
+                .placeholder(R.drawable.placeholder)
                 .thumbnail(0.5f)
                 .circleCrop()
                 .into(holder.icon);
@@ -58,6 +61,7 @@ public class CrewAdapter extends RecyclerView.Adapter<CrewAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        private View rootView;
         private ImageView icon;
         private TextView title;
         private TextView subtitle;
@@ -68,6 +72,18 @@ public class CrewAdapter extends RecyclerView.Adapter<CrewAdapter.ViewHolder> {
             icon = view.findViewById(R.id.astronaut_icon);
             title = view.findViewById(R.id.astronaut_title);
             subtitle = view.findViewById(R.id.astronaut_subtitle);
+            rootView = view.findViewById(R.id.rootView);
+
+            rootView.setOnClickListener(v -> {
+                AstronautFlight astronautFlight = astronauts.get(getAdapterPosition());
+                try {
+                    Intent exploreIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.astronauts.detail.AstronautDetailsActivity"));
+                    exploreIntent.putExtra("astronautId", astronautFlight.getAstronaut().getId());
+                    context.startActivity(exploreIntent);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 }
