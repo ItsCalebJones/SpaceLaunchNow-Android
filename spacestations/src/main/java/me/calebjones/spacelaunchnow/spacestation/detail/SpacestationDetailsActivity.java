@@ -124,7 +124,7 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
         } );
         tabs.addTab(tabs.newTab().setText(getString(R.string.details)));
         tabs.addTab(tabs.newTab().setText(getString(R.string.expeditions)));
-        tabs.addTab(tabs.newTab().setText(getString(R.string.docked)));
+        tabs.addTab(tabs.newTab().setText(getString(R.string.docked_alt)));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         spacestationDataRepository = new SpacestationDataRepository(this, getRealm());
 
