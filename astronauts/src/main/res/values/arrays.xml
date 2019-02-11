@@ -1,15 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="status">
-        <item>Active</item>
-        <item>Retired</item>
-        <item>In-Training</item>
-        <item>Lost in Flight</item>
-        <item>Lost in Training</item>
-        <item>Died While in Active Service</item>
-        <item>Dismissed</item>
-        <item>Resigned during Training</item>
-        <item>Non-Astronaut Passenger</item>
-        <item>Payload Specialist</item>
-    </string-array>
+
 </resources>
