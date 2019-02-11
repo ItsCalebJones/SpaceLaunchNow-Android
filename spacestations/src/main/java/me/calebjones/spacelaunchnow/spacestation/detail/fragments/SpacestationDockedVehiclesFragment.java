@@ -57,7 +57,6 @@ public class SpacestationDockedVehiclesFragment extends BaseFragment {
         linearLayoutManager = new LinearLayoutManager(context);
         adapter = new SpacestationAdapter(context);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         recyclerView.setAdapter(adapter);
         return view;
     }

@@ -91,14 +91,15 @@
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:gravity="left"
+                android:maxLines="4"
                 android:minHeight="60dp"
                 android:textAppearance="@style/MaterialTypography.Regular.Body1"
                 android:textColor="?android:textColorSecondary"
                 android:visibility="visible"
-                app:layout_constraintEnd_toStartOf="@+id/status_pill_layout"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spacestaion_subtitle"
-                tools:text="test sets set setsetse set set set set set " />
+                app:layout_constraintTop_toBottomOf="@+id/orbit_pill_layout"
+                tools:text="The International Space Station (ISS) is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030. Development and assembly of the station continues, with several new elements scheduled for launch in 2019. The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth. The ISS consists of pressurised habitation modules, structural trusses, solar arrays, radiators, docking ports, experiment bays and robotic arms. ISS components have been launched by Russian Proton and Soyuz rockets, and American Space Shuttles." />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/orbit_pill_layout"
@@ -195,6 +196,51 @@
                 app:layout_constraintTop_toBottomOf="@+id/spacestation_description"
                 app:layout_constraintWidth_max="150dp" />
 
+            <TextView
+                android:id="@+id/founded_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/founded_alt"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/spacestaion_subtitle" />
+
+            <TextView
+                android:id="@+id/founded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                tools:text="Nov. 20th, 1998"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/founded_title"
+                app:layout_constraintStart_toEndOf="@+id/founded_title"
+                app:layout_constraintTop_toTopOf="@+id/founded_title" />
+
+            <TextView
+                android:id="@+id/deorbited_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/de_orbited"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/founded_title" />
+
+            <TextView
+                android:id="@+id/deorbited"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                tools:text="Nov. 20th, 1998"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/deorbited_title"
+                app:layout_constraintStart_toEndOf="@+id/deorbited_title"
+                app:layout_constraintTop_toTopOf="@+id/deorbited_title" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

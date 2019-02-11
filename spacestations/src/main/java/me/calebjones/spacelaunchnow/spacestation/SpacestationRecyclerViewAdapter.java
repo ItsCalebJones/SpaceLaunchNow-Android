@@ -57,6 +57,12 @@ public class SpacestationRecyclerViewAdapter extends RecyclerView.Adapter<Spaces
         holder.spacestationSubtitle.setText(holder.mItem.getType().getName());
         holder.spacestationDescription.setText(holder.mItem.getDescription());
         holder.orbitlPillText.setText(holder.mItem.getOrbit());
+        holder.founded.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format((holder.mItem.getFounded())));
+        if (holder.mItem.getDeorbited() != null) {
+            holder.deorbited.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format((holder.mItem.getDeorbited())));
+        } else {
+            holder.deorbited.setText("N/A");
+        }
 
         if (holder.mItem.getStatus() != null){
             holder.statusPillText.setText(holder.mItem.getStatus().getName());
@@ -95,6 +101,8 @@ public class SpacestationRecyclerViewAdapter extends RecyclerView.Adapter<Spaces
         private TextView orbitlPillText;
         private CardView statusPill;
         private TextView statusPillText;
+        private TextView founded;
+        private TextView deorbited;
         private AppCompatButton button;
         public Spacestation mItem;
 
@@ -108,6 +116,8 @@ public class SpacestationRecyclerViewAdapter extends RecyclerView.Adapter<Spaces
             orbitlPillText = view.findViewById(R.id.orbit_text);
             statusPill = view.findViewById(R.id.status_pill_layout);
             statusPillText = view.findViewById(R.id.status_text);
+            founded = view.findViewById(R.id.founded);
+            deorbited = view.findViewById(R.id.deorbited);
 
             button = view.findViewById(R.id.spacestation_button);
             button.setOnClickListener(v -> {

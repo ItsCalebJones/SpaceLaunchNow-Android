@@ -485,4 +485,7 @@
     <string name="docked_alt">Docked</string>
     <string name="no_spacestations">No Spacestations Found</string>
     <string name="no_events">No Events Found</string>
+    <string name="founded_alt">Founded:</string>
+    <string name="status_alt">Status:</string>
+    <string name="de_orbited">De-orbited:</string>
 </resources>
