@@ -1,31 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string-array name="empty">
-    </string-array>
     <string-array name="agencies">
         <item>NASA</item>
         <item>SpaceX</item>
         <item>ROSCOSMOS</item>
-        <item>ULA</item>
         <item>Arianespace</item>
+        <item>ULA</item>
         <item>CASC</item>
         <item>ISRO</item>
     </string-array>
-
-    <string-array name="vehicles">
-        <item>Falcon</item>
-        <item>Proton</item>
-        <item>Soyuz</item>
-        <item>Atlas</item>
-        <item>Delta</item>
-        <item>Long March</item>
-        <item>PSLV/GSLV</item>
-        <item>Ariane</item>
-        <item>Zenit</item>
-        <item>Rokot</item>
-    </string-array>
-
     <string-array name="country">
         <item>USA</item>
         <item>China</item>
@@ -33,12 +16,11 @@
         <item>India</item>
         <item>Multi</item>
     </string-array>
-
     <string-array name="location">
         <item>Cape Canaveral, FL, USA</item>
         <item>Kennedy Space Center, FL, USA</item>
-        <item>Vandenberg AFB, CA, USA</item>
         <item>Wallops Island, Virginia, USA</item>
+        <item>Vandenberg AFB, CA, USA</item>
         <item>Jiuquan, China</item>
         <item>Taiyuan, China</item>
         <item>Xichang Satellite Launching Center, China</item>
@@ -55,9 +37,8 @@
         <item>Woomera, Australia</item>
         <item>Kiatorete Spit, New Zealand</item>
         <item>Kodiak Launch Complex, US</item>
-        <item>Ohae Launch Station, North Korea</item>
+        <item>Sohae Launch Station, North Korea</item>
     </string-array>
-
     <string-array name="multi_calendar_reminder">
         <item>One Minute</item>
         <item>Five Minutes</item>
@@ -67,7 +48,6 @@
         <item>Four Hours</item>
         <item>One Day</item>
     </string-array>
-
     <string-array name="multi_calendar_reminder_values">
         <item>1</item>
         <item>5</item>
@@ -77,12 +57,10 @@
         <item>480</item>
         <item>1440</item>
     </string-array>
-
     <string-array name="multi_calendar_reminder_default">
         <item>5</item>
         <item>1440</item>
     </string-array>
-
     <string-array name="sync_timer">
         <item>One Day</item>
         <item>Three Days</item>
@@ -92,5 +70,21 @@
         <item>24</item>
         <item>72</item>
         <item>168</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>One</item>
+        <item>Two</item>
+        <item>Five</item>
+        <item>Ten</item>
+        <item>Twenty</item>
+        <item>All (Not Recommended)</item>
+    </string-array>
+    <string-array name="upcoming_array_values">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>1000</item>
     </string-array>
 </resources>

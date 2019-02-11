@@ -111,7 +111,7 @@ ext.deps = [
         androidyoutubeplayer_chromecast: "com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.15",
         statefulLayout                 : "cz.kinst.jakub:android-stateful-layout-simple:2.0.7",
         photoView                      : "com.github.chrisbanes:PhotoView:2.0.0",
-        GDPRDialog                     : "com.github.ItsCalebJones:GDPRDialog:54231db",
+        GDPRDialog                     : "com.github.MFlisar:GDPRDialog:1.2.8",
         materialAbout                  : "com.github.jrvansuita:MaterialAbout:0.2.3",
         markdownView                   : "com.github.mukeshsolanki:MarkdownView-Android:1.0.4",
         colorpicker                    : "com.jaredrummler:colorpicker:1.0.5",

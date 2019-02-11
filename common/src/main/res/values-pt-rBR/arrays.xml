@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="widget_presets">
+        <item>Claro</item>
+        <item>Escuro</item>
+        <item>Claro - Transparente</item>
+        <item>Escuro - Transparente</item>
+        <item>Material Azul</item>
+        <item>Material Vermelha</item>
+        <item>Material Verde-azulado</item>
+        <item>Material Laranja</item>
+        <item>Personalizado</item>
+    </string-array>
     <string-array name="widget_presets_values">
         <item>0</item>
         <item>1</item>

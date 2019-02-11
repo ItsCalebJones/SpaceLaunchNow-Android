@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="multi_calendar_reminder">
+        <item>Un minuto</item>
+        <item>Cinque minuti</item>
+        <item>Trenta minuti</item>
+        <item>Un\'ora</item>
+        <item>Due ore</item>
+        <item>Quattro ore</item>
+        <item>Un giorno</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>Un Giorno</item>
+        <item>Tre Giorni</item>
+        <item>Una Settimana</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>Due</item>
+        <item>Uno</item>
+        <item>Cinque</item>
+        <item>Venti</item>
+        <item>Dieci</item>
+        <item>Tutto (Non Consigliato)</item>
+    </string-array>
+</resources>

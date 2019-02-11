@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <resources>
     <string name="app_name">Space Launch Now</string>
     <string name="news">News</string>
@@ -105,16 +106,16 @@
     <string name="unknown_payload">Unknown Payload</string>
     <string name="launch_vehicle_summary">Launch Vehicle Summary</string>
     <string name="unknown_launch_vehicle">Unknown Launch Vehicle</string>
-    <string name="family">Family: </string>
-    <string name="configuration">Configuration: </string>
+    <string name="family">Family:</string>
+    <string name="configuration">Configuration:</string>
     <string name="vehicle_specifications">Vehicle Specifications</string>
-    <string name="height">Height: </string>
-    <string name="diameter">Diameter: </string>
-    <string name="stages">Stages: </string>
-    <string name="mass_to_leo">Mass to LEO: </string>
-    <string name="mass_to_gto">Mass to GTO: </string>
-    <string name="mass_at_launch">Mass at Launch: </string>
-    <string name="thrust_at_launch">Thrust at Launch: </string>
+    <string name="height">Height:</string>
+    <string name="diameter">Diameter:</string>
+    <string name="stages">Stages:</string>
+    <string name="mass_to_leo">Mass to LEO:</string>
+    <string name="mass_to_gto">Mass to GTO:</string>
+    <string name="mass_at_launch">Mass at Launch:</string>
+    <string name="thrust_at_launch">Thrust at Launch:</string>
     <string name="watch_launch">Watch Launch</string>
     <string name="estimated_launch_date">Estimated Launch Date</string>
     <string name="nothing_here">Nothing here, refresh from menu?</string>
@@ -164,7 +165,6 @@
     <string name="title_activity_download">Download</string>
     <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">Keep up to date on all your favorite orbital launches, missions, and launch vehicles.</string>
-
     <string name="supporter_card_description">Exclusive Widgets, Wear Complications, Remove Ads and more.</string>
     <string name="vehicle_card_title">Find Launch Vehicles</string>
     <string name="notification_card">Notification for Launches</string>
@@ -190,7 +190,7 @@
     <string name="stage_full">Max Stages: %d</string>
     <string name="mass_leo_full">Mass to LEO: %d kg</string>
     <string name="mass_gto_full">Mass to GTO: %d kg</string>
-    <string name="mass_launch_full">Mass at Launch: %d T</string>
+    <string name="mass_launch_full">Mass at Launch: %d kg</string>
     <string name="thrust_full">Thrust at Launch: %d kN</string>
     <string name="upcoming">Upcoming</string>
     <string name="previous">Previous</string>
@@ -230,7 +230,6 @@
     <string name="stay_connected">Stay Connected</string>
     <string name="connect_description">Connect with the Community</string>
     <string name="discord_subtitle">Join the Community</string>
-
     <string name="twitter_subtitle">Connect on Twitter</string>
     <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Follow on Facebook</string>
@@ -253,9 +252,9 @@
     <string name="supporter_feature">(Supporter Feature)</string>
     <string name="location_denied"><![CDATA[Location denied, please go to Android Settings -> Apps to enable.]]></string>
     <string name="calendar_permissions_denied"><![CDATA[Calendar permission denied, try re-selecting or go to Android Settings -> Apps to enable.]]></string>
-    <string name="current_calendar">Current calendar: </string>
+    <string name="current_calendar">Current calendar:</string>
     <string name="select_calendar">Select a Calendar to add launch events.</string>
-    <string name="default_calendar">Default calendar: </string>
+    <string name="default_calendar">Default calendar:</string>
     <string name="permission_denied">Permission Denied</string>
     <string name="permission_denied_description"><![CDATA[If you change your mind, try to enable again. Or go to Settings -> Application -> Space Launch Now -> Permissions.]]></string>
     <string name="no_calendars_available">No Calendars available to sync launch events with.</string>
@@ -272,7 +271,7 @@
     <string name="night_mode_on">Night Mode is enabled.</string>
     <string name="night_mode_off">Night mode is disabled.</string>
     <string name="automatic_daynight">Automatic Day/Night</string>
-    <string name="automatic_daynight_summary">Automatically switch between Day and Night themes based on location.</string>
+    <string name="automatic_daynight_summary">Automatically switch between Day and Night themes based on time of day.</string>
     <string name="widget_themes">Widget Themes</string>
     <string name="widget_themes_summary">Select from a few default widget themes.</string>
     <string name="widget_background">Widget Background</string>
@@ -305,13 +304,13 @@
     <string name="data_saver_off">Launches will sync no more than once per day.</string>
     <string name="data_saver_on">Sync upcoming launches once a week unless a WiFi connection is available. (Does not impact notifications)</string>
     <string name="wifi_only">WiFi Only</string>
-    <string name="wifi_only_summary">Launch data will not be synced unless a WiFi connection is available. This will impact Launch notifications.</string>
+    <string name="wifi_only_summary">Launch data will not be synced unless a WiFi connection is available.</string>
     <string name="launch_tracking">Launch Tracking</string>
     <string name="calendar_settings">Calendar Settings</string>
     <string name="auto_calendar">Automatic Calendar Sync</string>
     <string name="auto_calendar_summary">Allow next Launch to sync with default Calendar.</string>
     <string name="event_count">Event Count</string>
-    <string name="event_count_summary">Configure the number of events to sync.</string>
+    <string name="event_count_summary">Configure the number of calendar events to sync.</string>
     <string name="calendar_account">Calendar Account</string>
     <string name="calendar_account_summary">Configure Calendar for Launch events.</string>
     <string name="event_reminder">Event Reminders</string>
@@ -327,11 +326,11 @@
     <string name="enable_notifications_off">Allow Notifications for upcoming launches.</string>
     <string name="status_updates">Status Updates</string>
     <string name="status_updates_on">Receive update notification for launch status changes.</string>
-    <string name="status_updates_off">Do not update when a launch successful changes.</string>
+    <string name="status_updates_off">Do not send notifications when a launch status changes.</string>
     <string name="webcast_only">Web-cast Only</string>
-    <string name="webcast_only_summary">Only notify for launches with webcast\'s available.</string>
+    <string name="webcast_only_summary">Only send notifications when a webcast is available.</string>
     <string name="do_not_disturb_enable">Enable Do Not Disturb</string>
-    <string name="do_not_disturb_summary">Enable for silent notifications for pre-Marshmallow.</string>
+    <string name="do_not_disturb_summary">Enable for silent notifications within the do-not-disturb window.</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
     <string name="general">General</string>
@@ -341,12 +340,12 @@
     <string name="Support">Become a Supporter</string>
     <string name="about">About</string>
     <string name="watch_hour_mode">Watch Hour Mode</string>
-    <string name="watch_hour_mode_on">Use 24 Hour mode for keeping time.</string>
-    <string name="watch_hour_mode_off">Use AM/PM mode for keeping time.</string>
+    <string name="watch_hour_mode_on">Use 24 Hour mode.</string>
+    <string name="watch_hour_mode_off">Use AM/PM mode.</string>
     <string name="utc_time">Show UTC Time</string>
-    <string name="utc_time_summary">Enable to show current time in UTC.</string>
+    <string name="utc_time_summary">Enable to show current UTC time.</string>
     <string name="dynamic_background">Dynamic Background</string>
-    <string name="dynamic_background_summary">Use image of the next Launch vehicle if available.</string>
+    <string name="dynamic_background_summary">Use image of the next Launch vehicle as background if available.</string>
     <string name="blur_background">Blur Background</string>
     <string name="blur_background_summary">Blur the background image.</string>
     <string name="blur_settings">Blur Settings</string>
@@ -445,7 +444,7 @@
     <string name="settings_one_minute_off">Do not notify when a Launch is within one minute.</string>
     <string name="no_live_stream_available">No live stream available.</string>
     <string name="date_confirmed">Date is confirmed however launch time is unknown.</string>
-    <string name="date_unconfirmed">Current date is a \'No Earlier Then\' estimation.</string>
+    <string name="date_unconfirmed">Current date is a \'No Earlier Than\' estimation.</string>
     <string name="source">Select a Source</string>
     <string name="long_press_share">Long press an item to share.</string>
     <string name="no_astronauts">No astronauts found.</string>
@@ -488,4 +487,7 @@
     <string name="founded_alt">Founded:</string>
     <string name="status_alt">Status:</string>
     <string name="de_orbited">De-orbited:</string>
+    <string name="mission_agency">Mission Agency</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

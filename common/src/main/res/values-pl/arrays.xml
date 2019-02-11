@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="widget_presets">
-        <item>Světlý</item>
-        <item>Tmavý</item>
-        <item>Světlý - průhledný</item>
-        <item>Tmavý - průhledný</item>
-        <item>Materiál modrý</item>
-        <item>Materiál červený</item>
-        <item>Materiál  teal</item>
-        <item>Materiál oranžová</item>
-        <item>Vlastní</item>
+        <item>Jasny</item>
+        <item>Ciemny</item>
+        <item>Jasny - przezroczysty</item>
+        <item>Ciemny - przezroczysty</item>
+        <item>Material - niebieski</item>
+        <item>Material - czerwony</item>
+        <item>Material - morski</item>
+        <item>Material - pomarańczowy</item>
+        <item>Własny</item>
     </string-array>
     <string-array name="widget_presets_values">
         <item>0</item>
@@ -23,8 +23,8 @@
         <item>8</item>
     </string-array>
     <string-array name="spinner_list_item_array">
-        <item>Všechny</item>
-        <item>Nadcházející</item>
-        <item>Předchozí</item>
+        <item>Wszystkie</item>
+        <item>Nadchodzące</item>
+        <item>Poprzednie</item>
     </string-array>
 </resources>

@@ -1,8 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <resources>
+    <string name="app_name">Space Launch Now</string>
+    <string name="twitter">Twitter</string>
     <string name="action_settings">Impostazioni</string>
     <string name="status_go">"Pronto al lancio"</string>
-    <string name="status_nogo">"Il lancio è NO GO"</string>
+    <string name="status_nogo">Il lancio è NO GO</string>
     <string name="status_success">"Il lancio ha avuto successo"</string>
     <string name="status_failure">"Lancio fallito"</string>
     <string name="spacex_summary">SpaceX progetta, produce e lancia razzi e veicoli spaziali. La società è stata fondata nel 2002 per rivoluzionare la tecnologia spaziale, con l\'obiettivo ultimo di consentire alle persone di vivere su altri pianeti.</string>
@@ -10,14 +12,14 @@
     <string name="casc_summary">La China Aerospace Science and Technology Corporation (CASC) è l\'appaltatore principale del programma spaziale cinese. È di proprietà statale e ha varie entità subordinate che progettano, sviluppano e producono una gamma di veicoli spaziali, veicoli di lancio, sistemi missilistici strategici e tattici e attrezzature a terra.</string>
     <string name="cnsa_summary">La China National Space Administration (CNSA) è l\'agenzia spaziale nazionale della Repubblica popolare cinese. È responsabile del programma spaziale nazionale e della pianificazione e lo sviluppo delle attività spaziali.</string>
     <string name="isro_summary">L\'Indian Space Research Organization (ISRO), è l\'agenzia spaziale del governo indiano con sede nella città di Bengaluru. La sua missione è di \"sfruttare la tecnologia spaziale per lo sviluppo nazionale, perseguendo allo stesso tempo la ricerca spaziale e l\'esplorazione planetaria\".</string>
-    <string name="vko_summary">"Le Russian Aerospace Defence Forces (VKO) erano una divisione delle forze armate della Federazione Russa, responsabili della difesa aerea e missilistica, delle operazioni dei satelliti militari russi e del cosmodromo di Plesetsk. "</string>
+    <string name="vko_summary">"Le Forze di difesa aerospaziali russe  (VKO) erano una divisione delle forze armate della Federazione Russa, responsabili della difesa aerea e missilistica, delle operazioni con i satelliti militari russi e del cosmodromo di Plesetsk. "</string>
     <string name="roscosmos_summary">L\'agenzia spaziale russa, comunemente conosciuta come Roscosmos, è l\'agenzia governativa responsabile del programma spaziale e della ricerca aerospaziale russa.</string>
-    <string name="ula_summary"><![CDATA[L\'United Launch Alliance (ULA) è una joint venture di Lockheed Martin e Boeing. L\'ULA è stata costituita nel dicembre 2016 combinando i rispettivi team attivi nel settore dei veicoli spaziali. Forniscono servizi di lancio al Dipartimento di Difesa degli Stati Uniti.]]></string>
+    <string name="ula_summary"><![CDATA[L\'United Launch Alliance (ULA) è una joint venture di Lockheed Martin e Boeing. L\'ULA è stata costituita nel dicembre 2006 combinando i rispettivi team attivi nel settore dei veicoli spaziali. Forniscono servizi di lancio al Dipartimento di Difesa degli Stati Uniti.]]></string>
     <string name="gd_summary">General Dynamics Corporation è una compagnia aerospaziale e di difesa americana formatasi in seguito a diverse fusioni e dismissioni. È il quinto più grande defense contractor del mondo.</string>
-    <string name="asa_summary">Arianespace SA è una multinazionale francese fondata nel 1980 come la prima azienda mondiale nel trasporto spaziale commerciale.</string>
-    <string name="TsSKB_summary">Il Progress State Research and Production Space Centre, anche conosciuto come TsSKB-Progress, è una compagnia federale sotto la giurisdizione della Roscosmos, l\'agenzia spaziale della federazione russa responsabile per la la ricerca scientifica e aerospaziale. Ha sviluppato sia il famoso razzo Soyuz-FG utilizzato per i viaggi spaziali con equipaggio umano, che il Soyuz-U usato per lanciare sonde senza equipaggio.</string>
+    <string name="asa_summary">Arianespace SA è una multinazionale francese. Fondata nel 1980 è stata la prima azienda mondiale nel trasporto spaziale commerciale.</string>
+    <string name="TsSKB_summary">Il Progress State Research and Production Space Centre, anche conosciuto come TsSKB-Progress, è una compagnia federale sotto la giurisdizione della Roscosmos, l\'agenzia spaziale della federazione russa responsabile per la ricerca scientifica e aerospaziale. Ha sviluppato sia il famoso razzo Soyuz-FG utilizzato per i viaggi spaziali con equipaggio umano, che il Soyuz-U usato per lanciare sonde senza equipaggio.</string>
     <string name="nasa_summary">La National Aeronautics and Space Administration (NASA) è l\'agenzia governativa civile responsabile del programma spaziale degli Stati Uniti d\'America e della ricerca aerospaziale.</string>
-    <string name="general_settings">Impostazioni generali per seguire i lanci e sul comportamento dell\'applicazione.</string>
+    <string name="general_settings">Impostazioni generali per seguire i lanci e per l\'applicazione.</string>
     <string name="supporter_title">Diventa un sostenitore</string>
     <string name="supporter_description">Aiuta a garantire un supporto continuo, correzioni di bug tempestive e nuove funzionalità.</string>
     <string name="slide_one_title">Space Launch Now</string>
@@ -97,13 +99,6 @@
     <string name="family">Famiglia:</string>
     <string name="configuration">Configurazione:</string>
     <string name="vehicle_specifications">Specifiche del veicolo</string>
-    <string name="height">Altezza:</string>
-    <string name="diameter">Diametro:</string>
-    <string name="stages">Stadi:</string>
-    <string name="mass_to_leo">Massa in LEO:</string>
-    <string name="mass_to_gto">Massa in GTO:</string>
-    <string name="mass_at_launch">Massa al lancio:</string>
-    <string name="thrust_at_launch">Spinta al lancio:</string>
     <string name="estimated_launch_date">Data stimata di lancio</string>
     <string name="supporter">Sostenitore</string>
     <string name="agency">Agenzia</string>
@@ -137,7 +132,6 @@
     <string name="title_activity_download">Download</string>
     <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">Tieniti aggiornato sui tuoi lanci orbitali, missioni e mezzi spaziali preferiti.</string>
-    <string name="app_name">Space Launch Now</string>
     <string name="notification_card">Notifiche per i lanci</string>
     <string name="vehicle_card_description">Conosci i mezzi che ci hanno portato in orbita.</string>
     <string name="notification_card_description">Ricevi notifiche per i lanci a cui tieni.</string>
@@ -182,7 +176,6 @@
     <string name="stay_connected">Rimani in contatto</string>
     <string name="connect_description">Collegati alla community</string>
     <string name="discord_subtitle">Entra nella community</string>
-    <string name="twitter">Twitter</string>
     <string name="twitter_subtitle">Seguici su Twitter</string>
     <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Seguici su Facebook</string>
@@ -259,4 +252,5 @@
     <string name="wear_os">Wear OS</string>
     <string name="launchers">Razzi vettori</string>
     <string name="orbiters">Moduli orbitanti</string>
+    <string name="mission_agency">Agenzia della missione</string>
 </resources>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="agencies">
+        <item>NASA</item>
+        <item>SpaceX</item>
+        <item>ROSCOSMOS</item>
+        <item>Arianespace</item>
+        <item>ULA</item>
+        <item>CASC</item>
+        <item>ISRO</item>
+    </string-array>
+    <string-array name="vehicles">
+        <item>Falcon</item>
+        <item>Proton</item>
+        <item>Soyuz</item>
+        <item>Atlas</item>
+        <item>Delta</item>
+        <item>PSLV/GSLV</item>
+        <item>Longa Marcha</item>
+        <item>Ariane</item>
+        <item>Zenit</item>
+        <item>Rokot</item>
+    </string-array>
+    <string-array name="country">
+        <item>EUA</item>
+        <item>China</item>
+        <item>Rússia</item>
+        <item>Índia</item>
+        <item>Multinacional</item>
+    </string-array>
+    <string-array name="location">
+        <item>Cabo Canaveral, FL, EUA</item>
+        <item>Centro Espacial Kennedy, FL, EUA</item>
+        <item>Wallops Island, Virgínia, EUA</item>
+        <item>BFA de Vandenberg, CA, EUA</item>
+        <item>Jiuquan, China</item>
+        <item>Taiyuan, China</item>
+        <item>Centro de Lançamento de Satélites de Xichang, China</item>
+        <item>Centro de Lançamento de Satélites de Wechang, China</item>
+        <item>Kourou, Guiana Francesa</item>
+        <item>Sriharikota, Índia</item>
+        <item>Kagoshima / Tanegashima, Japão</item>
+        <item>Cosmódromo de Baikonur, Cazaquistão, Rússia</item>
+        <item>Cosmódromo de Plesetsk, Rússia</item>
+        <item>Kapustin Yar, Rússia</item>
+        <item>Cosmódromo de Svobodney, Rússia</item>
+        <item>Dombarovskiy, Rússia</item>
+        <item>Sea Launch</item>
+        <item>Woomera, Austrália</item>
+        <item>Kiatorete Spit, Nova Zelândia</item>
+        <item>Complexo de Lançamento de Kodiak, EUA</item>
+        <item>Estação de Lançamento de Ohae, Coreia do Norte</item>
+    </string-array>
+    <string-array name="multi_calendar_reminder">
+        <item>Um Minuto</item>
+        <item>Cinco Minutos</item>
+        <item>Trinta Minutos</item>
+        <item>Uma Hora</item>
+        <item>Duas Horas</item>
+        <item>Quatro Horas</item>
+        <item>Um Dia</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>Um dia</item>
+        <item>Três dias</item>
+        <item>Uma Semana</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>Dois</item>
+        <item>Um</item>
+        <item>Cinco</item>
+        <item>Vinte</item>
+        <item>Dez</item>
+        <item>Todos (não recomendado)</item>
+    </string-array>
+</resources>
