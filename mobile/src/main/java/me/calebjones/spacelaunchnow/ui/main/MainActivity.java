@@ -40,8 +40,9 @@ import com.michaelflisar.gdprdialog.GDPRConsent;
 import com.michaelflisar.gdprdialog.GDPRConsentState;
 import com.michaelflisar.gdprdialog.GDPRDefinitions;
 import com.michaelflisar.gdprdialog.GDPRLocation;
-import com.michaelflisar.gdprdialog.GDPRNetwork;
+import com.michaelflisar.gdprdialog.GDPRLocationCheck;
 import com.michaelflisar.gdprdialog.GDPRSetup;
+import com.michaelflisar.gdprdialog.helper.GDPRPreperationData;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -622,7 +623,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
 
         if (id == R.id.action_consent) {
-            showGDPRIfNecessary(true, GDPRLocation.IN_EAA_OR_UNKNOWN);
+            GDPR.getInstance().resetConsent();
+            showGDPRIfNecessary();
         }
 
         if (id == R.id.action_supporter) {
@@ -877,43 +879,38 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
     }
 
-    private void showGDPRIfNecessary(boolean forceShow, GDPRLocation location) {
-        if (forceShow || location == GDPRLocation.IN_EAA_OR_UNKNOWN) {
+    private void showGDPRIfNecessary(boolean forceShow, GDPRPreperationData data) {
+        if (forceShow || data.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN) {
             try {
-                GDPR.getInstance().showDialog(this, getGDPRSetup(), location);
+                GDPR.getInstance().showDialog(this, getGDPRSetup(), data.getLocation());
             } catch (IllegalStateException e) {
                 Timber.e(e);
             }
         }
     }
 
+    private void showGDPRIfNecessary() {
+        GDPRSetup setup = getGDPRSetup();
+        GDPR.getInstance().checkIfNeedsToBeShown(this, setup);
+    }
+
     private GDPRSetup getGDPRSetup() {
 
         return new GDPRSetup(GDPRDefinitions.ADMOB,
                 GDPRDefinitions.FIREBASE_CRASH,
-                new GDPRNetwork("Fabric - Crashlytics",
-                        "https://try.crashlytics.com/terms/",
-                        context.getString(R.string.gdpr_type_crash),
-                        true,
-                        false),
-                new GDPRNetwork("Fabric - Answers",
-                        "https://answers.io/img/onepager/privacy.pdf",
-                        context.getString(R.string.gdpr_type_analytics),
-                        true,
-                        false),
+                GDPRDefinitions.FABRIC_CRASHLYTICS,
+                GDPRDefinitions.FABRIC_ANSWERS,
                 GDPRDefinitions.FIREBASE_ANALYTICS)
                 .withPrivacyPolicy("https://spacelaunchnow.me/app/privacy")
                 .withAllowNoConsent(false)
-                .withExplicitAgeConfirmation(true)
-                .withCheckRequestLocation(true)
                 .withBottomSheet(true)
                 .withForceSelection(true);
     }
 
+
     @Override
-    public void onConsentNeedsToBeRequested(GDPRLocation gdprLocation) {
-        // default: forward the result and show the dialog
-        showGDPRIfNecessary(true, gdprLocation);
+    public void onConsentNeedsToBeRequested(GDPRPreperationData gdprPreperationData) {
+        showGDPRIfNecessary(false, gdprPreperationData);
     }
 
     @Override
@@ -926,10 +923,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     // never happens!
                     break;
                 case NO_CONSENT:
-                    if (!SupporterHelper.isSupporter()) {
-                        Intent intent = new Intent(this, SupporterActivity.class);
-                        startActivity(intent);
-                    }
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
                     break;
@@ -942,11 +935,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     // never happens!
                     break;
                 case NO_CONSENT:
-                    // with the default setup, the dialog will shown in this case again anyways!
-                    if (!SupporterHelper.isSupporter()) {
-                        Intent intent = new Intent(this, SupporterActivity.class);
-                        startActivity(intent);
-                    }
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
                     break;
