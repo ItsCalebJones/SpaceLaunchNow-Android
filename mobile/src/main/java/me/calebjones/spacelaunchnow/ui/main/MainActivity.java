@@ -53,7 +53,9 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.holder.ImageHolder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 
 import java.util.concurrent.TimeUnit;
 
@@ -258,26 +260,31 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withIdentifier(R.id.menu_events)
                                 .withSelectable(true),
                         new DividerDrawerItem(),
-                        new PrimaryDrawerItem()
-                                .withIcon(CommunityMaterial.Icon.cmd_clipboard_outline)
-                                .withName(R.string.whats_new)
-                                .withIdentifier(R.id.menu_new)
-                                .withSelectable(false),
-                        new PrimaryDrawerItem()
-                                .withName(R.string.about)
-                                .withIcon(GoogleMaterial.Icon.gmd_info)
-                                .withIdentifier(R.id.about)
-                                .withSelectable(false),
-                        new PrimaryDrawerItem()
-                                .withIcon(CommunityMaterial.Icon.cmd_discord)
-                                .withName(R.string.discord)
-                                .withIdentifier(R.id.menu_discord)
-                                .withSelectable(false),
-                        new PrimaryDrawerItem()
-                                .withIcon(GoogleMaterial.Icon.gmd_feedback)
-                                .withName(R.string.feedback)
-                                .withIdentifier(R.id.menu_feedback)
-                                .withSelectable(false),
+                        new ExpandableDrawerItem().withName("Stay Connected").withIcon(CommunityMaterial.Icon.cmd_account).withDescription("Connect with the Community").withIdentifier(19).withSelectable(false).withSubItems(
+                                new SecondaryDrawerItem()
+                                        .withLevel(2)
+                                        .withIcon(CommunityMaterial.Icon.cmd_clipboard_outline)
+                                        .withName(R.string.whats_new)
+                                        .withIdentifier(R.id.menu_new)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withLevel(2)
+                                        .withName(R.string.about)
+                                        .withIcon(GoogleMaterial.Icon.gmd_info)
+                                        .withIdentifier(R.id.about)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withLevel(2)
+                                        .withIcon(CommunityMaterial.Icon.cmd_discord)
+                                        .withName(R.string.discord)
+                                        .withIdentifier(R.id.menu_discord)
+                                        .withSelectable(false),
+                                new SecondaryDrawerItem()
+                                        .withIcon(GoogleMaterial.Icon.gmd_feedback)
+                                        .withName(R.string.feedback)
+                                        .withIdentifier(R.id.menu_feedback)
+                                        .withSelectable(false)
+                        ),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.settings)
                                 .withIcon(GoogleMaterial.Icon.gmd_settings)
@@ -553,24 +560,26 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     public void onBackPressed() {
         if (drawer.isDrawerOpen()) {
             drawer.closeDrawer();
-        } else if (mNavItemId != R.id.menu_launches) {
-            drawer.setSelection(R.id.menu_launches);
-        } else if (mNavItemId == R.id.menu_launches) {
-            if (mUpcomingFragment != null) {
-                if (mUpcomingFragment.isFilterShown()) {
-                    mUpcomingFragment.checkFilter();
-                } else {
-                    checkExitApp();
-                }
+        } else if (mNavItemId != R.id.menu_home
+                && mNavItemId != R.id.menu_vehicle
+                && mNavItemId != R.id.menu_favorite
+                && mNavItemId != R.id.menu_launches
+                && mNavItemId != R.id.menu_news) {
+            mNavItemId = R.id.menu_home;
+            navigate(mNavItemId);
+        } else if (mNavItemId != R.id.menu_favorite) {
+            if (bottomNavigationView.getCurrentSelectedPosition() != 0) {
+                mNavItemId = R.id.menu_favorite;
+                navigate(mNavItemId);
+            }
+        } else if (bottomNavigationView.getCurrentSelectedPosition() == 0 && mUpcomingFragment != null) {
+            if (mUpcomingFragment.isFilterShown()) {
+                mUpcomingFragment.checkFilter();
             } else {
                 checkExitApp();
             }
         } else {
-            if (getFragmentManager().getBackStackEntryCount() != 0) {
-                getFragmentManager().popBackStack();
-            } else {
-                checkExitApp();
-            }
+            checkExitApp();
         }
     }
 
@@ -583,7 +592,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     .onPositive((dialog, which) -> finish())
                     .show();
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 

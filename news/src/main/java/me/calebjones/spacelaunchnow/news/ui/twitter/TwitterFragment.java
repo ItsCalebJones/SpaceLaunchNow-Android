@@ -17,16 +17,16 @@ import com.twitter.sdk.android.tweetui.TimelineResult;
 import com.twitter.sdk.android.tweetui.TweetTimelineRecyclerViewAdapter;
 import com.twitter.sdk.android.tweetui.TwitterListTimeline;
 
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.news.R;
 import timber.log.Timber;
 
 
-public class TwitterFragment extends Fragment {
+public class TwitterFragment extends BaseFragment {
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -91,9 +91,15 @@ public class TwitterFragment extends Fragment {
         timeline = new TwitterListTimeline.Builder()
                 .slugWithOwnerScreenName("space-launch-news", "SpaceLaunchNow")
                 .build();
+        int style = 0;
+        if (getCyanea().isDark()){
+            style = R.style.SpaceLaunchNowTweetStyleDark;
+        } else {
+            style = R.style.SpaceLaunchNowTweetStyle;
+        }
         timelineAdapter = new TweetTimelineRecyclerViewAdapter.Builder(context)
                 .setTimeline(timeline)
-                .setViewStyle(R.style.SpaceLaunchNowTweetStyle)
+                .setViewStyle(style)
                 .build();
         recyclerView.setAdapter(timelineAdapter);
     }

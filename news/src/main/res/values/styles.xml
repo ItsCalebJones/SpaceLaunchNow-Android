@@ -15,5 +15,13 @@
   -->
 
 <resources>
-    <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetLightWithActionsStyle" />
+    <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetLightWithActionsStyle">
+        <item name="tw__container_bg_color">?backgroundColor</item>
+        <item name="tw__action_color">?colorPrimary</item>
+    </style>
+    <style name="SpaceLaunchNowTweetStyleDark" parent="tw__TweetDarkWithActionsStyle">
+        <item name="tw__container_bg_color">?backgroundColor</item>
+        <item name="tw__action_color">?colorPrimary</item>
+        <item name="tw__primary_text_color">@color/md_white_1000</item>
+    </style>
 </resources>

@@ -76,21 +76,6 @@ public class FullscreenImageActivity extends BaseActivity {
                         .load(imageURL)
                         .into(photoView);
             }
-        } else if (getIntent().getStringExtra("image") != null){
-            String image = getIntent().getStringExtra("image");
-            if (image.contains("btc")){
-                GlideApp.with(getApplicationContext())
-                        .load(R.drawable.btc_wallet)
-                        .into(photoView);
-            } else if (image.contains("ltc")){
-                GlideApp.with(getApplicationContext())
-                        .load(R.drawable.ltc_wallet)
-                        .into(photoView);
-            } else if (image.contains("eth")){
-                GlideApp.with(getApplicationContext())
-                        .load(R.drawable.eth_wallet)
-                        .into(photoView);
-            }
         }
     }
 

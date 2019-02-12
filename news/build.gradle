@@ -53,7 +53,7 @@ dependencies {
     implementation deps.retrofit
     implementation deps.converter_gson
     implementation deps.gson
-
+    implementation deps.cyanea
     implementation deps.statefulLayout
     implementation deps.okhttp
     implementation deps.okhttpLogging

@@ -118,9 +118,7 @@ class CyaneaSettingsActivity : PreferenceActivity(), BaseAppCompatDelegate, Base
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item!!.itemId
 
-        if (id == R.id.home) {
-            onBackPressed()
-        }
+        onBackPressed()
 
         return super.onOptionsItemSelected(item)
     }

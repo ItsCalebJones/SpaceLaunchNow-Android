@@ -185,9 +185,12 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
 
     private OnItemClickListener recyclerRowClickListener = (v, position) -> {
         Analytics.getInstance().sendButtonClicked("Launcher clicked", items.get(position).getName());
+        Gson gson = new Gson();
+        String jsonItem = gson.toJson(items.get(position));
 
         Intent intent = new Intent(getActivity(), OrbiterDetailActivity.class);
-        intent.putExtra("id", items.get(position).getId());
+        intent.putExtra("name", items.get(position).getName());
+        intent.putExtra("json", jsonItem);
         startActivity(intent);
     };
 

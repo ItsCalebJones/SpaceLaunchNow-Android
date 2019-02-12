@@ -259,6 +259,7 @@
         <activity
             android:name=".common.ui.launchdetail.launches.agency.AgencyLaunchActivity"
             android:theme="@style/BaseAppTheme" />
+        <activity android:name=".ui.spacecraft.OrbiterDetailActivity" />
 
     </application>
 

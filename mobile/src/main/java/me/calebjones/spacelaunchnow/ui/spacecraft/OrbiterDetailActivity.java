@@ -128,18 +128,19 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
             Timber.e("Error - Unable to load launch details.");
             Intent homeIntent = new Intent(this, MainActivity.class);
             startActivity(homeIntent);
+        } else {
+
+            toolbarSubTitle.setText(agency.getType());
+            toolbarTitle.setText(agency.getName());
+
+            if (agency.getSpacecraftConfigs() != null) {
+                adapter.clear();
+                adapter.addItems(agency.getSpacecraftConfigs());
+            }
+
+            applyProfileBackdrop(agency.getImageUrl());
+            applyProfileLogo(agency.getNationUrl());
         }
-
-        toolbarSubTitle.setText(agency.getType());
-        toolbarTitle.setText(agency.getName());
-
-        if (agency.getSpacecraftConfigs() != null) {
-            adapter.clear();
-            adapter.addItems(agency.getSpacecraftConfigs());
-        }
-
-        applyProfileBackdrop(agency.getImageUrl());
-        applyProfileLogo(agency.getNationUrl());
     }
 
     private void applyProfileBackdrop(String drawableURL) {

@@ -16,5 +16,4 @@
 
 <resources>
     <string name="subtitle">via %s</string>
-    <string name="retry">Retry</string>
 </resources>
