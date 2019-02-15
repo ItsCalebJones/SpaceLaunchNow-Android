@@ -43,6 +43,7 @@ import butterknife.Unbinder;
 
 import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.realm.RealmResults;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.ui.settings.CyaneaSettingsActivity;
@@ -55,6 +56,7 @@ import me.calebjones.spacelaunchnow.common.content.jobs.SyncCalendarJob;
 import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
+import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.common.ui.settings.fragments.NotificationsFragment;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
@@ -190,6 +192,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         colorReveal.setBackgroundColor(color);
         fabExtensionAnimator = new FabExtensionAnimator(fab);
         fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context,R.drawable.ic_notifications_white)), true);
+        if (!Once.beenDone(Once.THIS_APP_INSTALL, "showFilters")) {
+            colorReveal.setVisibility(View.VISIBLE);
+            filterViewShowing = true;
+            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Close", ContextCompat.getDrawable(context, R.drawable.ic_close)), true);
+            mainActivity.hideBottomNavigation();
+            mainActivity.checkHideAd();
+            mSwipeRefreshLayout.setEnabled(false);
+        }
         fab.setOnClickListener(v -> checkFilter());
         fab.setVisibility(View.GONE);
         if (switchPreferences.getNextFABHidden()) {
@@ -298,6 +308,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
 
         mainActivity.showBottomNavigation();
+        mainActivity.checkShowAd();
+        mSwipeRefreshLayout.setEnabled(true);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -326,6 +338,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         anim.start();
 
         mainActivity.hideBottomNavigation();
+        mainActivity.checkHideAd();
+        mSwipeRefreshLayout.setEnabled(false);
     }
 
     public void fetchData(boolean forceRefresh) {
@@ -423,6 +437,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 }
                 bundle.clear();
             }
+        }
+
+        if(filterViewShowing){
+            mainActivity.hideBottomNavigation();
+            mainActivity.checkHideAd();
         }
     }
 
