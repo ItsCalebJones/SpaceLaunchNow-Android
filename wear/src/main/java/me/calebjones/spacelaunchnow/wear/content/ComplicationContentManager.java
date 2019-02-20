@@ -103,6 +103,7 @@ public class ComplicationContentManager {
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
+                            realm.where(Launch.class).findAll().deleteAllFromRealm();
                             realm.copyToRealmOrUpdate(response.body().getLaunches());
                         }
                     });
@@ -144,6 +145,7 @@ public class ComplicationContentManager {
                     realm.executeTransaction(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
+                            realm.where(Launch.class).findAll().deleteAllFromRealm();
                             realm.copyToRealmOrUpdate(response.body().getLaunches());
                         }
                     });
