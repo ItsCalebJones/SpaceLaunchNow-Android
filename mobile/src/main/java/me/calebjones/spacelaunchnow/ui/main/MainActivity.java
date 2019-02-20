@@ -958,12 +958,15 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         boolean allowAds = true;
         GDPRConsent consent = consentState.getConsent();
 
-        if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN && consent == GDPRConsent.UNKNOWN) {
+        if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                && consent == GDPRConsent.UNKNOWN) {
             allowAds = false;
-        }
-
-        if (consent == GDPRConsent.NO_CONSENT || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
+        } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                && consent == GDPRConsent.NO_CONSENT
+                || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
             allowsPersonalAds = false;
+        } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
+            GDPR.getInstance().resetConsent();
         }
 
         Timber.v("Load Ads");

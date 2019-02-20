@@ -55,9 +55,7 @@ import me.calebjones.spacelaunchnow.common.content.jobs.SyncCalendarJob;
 import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
-import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.common.ui.settings.fragments.NotificationsFragment;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
@@ -192,6 +190,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         fabExtensionAnimator = new FabExtensionAnimator(fab);
         fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context,R.drawable.ic_notifications_white)), true);
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showFilters")) {
+            Once.markDone("showFilters");
             colorReveal.setVisibility(View.VISIBLE);
             filterViewShowing = true;
             fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Close", ContextCompat.getDrawable(context, R.drawable.ic_close)), true);
