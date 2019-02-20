@@ -64,7 +64,7 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
         colorList.add(R.color.slide_four_background);
 
         setColorBackground(colorList);
-        setImageBackground(R.drawable.intro_slide_background);
+//        setImageBackground(R.drawable.intro_slide_background);
         setOnboardPages(pages);
 
     }

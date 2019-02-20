@@ -133,6 +133,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private int mNavItemId;
     private Snackbar snackbar;
     private String action;
+    private boolean showFilter = false;
 
     public MainActivity() {
         super("Main Activity");
@@ -154,6 +155,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
 
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
+            showFilter = true;
             startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
         }
 
@@ -190,6 +192,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         if (null == savedInstanceState) {
             mNavItemId = R.id.menu_home;
         } else if ("SHOW_FILTERS".equals(action)) {
+            getIntent().setAction("");
+            showFilter = true;
             mNavItemId = R.id.menu_home;
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
@@ -636,13 +640,14 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 break;
             case R.id.menu_favorite:
                 setActionBarTitle("Space Launch Now");
-                if (mUpcomingFragment == null)
+                if (mUpcomingFragment == null) {
                     mUpcomingFragment = NextLaunchFragment.newInstance();
-                if ("SHOW_FILTERS".equals(getIntent().getAction())) {
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("SHOW_FILTERS", true);
-                    mUpcomingFragment.setArguments(bundle);
-                    getIntent().setAction("");
+                    if (showFilter) {
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean("SHOW_FILTERS", true);
+                        mUpcomingFragment.setArguments(bundle);
+                        showFilter = false;
+                    }
                 }
                 navigateToFragment(mUpcomingFragment, HOME_TAG);
                 if (bottomNavigationView.getChildCount() > 0) {
@@ -851,6 +856,16 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
     }
 
+    public void checkHideAd(){
+            hideAd();
+    }
+
+    public void checkShowAd(){
+        if (adviewEnabled){
+            showAd();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         int m_theme;
@@ -865,6 +880,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 Once.markDone("showTutorial");
+                showFilter = true;
                 navigate(mNavItemId);
             }
         }
@@ -973,7 +989,13 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 public void onAdLoaded() {
                     Timber.d("Ad loaded successfully.");
                     adviewEnabled = true;
-                    showAd();
+                    if (mUpcomingFragment != null){
+                        if (!mUpcomingFragment.isFilterShown()){
+                            showAd();
+                        }
+                    } else {
+                        showAd();
+                    }
                     super.onAdLoaded();
                 }
             });
