@@ -24,6 +24,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import timber.log.Timber;
 
@@ -234,7 +235,7 @@ public class AppearanceFragment extends BaseSettingsFragment implements SharedPr
         } else {
             Preference themes = findPreference("custom_themes");
             themes.setOnPreferenceClickListener(preference -> {
-                Intent intent = new Intent(context, CyaneaSettingsActivity.class);
+                Intent intent = new Intent(context, SettingsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(intent);
                 return true;

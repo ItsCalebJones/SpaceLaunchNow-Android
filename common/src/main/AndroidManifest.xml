@@ -1,16 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.calebjones.spacelaunchnow.common">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <application>
         <activity
             android:name=".customtab.webview.WebViewFallbackActivity"
-            android:theme="@style/BaseAppTheme"/>
-        <activity android:name=".ui.settings.CyaneaSettingsActivity"
-            android:theme="@style/BaseAppTheme"/>
+            android:theme="@style/BaseAppTheme" />
+
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/BaseAppTheme" />
     </application>
+
 </manifest>

@@ -62,12 +62,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GoogleMapsKey" />
-
-        <activity
-            android:name=".common.ui.settings.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".ui.main.MainActivity"
-            android:theme="@style/CustomPreferenceTheme" />
         <activity
             android:name=".common.ui.spacecraft.OrbiterDetailActivity"
             android:theme="@style/BaseAppTheme"/>

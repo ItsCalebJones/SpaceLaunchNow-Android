@@ -41,11 +41,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.ui.settings.CyaneaSettingsActivity;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.local.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
 import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
@@ -655,9 +654,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @OnClick(R.id.action_notification_settings)
     public void onNotificationSettingsClicked() {
-        Intent intent = new Intent(context, CyaneaSettingsActivity.class);
-        intent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT, NotificationsFragment.class.getName());
-        intent.putExtra(PreferenceActivity.EXTRA_HIDE_NAVIGATION, true);
+        Intent intent = new Intent(context, SettingsActivity.class);
         startActivity(intent);
     }
 

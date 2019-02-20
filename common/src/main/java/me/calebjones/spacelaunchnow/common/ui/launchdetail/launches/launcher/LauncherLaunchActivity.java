@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
-import me.calebjones.spacelaunchnow.common.ui.settings.CyaneaSettingsActivity;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.BadgeTabLayout;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
@@ -150,7 +150,7 @@ public class LauncherLaunchActivity extends BaseActivity implements UpcomingLaun
         }
 
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, CyaneaSettingsActivity.class);
+            Intent intent = new Intent(this, SettingsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             return true;

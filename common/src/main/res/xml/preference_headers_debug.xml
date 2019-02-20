@@ -36,13 +36,13 @@
             android:data="https://goo.gl/forms/Pt4QA5JNznF2MiKu1"
             />
     </de.mrapp.android.preference.activity.NavigationPreference>
-    <de.mrapp.android.preference.activity.NavigationPreference
+    <header
         android:icon="@drawable/ic_support_black"
         android:summary="@string/support_settings"
         android:title="@string/Support">
         <intent
             android:targetClass="me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity"
             android:targetPackage="me.calebjones.spacelaunchnow.debug"/>
-    </de.mrapp.android.preference.activity.NavigationPreference>
+    </header>
 
 </PreferenceScreen>

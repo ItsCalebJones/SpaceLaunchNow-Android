@@ -263,9 +263,6 @@ dependencies {
     implementation deps.gson
     implementation deps.calendarprovider
 
-    // DO NOT UPDATE - v5.0.+ not working well.
-    implementation deps.androidPreference
-
     // Iconography
     implementation deps.iconicsCore
     implementation deps.googleMaterialTypeface
@@ -291,6 +288,7 @@ dependencies {
     annotationProcessor deps.butterknifeCompiler
 
     implementation deps.bottomNavigation
+    implementation deps.preferences
 
 }
 

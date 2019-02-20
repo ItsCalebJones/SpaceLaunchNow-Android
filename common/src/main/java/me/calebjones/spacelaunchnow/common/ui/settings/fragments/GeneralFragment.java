@@ -223,17 +223,17 @@ public class GeneralFragment extends BaseSettingsFragment implements SharedPrefe
     }
 
     private void createPermissionListeners() {
-        MultiplePermissionsListener feedbackViewMultiplePermissionListener =
-                new CalendarPermissionListener(this);
-
-        allPermissionsListener =
-                new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
-                        DialogOnAnyDeniedMultiplePermissionsListener.Builder.withContext(context)
-                                .withTitle(R.string.permission_denied)
-                                .withMessage(R.string.permission_denied_description)
-                                .withButtonText(android.R.string.ok)
-                                .withIcon(R.drawable.ic_launcher)
-                                .build());
+//        MultiplePermissionsListener feedbackViewMultiplePermissionListener =
+//                new CalendarPermissionListener(this);
+//
+//        allPermissionsListener =
+//                new CompositeMultiplePermissionsListener(feedbackViewMultiplePermissionListener,
+//                        DialogOnAnyDeniedMultiplePermissionsListener.Builder.withContext(context)
+//                                .withTitle(R.string.permission_denied)
+//                                .withMessage(R.string.permission_denied_description)
+//                                .withButtonText(android.R.string.ok)
+//                                .withIcon(R.drawable.ic_launcher)
+//                                .build());
     }
 
     public void checkCalendarPermission() {
