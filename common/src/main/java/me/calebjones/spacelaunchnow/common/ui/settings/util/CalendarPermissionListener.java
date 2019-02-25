@@ -10,13 +10,15 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.List;
 
+import androidx.preference.PreferenceFragmentCompat;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsFragment;
 import me.calebjones.spacelaunchnow.common.ui.settings.fragments.GeneralFragment;
 
 public class CalendarPermissionListener implements MultiplePermissionsListener {
 
-    private final GeneralFragment activity;
+    private final SettingsFragment activity;
 
-    public CalendarPermissionListener(GeneralFragment activity) {
+    public CalendarPermissionListener(SettingsFragment activity) {
         this.activity = activity;
     }
 

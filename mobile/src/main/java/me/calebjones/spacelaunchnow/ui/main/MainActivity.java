@@ -64,13 +64,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.fabric.sdk.android.Fabric;
 import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.ui.settings.CyaneaSettingsActivity;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.events.list.EventListFragment;
 import me.calebjones.spacelaunchnow.spacestation.SpacestationListFragment;
 import me.calebjones.spacelaunchnow.local.common.BaseActivity;
@@ -84,7 +83,6 @@ import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.ui.AboutActivity;
-import me.calebjones.spacelaunchnow.common.ui.settings.fragments.AppearanceFragment;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Utils;
@@ -137,14 +135,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private String action;
     private boolean showFilter = false;
 
-    public void mayLaunchUrl(Uri parse) {
-        if (customTabActivityHelper.mayLaunchUrl(parse, null, null)) {
-            Timber.v("mayLaunchURL Accepted - %s", parse.toString());
-        } else {
-            Timber.v("mayLaunchURL Denied - %s", parse.toString());
-        }
-    }
-
     public MainActivity() {
         super("Main Activity");
     }
@@ -172,14 +162,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         // Get intent, action and MIME type
         Intent intent = getIntent();
         action = intent.getAction();
-
-        if ("me.calebjones.spacelaunchnow.NIGHTMODE".equals(action)) {
-            Intent sendIntent = new Intent(this, CyaneaSettingsActivity.class);
-            sendIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
-                    AppearanceFragment.class.getName());
-            startActivity(sendIntent);
-        }
-
 
         Timber.d("Creating Preference instances.");
         listPreferences = ListPreferences.getInstance(this.context);
@@ -629,7 +611,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, CyaneaSettingsActivity.class);
+            Intent intent = new Intent(this, SettingsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             return true;
@@ -755,7 +737,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
                 break;
             case R.id.menu_settings:
-                Intent settingsIntent = new Intent(this, CyaneaSettingsActivity.class);
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 settingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(settingsIntent);
                 break;
@@ -976,12 +958,15 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         boolean allowAds = true;
         GDPRConsent consent = consentState.getConsent();
 
-        if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN && consent == GDPRConsent.UNKNOWN) {
+        if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                && consent == GDPRConsent.UNKNOWN) {
             allowAds = false;
-        }
-
-        if (consent == GDPRConsent.NO_CONSENT || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
+        } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                && consent == GDPRConsent.NO_CONSENT
+                || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
             allowsPersonalAds = false;
+        } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
+            GDPR.getInstance().resetConsent();
         }
 
         Timber.v("Load Ads");

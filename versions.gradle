@@ -63,6 +63,7 @@ ext.deps = [
         room                           : "androidx.room:room-runtime:$roomVersion",
         roomCompiler                   : "androidx.room:room-compiler:$roomVersion",
         paging                         : "androidx.paging:paging-runtime-ktx:2.1.0-beta01",
+        preferences                    : "androidx.preference:preference:1.1.0-alpha03",
 
         //Google
         material                       : "com.google.android.material:material:1.0.0",
@@ -97,15 +98,13 @@ ext.deps = [
 
         //Views
         materialdrawer                 : "com.mikepenz:materialdrawer:6.1.0",
-        materialDialogCore             : "com.afollestad.material-dialogs:core:0.9.4.3",
-        materialDialogCommons          : "com.afollestad.material-dialogs:commons:0.9.3.0",
+        materialDialogCore             : "com.afollestad.material-dialogs:core:0.9.6.0",
+        materialDialogCommons          : "com.afollestad.material-dialogs:commons:0.9.6.0",
         cyanea                         : "com.jaredrummler:cyanea:1.0.1",
         expandableLayout               : "net.cachapa.expandablelayout:expandablelayout:2.9.2",
         expandableTextview             : "at.blogc:expandabletextview:1.0.5",
         circleImageView                : "de.hdodenhof:circleimageview:2.2.0",
         customtabs                     : "saschpe.android:customtabs:2.0.0",
-        // DO NOT UPDATE - v5.0.+ not working well.
-        androidPreference              : "com.github.michael-rapp:android-preference-activity:7.0.1",
         transitionseverywhere          : "com.andkulikov:transitionseverywhere:1.8.0",
         androidyoutubeplayer_core      : "com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1",
         androidyoutubeplayer_chromecast: "com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.15",
