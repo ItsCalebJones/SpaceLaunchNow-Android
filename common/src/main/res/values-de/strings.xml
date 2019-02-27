@@ -447,7 +447,7 @@
     <string name="date_unconfirmed">Aktuelles Datum ist eine „nicht früher als“ Schätzung.</string>
     <string name="source">Wähle eine Quelle</string>
     <string name="long_press_share">Lange drücken, um ein Element zu teilen.</string>
-    <string name="no_astronauts">Keine Astronauten gefunden.</string>
+    <string name="no_astronauts">Keine Raumfahrer gefunden.</string>
     <string name="notification_filters">Benachrichtigungsfilter</string>
     <string name="notification_filter_description">Wähle aus, welche Launch-Benachrichtigungen du sehen möchtest.</string>
     <string name="biography">Biografie</string>
@@ -460,7 +460,7 @@
     <string name="past_expeditions">Vergangene Expeditionen</string>
     <string name="expeditions">Expeditionen</string>
     <string name="deorbited">Wiedereintritt: %s</string>
-    <string name="founded">Gegründet: %s</string>
+    <string name="founded">Gestartet: %s</string>
     <string name="status">Status: %s</string>
     <string name="height_plain">Höhe</string>
     <string name="width_plain">Breite</string>
@@ -477,14 +477,14 @@
     <string name="start_fill">Start: %s</string>
     <string name="end_fill">Ende: %s</string>
     <string name="spacestations">Raumstationen</string>
-    <string name="astronauts">Astronauten</string>
+    <string name="astronauts">Raumfahrer</string>
     <string name="events">Events</string>
     <string name="favorites">Favoriten</string>
     <string name="show_me">Zeig Mir</string>
     <string name="docked_alt">Angedockt</string>
     <string name="no_spacestations">Keine Raumstationen gefunden</string>
     <string name="no_events">Keine Events gefunden</string>
-    <string name="founded_alt">Gegründet:</string>
+    <string name="founded_alt">Gestartet:</string>
     <string name="status_alt">Status:</string>
     <string name="de_orbited">Wiedereintritt:</string>
     <string name="mission_agency">Missions-Organisation</string>

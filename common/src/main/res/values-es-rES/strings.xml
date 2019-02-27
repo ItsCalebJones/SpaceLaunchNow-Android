@@ -481,6 +481,12 @@
     <string name="events">Eventos</string>
     <string name="favorites">Favoritos</string>
     <string name="show_me">Mostrar</string>
+    <string name="docked_alt">Acoplado</string>
+    <string name="no_spacestations">No se han encontrado Estaciones espaciales</string>
+    <string name="no_events">No se han encontrado eventos</string>
+    <string name="founded_alt">Fundado:</string>
+    <string name="status_alt">Estado:</string>
+    <string name="de_orbited">Deorbitado:</string>
     <string name="mission_agency">Agencia de la misión</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hola fragmento en blanco</string>

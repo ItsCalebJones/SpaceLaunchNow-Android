@@ -486,6 +486,9 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="docked_alt">Připojeno:</string>
     <string name="no_spacestations">Žádné vesmírné stanice nebyly nalezeny</string>
     <string name="no_events">Žádné události nebyly nalezeny</string>
+    <string name="founded_alt">Založeno:</string>
+    <string name="status_alt">Stav:</string>
+    <string name="de_orbited">Z oběžné dráhy:</string>
     <string name="mission_agency">Pořádající agentura mise</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Ahoj blank fragment</string>
