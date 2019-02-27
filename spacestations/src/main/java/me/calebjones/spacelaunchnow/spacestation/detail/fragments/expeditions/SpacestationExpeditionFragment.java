@@ -24,8 +24,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
+import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -34,6 +36,7 @@ import me.calebjones.spacelaunchnow.spacestation.R;
 import me.calebjones.spacelaunchnow.spacestation.R2;
 import me.calebjones.spacelaunchnow.spacestation.detail.SpacestationDetailViewModel;
 import me.calebjones.spacelaunchnow.spacestation.detail.adapter.ActiveExpeditionItem;
+import me.calebjones.spacelaunchnow.spacestation.detail.adapter.ExpeditionItem;
 import me.calebjones.spacelaunchnow.spacestation.detail.adapter.ListItem;
 import me.calebjones.spacelaunchnow.spacestation.detail.adapter.SpacestationAdapter;
 import retrofit2.Call;
@@ -58,6 +61,8 @@ public class SpacestationExpeditionFragment extends BaseFragment {
     MaterialCardView pastCardView;
     @BindView(R2.id.past_expedition_recyclerview)
     RecyclerView pastExpeditionRecyclerview;
+    @BindView(R2.id.stateful_view)
+    SimpleStatefulLayout simpleStatefulLayout;
     private SpacestationDetailViewModel mViewModel;
     private Unbinder unbinder;
     private SpacestationAdapter adapter;
@@ -84,7 +89,9 @@ public class SpacestationExpeditionFragment extends BaseFragment {
         activeRecyclerView.setAdapter(adapter);
         pastAdapter = new SpacestationAdapter(context);
         pastExpeditionRecyclerview.setLayoutManager(new LinearLayoutManager(context));
+        pastExpeditionRecyclerview.addItemDecoration(new SimpleDividerItemDecoration(context));
         pastExpeditionRecyclerview.setAdapter(pastAdapter);
+        simpleStatefulLayout.getProgressView();
         return view;
     }
 
@@ -106,6 +113,11 @@ public class SpacestationExpeditionFragment extends BaseFragment {
             adapter.clear();
             adapter.addItems(items);
         }
+        if (adapter.getItemCount() > 0) {
+            simpleStatefulLayout.showContent();
+        } else {
+            simpleStatefulLayout.showEmpty();
+        }
         pastCardView.setVisibility(View.GONE);
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -118,22 +130,35 @@ public class SpacestationExpeditionFragment extends BaseFragment {
                         List<Expedition> pastExpeditions = response.body().getExpeditions();
                         List<ListItem> items = new ArrayList<>();
                         for (Expedition expedition : pastExpeditions) {
-                            ActiveExpeditionItem item = new ActiveExpeditionItem(expedition);
+                            ExpeditionItem item = new ExpeditionItem(expedition);
                             items.add(item);
                         }
+                        int pastCount = pastExpeditions.size();
+                        int active = activeRecyclerView.getAdapter().getItemCount();
+                        String total = String.valueOf(pastCount + active);
+                        spacestaionPastSubtitle.setText(String.format("Total Expeditions: %s", total));
                         if (items.size() > 0) {
                             pastAdapter.clear();
                             pastAdapter.addItems(items);
                             pastCardView.setVisibility(View.VISIBLE);
                         } else {
+                            if (adapter.getItemCount() == 0) simpleStatefulLayout.showEmpty();
                             pastCardView.setVisibility(View.GONE);
                         }
+                        return;
                     }
+                }
+                if (adapter.getItemCount() == 0 && pastAdapter.getItemCount() == 0) {
+                    simpleStatefulLayout.showEmpty();
+                    pastCardView.setVisibility(View.GONE);
+                } else if (adapter.getItemCount() != 0 || pastAdapter.getItemCount() != 0){
+                    simpleStatefulLayout.showContent();
                 }
             }
 
             @Override
             public void onFailure(Call<ExpeditionResponse> call, Throwable t) {
+                if (adapter.getItemCount() == 0) simpleStatefulLayout.showEmpty();
                 pastCardView.setVisibility(View.GONE);
             }
         });

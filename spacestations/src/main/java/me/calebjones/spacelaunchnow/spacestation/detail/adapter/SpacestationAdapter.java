@@ -5,26 +5,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 import me.calebjones.spacelaunchnow.common.GlideApp;
-import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftStage;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.DockingEvent;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
+import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.spacestation.R;
 import me.calebjones.spacelaunchnow.spacestation.detail.fragments.expeditions.CrewAdapter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to RecyclerView
@@ -129,8 +129,8 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
             DockedVehicleItem dockedVehicleItem = (DockedVehicleItem) item;
             SpacecraftStage spacecraft = dockedVehicleItem.getDockedVehicle();
             List<DockingEvent> dockingEvents = spacecraft.getDockingEvents();
-            for (DockingEvent dockingEvent: dockingEvents){
-                if (dockingEvent.getDeparture() == null){
+            for (DockingEvent dockingEvent : dockingEvents) {
+                if (dockingEvent.getDeparture() == null) {
                     dockedLocation.setText(dockingEvent.getDockingLocation());
                 }
             }
@@ -141,15 +141,15 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
 
             title.setText(spacecraft.getSpacecraft().getName());
             subtitle.setText(spacecraft.getSpacecraft().getSerialNumber());
-            if (spacecraft.getSpacecraft().getConfiguration().getHumanRated() == null ){
+            if (spacecraft.getSpacecraft().getConfiguration().getHumanRated() == null) {
                 GlideApp.with(context)
                         .load(R.drawable.ic_question_mark)
                         .into(humanRated);
-            } else if (spacecraft.getSpacecraft().getConfiguration().getHumanRated()){
+            } else if (spacecraft.getSpacecraft().getConfiguration().getHumanRated()) {
                 GlideApp.with(context)
                         .load(R.drawable.ic_checkmark)
                         .into(humanRated);
-                } else {
+            } else {
                 GlideApp.with(context)
                         .load(R.drawable.ic_failed)
                         .into(humanRated);
@@ -213,17 +213,95 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
         }
     }
 
-    public class ViewHolderPastExpedition extends ViewHolder {
-        private final TextView mTextView;
+    public class ViewHolderPastExpedition extends ViewHolder implements View.OnClickListener {
+        private final TextView title;
+        private final TextView subtitle;
+        private final View rootView;
+        private ExpeditionItem expeditionItem;
+        private RecyclerView crewRecyler;
 
         public ViewHolderPastExpedition(View itemView) {
             super(itemView);
 
-            mTextView = itemView.findViewById(R.id.txtView);
+            title = itemView.findViewById(R.id.title);
+            subtitle = itemView.findViewById(R.id.sub_title);
+            rootView = itemView.findViewById(R.id.rootView);
+            crewRecyler = itemView.findViewById(R.id.crew_recycler_view);
         }
 
         public void bindType(ListItem item) {
-            mTextView.setText(((ActiveExpeditionItem) item).getExpedition().getName());
+            expeditionItem = ((ExpeditionItem) item);
+            Expedition expedition = ((ExpeditionItem) item).getExpedition();
+            title.setText(expedition.getName());
+            String startDate = "?";
+            String endDate = "?";
+            if (expedition.getStart() != null) {
+                startDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(expedition.getStart());
+            }
+            if (expedition.getEnd() != null) {
+                endDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(expedition.getEnd());
+            }
+            subtitle.setText(String.format("%s - %s", startDate, endDate));
+            rootView.setOnClickListener(this);
+            crewRecyler.setNestedScrollingEnabled(false);
+            ((SimpleItemAnimator) crewRecyler.getItemAnimator()).setSupportsChangeAnimations(false);
+            if (expeditionItem.isExpanded()) {
+                if (expeditionItem.getExpedition().getCrew() == null) {
+                    getCrew(expedition);
+                } else {
+                    crewRecyler.setVisibility(View.VISIBLE);
+                    crewRecyler.setLayoutManager(new LinearLayoutManager(context));
+                    crewRecyler.setAdapter(new CrewAdapter(context, expedition.getCrew()));
+                }
+            } else {
+                crewRecyler.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+            Expedition expedition = expeditionItem.getExpedition();
+            boolean expanded = expeditionItem.isExpanded();
+            // Change the state
+            expeditionItem.setExpanded(!expanded);
+            if (expeditionItem.isExpanded()) {
+                if (expeditionItem.getExpedition().getCrew() == null) {
+                    getCrew(expedition);
+                    notifyItemChanged(position);
+
+                } else {
+
+                    crewRecyler.setVisibility(View.VISIBLE);
+                    crewRecyler.setLayoutManager(new LinearLayoutManager(context));
+                    crewRecyler.setAdapter(new CrewAdapter(context, expedition.getCrew()));
+                    notifyItemChanged(position);
+                }
+            } else {
+                crewRecyler.setVisibility(View.GONE);
+                notifyItemChanged(position);
+            }
+        }
+
+        private void getCrew(Expedition expedition) {
+            DataClient.getInstance().getExpeditionById(expedition.getId(), new Callback<Expedition>() {
+                @Override
+                public void onResponse(Call<Expedition> call, Response<Expedition> response) {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            expeditionItem.getExpedition().setCrew(response.body().getCrew());
+                            crewRecyler.setVisibility(View.VISIBLE);
+                            crewRecyler.setLayoutManager(new LinearLayoutManager(context));
+                            crewRecyler.setAdapter(new CrewAdapter(context, expedition.getCrew()));
+                            return;
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Expedition> call, Throwable t) {
+                    crewRecyler.setVisibility(View.GONE);
+                }
+            });
         }
     }
 }
