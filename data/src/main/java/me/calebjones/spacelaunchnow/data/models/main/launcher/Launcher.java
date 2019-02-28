@@ -28,6 +28,12 @@ public class Launcher extends RealmObject {
     @Expose
     public String details;
 
+
+
+    @SerializedName("image_url")
+    @Expose
+    public String imageUrl;
+
     public Integer getPreviousFlights() {
         return previousFlights;
     }
@@ -38,6 +44,18 @@ public class Launcher extends RealmObject {
 
     public Boolean getFlightProven() {
         return flightProven;
+    }
+
+    public void setFlightProven(Boolean flightProven) {
+        this.flightProven = flightProven;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getDetails() {

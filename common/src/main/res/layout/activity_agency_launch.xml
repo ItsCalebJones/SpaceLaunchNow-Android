@@ -17,14 +17,17 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" />
+            android:background="?attr/colorPrimary"
+            app:theme="@style/MaterialTheme.ActionBar"/>
 
 
         <me.calebjones.spacelaunchnow.common.ui.views.custom.BadgeTabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary" />
+            android:background="?attr/colorPrimary"
+            app:tabTextColor="@color/material_color_white_70_percent"
+            app:tabSelectedTextColor="@color/material_color_white"/>
     </com.google.android.material.appbar.AppBarLayout>
 
 

@@ -10,14 +10,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 import at.blogc.android.views.ExpandableTextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.data.models.main.Landing;
@@ -63,9 +66,16 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
                 launches.putExtra("serialNumber", launcher.getSerialNumber());
                 context.startActivity(launches);
             });
+
+            if (launcher.getImageUrl() != null){
+                GlideApp.with(context)
+                        .load(launcher.getImageUrl())
+                        .placeholder(R.drawable.placeholder)
+                        .into(holder.coreImage);
+            }
             holder.coreInformation.setText(String.format("%s Information", launcher.getSerialNumber()));
             if (stage.getType() != null) {
-                holder.coreInformationSubtitle.setText(String.format("First LauncherStage - %s", stage.getType()));
+                holder.coreInformationSubtitle.setText(String.format("First Stage - %s", stage.getType()));
             }
             holder.details.setText(launcher.getDetails());
             holder.serialNumberText.setText(stage.getLauncher().getSerialNumber());
@@ -220,7 +230,7 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
         @BindView(R2.id.landing_more)
         Button landingMore;
         @BindView(R2.id.view_core_launches)
-        Button viewCoreLaunches;
+        AppCompatButton viewCoreLaunches;
         @BindView(R2.id.landing_group)
         Group landingGroup;
         @BindView(R2.id.landing_group_landingtype)
@@ -231,6 +241,8 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
         TextView details;
         @BindView(R2.id.landing_information_title)
         TextView landingInformationTitle;
+        @BindView(R2.id.coreImage)
+        ImageView coreImage;
 
 
         //Add content to the card
