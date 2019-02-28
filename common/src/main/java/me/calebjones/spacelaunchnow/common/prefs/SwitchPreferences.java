@@ -59,6 +59,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     private static String PREFS_SWITCH_VAN;
     private static String PREFS_SWITCH_CAPE;
     private static String PREFS_SWITCH_KSC;
+    private static String PREFS_SWITCH_WALLOPS;
+    private static String PREFS_SWITCH_MOJAVE;
+    private static String PREFS_SWITCH_NZ;
+    private static String PREFS_SWITCH_FG;
+    private static String PREFS_SWITCH_NORTHROP;
     private static String PREFS_SWITCH_ALL;
     private static String PREFS_CALENDAR_STATUS;
     private static String PREFS_NO_GO_SWITCH;
@@ -94,6 +99,11 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         PREFS_SWITCH_VAN = "SWITCH_VAN";
         PREFS_SWITCH_KSC = "SWITCH_KSC";
         PREFS_SWITCH_PLES = "SWITCH_PLES";
+        PREFS_SWITCH_WALLOPS = "SWITCH_WALLOPS";
+        PREFS_SWITCH_MOJAVE  = "SWITCH_MOJAVE";
+        PREFS_SWITCH_NZ = "SWITCH_NZ";
+        PREFS_SWITCH_FG = "SWITCH_FG";
+        PREFS_SWITCH_NORTHROP = "SWITCH_NORTHROP";
         PREFS_SWITCH_ALL = "SWITCH_ALL";
         PREFS_FAB_HIDDEN = "FAB_HIDDEN";
         PREFS_PREV_VEHICLE_FILTERED_WHICH = "PREV_VEHICLE_FILTERED_WHICH";
@@ -694,6 +704,91 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         }
     }
 
+    public boolean getSwitchWallops() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_WALLOPS, true);
+    }
+
+    public void setSwitchWallops(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_WALLOPS, key);
+        this.prefsEditor.apply();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("wallops");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("wallops");
+        }
+    }
+
+    public boolean getSwitchNorthrop() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_NORTHROP, true);
+    }
+
+    public void setSwitchNorthrop(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_NORTHROP, key);
+        this.prefsEditor.apply();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("northrop");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("northrop");
+        }
+    }
+
+    public boolean getSwitchNZ() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_NZ, true);
+    }
+
+    public void setSwitchNZ(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_NZ, key);
+        this.prefsEditor.apply();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("newZealand");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("newZealand");
+        }
+    }
+
+    public boolean getSwitchFG() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_FG, true);
+    }
+
+    public void setSwitchFG(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_FG, key);
+        this.prefsEditor.apply();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("frenchGuiana");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
+        }
+    }
+
+    public boolean getSwitchMojave() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_MOJAVE, true);
+    }
+
+    public void setSwitchMojave(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_MOJAVE, key);
+        this.prefsEditor.apply();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("mojave");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("mojave");
+        }
+    }
+
     //All Switch
     public boolean getAllSwitch() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
@@ -724,6 +819,13 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         setSwitchKSC(true);
         setSwitchPles(true);
         setSwitchVan(true);
+        setSwitchBO(true);
+        setSwitchRL(true);
+        setSwitchNorthrop(true);
+        setSwitchMojave(true);
+        setSwitchNZ(true);
+        setSwitchFG(true);
+        setSwitchWallops(true);
     }
 
     @Override
