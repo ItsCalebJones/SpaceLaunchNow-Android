@@ -92,6 +92,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         backgroundArray = getResources().getIntArray(R.array.widget_presets_values_background);
         accentArray = getResources().getIntArray(R.array.widget_presets_values_accent);
         titleTextArray = getResources().getIntArray(R.array.widget_presets_values_title_text);
+        firebaseMessaging = FirebaseMessaging.getInstance();
 
         createPermissionListeners();
         setupPreference();
