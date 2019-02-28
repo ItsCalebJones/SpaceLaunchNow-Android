@@ -387,7 +387,8 @@ public class LaunchDetailActivity extends BaseActivity
         if (launch.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
             if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getNationUrl() != null) {
                 applyProfileLogo(launch.getRocket().getConfiguration().getLaunchServiceProvider().getNationUrl());
-            } else {
+            } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev() != null
+                    && launch.getRocket().getConfiguration().getLaunchServiceProvider().getCountryCode() != null) {
                 locationCountryCode = launch.getRocket().getConfiguration().getLaunchServiceProvider().getCountryCode();
                 //Go through various CountryCodes and assign flag.
                 if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ASA")) {
