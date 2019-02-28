@@ -10,15 +10,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatCheckBox;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.SwitchCompat;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +21,13 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.button.MaterialButton;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,25 +38,24 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-
 import io.realm.RealmResults;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
-import me.calebjones.spacelaunchnow.local.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
-import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
-import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
-import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.common.content.jobs.SyncCalendarJob;
 import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
+import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.local.common.BaseFragment;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
-import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.utils.views.animator.FabExtensionAnimator;
 import me.calebjones.spacelaunchnow.widgets.launchcard.LaunchCardCompactManager;
 import me.calebjones.spacelaunchnow.widgets.launchcard.LaunchCardCompactWidgetProvider;
@@ -82,6 +79,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatCheckBox spacexSwitch;
     @BindView(R.id.roscosmos_switch)
     AppCompatCheckBox roscosmosSwitch;
+    @BindView(R.id.bo_switch)
+    AppCompatCheckBox blueOriginSwitch;
+    @BindView(R.id.rl_switch)
+    AppCompatCheckBox rocketLabsSwitch;
     @BindView(R.id.ula_switch)
     AppCompatCheckBox ulaSwitch;
     @BindView(R.id.arianespace_switch)
@@ -91,7 +92,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @BindView(R.id.isro_switch)
     AppCompatCheckBox isroSwitch;
     @BindView(R.id.all_switch)
-    AppCompatCheckBox customSwitch;
+    AppCompatCheckBox allSwitch;
     @BindView(R.id.tbd_launch)
     SwitchCompat tbdLaunchSwitch;
     @BindView(R.id.persist_last_launch)
@@ -118,6 +119,16 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.color_reveal)
     CoordinatorLayout colorReveal;
+    @BindView(R.id.northrop_switch)
+    AppCompatCheckBox northropSwitch;
+    @BindView(R.id.wallops_switch)
+    AppCompatCheckBox wallopsSwitch;
+    @BindView(R.id.new_zealand_switch)
+    AppCompatCheckBox newZealandSwitch;
+    @BindView(R.id.mojave_switch)
+    AppCompatCheckBox mojaveSwitch;
+    @BindView(R.id.french_guiana_switch)
+    AppCompatCheckBox frenchGuianaSwitch;
 
     private View view;
     private CardAdapter adapter;
@@ -188,7 +199,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         setUpSwitches();
         colorReveal.setBackgroundColor(color);
         fabExtensionAnimator = new FabExtensionAnimator(fab);
-        fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context,R.drawable.ic_notifications_white)), true);
+        fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)), true);
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showFilters")) {
             Once.markDone("showFilters");
             colorReveal.setVisibility(View.VISIBLE);
@@ -263,7 +274,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void setUpSwitches() {
-        customSwitch.setChecked(switchPreferences.getAllSwitch());
+        allSwitch.setChecked(switchPreferences.getAllSwitch());
         nasaSwitch.setChecked(switchPreferences.getSwitchNasa());
         spacexSwitch.setChecked(switchPreferences.getSwitchSpaceX());
         roscosmosSwitch.setChecked(switchPreferences.getSwitchRoscosmos());
@@ -274,7 +285,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         plesSwitch.setChecked(switchPreferences.getSwitchPles());
         vanSwitch.setChecked(switchPreferences.getSwitchVan());
         kscSwitch.setChecked(switchPreferences.getSwitchKSC());
+        blueOriginSwitch.setChecked(switchPreferences.getSwitchBO());
+        rocketLabsSwitch.setChecked(switchPreferences.getSwitchRL());
         tbdLaunchSwitch.setChecked(switchPreferences.getTBDSwitch());
+        northropSwitch.setChecked(switchPreferences.getSwitchNorthrop());
+        wallopsSwitch.setChecked(switchPreferences.getSwitchWallops());
+        newZealandSwitch.setChecked(switchPreferences.getSwitchNZ());
+        frenchGuianaSwitch.setChecked(switchPreferences.getSwitchFG());
+        mojaveSwitch.setChecked(switchPreferences.getSwitchMojave());
         persistLastSwitch.setChecked(switchPreferences.getPersistSwitch());
     }
 
@@ -437,7 +455,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             }
         }
 
-        if(filterViewShowing){
+        if (filterViewShowing) {
             mainActivity.hideBottomNavigation();
             mainActivity.checkHideAd();
         }
@@ -506,7 +524,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
 
-
     public void checkFilter() {
 
         if (!filterViewShowing) {
@@ -527,7 +544,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             if (switchPreferences.getNextFABHidden()) {
                 fab.setVisibility(View.GONE);
             }
-            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)),true);
+            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)), true);
             mSwipeRefreshLayout.setEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 hideView();
@@ -651,6 +668,20 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         checkAll();
     }
 
+    @OnClick(R.id.bo_switch)
+    public void bo_switch() {
+        confirm();
+        switchPreferences.setSwitchBO(!switchPreferences.getSwitchBO());
+        checkAll();
+    }
+
+    @OnClick(R.id.rl_switch)
+    public void rl_switch() {
+        confirm();
+        switchPreferences.setSwitchRL(!switchPreferences.getSwitchRL());
+        checkAll();
+    }
+
     @OnClick(R.id.all_switch)
     public void all_switch() {
         confirm();
@@ -692,7 +723,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private void confirm() {
         if (!switchChanged) {
-            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Apply", ContextCompat.getDrawable(context,R.drawable.ic_check)), true);
+            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Apply", ContextCompat.getDrawable(context, R.drawable.ic_check)), true);
             fabExtensionAnimator.setExtended(true);
         }
         switchChanged = true;
@@ -701,7 +732,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private void checkAll() {
         if (switchPreferences.getAllSwitch()) {
             switchPreferences.setAllSwitch(false);
-            customSwitch.setChecked(false);
+            allSwitch.setChecked(false);
         }
     }
 

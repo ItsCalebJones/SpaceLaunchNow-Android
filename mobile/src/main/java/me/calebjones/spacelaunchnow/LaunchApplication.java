@@ -306,6 +306,11 @@ public class LaunchApplication extends MultiDexApplication {
         boolean nasa = switchPreferences.getSwitchNasa();
         boolean blueOrigin = switchPreferences.getSwitchBO();
         boolean rocketLab = switchPreferences.getSwitchRL();
+        boolean frenchGuiana = switchPreferences.getSwitchFG();
+        boolean mojave = switchPreferences.getSwitchMojave();
+        boolean wallops = switchPreferences.getSwitchWallops();
+        boolean northrop = switchPreferences.getSwitchNorthrop();
+        boolean newZealand = switchPreferences.getSwitchNZ();
 
         if (all) {
             firebaseMessaging.subscribeToTopic("all");
@@ -383,6 +388,36 @@ public class LaunchApplication extends MultiDexApplication {
             firebaseMessaging.subscribeToTopic("nasa");
         } else {
             firebaseMessaging.unsubscribeFromTopic("nasa");
+        }
+
+        if (frenchGuiana) {
+            firebaseMessaging.subscribeToTopic("frenchGuiana");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
+        }
+
+        if (mojave) {
+            firebaseMessaging.subscribeToTopic("mojave");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("mojave");
+        }
+
+        if (wallops) {
+            firebaseMessaging.subscribeToTopic("wallops");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("wallops");
+        }
+
+        if (northrop) {
+            firebaseMessaging.subscribeToTopic("northrop");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("northrop");
+        }
+
+        if (newZealand) {
+            firebaseMessaging.subscribeToTopic("newZealand");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("newZealand");
         }
 
         if (notificationEnabled) {
