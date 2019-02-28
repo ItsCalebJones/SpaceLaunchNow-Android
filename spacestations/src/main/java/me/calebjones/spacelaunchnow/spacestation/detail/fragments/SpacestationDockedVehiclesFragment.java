@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftStage;
 import me.calebjones.spacelaunchnow.spacestation.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
@@ -32,6 +33,8 @@ public class SpacestationDockedVehiclesFragment extends BaseFragment {
 
     @BindView(R2.id.recycler_view)
     RecyclerView recyclerView;
+    @BindView(R2.id.stateful_view)
+    SimpleStatefulLayout simpleStatefulLayout;
 
     private SpacestationDetailViewModel mViewModel;
     private Unbinder unbinder;
@@ -58,6 +61,7 @@ public class SpacestationDockedVehiclesFragment extends BaseFragment {
         adapter = new SpacestationAdapter(context);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
+        simpleStatefulLayout.showProgress();
         return view;
     }
 
@@ -70,14 +74,19 @@ public class SpacestationDockedVehiclesFragment extends BaseFragment {
     }
 
     private void setSpacestation(Spacestation spacestation) {
-        if (spacestation != null && spacestation.getDockedVehicles() != null){
+        if (spacestation != null && spacestation.getDockedVehicles() != null) {
             List<ListItem> items = new ArrayList<>();
-            for (SpacecraftStage spacecraftStage: spacestation.getDockedVehicles()){
+            for (SpacecraftStage spacecraftStage : spacestation.getDockedVehicles()) {
                 DockedVehicleItem item = new DockedVehicleItem(spacecraftStage);
                 items.add(item);
             }
             adapter.clear();
             adapter.addItems(items);
+        }
+        if (adapter.getItemCount() > 0) {
+            simpleStatefulLayout.showContent();
+        } else {
+            simpleStatefulLayout.showEmpty();
         }
     }
 }

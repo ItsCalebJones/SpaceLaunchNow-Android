@@ -230,7 +230,7 @@ public interface SpaceLaunchNowService {
                                            @Query("crew__astronaut") Integer astronaut,
                                            @Query("crew__astronaut__agency") Integer agency,
                                            @Query("space_station") Integer spacestation,
-                                           @Query("end__gte") String endDate);
+                                           @Query("end__lte") String endDate);
 
 
     // Launcher

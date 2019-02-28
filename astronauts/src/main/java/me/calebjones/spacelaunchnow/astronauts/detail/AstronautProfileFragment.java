@@ -175,7 +175,7 @@ public class AstronautProfileFragment extends BaseFragment {
             int bornYear = astronaut.getDateOfBirth().getYear();
             int diedYear =  astronaut.getDateOfDeath().getYear();
             astronautBorn.setText(String.format("Born: %s", bornDate));
-            astronautDied.setText(String.format("Died: %s (%s)", bornDate, diedYear - bornYear));
+            astronautDied.setText(String.format("Died: %s (%s)", deathDate, diedYear - bornYear));
             astronautDied.setVisibility(View.VISIBLE);
         }
 

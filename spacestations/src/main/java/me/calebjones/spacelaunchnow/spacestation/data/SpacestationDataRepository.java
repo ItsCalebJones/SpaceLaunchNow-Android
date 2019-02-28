@@ -67,7 +67,7 @@ public class SpacestationDataRepository {
 
     public RealmResults<Spacestation> getSpacestationsFromRealm() {
         RealmQuery<Spacestation> query = realm.where(Spacestation.class).isNotNull("id");
-        return query.sort("status.name", Sort.ASCENDING).findAll();
+        return query.sort("id", Sort.ASCENDING).findAll();
     }
 
     public Spacestation getSpacestationByIdFromRealm(int id) {
