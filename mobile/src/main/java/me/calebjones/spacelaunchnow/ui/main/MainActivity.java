@@ -59,6 +59,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 
 import java.util.concurrent.TimeUnit;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -231,9 +232,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withIdentifier(R.id.menu_home)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
-                                .withIcon(GoogleMaterial.Icon.gmd_satellite)
+                                .withIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_spacestation_logo, null))
                                 .withName(getString(R.string.spacestations))
                                 .withIdentifier(R.id.menu_iss)
+                                .withIconTintingEnabled(true)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
                                 .withIcon(GoogleMaterial.Icon.gmd_person_outline)
@@ -246,31 +248,27 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withIdentifier(R.id.menu_events)
                                 .withSelectable(true),
                         new DividerDrawerItem(),
-                        new ExpandableDrawerItem().withName("Stay Connected").withIcon(CommunityMaterial.Icon.cmd_account).withDescription("Connect with the Community").withIdentifier(19).withSelectable(false).withSubItems(
-                                new SecondaryDrawerItem()
-                                        .withLevel(2)
-                                        .withIcon(CommunityMaterial.Icon.cmd_clipboard_outline)
-                                        .withName(R.string.whats_new)
-                                        .withIdentifier(R.id.menu_new)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withLevel(2)
-                                        .withName(R.string.about)
-                                        .withIcon(GoogleMaterial.Icon.gmd_info)
-                                        .withIdentifier(R.id.about)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withLevel(2)
-                                        .withIcon(CommunityMaterial.Icon.cmd_discord)
-                                        .withName(R.string.discord)
-                                        .withIdentifier(R.id.menu_discord)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(GoogleMaterial.Icon.gmd_feedback)
-                                        .withName(R.string.feedback)
-                                        .withIdentifier(R.id.menu_feedback)
-                                        .withSelectable(false)
-                        ),
+                        new PrimaryDrawerItem()
+                                .withIcon(CommunityMaterial.Icon.cmd_clipboard_outline)
+                                .withName(R.string.whats_new)
+                                .withIdentifier(R.id.menu_new)
+                                .withSelectable(false),
+                        new PrimaryDrawerItem()
+                                .withName(R.string.about)
+                                .withIcon(GoogleMaterial.Icon.gmd_info)
+                                .withIdentifier(R.id.about)
+                                .withSelectable(false),
+                        new PrimaryDrawerItem()
+                                .withIcon(CommunityMaterial.Icon.cmd_discord)
+                                .withName(R.string.discord)
+                                .withIdentifier(R.id.menu_discord)
+                                .withSelectable(false),
+                        new PrimaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_feedback)
+                                .withName(R.string.feedback)
+                                .withIdentifier(R.id.menu_feedback)
+                                .withSelectable(false)
+                        ,
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.settings)
                                 .withIcon(GoogleMaterial.Icon.gmd_settings)
