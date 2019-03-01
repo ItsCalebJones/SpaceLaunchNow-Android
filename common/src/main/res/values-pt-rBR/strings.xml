@@ -67,8 +67,8 @@
     <string name="weather_description">Obtenha informações do tempo da plataforma de lançamento para os lançamentos históricos e futuros.</string>
     <string name="calendar_sync">Sincronizar Calendário</string>
     <string name="calendar_sync_description">Sincronizar automaticamente os lançamentos futuros com seu calendário.</string>
-    <string name="dynamic_watch_face">Dynamic Watch Face</string>
-    <string name="dynamic_watch_face_description">Imagens dinâmicas de veículos de lançamento como o fundo da face do relógio.</string>
+    <string name="wear_complications">Dynamic Watch Face</string>
+    <string name="wear_complications_description">Imagens dinâmicas de veículos de lançamento como o fundo da face do relógio.</string>
     <string name="remove_ads">Remover Anúncios</string>
     <string name="remove_ads_description">Remover todos os anúncios para sempre!</string>
     <string name="discord">Discord</string>

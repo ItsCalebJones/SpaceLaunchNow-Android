@@ -416,7 +416,7 @@ public class LaunchDetailActivity extends BaseActivity
                 }
             }
         } catch (Exception e){
-
+            Timber.e(e);
         }
     }
 

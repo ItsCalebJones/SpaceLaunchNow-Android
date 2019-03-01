@@ -67,8 +67,8 @@
     <string name="weather_description">Get weather information from the launch pad for historical and upcoming launches.</string>
     <string name="calendar_sync">Calendar Sync</string>
     <string name="calendar_sync_description">Automatically sync upcoming launches to your calendar.</string>
-    <string name="dynamic_watch_face">Dynamic Watch Face</string>
-    <string name="dynamic_watch_face_description">Dynamic pictures of launch vehicles as watch face background.</string>
+    <string name="wear_complications">Wear OS Complications</string>
+    <string name="wear_complications_description">Get Space Launch Now complications on your Wear OS watch!</string>
     <string name="remove_ads">Remove Ads</string>
     <string name="remove_ads_description">Remove all advertisements forever!</string>
     <string name="discord">Discord</string>

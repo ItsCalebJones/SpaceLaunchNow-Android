@@ -67,8 +67,8 @@
     <string name="weather_description">Krijg weerinformatie vanaf het lanceerplatform voor vorige en aankomende lanceringen.</string>
     <string name="calendar_sync">Kalender synchronisatie</string>
     <string name="calendar_sync_description">Synchroniseer aankomende lanceringen automatisch naar je kalender.</string>
-    <string name="dynamic_watch_face">Dynamisch Watch Face</string>
-    <string name="dynamic_watch_face_description">Dynamische foto\'s van raketten als watch face achtergrond.</string>
+    <string name="wear_complications">Dynamisch Watch Face</string>
+    <string name="wear_complications_description">Dynamische foto\'s van raketten als watch face achtergrond.</string>
     <string name="remove_ads">Verwijder reclame</string>
     <string name="remove_ads_description">Verwijder alle reclame voor altijd!</string>
     <string name="discord">Discord</string>

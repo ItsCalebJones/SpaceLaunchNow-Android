@@ -67,8 +67,8 @@
     <string name="weather_description">Získat informace o počasí odpalovací rampy pro historické a nadcházející starty.</string>
     <string name="calendar_sync">Synchronizace kalendáře</string>
     <string name="calendar_sync_description">Automatická synchronizace nadcházejících startů do vašeho kalendáře.</string>
-    <string name="dynamic_watch_face">Dynamický ciferník hodinek</string>
-    <string name="dynamic_watch_face_description">Dynamické obrázky raket na pozadí ciferníku hodinek.</string>
+    <string name="wear_complications">Dynamický ciferník hodinek</string>
+    <string name="wear_complications_description">Dynamické obrázky raket na pozadí ciferníku hodinek.</string>
     <string name="remove_ads">Odstranit reklamy</string>
     <string name="remove_ads_description">Odstranit všechny reklamy navždy!</string>
     <string name="discord">Discord chat</string>

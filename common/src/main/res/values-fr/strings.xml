@@ -68,8 +68,8 @@
     <string name="weather_description">Obtenir les informations météo de la rampe de lancement pour les lancements passés et à venir.</string>
     <string name="calendar_sync">Synchronisation du Calendrier</string>
     <string name="calendar_sync_description">Synchroniser automatiquement les lancements futurs avec votre calendrier.</string>
-    <string name="dynamic_watch_face">Cadran Android Wear Dynamique</string>
-    <string name="dynamic_watch_face_description">Images dynamiques des véhicules de lancement en fond d\'écran du cadran Android Wear.</string>
+    <string name="wear_complications">Cadran Android Wear Dynamique</string>
+    <string name="wear_complications_description">Images dynamiques des véhicules de lancement en fond d\'écran du cadran Android Wear.</string>
     <string name="remove_ads">Retirer les publicités</string>
     <string name="remove_ads_description">Retirer toutes les publicités pour toujours !</string>
     <string name="discord">Discord</string>

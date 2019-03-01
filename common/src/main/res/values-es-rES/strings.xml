@@ -67,8 +67,8 @@
     <string name="weather_description">Obtenga información meteorológica de la plataforma de lanzamiento para lanzamientos históricos y próximos.</string>
     <string name="calendar_sync">Sincronización de calendario</string>
     <string name="calendar_sync_description">Sincronice automáticamente los próximos lanzamientos con su calendario.</string>
-    <string name="dynamic_watch_face">Esfera del reloj dinámica</string>
-    <string name="dynamic_watch_face_description">Imágenes dinámicas de vehículos de lanzamiento como fondo de esfera del reloj.</string>
+    <string name="wear_complications">Esfera del reloj dinámica</string>
+    <string name="wear_complications_description">Imágenes dinámicas de vehículos de lanzamiento como fondo de esfera del reloj.</string>
     <string name="remove_ads">Quitar anuncios</string>
     <string name="remove_ads_description">¡Elimine todos los anuncios para siempre!</string>
     <string name="discord">Discord</string>

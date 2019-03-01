@@ -67,8 +67,8 @@
     <string name="weather_description">Uzyskaj informacje o pogodzie na platformie startowej dla historycznych i nadchodzących startów.</string>
     <string name="calendar_sync">Synchronizacja z kalendarzem</string>
     <string name="calendar_sync_description">Automatycznie synchronizuj nadchodzące starty z Twoim kalendarzem.</string>
-    <string name="dynamic_watch_face">Dynamiczna skórka dla Android Watch</string>
-    <string name="dynamic_watch_face_description">Dynamiczne tło startujących rakiet dla Android Watch</string>
+    <string name="wear_complications">Dynamiczna skórka dla Android Watch</string>
+    <string name="wear_complications_description">Dynamiczne tło startujących rakiet dla Android Watch</string>
     <string name="remove_ads">Pozbądź się reklam</string>
     <string name="remove_ads_description">Pozbądź się wszystkich reklam na zawsze!</string>
     <string name="discord">Discord</string>
