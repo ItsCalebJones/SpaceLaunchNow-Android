@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.news.refactor.data;
+package me.calebjones.spacelaunchnow.news.data;
 
 import android.content.Context;
 

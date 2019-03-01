@@ -20,6 +20,8 @@ public class NewsItem extends RealmObject {
     private String newsSite;
     @SerializedName("featured_image")
     private String featured_image;
+    @SerializedName("url")
+    private String url;
     @SerializedName("datePublished")
     private int datePublished;
     private Date lastUpdate;
@@ -62,6 +64,14 @@ public class NewsItem extends RealmObject {
 
     public void setFeatured_image(String featured_image) {
         this.featured_image = featured_image;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public int getDatePublished() {

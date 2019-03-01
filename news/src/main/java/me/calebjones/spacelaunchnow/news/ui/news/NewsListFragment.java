@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.news.refactor;
+package me.calebjones.spacelaunchnow.news.ui.news;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,8 +19,8 @@ import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.news.R;
-import me.calebjones.spacelaunchnow.news.refactor.data.Callbacks;
-import me.calebjones.spacelaunchnow.news.refactor.data.NewsDataRepository;
+import me.calebjones.spacelaunchnow.news.data.Callbacks;
+import me.calebjones.spacelaunchnow.news.data.NewsDataRepository;
 import timber.log.Timber;
 
 /**

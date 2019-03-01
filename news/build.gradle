@@ -36,21 +36,15 @@ android {
 dependencies {
     implementation project(':common')
     implementation project(path: ':data')
-    def room_version = "2.0.0-rc01"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation deps.cardview
     implementation deps.appcompat
-
-    api deps.paging
     implementation deps.lifecycleExtensions
-    implementation deps.room
-    kapt deps.roomCompiler
 
     implementation deps.kotlin_stdlib_jdk7
 
     implementation deps.material
-
     implementation deps.retrofit
     implementation deps.converter_gson
     implementation deps.gson

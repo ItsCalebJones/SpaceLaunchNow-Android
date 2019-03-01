@@ -14,8 +14,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import me.calebjones.spacelaunchnow.news.R;
-import me.calebjones.spacelaunchnow.news.refactor.NewsListFragment;
-import me.calebjones.spacelaunchnow.news.ui.articles.ArticleFragment;
+import me.calebjones.spacelaunchnow.news.ui.news.NewsListFragment;
 import me.calebjones.spacelaunchnow.news.ui.twitter.TwitterFragment;
 
 public class NewsViewPager extends Fragment {

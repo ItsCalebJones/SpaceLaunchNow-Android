@@ -1,6 +1,8 @@
-package me.calebjones.spacelaunchnow.news.refactor;
+package me.calebjones.spacelaunchnow.news.ui.news;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +13,10 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.news.R;
-import me.calebjones.spacelaunchnow.news.R2;
 
 
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.ViewHolder> {
@@ -118,6 +116,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         private TextView articleSite;
         private TextView articleTitle;
         private TextView articlePublicationDate;
+        private TextView rootView;
 
 
         public ViewHolder(View view) {
@@ -126,7 +125,13 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             articleSite = view.findViewById(R.id.article_site);
             articleTitle = view.findViewById(R.id.article_title);
             articlePublicationDate = view.findViewById(R.id.article_publication_date);
+            rootView = view.findViewById(R.id.rootview);
 
+            rootView.setOnClickListener(v -> {
+                NewsItem news = newsList.get(getAdapterPosition());
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(news.getUrl()));
+                context.startActivity(intent);
+            });
         }
     }
 }
