@@ -19,6 +19,9 @@ public class Spacecraft extends RealmObject {
     @SerializedName("name")
     @Expose
     public String name;
+    @SerializedName("description")
+    @Expose
+    public String description;
     @SerializedName("serial_number")
     @Expose
     public String serialNumber;
@@ -78,6 +81,14 @@ public class Spacecraft extends RealmObject {
 
     public void setConfiguration(SpacecraftConfig configuration) {
         this.configuration = configuration;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public RealmList<SpacecraftStage> getFlights() {
