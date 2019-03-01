@@ -564,4 +564,5 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="no_expeditions">No Expeditions Found</string>
     <string name="no_docked">No Docked Vehicles</string>
+    <string name="no_news">No News Loaded</string>
 </resources>

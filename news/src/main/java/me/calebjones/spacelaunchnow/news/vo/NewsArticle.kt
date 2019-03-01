@@ -24,6 +24,6 @@ data class NewsArticle(
         @SerializedName("date_published")
         val date_published: Int,
         val url: String?) {
-        // to be consistent w/ changing backend order, we need to keep a data like this
-        var indexInResponse: Int = -1
+    // to be consistent w/ changing backend order, we need to keep a data like this
+    var indexInResponse: Int = -1
 }

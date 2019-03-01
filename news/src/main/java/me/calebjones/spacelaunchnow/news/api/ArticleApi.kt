@@ -48,7 +48,7 @@ interface ArticleApi {
 
     companion object {
         private const val BASE_URL = "https://api.spaceflightnewsapi.net"
-        fun create(): ArticleApi = create(HttpUrl.parse(BASE_URL)!!)
+        public fun create(): ArticleApi = create(HttpUrl.parse(BASE_URL)!!)
         fun create(httpUrl: HttpUrl): ArticleApi {
             val logger = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger {
                 Log.d("API", it)
