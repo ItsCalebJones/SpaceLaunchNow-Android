@@ -64,8 +64,8 @@
     <string name="weather_description">Получить информацию о погоде со стартовой площадки для исторических и предстоящих запусков.</string>
     <string name="calendar_sync">Синхронизация с календарем</string>
     <string name="calendar_sync_description">Автоматическая синхронизация предстоящих пусков с календарем.</string>
-    <string name="dynamic_watch_face">Динамический циферблат для смарт-часов</string>
-    <string name="dynamic_watch_face_description">Сменяющиеся фотографии ракет как фон на циферблате.</string>
+    <string name="wear_complications">Динамический циферблат для смарт-часов</string>
+    <string name="wear_complications_description">Сменяющиеся фотографии ракет как фон на циферблате.</string>
     <string name="remove_ads">Убрать рекламу</string>
     <string name="remove_ads_description">Уберите все рекламные баннеры навсегда!</string>
     <string name="discord">Discord</string>

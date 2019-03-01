@@ -67,8 +67,8 @@
     <string name="weather_description">Sieh Wetterinformationen vom Launchpad für vergangene und kommende Starts.</string>
     <string name="calendar_sync">Kalender Sync</string>
     <string name="calendar_sync_description">Synchronisiere kommende Starts automatisch mit deinem Kalender.</string>
-    <string name="dynamic_watch_face">Dynamische Zifferblätter</string>
-    <string name="dynamic_watch_face_description">Dynamische Bilder von Trägerraketen als Zifferblatt-Hintergrund.</string>
+    <string name="wear_complications">Dynamische Zifferblätter</string>
+    <string name="wear_complications_description">Dynamische Bilder von Trägerraketen als Zifferblatt-Hintergrund.</string>
     <string name="remove_ads">Entferne Werbung</string>
     <string name="remove_ads_description">Entferne Werbung für immer!</string>
     <string name="discord">Discord</string>

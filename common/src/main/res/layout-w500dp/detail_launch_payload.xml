@@ -164,6 +164,213 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/spacecraft_card"
+            android:layout_width="@dimen/max_width"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/material_card_edge_margin"
+            android:animateLayoutChanges="true"
+            android:layout_gravity="center"
+            android:padding="@dimen/material_card_edge_margin"
+            app:cardBackgroundColor="?backgroundColor"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="@dimen/material_card_elevation_resting"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/spacecraft_image"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:adjustViewBounds="false"
+                    android:cropToPadding="false"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/placeholder"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_weight="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/spacecraft_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="8dp"
+                    android:text="@string/spacecraft_default_title"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@+id/spacecraft_image"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/spacecraft_sub_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="8dp"
+                    android:singleLine="false"
+                    android:text="@string/spacecraft_default_sub_title"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spacecraft_title" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/spacecraft_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.5" />
+
+
+                <TextView
+                    android:id="@+id/destination_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Destination:"
+                    android:textAppearance="@style/MaterialTypography.Regular.Title"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/spacecraft_guideline"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/spacecraft_sub_title" />
+
+                <TextView
+                    android:id="@+id/destination_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:paddingLeft="4dp"
+                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/spacecraft_guideline"
+                    app:layout_constraintTop_toTopOf="@+id/destination_title"
+                    tools:text="International Space Station" />
+
+                <TextView
+                    android:id="@+id/serial_number_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Serial Number:"
+                    android:textAppearance="@style/MaterialTypography.Regular.Title"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/spacecraft_guideline"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/destination_text" />
+
+                <TextView
+                    android:id="@+id/serial_number_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:paddingLeft="4dp"
+                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/spacecraft_guideline"
+                    app:layout_constraintTop_toTopOf="@+id/serial_number_title"
+                    tools:text="B1005" />
+
+                <TextView
+                    android:id="@+id/status_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Status:"
+                    android:textAppearance="@style/MaterialTypography.Regular.Title"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/spacecraft_guideline"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/serial_number_title"
+                    app:layout_constraintTop_toBottomOf="@+id/serial_number_text" />
+
+                <TextView
+                    android:id="@+id/status_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="2"
+                    android:paddingLeft="4dp"
+                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintBottom_toBottomOf="@+id/status_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.6"
+                    app:layout_constraintStart_toEndOf="@+id/status_title"
+                    app:layout_constraintStart_toStartOf="@+id/serial_number_text"
+                    app:layout_constraintTop_toTopOf="@+id/status_title"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:text="Active" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:paddingLeft="4dp"
+                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/status_title"
+                    tools:text="Crew Dragon 1 will be the Crew Dragon spacecraft launched on the SpaceX DM-1 demonstration mission to the ISS." />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

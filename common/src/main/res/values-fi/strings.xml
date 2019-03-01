@@ -61,8 +61,8 @@
     <string name="weather_description">Saa säätiedot laukaisualustalta tulevista ja menneistä laukaisuista</string>
     <string name="calendar_sync">kalenterin synkronointi</string>
     <string name="calendar_sync_description">Synkronoi tulevat laukaisut automaattisesti kalenteriisi.</string>
-    <string name="dynamic_watch_face">Dynaaminen rannekellon ulkonäkö</string>
-    <string name="dynamic_watch_face_description">Dynaamiset kuvat kantoraketeista rannekellon taustakuvana.</string>
+    <string name="wear_complications">Dynaaminen rannekellon ulkonäkö</string>
+    <string name="wear_complications_description">Dynaamiset kuvat kantoraketeista rannekellon taustakuvana.</string>
     <string name="remove_ads">Poista Mainokset</string>
     <string name="remove_ads_description">Poista kaikki mainostus ikuisesti!</string>
     <string name="discord">Discord</string>

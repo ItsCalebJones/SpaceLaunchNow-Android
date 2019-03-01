@@ -71,8 +71,8 @@ amelyet emberes repülésekhez használnak, és a Szojuz-U fejlesztője, melyet 
     <string name="weather_description">Szerezzen időjárás információkat az indítás helyszínéről történelmi indításokból, vagy közelgő indításokból.</string>
     <string name="calendar_sync">Naptár szinkronizálása</string>
     <string name="calendar_sync_description">Közelgő indítások automatikus szinkronizálása a naptáramba.</string>
-    <string name="dynamic_watch_face">Dinamikus Watch Face</string>
-    <string name="dynamic_watch_face_description">Az indított járművek dinamikus képeinek megtekintése.</string>
+    <string name="wear_complications">Dinamikus Watch Face</string>
+    <string name="wear_complications_description">Az indított járművek dinamikus képeinek megtekintése.</string>
     <string name="remove_ads">Reklámok eltüntetése</string>
     <string name="remove_ads_description">Összes reklám eltüntesése örökre!</string>
     <string name="discord">Discord</string>

@@ -3,30 +3,41 @@ package me.calebjones.spacelaunchnow.common.ui.launchdetail.fragments.mission;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+import com.google.android.material.card.MaterialCardView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.Group;
+import androidx.constraintlayout.widget.Guideline;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.RetroFitFragment;
-import me.calebjones.spacelaunchnow.common.utils.Utils;
-import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
-import me.calebjones.spacelaunchnow.data.models.main.Mission;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.launches.launcher.LauncherLaunchActivity;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.Mission;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
+import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftStage;
 import timber.log.Timber;
 
 public class MissionDetailFragment extends RetroFitFragment {
@@ -75,6 +86,24 @@ public class MissionDetailFragment extends RetroFitFragment {
     AppCompatButton vehicleWikiButton;
     @BindView(R2.id.launcher_launches)
     AppCompatButton launchesButton;
+    @BindView(R2.id.spacecraft_image)
+    ImageView spacecraftImage;
+    @BindView(R2.id.spacecraft_title)
+    TextView spacecraftTitle;
+    @BindView(R2.id.spacecraft_sub_title)
+    TextView spacecraftSubTitle;
+    @BindView(R2.id.spacecraft_guideline)
+    Guideline spacecraftGuideline;
+    @BindView(R2.id.destination_text)
+    TextView destinationText;
+    @BindView(R2.id.serial_number_text)
+    TextView serialNumberText;
+    @BindView(R2.id.status_text)
+    TextView statusText;
+    @BindView(R2.id.description)
+    TextView description;
+    @BindView(R2.id.spacecraft_card)
+    MaterialCardView spacecraftCard;
 
     private Context context;
     public Launch detailLaunch;
@@ -166,7 +195,7 @@ public class MissionDetailFragment extends RetroFitFragment {
             }
             configureLaunchVehicle(launch.getRocket().getConfiguration());
 
-            if (launch.getRocket().getLauncherStage() != null && launch.getRocket().getLauncherStage().size() > 0){
+            if (launch.getRocket().getLauncherStage() != null && launch.getRocket().getLauncherStage().size() > 0) {
                 coreRecyclerView.setVisibility(View.VISIBLE);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
                 coreRecyclerView.setLayoutManager(layoutManager);
@@ -177,6 +206,23 @@ public class MissionDetailFragment extends RetroFitFragment {
                 coreRecyclerView.setVisibility(View.GONE);
             }
 
+            if (launch.getRocket().getSpacecraftStage() != null) {
+                spacecraftCard.setVisibility(View.VISIBLE);
+                SpacecraftStage stage = launch.getRocket().getSpacecraftStage();
+                GlideApp.with(context)
+                        .load(stage.getSpacecraft().getConfiguration().getImageUrl())
+                        .placeholder(R.drawable.placeholder)
+                        .centerCrop()
+                        .into(spacecraftImage);
+                spacecraftTitle.setText(stage.getSpacecraft().getConfiguration().getName());
+                spacecraftSubTitle.setText(stage.getSpacecraft().getConfiguration().getAgency().getName());
+                destinationText.setText(stage.getDestination());
+                serialNumberText.setText(stage.getSpacecraft().getSerialNumber());
+                statusText.setText(stage.getSpacecraft().getStatus().getName());
+                description.setText(stage.getSpacecraft().getDescription());
+            } else {
+                spacecraftCard.setVisibility(View.GONE);
+            }
 
         } catch (NullPointerException e) {
             Timber.e(e);

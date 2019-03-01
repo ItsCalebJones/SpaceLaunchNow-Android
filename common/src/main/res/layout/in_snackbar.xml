@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/swipe_to_dismiss"
-        android:textColor="?android:attr/textColorPrimary"
+        android:textColor="?android:attr/textColorPrimaryInverse"
         android:textSize="12sp" />
 
     <TextView
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:textColor="?android:attr/textColorSecondary"
+        android:textColor="?android:attr/textColorSecondaryInverse"
         tools:text="@string/please_rate_short" />
 
     <LinearLayout
@@ -65,7 +65,7 @@
                 android:paddingRight="@dimen/material_baseline_grid_2x"
                 android:paddingStart="@dimen/material_baseline_grid_2x"
                 android:text="@string/button_feedback"
-                android:textColor="?android:attr/textColorSecondary"
+                android:textColor="?android:attr/textColorSecondaryInverse"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -76,7 +76,7 @@
                 android:layout_gravity="center"
                 android:checked="false"
                 android:text="@string/button_dont_ask"
-                android:textColor="?android:attr/textColorSecondary" />
+                android:textColor="?android:attr/textColorSecondaryInverse" />
 
         </LinearLayout>
 
