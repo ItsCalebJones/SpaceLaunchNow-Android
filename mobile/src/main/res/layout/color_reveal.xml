@@ -103,6 +103,7 @@
                     app:buttonTint="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/rl_switch"
                     app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/launch_providers_title" />
 
@@ -111,10 +112,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/spacex"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/bo_switch"
                     app:layout_constraintStart_toStartOf="@+id/nasa_switch"
                     app:layout_constraintTop_toBottomOf="@id/nasa_switch" />
 
@@ -123,10 +126,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/roscosmos"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/arianespace_switch"
                     app:layout_constraintStart_toStartOf="@+id/spacex_switch"
                     app:layout_constraintTop_toBottomOf="@id/spacex_switch" />
 
@@ -135,10 +140,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/ula"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/isro_switch"
                     app:layout_constraintStart_toStartOf="@+id/roscosmos_switch"
                     app:layout_constraintTop_toBottomOf="@id/roscosmos_switch" />
 
@@ -148,10 +155,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="Blue Origin"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/spacex_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/rl_switch"
                     app:layout_constraintTop_toBottomOf="@+id/rl_switch" />
 
@@ -161,10 +171,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/arianespace"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/roscosmos_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/bo_switch"
                     app:layout_constraintTop_toBottomOf="@+id/bo_switch" />
 
@@ -174,10 +187,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/isro"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/ula_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/arianespace_switch"
                     app:layout_constraintTop_toBottomOf="@+id/arianespace_switch" />
 
@@ -186,10 +202,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="Northrop Gruman"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/isro_switch"
                     app:layout_constraintStart_toStartOf="@+id/ula_switch"
                     app:layout_constraintTop_toBottomOf="@+id/ula_switch" />
 
@@ -203,6 +221,7 @@
                     android:text="Rocket Labs"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/nasa_switch"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/nasa_switch"
@@ -228,11 +247,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="China"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/ples_switch"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/ples_switch"
@@ -241,13 +261,14 @@
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/KSC_switch"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:checked="false"
-                    android:text="@string/kennedy_space_center"
+                    android:text="Kennedy Space Center / Cape Canaveral"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/van_switch"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/casc_switch"
                     app:layout_constraintTop_toBottomOf="@+id/casc_switch" />
@@ -261,6 +282,7 @@
                     android:text="@string/vandenberg_afb"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/KSC_switch"
                     app:layout_constraintStart_toStartOf="@+id/ples_switch"
                     app:layout_constraintTop_toBottomOf="@+id/ples_switch" />
 
@@ -273,6 +295,7 @@
                     android:text="Wallops Island"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/japan_switch"
                     app:layout_constraintStart_toStartOf="@+id/ples_switch"
                     app:layout_constraintTop_toBottomOf="@+id/van_switch" />
 
@@ -285,6 +308,7 @@
                     android:text="New Zealand"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/french_guiana_switch"
                     app:layout_constraintStart_toStartOf="@+id/ples_switch"
                     app:layout_constraintTop_toBottomOf="@+id/wallops_switch" />
 
@@ -293,10 +317,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="Japan"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/wallops_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/casc_switch"
                     app:layout_constraintTop_toBottomOf="@+id/KSC_switch" />
 
@@ -305,10 +332,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="French Guiana"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/new_zealand_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/casc_switch"
                     app:layout_constraintTop_toBottomOf="@+id/japan_switch" />
 
