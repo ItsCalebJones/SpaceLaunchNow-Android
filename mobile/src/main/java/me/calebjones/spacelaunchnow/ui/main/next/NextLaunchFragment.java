@@ -92,7 +92,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @BindView(R.id.isro_switch)
     AppCompatCheckBox isroSwitch;
     @BindView(R.id.all_switch)
-    AppCompatCheckBox allSwitch;
+    SwitchCompat allSwitch;
+    @BindView(R.id.all_info)
+    AppCompatImageView allInfo;
     @BindView(R.id.tbd_launch)
     SwitchCompat tbdLaunchSwitch;
     @BindView(R.id.persist_last_launch)
@@ -125,8 +127,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatCheckBox wallopsSwitch;
     @BindView(R.id.new_zealand_switch)
     AppCompatCheckBox newZealandSwitch;
-    @BindView(R.id.mojave_switch)
-    AppCompatCheckBox mojaveSwitch;
+    @BindView(R.id.japan_switch)
+    AppCompatCheckBox japanSwitch;
     @BindView(R.id.french_guiana_switch)
     AppCompatCheckBox frenchGuianaSwitch;
 
@@ -282,7 +284,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         arianespaceSwitch.setChecked(switchPreferences.getSwitchArianespace());
         cascSwitch.setChecked(switchPreferences.getSwitchCASC());
         isroSwitch.setChecked(switchPreferences.getSwitchISRO());
-        plesSwitch.setChecked(switchPreferences.getSwitchPles());
+        plesSwitch.setChecked(switchPreferences.getSwitchRussia());
         vanSwitch.setChecked(switchPreferences.getSwitchVan());
         kscSwitch.setChecked(switchPreferences.getSwitchKSC());
         blueOriginSwitch.setChecked(switchPreferences.getSwitchBO());
@@ -292,7 +294,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         wallopsSwitch.setChecked(switchPreferences.getSwitchWallops());
         newZealandSwitch.setChecked(switchPreferences.getSwitchNZ());
         frenchGuianaSwitch.setChecked(switchPreferences.getSwitchFG());
-        mojaveSwitch.setChecked(switchPreferences.getSwitchMojave());
+        japanSwitch.setChecked(switchPreferences.getSwitchJapan());
         persistLastSwitch.setChecked(switchPreferences.getPersistSwitch());
     }
 
@@ -619,6 +621,27 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         checkAll();
     }
 
+    @OnClick(R.id.wallops_switch)
+    public void wallops_switch() {
+        confirm();
+        switchPreferences.setSwitchWallops(!switchPreferences.getSwitchWallops());
+        checkAll();
+    }
+
+    @OnClick(R.id.new_zealand_switch)
+    public void new_zealand_switch() {
+        confirm();
+        switchPreferences.setSwitchNZ(!switchPreferences.getSwitchNZ());
+        checkAll();
+    }
+
+    @OnClick(R.id.french_guiana_switch)
+    public void french_guiana_switch() {
+        confirm();
+        switchPreferences.setSwitchFG(!switchPreferences.getSwitchFG());
+        checkAll();
+    }
+
     @OnClick(R.id.ula_switch)
     public void ula_switch() {
         confirm();
@@ -657,7 +680,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @OnClick(R.id.ples_switch)
     public void ples_switch() {
         confirm();
-        switchPreferences.setSwitchPles(plesSwitch.isChecked());
+        switchPreferences.setSwitchRussia(plesSwitch.isChecked());
         checkAll();
     }
 
@@ -679,6 +702,13 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void rl_switch() {
         confirm();
         switchPreferences.setSwitchRL(!switchPreferences.getSwitchRL());
+        checkAll();
+    }
+
+    @OnClick(R.id.northrop_switch)
+    public void northrop_switch() {
+        confirm();
+        switchPreferences.setSwitchNorthrop(!switchPreferences.getSwitchNorthrop());
         checkAll();
     }
 
@@ -707,7 +737,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         startActivity(intent);
     }
 
-    @OnClick({R.id.tbd_info, R.id.last_launch_info})
+    @OnClick({R.id.tbd_info, R.id.last_launch_info, R.id.all_info})
     public void onViewClicked(View view) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
         dialog.positiveText("Ok");
@@ -717,6 +747,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 break;
             case R.id.last_launch_info:
                 dialog.title(R.string.launch_info).content(R.string.launch_info_description).show();
+                break;
+            case R.id.all_info:
+                dialog.title("Follow All Launches").content("This option follows all launches available, some of which do not fit neatly into a category listed above.").show();
                 break;
         }
     }

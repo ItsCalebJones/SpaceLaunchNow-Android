@@ -7,7 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="gone"
-    android:elevation="2dp">
+    android:elevation="2dp"
+    tools:visibility="visible"
+    tools:background="@color/primary">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -287,12 +289,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/wallops_switch" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/mojave_switch"
+                    android:id="@+id/japan_switch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:checked="false"
-                    android:text="Mojave"
+                    android:text="Japan"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintStart_toStartOf="@+id/casc_switch"
@@ -308,22 +310,42 @@
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintStart_toStartOf="@+id/casc_switch"
-                    app:layout_constraintTop_toBottomOf="@+id/mojave_switch" />
+                    app:layout_constraintTop_toBottomOf="@+id/japan_switch" />
 
-                <androidx.appcompat.widget.AppCompatCheckBox
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/all_switch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
                     android:checked="false"
-                    android:text="@string/all"
+                    android:text="Follow All Launches"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/french_guiana_switch"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/all_info"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintHorizontal_weight="0.8"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/new_zealand_switch" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/all_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight=".20"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_about"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="0.2"
+                    app:layout_constraintStart_toEndOf="@+id/all_switch"
+                    app:layout_constraintTop_toTopOf="@+id/all_switch" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

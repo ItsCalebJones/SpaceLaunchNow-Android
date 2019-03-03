@@ -294,7 +294,7 @@ public class LaunchApplication extends MultiDexApplication {
         boolean success = Prefs.getBoolean("success", true);
 
         boolean all = switchPreferences.getAllSwitch();
-        boolean ples = switchPreferences.getSwitchPles();
+        boolean ples = switchPreferences.getSwitchRussia();
         boolean ksc = switchPreferences.getSwitchKSC();
         boolean van = switchPreferences.getSwitchVan();
         boolean isro = switchPreferences.getSwitchISRO();
@@ -307,7 +307,7 @@ public class LaunchApplication extends MultiDexApplication {
         boolean blueOrigin = switchPreferences.getSwitchBO();
         boolean rocketLab = switchPreferences.getSwitchRL();
         boolean frenchGuiana = switchPreferences.getSwitchFG();
-        boolean mojave = switchPreferences.getSwitchMojave();
+        boolean japan = switchPreferences.getSwitchJapan();
         boolean wallops = switchPreferences.getSwitchWallops();
         boolean northrop = switchPreferences.getSwitchNorthrop();
         boolean newZealand = switchPreferences.getSwitchNZ();
@@ -325,9 +325,9 @@ public class LaunchApplication extends MultiDexApplication {
         }
 
         if (ples) {
-            firebaseMessaging.subscribeToTopic("ples");
+            firebaseMessaging.subscribeToTopic("russia");
         } else {
-            firebaseMessaging.unsubscribeFromTopic("ples");
+            firebaseMessaging.unsubscribeFromTopic("russia");
         }
 
         if (van) {
@@ -343,9 +343,9 @@ public class LaunchApplication extends MultiDexApplication {
         }
 
         if (casc) {
-            firebaseMessaging.subscribeToTopic("casc");
+            firebaseMessaging.subscribeToTopic("china");
         } else {
-            firebaseMessaging.unsubscribeFromTopic("casc");
+            firebaseMessaging.unsubscribeFromTopic("china");
         }
 
         if (ariane) {
@@ -396,10 +396,10 @@ public class LaunchApplication extends MultiDexApplication {
             firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
         }
 
-        if (mojave) {
-            firebaseMessaging.subscribeToTopic("mojave");
+        if (japan) {
+            firebaseMessaging.subscribeToTopic("japan");
         } else {
-            firebaseMessaging.unsubscribeFromTopic("mojave");
+            firebaseMessaging.unsubscribeFromTopic("japan");
         }
 
         if (wallops) {

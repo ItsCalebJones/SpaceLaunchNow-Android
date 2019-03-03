@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.common.content.util;
 
 import android.content.Context;
 
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -111,7 +112,13 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 88);
+            query.equalTo("pad.location.id", 17);
+            query.or();
+            query.equalTo("pad.location.id", 19);
+            query.or();
+            query.equalTo("pad.location.id", 33);
+            query.or();
+            query.equalTo("pad.location.id", 16);
         }
 
         if (switchPreferences.getSwitchISRO()) {
@@ -121,6 +128,35 @@ public class QueryBuilder {
                 first = false;
             }
             query.equalTo("rocket.configuration.launchServiceProvider.id", 31);
+            query.or();
+            query.equalTo("pad.location.id", 14);
+        }
+
+        if (switchPreferences.getSwitchBO()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 141);
+        }
+
+        if (switchPreferences.getSwitchRL()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 147);
+        }
+
+        if (switchPreferences.getSwitchNorthrop()) {
+            if (!first) {
+                query.or();
+            } else {
+                first = false;
+            }
+            query.equalTo("rocket.configuration.launchServiceProvider.id", 257);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -129,32 +165,65 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("pad.location.id", 17);
+            query.equalTo("pad.location.id", 27);
+            query.or();
+            query.equalTo("pad.location.id", 12);
         }
 
-        if (switchPreferences.getSwitchKSC()) {
+        if (switchPreferences.getSwitchFG()) {
             if (!first) {
                 query.or();
             } else {
                 first = false;
             }
-            query.equalTo("pad.location.id", 16);
+            query.equalTo("pad.location.id", 13);
         }
 
-        if (switchPreferences.getSwitchPles()) {
+
+        if (switchPreferences.getSwitchRussia()) {
             if (!first) {
                 query.or();
             } else {
                 first = false;
             }
-            query.equalTo("pad.location.id", 11);
+            query.equalTo("pad.location.id", 15);
+            query.or();
+            query.equalTo("pad.location.id", 5);
+            query.or();
+            query.equalTo("pad.location.id", 6);
+            query.or();
+            query.equalTo("pad.location.id", 18);
         }
 
         if (switchPreferences.getSwitchVan()) {
             if (!first) {
                 query.or();
             }
-            query.equalTo("pad.location.id", 18);
+            query.equalTo("pad.location.id", 11);
+        }
+
+        if (switchPreferences.getSwitchWallops()) {
+            if (!first) {
+                query.or();
+            }
+            query.equalTo("pad.location.id", 21);
+        }
+
+        if (switchPreferences.getSwitchNZ()) {
+            if (!first) {
+                query.or();
+            }
+            query.equalTo("pad.location.id", 10);
+        }
+
+
+        if (switchPreferences.getSwitchJapan()) {
+            if (!first) {
+                query.or();
+            }
+            query.equalTo("pad.location.id", 9);
+            query.or();
+            query.equalTo("pad.location.id", 41);
         }
 
         query.endGroup();
@@ -260,7 +329,7 @@ public class QueryBuilder {
             query.equalTo("pad.location.id", 16);
         }
 
-        if (switchPreferences.getSwitchPles()) {
+        if (switchPreferences.getSwitchRussia()) {
             if (!first) {
                 query.or();
             } else {
@@ -375,7 +444,7 @@ public class QueryBuilder {
             query.equalTo("pad.location.id", 16);
         }
 
-        if (switchPreferences.getSwitchPles()) {
+        if (switchPreferences.getSwitchRussia()) {
             if (!first) {
                 query.or();
             } else {

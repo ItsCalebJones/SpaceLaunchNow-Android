@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.Arrays;
 
@@ -60,7 +58,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     private static String PREFS_SWITCH_CAPE;
     private static String PREFS_SWITCH_KSC;
     private static String PREFS_SWITCH_WALLOPS;
-    private static String PREFS_SWITCH_MOJAVE;
+    private static String PREFS_SWITCH_JAPAN;
     private static String PREFS_SWITCH_NZ;
     private static String PREFS_SWITCH_FG;
     private static String PREFS_SWITCH_NORTHROP;
@@ -100,7 +98,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         PREFS_SWITCH_KSC = "SWITCH_KSC";
         PREFS_SWITCH_PLES = "SWITCH_PLES";
         PREFS_SWITCH_WALLOPS = "SWITCH_WALLOPS";
-        PREFS_SWITCH_MOJAVE  = "SWITCH_MOJAVE";
+        PREFS_SWITCH_JAPAN = "SWITCH_MOJAVE";
         PREFS_SWITCH_NZ = "SWITCH_NZ";
         PREFS_SWITCH_FG = "SWITCH_FG";
         PREFS_SWITCH_NORTHROP = "SWITCH_NORTHROP";
@@ -524,20 +522,20 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
 
 
     //Nasa Switch
-    public boolean getSwitchPles() {
+    public boolean getSwitchRussia() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_SWITCH_PLES, true);
     }
 
-    public void setSwitchPles(boolean key) {
+    public void setSwitchRussia(boolean key) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_PLES, key);
         this.prefsEditor.apply();
         if (key) {
-            firebaseMessaging.subscribeToTopic("ples");
+            firebaseMessaging.subscribeToTopic("russia");
         } else {
-            firebaseMessaging.unsubscribeFromTopic("ples");
+            firebaseMessaging.unsubscribeFromTopic("russia");
         }
     }
 
@@ -680,9 +678,9 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor.putBoolean(PREFS_SWITCH_CASC, key);
         this.prefsEditor.apply();
         if (key) {
-            firebaseMessaging.subscribeToTopic("casc");
+            firebaseMessaging.subscribeToTopic("china");
         } else {
-            firebaseMessaging.unsubscribeFromTopic("casc");
+            firebaseMessaging.unsubscribeFromTopic("china");
         }
     }
 
@@ -772,20 +770,20 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    public boolean getSwitchMojave() {
+    public boolean getSwitchJapan() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_MOJAVE, true);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_JAPAN, true);
     }
 
     public void setSwitchMojave(boolean key) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_MOJAVE, key);
+        this.prefsEditor.putBoolean(PREFS_SWITCH_JAPAN, key);
         this.prefsEditor.apply();
         if (key) {
-            firebaseMessaging.subscribeToTopic("mojave");
+            firebaseMessaging.subscribeToTopic("japan");
         } else {
-            firebaseMessaging.unsubscribeFromTopic("mojave");
+            firebaseMessaging.unsubscribeFromTopic("japan");
         }
     }
 
@@ -817,7 +815,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         setSwitchArianespace(true);
         setSwitchCASC(true);
         setSwitchKSC(true);
-        setSwitchPles(true);
+        setSwitchRussia(true);
         setSwitchVan(true);
         setSwitchBO(true);
         setSwitchRL(true);

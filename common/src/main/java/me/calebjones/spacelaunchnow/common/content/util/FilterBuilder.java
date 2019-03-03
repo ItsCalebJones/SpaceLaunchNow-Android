@@ -13,51 +13,50 @@ public class FilterBuilder {
 
         ArrayList<Integer> location_ids = new ArrayList<Integer>();
 
-        if (switchPreferences.getSwitchNasa()) {
-            location_ids.add(44);
-        }
-
-        if (switchPreferences.getSwitchArianespace()) {
-            location_ids.add(115);
-        }
-
-        if (switchPreferences.getSwitchSpaceX()) {
-            location_ids.add(121);
-        }
-
-        if (switchPreferences.getSwitchULA()) {
-            location_ids.add(124);
-        }
-
-        if (switchPreferences.getSwitchRoscosmos()) {
-            location_ids.add(111);
-            location_ids.add(163);
-            location_ids.add(63);
-        }
         if (switchPreferences.getSwitchCASC()) {
-            location_ids.add(88);
+            location_ids.add(17);
+            location_ids.add(19);
+            location_ids.add(8);
+            location_ids.add(16);
         }
 
         if (switchPreferences.getSwitchISRO()) {
-            location_ids.add(31);
+            location_ids.add(14);
         }
 
         if (switchPreferences.getSwitchKSC()) {
-            location_ids.add(16);
-            location_ids.add(17);
+            location_ids.add(27);
+            location_ids.add(12);
         }
 
-        if (switchPreferences.getSwitchKSC()) {
-
-        }
-
-        if (switchPreferences.getSwitchPles()) {
-            location_ids.add(11);
+        if (switchPreferences.getSwitchRussia()) {
+            location_ids.add(15);
+            location_ids.add(5);
+            location_ids.add(6);
+            location_ids.add(18);
         }
 
         if (switchPreferences.getSwitchVan()) {
-            location_ids.add(18);
+            location_ids.add(11);
         }
+
+        if (switchPreferences.getSwitchWallops()) {
+            location_ids.add(21);
+        }
+
+        if (switchPreferences.getSwitchNZ()) {
+            location_ids.add(10);
+        }
+
+        if (switchPreferences.getSwitchJapan()) {
+            location_ids.add(24);
+            location_ids.add(26);
+        }
+
+        if (switchPreferences.getSwitchFG()) {
+            location_ids.add(13);
+        }
+
         return listToString(location_ids);
     }
 
@@ -87,12 +86,21 @@ public class FilterBuilder {
             lsp_ids.add(163);
             lsp_ids.add(63);
         }
-        if (switchPreferences.getSwitchCASC()) {
-            lsp_ids.add(88);
-        }
 
         if (switchPreferences.getSwitchISRO()) {
             lsp_ids.add(31);
+        }
+
+        if (switchPreferences.getSwitchBO()) {
+            lsp_ids.add(141);
+        }
+
+        if (switchPreferences.getSwitchRL()) {
+            lsp_ids.add(147);
+        }
+
+        if (switchPreferences.getSwitchNorthrop()) {
+            lsp_ids.add(257);
         }
 
         return listToString(lsp_ids);
