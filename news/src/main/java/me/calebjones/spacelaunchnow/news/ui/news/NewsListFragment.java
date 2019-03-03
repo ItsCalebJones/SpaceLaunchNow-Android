@@ -41,8 +41,6 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
     private LinearLayoutManager linearLayoutManager;
     private List<Integer> statusIDs;
     private Integer[] statusIDsSelection;
-    private boolean limitReached;
-
     private RecyclerView recyclerView;
     private SimpleStatefulLayout statefulView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -88,7 +86,6 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
         }
 
         canLoadMore = true;
-        limitReached = false;
         statefulView.setOfflineRetryOnClickListener(v -> onRefresh());
         fetchData(false, firstLaunch, false);
         firstLaunch = false;
@@ -104,40 +101,36 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
 
         if (forceRefresh || searchQuery) {
             eventCount = 0;
-            limitReached = false;
             adapter.clear();
         }
+        dataRepository.getNews(limit, forceRefresh, new Callbacks.NewsListCallback() {
+            @Override
+            public void onNewsLoaded(RealmResults<NewsItem> news) {
+                if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.CREATED)) {
+                    updateAdapter(news);
+                }
+            }
 
-        if (!limitReached) {
-            dataRepository.getNews(limit, forceRefresh, new Callbacks.NewsListCallback() {
-                @Override
-                public void onNewsLoaded(RealmResults<NewsItem> news) {
-                    if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-                        updateAdapter(news);
+            @Override
+            public void onNetworkStateChanged(boolean refreshing) {
+                if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    showNetworkLoading(refreshing);
+                }
+            }
+
+            @Override
+            public void onError(String message, @Nullable Throwable throwable) {
+                if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    statefulView.showOffline();
+                    statefulStateContentShow = false;
+                    if (throwable != null) {
+                        Timber.e(throwable);
+                    } else {
+                        Timber.e(message);
                     }
                 }
-
-                @Override
-                public void onNetworkStateChanged(boolean refreshing) {
-                    if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-                        showNetworkLoading(refreshing);
-                    }
-                }
-
-                @Override
-                public void onError(String message, @Nullable Throwable throwable) {
-                    if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-                        statefulView.showOffline();
-                        statefulStateContentShow = false;
-                        if (throwable != null) {
-                            Timber.e(throwable);
-                        } else {
-                            Timber.e(message);
-                        }
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 
 

@@ -14,15 +14,15 @@ public class NewsItem extends RealmObject {
     private String id;
     @SerializedName("title")
     private String title;
-    @SerializedName("newsSiteLong")
+    @SerializedName("news_site_long")
     private String newsSiteLong;
-    @SerializedName("newsSite")
+    @SerializedName("news_site")
     private String newsSite;
     @SerializedName("featured_image")
     private String featured_image;
     @SerializedName("url")
     private String url;
-    @SerializedName("datePublished")
+    @SerializedName("date_published")
     private int datePublished;
     private Date lastUpdate;
 

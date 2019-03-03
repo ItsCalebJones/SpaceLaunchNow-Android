@@ -13,6 +13,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
@@ -116,7 +117,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         private TextView articleSite;
         private TextView articleTitle;
         private TextView articlePublicationDate;
-        private TextView rootView;
+        private CoordinatorLayout rootView;
 
 
         public ViewHolder(View view) {
