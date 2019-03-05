@@ -5,6 +5,17 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 6-11-2018
 ---
+### Version 3.0.0
+#### Overview
+A large update adding Astronaut information, Spacestation data and Event notifications!
+
+#### Changelog
+* Added Astronauts - check crew onboard a flight or Spacestation.
+* Added Spacestations - view history of Spacestations and expeditions to active stations.
+* Added Events - track post-launch events like dockings, departures, landings, etc.
+* Added additional launch notification filters.
+* Various bug fixes and usability improvements.
+
 ### Version 2.7.0
 #### Overview
 Added notifications for launch failures and partial-failure, bug fixes!

@@ -11,10 +11,13 @@ import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.news.R;
@@ -52,7 +55,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         NewsItem news = newsList.get(position);
         holder.articleTitle.setText(news.getTitle());
         holder.articleSite.setText(news.getNewsSiteLong());
-        holder.articlePublicationDate.setText(DateFormat.getDateInstance(DateFormat.LONG).format((news.getDatePublished() * 1000)));
+        Date published = new Date(news.getDatePublished() * 1000);
+        holder.articlePublicationDate.setText(DateFormat.getDateInstance(DateFormat.LONG).format(((long) news.getDatePublished() * 1000)));
         if (news.getFeatured_image() != null) {
             GlideApp.with(context)
                     .load(news.getFeatured_image())
@@ -61,37 +65,37 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
                     .into(holder.articleImage);
         } else {
             String link = news.getNewsSite();
-            if (link.contains("spaceflightnow")){
+            if (link.contains("spaceflightnow")) {
                 GlideApp.with(context)
                         .load(context.getResources().getString(R.string.spaceflightnow_logo))
                         .centerCrop()
                         .placeholder(R.drawable.placeholder)
                         .into(holder.articleImage);
-            } else if (link.contains("spaceflight101")){
+            } else if (link.contains("spaceflight101")) {
                 GlideApp.with(context)
                         .load(context.getResources().getString(R.string.spaceflight_101))
                         .centerCrop()
                         .placeholder(R.drawable.placeholder)
                         .into(holder.articleImage);
-            } else if (link.contains("spacenews")){
+            } else if (link.contains("spacenews")) {
                 GlideApp.with(context)
                         .load(context.getResources().getString(R.string.spacenews_logo))
                         .centerCrop()
                         .placeholder(R.drawable.placeholder)
                         .into(holder.articleImage);
-            } else if (link.contains("nasaspaceflight")){
+            } else if (link.contains("nasaspaceflight")) {
                 GlideApp.with(context)
                         .load(context.getResources().getString(R.string.nasaspaceflight_logo))
                         .centerCrop()
                         .placeholder(R.drawable.placeholder)
                         .into(holder.articleImage);
-            } else if (link.contains("nasa.gov")){
+            } else if (link.contains("nasa.gov")) {
                 GlideApp.with(context)
                         .load(context.getResources().getString(R.string.NASA_logo))
                         .centerCrop()
                         .placeholder(R.drawable.placeholder)
                         .into(holder.articleImage);
-            } else if (link.contains("spacex.com")){
+            } else if (link.contains("spacex.com")) {
                 GlideApp.with(context)
                         .load(context.getResources().getString(R.string.spacex_logo))
                         .centerCrop()

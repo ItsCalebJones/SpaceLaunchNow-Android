@@ -10,8 +10,10 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
@@ -39,6 +41,7 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
     private Unbinder unbinder;
     private NewsRecyclerViewAdapter adapter;
     private LinearLayoutManager linearLayoutManager;
+    private StaggeredGridLayoutManager layoutManager;
     private List<Integer> statusIDs;
     private Integer[] statusIDsSelection;
     private RecyclerView recyclerView;
@@ -76,8 +79,9 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
         // Set the adapter
         Context context = view.getContext();
         adapter = new NewsRecyclerViewAdapter(context);
-        linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         if (firstLaunch) {
             statefulView.showProgress();
