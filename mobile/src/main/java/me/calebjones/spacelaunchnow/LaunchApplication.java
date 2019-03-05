@@ -271,15 +271,18 @@ public class LaunchApplication extends MultiDexApplication {
     }
 
     private void setupNotification() {
+        firebaseMessaging.unsubscribeFromTopic("debug");
+        firebaseMessaging.unsubscribeFromTopic("production");
+
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
-            firebaseMessaging.subscribeToTopic("debug");
-            firebaseMessaging.unsubscribeFromTopic("production");
+            firebaseMessaging.subscribeToTopic("debug_v2");
+            firebaseMessaging.unsubscribeFromTopic("prod_v2");
 
         } else {
             Timber.plant(new CrashlyticsTree(context));
-            firebaseMessaging.subscribeToTopic("production");
-            firebaseMessaging.unsubscribeFromTopic("debug");
+            firebaseMessaging.subscribeToTopic("prod_v2");
+            firebaseMessaging.unsubscribeFromTopic("debug_v2");
         }
         migrateNotifications();
 
@@ -478,6 +481,7 @@ public class LaunchApplication extends MultiDexApplication {
 
     private void migrateNotifications() {
         if (!Once.beenDone("migrateNotifications")) {
+            Once.markDone("migrateNotifications");
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
             boolean notificationEnabled = prefs.getBoolean("notifications_new_message", true);
             boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", true);
