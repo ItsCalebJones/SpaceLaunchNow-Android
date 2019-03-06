@@ -27,6 +27,7 @@ import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
+import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import timber.log.Timber;
@@ -34,6 +35,7 @@ import timber.log.Timber;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_IMMINENT;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_REMINDER;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_SILENT;
+import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_NEWS_NAME;
 
 public class NotificationBuilder {
 
@@ -405,5 +407,118 @@ public class NotificationBuilder {
         title = launch.getName();
         expandedText = "Test Notification";
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
+    }
+
+    public static void notifyUserEventUpcoming(Context context, Event event) {
+        String title;
+        String expandedText;
+
+        title = "" + event.getName();
+        expandedText = event.getDescription();
+
+        buildEventNotification(context, event, title, expandedText, CHANNEL_NEWS_NAME);
+    }
+
+    public static void notifyUserEventWebcastLive(Context context, Event event) {
+        String title;
+        String expandedText;
+
+        title = "\uD83D\uDD34 Webcast Live - " + event.getName();
+        expandedText = event.getDescription();
+
+        buildEventNotification(context, event, title, expandedText, CHANNEL_NEWS_NAME);
+    }
+
+    private static void buildEventNotification(Context context, Event event, String title, String expandedText, String channelNewsName) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        NotificationCompat.Builder mBuilder;
+        NotificationManager mNotifyManager;
+        int notificationId;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationHelper notificationHelper = new NotificationHelper(context);
+            mBuilder = new NotificationCompat.Builder(context, CHANNEL_LAUNCH_REMINDER);
+            mNotifyManager = notificationHelper.getManager();
+        } else {
+            mBuilder = new NotificationCompat.Builder(context);
+            mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+
+        String launchPad = event.getLocation();
+        boolean isDoNotDisturb = sharedPref.getBoolean("do_not_disturb_status", false);
+
+        if (isDoNotDisturb) {
+            try {
+                isDoNotDisturb = isTimeBetweenTwoTime(sharedPref.getString("do_not_disturb_start_time", "22:00"),
+                        sharedPref.getString("do_not_disturb_end_time", "08:00"),
+                        new SimpleDateFormat("HH:mm").format(new Date()));
+            } catch (ParseException e) {
+                Timber.e(e);
+                isDoNotDisturb = false;
+            }
+        }
+
+//        Intent resultIntent = new Intent(context, LaunchDetailActivity.class);
+//        resultIntent.putExtra("TYPE", "launch");
+//        resultIntent.putExtra("launchID", launch.getId());
+//
+//        PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mBuilder.setSubText(launchPad);
+
+        NotificationCompat.WearableExtender wearableExtender =
+                new NotificationCompat.WearableExtender()
+                        .setHintHideIcon(true);
+
+        notificationId = (int) (event.getDate().getTime() / 1000);
+
+        mBuilder.setContentTitle(title)
+                .setSmallIcon(R.drawable.ic_rocket)
+                .setAutoCancel(true)
+                .setContentText(expandedText)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(expandedText))
+                .extend(wearableExtender);
+//                .setContentIntent(pending);
+
+        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
+                "default ringtone");
+        Uri alarmSound = Uri.parse(ringtoneBox);
+        if (isDoNotDisturb) {
+            mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
+        } else {
+            mBuilder.setChannelId(channelNewsName).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_EVENT);
+        }
+
+        if (event.getFeatureImage() != null
+                && event.getFeatureImage().length() > 0) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = Utils.getBitMapFromUrl(context, event.getFeatureImage());
+            } catch (ExecutionException | InterruptedException e) {
+                Timber.e(e);
+            }
+            if (bitmap != null) {
+                mBuilder.setLargeIcon(bitmap);
+                wearableExtender.setBackground(bitmap);
+            }
+        }
+
+        if (isDoNotDisturb) {
+            mBuilder.setPriority(Notification.PRIORITY_LOW);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
+                mBuilder.setPriority(Notification.PRIORITY_HIGH);
+            }
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
+                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
+            mBuilder.setVibrate(new long[]{750, 750});
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
+                && sharedPref.getBoolean("notifications_new_message_led", true)) {
+            mBuilder.setLights(Color.GREEN, 3000, 3000);
+        }
+
+        mNotifyManager.notify(notificationId, mBuilder.build());
     }
 }

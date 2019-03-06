@@ -35,6 +35,12 @@ public class Event extends RealmObject {
     @SerializedName("news_url")
     @Expose
     public String newsUrl;
+    @SerializedName("video_url")
+    @Expose
+    public String videoUrl;
+    @SerializedName("webcast_live")
+    @Expose
+    public Boolean webcastLive;
     @SerializedName("date")
     @Expose
     public Date date;
@@ -119,5 +125,21 @@ public class Event extends RealmObject {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
+    public Boolean getWebcastLive() {
+        return webcastLive;
+    }
+
+    public void setWebcastLive(Boolean webcastLive) {
+        this.webcastLive = webcastLive;
     }
 }
