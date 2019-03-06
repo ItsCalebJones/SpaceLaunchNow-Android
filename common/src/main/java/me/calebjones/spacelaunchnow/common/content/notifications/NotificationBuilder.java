@@ -457,6 +457,8 @@ public class NotificationBuilder {
             }
         }
 
+
+        //TODO Add Event detail and load that page.
 //        Intent resultIntent = new Intent(context, LaunchDetailActivity.class);
 //        resultIntent.putExtra("TYPE", "launch");
 //        resultIntent.putExtra("launchID", launch.getId());
