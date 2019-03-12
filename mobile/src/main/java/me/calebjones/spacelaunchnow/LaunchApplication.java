@@ -295,6 +295,7 @@ public class LaunchApplication extends MultiDexApplication {
         boolean oneMinute = Prefs.getBoolean("oneMinute", true);
         boolean inFlight = Prefs.getBoolean("inFlight", true);
         boolean success = Prefs.getBoolean("success", true);
+        boolean events = Prefs.getBoolean("eventNotifications", true);
 
         boolean all = switchPreferences.getAllSwitch();
         boolean ples = switchPreferences.getSwitchRussia();
@@ -319,6 +320,12 @@ public class LaunchApplication extends MultiDexApplication {
             firebaseMessaging.subscribeToTopic("all");
         } else {
             firebaseMessaging.unsubscribeFromTopic("all");
+        }
+
+        if (events) {
+            firebaseMessaging.subscribeToTopic("events");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("events");
         }
 
         if (ksc) {

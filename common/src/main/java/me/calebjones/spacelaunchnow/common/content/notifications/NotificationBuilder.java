@@ -35,6 +35,7 @@ import timber.log.Timber;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_IMMINENT;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_REMINDER;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_SILENT;
+import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_NEWS;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_NEWS_NAME;
 
 public class NotificationBuilder {
@@ -416,7 +417,7 @@ public class NotificationBuilder {
         title = "" + event.getName();
         expandedText = event.getDescription();
 
-        buildEventNotification(context, event, title, expandedText, CHANNEL_NEWS_NAME);
+        buildEventNotification(context, event, title, expandedText, CHANNEL_NEWS);
     }
 
     public static void notifyUserEventWebcastLive(Context context, Event event) {
@@ -426,7 +427,7 @@ public class NotificationBuilder {
         title = "\uD83D\uDD34 Webcast Live - " + event.getName();
         expandedText = event.getDescription();
 
-        buildEventNotification(context, event, title, expandedText, CHANNEL_NEWS_NAME);
+        buildEventNotification(context, event, title, expandedText, CHANNEL_NEWS);
     }
 
     private static void buildEventNotification(Context context, Event event, String title, String expandedText, String channelNewsName) {
@@ -436,7 +437,7 @@ public class NotificationBuilder {
         int notificationId;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationHelper notificationHelper = new NotificationHelper(context);
-            mBuilder = new NotificationCompat.Builder(context, CHANNEL_LAUNCH_REMINDER);
+            mBuilder = new NotificationCompat.Builder(context, CHANNEL_NEWS);
             mNotifyManager = notificationHelper.getManager();
         } else {
             mBuilder = new NotificationCompat.Builder(context);
@@ -459,11 +460,22 @@ public class NotificationBuilder {
 
 
         //TODO Add Event detail and load that page.
-//        Intent resultIntent = new Intent(context, LaunchDetailActivity.class);
-//        resultIntent.putExtra("TYPE", "launch");
-//        resultIntent.putExtra("launchID", launch.getId());
-//
-//        PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent resultIntent;
+        try {
+            resultIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        resultIntent.setAction("SHOW_EVENTS");
+        resultIntent.putExtra("SHOW_EVENTS", true);
+        resultIntent.putExtra("eventId", event.getId());
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent eventIntent = PendingIntent.getActivity(context,
+                2,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder.setSubText(launchPad);
 
@@ -479,8 +491,23 @@ public class NotificationBuilder {
                 .setContentText(expandedText)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(expandedText))
-                .extend(wearableExtender);
-//                .setContentIntent(pending);
+                .extend(wearableExtender)
+                .setContentIntent(eventIntent);
+
+//        if (event.getWebcastLive() && event.getVideoUrl() != null) {
+//            Intent watchLive = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getVideoUrl()));
+//
+//
+//
+//            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, watchLive, 0);
+//
+//            NotificationCompat.Action channelSettings =
+//                    new NotificationCompat.Action.Builder(R.drawable.ic_notifications_white,
+//                            "Watch Live", contentIntent)
+//                            .build();
+//
+//            mBuilder.addAction(channelSettings);
+//        }
 
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
                 "default ringtone");

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import org.json.JSONException;
@@ -23,6 +24,7 @@ import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Location;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.main.Rocket;
+import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import timber.log.Timber;
 
 public class AppFireBaseMessagingService extends FirebaseMessagingService {
@@ -117,7 +119,6 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
             }
 
             if (notificationType.contains("event_notification") && eventNotifications) {
-                if (checkWebcast(data, webcastOnly)) return;
                 NotificationBuilder.notifyUserEventUpcoming(context, getEventFromJSON(data));
             }
 
@@ -148,22 +149,8 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
         return launch;
     }
 
-    private Event getEventFromJSON(JSONObject data) throws JSONException, ParseException  {
-        Event event = new Event();
-        event.setId(data.getInt("event_id"));
-        event.setName(data.getString("event_name"));
-        event.setDescription(data.getString("event_description"));
-        EventType type = new EventType();
-        type.setId(data.getInt("event_type_id"));
-        type.setName(data.getString("event_type_name"));
-        event.setType(type);
-        event.setDate(dateFormat.parse(data.getString("event_date")));
-        event.setLocation(data.getString("event_location"));
-        event.setNewsUrl(data.getString("event_news_url"));
-        event.setVideoUrl(data.getString("event_video_url"));
-        event.setWebcastLive(data.getBoolean("event_webcast_live"));
-        event.setFeatureImage(data.getString("event_feature_image"));
-        return event;
+    private Event getEventFromJSON(JSONObject data) throws JSONException  {
+        return RetrofitBuilder.getGson().fromJson(data.getString("event"), Event.class);
     }
 
     private boolean checkWebcast(JSONObject data, boolean webcastOnly) throws JSONException {

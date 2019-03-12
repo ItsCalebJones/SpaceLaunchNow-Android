@@ -215,6 +215,13 @@
             android:summary="@string/settings_success_summary"
             android:title="@string/settings_success" />
         <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notificationEnabled"
+            android:key="eventNotifications"
+            android:summary="Receive notifications for post-launch spaceflight events and news."
+            android:title="Events and News Notifications"
+            app:iconSpaceReserved="false" />
+        <SwitchPreference
             android:defaultValue="false"
             app:iconSpaceReserved="false"
             android:dependency="notificationEnabled"

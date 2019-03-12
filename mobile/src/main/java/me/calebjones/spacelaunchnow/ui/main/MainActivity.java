@@ -196,6 +196,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             getIntent().setAction("");
             showFilter = true;
             mNavItemId = R.id.menu_home;
+        } else if (getIntent().getBooleanExtra("SHOW_EVENTS", false)) {
+            mNavItemId = R.id.menu_events;
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
@@ -411,8 +413,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     public void onResume() {
         super.onResume();
         Timber.v("onResume");
+
         if ("SHOW_FILTERS".equals(action)) {
             navigate(R.id.menu_favorite);
+        } else if (getIntent().getBooleanExtra("SHOW_EVENTS", false)) {
+            navigate(R.id.menu_events);
         } else {
             Timber.d("Navigate to initial fragment.");
             navigate(mNavItemId);
@@ -854,12 +859,12 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
     }
 
-    public void checkHideAd(){
-            hideAd();
+    public void checkHideAd() {
+        hideAd();
     }
 
-    public void checkShowAd(){
-        if (adviewEnabled){
+    public void checkShowAd() {
+        if (adviewEnabled) {
             showAd();
         }
     }
@@ -990,8 +995,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 public void onAdLoaded() {
                     Timber.d("Ad loaded successfully.");
                     adviewEnabled = true;
-                    if (mUpcomingFragment != null){
-                        if (!mUpcomingFragment.isFilterShown()){
+                    if (mUpcomingFragment != null) {
+                        if (!mUpcomingFragment.isFilterShown()) {
                             showAd();
                         }
                     } else {
