@@ -5,8 +5,10 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
@@ -228,7 +230,7 @@ public class CountDownView extends ConstraintLayout {
         final Date date = new Date(longdate);
 
         Calendar launchDate = DateToCalendar(date);
-        Calendar now = Calendar.getInstance();
+        Calendar now = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 
         now.setTimeInMillis(System.currentTimeMillis());
 
@@ -287,7 +289,7 @@ public class CountDownView extends ConstraintLayout {
     }
 
     public Calendar DateToCalendar(Date date) {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         cal.setTime(date);
         return cal;
     }

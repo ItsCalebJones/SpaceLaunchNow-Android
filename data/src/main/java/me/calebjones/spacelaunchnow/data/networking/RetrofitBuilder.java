@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -137,8 +138,8 @@ public class RetrofitBuilder {
     }
 
     private static final String[] DATE_FORMATS = new String[] {
-            "MMMM dd, yyyy HH:mm:ss zzz",
             "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "MMMM dd, yyyy HH:mm:ss zzz",
             "yyyy-MM-dd"
     };
 
@@ -150,7 +151,9 @@ public class RetrofitBuilder {
                                 JsonDeserializationContext context) throws JsonParseException {
             for (String format : DATE_FORMATS) {
                 try {
-                    return new SimpleDateFormat(format, Locale.US).parse(jsonElement.getAsString());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.US);      //This is the format I need
+                    dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                    return dateFormat.parse(jsonElement.getAsString());
                 } catch (ParseException e) {
                 }
             }
