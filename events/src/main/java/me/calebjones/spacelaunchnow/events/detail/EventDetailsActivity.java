@@ -166,8 +166,6 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
         Intent mIntent = getIntent();
         eventId = mIntent.getIntExtra("eventId", 0);
 
-        fetchData(eventId);
-
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
@@ -208,6 +206,7 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
         viewModel = ViewModelProviders.of(this).get(EventDetailViewModel.class);
         // update UI
         viewModel.getEvent().observe(this, this::updateViews);
+        fetchData(eventId);
     }
 
     private void enableDisableSwipeRefresh(boolean enable) {
@@ -217,6 +216,7 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
     }
 
     private void fetchData(int eventId) {
+
         eventDataRepository.getEventById(eventId, new Callbacks.EventCallback() {
             @Override
             public void onEventLoaded(Event event) {
@@ -282,7 +282,9 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
     }
 
     private void updateViewModel(Event event) {
-
+        adapter.clear();
+        expeditionAdapter.clear();
+        spacestationAdapter.clear();
         viewModel.getEvent().setValue(event);
     }
 
