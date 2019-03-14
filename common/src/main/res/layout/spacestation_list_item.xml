@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootview"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/spacestation_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="@dimen/material_baseline_grid_2x"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/launch_rocket"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_unknown" />
+
+
+    <TextView
+        android:id="@+id/spacestation_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/material_baseline_grid_1x"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="left"
+        android:maxLines="2"
+        android:text="@string/unknown_launch_vehicle"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toTopOf="@+id/spacestation_status"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/spacestation_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/spacestation_status"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:maxLines="2"
+        android:paddingBottom="2dp"
+        android:paddingRight="16dp"
+        android:singleLine="false"
+        android:text="@string/unknown_mission"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintBottom_toTopOf="@+id/spacestation_location"
+        app:layout_constraintEnd_toEndOf="@+id/spacestation_name"
+        app:layout_constraintStart_toEndOf="@+id/spacestation_icon"
+        app:layout_constraintTop_toBottomOf="@+id/spacestation_name" />
+
+    <TextView
+        android:id="@+id/spacestation_location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:maxLines="2"
+        android:paddingRight="16dp"
+        android:paddingBottom="2dp"
+        android:singleLine="false"
+        android:text="@string/unknown_launch_location"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintEnd_toEndOf="@+id/spacestation_name"
+        app:layout_constraintStart_toStartOf="@+id/spacestation_status"
+        app:layout_constraintTop_toBottomOf="@+id/spacestation_status" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

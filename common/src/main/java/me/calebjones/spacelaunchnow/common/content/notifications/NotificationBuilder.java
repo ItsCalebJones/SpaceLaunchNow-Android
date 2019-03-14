@@ -462,14 +462,11 @@ public class NotificationBuilder {
         //TODO Add Event detail and load that page.
         Intent resultIntent;
         try {
-            resultIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
+            resultIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.events.detail.EventDetailsActivity"));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return;
         }
-
-        resultIntent.setAction("SHOW_EVENTS");
-        resultIntent.putExtra("SHOW_EVENTS", true);
         resultIntent.putExtra("eventId", event.getId());
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent eventIntent = PendingIntent.getActivity(context,

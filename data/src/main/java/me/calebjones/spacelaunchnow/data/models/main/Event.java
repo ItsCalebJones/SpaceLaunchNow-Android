@@ -4,9 +4,13 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.List;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 
 public class Event extends RealmObject {
 
@@ -44,6 +48,27 @@ public class Event extends RealmObject {
     @SerializedName("date")
     @Expose
     public Date date;
+
+    @SerializedName("launches")
+    private RealmList<LaunchList> launches;
+
+    public RealmList<LaunchList> getLaunches() {
+        return launches;
+    }
+
+    @SerializedName("expeditions")
+    private RealmList<Expedition> expeditions;
+
+    public RealmList<Expedition> getExpeditions() {
+        return expeditions;
+    }
+
+    @SerializedName("spacestations")
+    private RealmList<Spacestation> spacestations;
+
+    public RealmList<Spacestation> getSpacestations() {
+        return spacestations;
+    }
 
     private Date lastUpdate;
 

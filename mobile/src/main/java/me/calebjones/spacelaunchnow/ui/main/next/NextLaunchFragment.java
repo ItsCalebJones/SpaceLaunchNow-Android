@@ -384,9 +384,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     Timber.e(throwable);
                 } else {
                     Timber.e(message);
+                    if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
+                    }
+                }if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
             }
         });
     }

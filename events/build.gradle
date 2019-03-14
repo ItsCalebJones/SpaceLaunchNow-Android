@@ -73,6 +73,7 @@ dependencies {
 
     implementation deps.glide
     annotationProcessor deps.glideCompiler
+    implementation deps.glideTransformation
 
     implementation deps.playAds
 }

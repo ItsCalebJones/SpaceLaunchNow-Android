@@ -9,7 +9,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/material_baseline_grid_1x"
+        android:layout_margin="@dimen/material_baseline_grid_0.5x"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 

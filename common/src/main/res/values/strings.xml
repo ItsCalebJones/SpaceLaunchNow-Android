@@ -477,6 +477,7 @@
     <string name="start_fill">Start: %s</string>
     <string name="end_fill">End: %s</string>
     <string name="spacestations">Spacestations</string>
+    <string name="spacestation">Spacestation</string>
     <string name="astronauts">Astronauts</string>
     <string name="events">Events</string>
     <string name="favorites">Favorites</string>

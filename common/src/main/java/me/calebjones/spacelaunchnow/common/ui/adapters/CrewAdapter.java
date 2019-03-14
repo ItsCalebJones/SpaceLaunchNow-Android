@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.spacestation.detail.fragments.expeditions;
+package me.calebjones.spacelaunchnow.common.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,14 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
-import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
+import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.AstronautFlight;
-import me.calebjones.spacelaunchnow.spacestation.R;
 
 public class CrewAdapter extends RecyclerView.Adapter<CrewAdapter.ViewHolder> {
 
@@ -56,7 +54,9 @@ public class CrewAdapter extends RecyclerView.Adapter<CrewAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return astronauts.size();
+        if (astronauts!= null) {
+            return astronauts.size();
+        } else return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

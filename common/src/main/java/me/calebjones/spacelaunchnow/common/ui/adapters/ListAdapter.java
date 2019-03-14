@@ -212,7 +212,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         TextView landingLocation;
         @BindView(R2.id.landing_pill_mini)
         CardView landingCard;
-        @BindView(R2.id.launcher)
+        @BindView(R2.id.launcher_name)
         TextView orbitName;
         @BindView(R2.id.launcher_pill_mini)
         CardView orbitCard;

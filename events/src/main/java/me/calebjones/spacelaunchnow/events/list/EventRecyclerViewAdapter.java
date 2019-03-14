@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.events.list;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.events.R;
 import me.calebjones.spacelaunchnow.events.R2;
+import me.calebjones.spacelaunchnow.events.detail.EventDetailsActivity;
 
 
 public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecyclerViewAdapter.ViewHolder> {
@@ -60,12 +62,6 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         holder.eventDescription.setText(holder.mItem.getDescription());
         holder.eventType.setText(holder.mItem.getType().getName());
 
-        if (holder.mItem.getNewsUrl() != null){
-            holder.details.setVisibility(View.VISIBLE);
-        } else {
-            holder.details.setVisibility(View.GONE);
-        }
-
         GlideApp.with(context)
                 .load(holder.mItem.getFeatureImage())
                 .placeholder(R.drawable.placeholder)
@@ -100,7 +96,9 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         @OnClick(R2.id.details)
         void onClick(View v){
             Event event = events.get(getAdapterPosition());
-            Utils.openCustomTab(context, event.getNewsUrl());
+            Intent intent = new Intent(context, EventDetailsActivity.class);
+            intent.putExtra("eventId", event.getId());
+            context.startActivity(intent);
         }
     }
 }

@@ -14,7 +14,7 @@
 
 
         <TextView
-            android:id="@+id/launcher"
+            android:id="@+id/launcher_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"

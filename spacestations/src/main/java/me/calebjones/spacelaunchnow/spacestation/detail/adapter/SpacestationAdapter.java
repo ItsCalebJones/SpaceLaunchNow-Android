@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -21,7 +20,7 @@ import me.calebjones.spacelaunchnow.data.models.main.spacestation.DockingEvent;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.spacestation.R;
-import me.calebjones.spacelaunchnow.spacestation.detail.fragments.expeditions.CrewAdapter;
+import me.calebjones.spacelaunchnow.common.ui.adapters.CrewAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
