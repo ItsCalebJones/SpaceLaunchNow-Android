@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
@@ -8,9 +7,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.webkit.WebView;
@@ -25,6 +24,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.jaredrummler.cyanea.Cyanea;
 import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
@@ -39,31 +39,33 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import jonathanfinerty.once.Once;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.jobs.DataJobCreator;
-import me.calebjones.spacelaunchnow.content.jobs.SyncCalendarJob;
-import me.calebjones.spacelaunchnow.content.jobs.SyncJob;
-import me.calebjones.spacelaunchnow.content.jobs.SyncWearJob;
-import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
-import me.calebjones.spacelaunchnow.content.notifications.NotificationHelper;
+import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
+import me.calebjones.spacelaunchnow.common.content.jobs.DataJobCreator;
+import me.calebjones.spacelaunchnow.common.content.jobs.SyncCalendarJob;
+import me.calebjones.spacelaunchnow.common.content.jobs.SyncWearJob;
+import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
+import me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.utils.Connectivity;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
+import me.calebjones.spacelaunchnow.widgets.WidgetJobCreator;
 import timber.log.Timber;
 
-public class LaunchApplication extends Application {
+public class LaunchApplication extends MultiDexApplication {
 
     public static final String TAG = "Space Launch Now";
     private static ListPreferences sharedPreference;
@@ -73,13 +75,18 @@ public class LaunchApplication extends Application {
     private FirebaseMessaging firebaseMessaging;
     private BillingProcessor bp;
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = this;
         firebaseMessaging = FirebaseMessaging.getInstance();
-
+        Cyanea.init(this, getResources());
         setupAndCheckOnce();
         setupAds();
         setupPreferences();
@@ -165,17 +172,9 @@ public class LaunchApplication extends Application {
 
 
     private void setupData(final boolean update) {
-        final String version;
-        boolean debug;
-        if (sharedPreference.isDebugEnabled()) {
-            version = "dev";
-            debug = true;
-        } else {
-            version = "1.3";
-            debug = false;
-        }
-        DataClient.create(version, getString(R.string.sln_token), debug);
+        DataClient.create(getString(R.string.sln_token), sharedPreference.getNetworkEndpoint());
         JobManager.create(context).addJobCreator(new DataJobCreator());
+        JobManager.instance().addJobCreator(new WidgetJobCreator());
         startJobs();
     }
 
@@ -272,15 +271,18 @@ public class LaunchApplication extends Application {
     }
 
     private void setupNotification() {
+        firebaseMessaging.unsubscribeFromTopic("debug");
+        firebaseMessaging.unsubscribeFromTopic("production");
+
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
-            firebaseMessaging.subscribeToTopic("debug");
-            firebaseMessaging.unsubscribeFromTopic("production");
+            firebaseMessaging.subscribeToTopic("debug_v2");
+            firebaseMessaging.unsubscribeFromTopic("prod_v2");
 
         } else {
             Timber.plant(new CrashlyticsTree(context));
-            firebaseMessaging.subscribeToTopic("production");
-            firebaseMessaging.unsubscribeFromTopic("debug");
+            firebaseMessaging.subscribeToTopic("prod_v2");
+            firebaseMessaging.unsubscribeFromTopic("debug_v2");
         }
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
@@ -292,9 +294,10 @@ public class LaunchApplication extends Application {
         boolean oneMinute = Prefs.getBoolean("oneMinute", true);
         boolean inFlight = Prefs.getBoolean("inFlight", true);
         boolean success = Prefs.getBoolean("success", true);
+        boolean events = Prefs.getBoolean("eventNotifications", true);
 
         boolean all = switchPreferences.getAllSwitch();
-        boolean ples = switchPreferences.getSwitchPles();
+        boolean ples = switchPreferences.getSwitchRussia();
         boolean ksc = switchPreferences.getSwitchKSC();
         boolean van = switchPreferences.getSwitchVan();
         boolean isro = switchPreferences.getSwitchISRO();
@@ -304,11 +307,24 @@ public class LaunchApplication extends Application {
         boolean roscosmos = switchPreferences.getSwitchRoscosmos();
         boolean spacex = switchPreferences.getSwitchSpaceX();
         boolean nasa = switchPreferences.getSwitchNasa();
+        boolean blueOrigin = switchPreferences.getSwitchBO();
+        boolean rocketLab = switchPreferences.getSwitchRL();
+        boolean frenchGuiana = switchPreferences.getSwitchFG();
+        boolean japan = switchPreferences.getSwitchJapan();
+        boolean wallops = switchPreferences.getSwitchWallops();
+        boolean northrop = switchPreferences.getSwitchNorthrop();
+        boolean newZealand = switchPreferences.getSwitchNZ();
 
         if (all) {
             firebaseMessaging.subscribeToTopic("all");
         } else {
             firebaseMessaging.unsubscribeFromTopic("all");
+        }
+
+        if (events) {
+            firebaseMessaging.subscribeToTopic("events");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("events");
         }
 
         if (ksc) {
@@ -318,9 +334,9 @@ public class LaunchApplication extends Application {
         }
 
         if (ples) {
-            firebaseMessaging.subscribeToTopic("ples");
+            firebaseMessaging.subscribeToTopic("russia");
         } else {
-            firebaseMessaging.unsubscribeFromTopic("ples");
+            firebaseMessaging.unsubscribeFromTopic("russia");
         }
 
         if (van) {
@@ -336,15 +352,27 @@ public class LaunchApplication extends Application {
         }
 
         if (casc) {
-            firebaseMessaging.subscribeToTopic("casc");
+            firebaseMessaging.subscribeToTopic("china");
         } else {
-            firebaseMessaging.unsubscribeFromTopic("casc");
+            firebaseMessaging.unsubscribeFromTopic("china");
         }
 
         if (ariane) {
             firebaseMessaging.subscribeToTopic("ariane");
         } else {
             firebaseMessaging.unsubscribeFromTopic("ariane");
+        }
+
+        if (blueOrigin) {
+            firebaseMessaging.subscribeToTopic("blueOrigin");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("blueOrigin");
+        }
+
+        if (rocketLab) {
+            firebaseMessaging.subscribeToTopic("rocketLab");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("rocketLab");
         }
 
         if (ula) {
@@ -369,6 +397,36 @@ public class LaunchApplication extends Application {
             firebaseMessaging.subscribeToTopic("nasa");
         } else {
             firebaseMessaging.unsubscribeFromTopic("nasa");
+        }
+
+        if (frenchGuiana) {
+            firebaseMessaging.subscribeToTopic("frenchGuiana");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
+        }
+
+        if (japan) {
+            firebaseMessaging.subscribeToTopic("japan");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("japan");
+        }
+
+        if (wallops) {
+            firebaseMessaging.subscribeToTopic("wallops");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("wallops");
+        }
+
+        if (northrop) {
+            firebaseMessaging.subscribeToTopic("northrop");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("northrop");
+        }
+
+        if (newZealand) {
+            firebaseMessaging.subscribeToTopic("newZealand");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("newZealand");
         }
 
         if (notificationEnabled) {
@@ -427,6 +485,27 @@ public class LaunchApplication extends Application {
 
     }
 
+    private void migrateNotifications() {
+        if (!Once.beenDone("migrateNotifications")) {
+            Once.markDone("migrateNotifications");
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            boolean notificationEnabled = prefs.getBoolean("notifications_new_message", true);
+            boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", true);
+            boolean webcastOnly = prefs.getBoolean("notifications_new_message_webcast", false);
+            boolean twentyFourHour = prefs.getBoolean("notifications_launch_day", true);
+            boolean oneHour = prefs.getBoolean("notifications_launch_imminent", true);
+            boolean tenMinutes = prefs.getBoolean("notifications_launch_minute", true);
+
+            Prefs.putBoolean("notificationEnabled", notificationEnabled);
+            Prefs.putBoolean("netstampChanged", netstampChanged);
+            Prefs.putBoolean("webcastOnly", webcastOnly);
+            Prefs.putBoolean("twentyFourHour", twentyFourHour);
+            Prefs.putBoolean("oneHour", oneHour);
+            Prefs.putBoolean("tenMinutes", tenMinutes);
+        }
+    }
+
+
     private void setupCrashlytics() {
         /*
          * Init Crashlytics and gather additional device information.
@@ -444,7 +523,6 @@ public class LaunchApplication extends Application {
 
     private void startJobs() {
         new Thread(() -> {
-            SyncJob.schedulePeriodicJob(context);
             SyncWearJob.scheduleJob();
             UpdateWearJob.scheduleJobNow();
             SyncCalendarJob.scheduleDailyJob();

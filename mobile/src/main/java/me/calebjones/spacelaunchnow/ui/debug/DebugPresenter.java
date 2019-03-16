@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ShareCompat;
-import android.support.v4.content.FileProvider;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ShareCompat;
+import androidx.core.content.FileProvider;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
@@ -18,13 +19,13 @@ import java.io.IOException;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.jobs.JobUtils;
-import me.calebjones.spacelaunchnow.content.jobs.UpdateWearJob;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.common.content.jobs.JobUtils;
+import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.FileUtils;
 import timber.log.Timber;
 
@@ -59,12 +60,7 @@ public class DebugPresenter implements DebugContract.Presenter {
         sharedPreference.setDebugSupporter(selected);
         realm = Realm.getDefaultInstance();
         if (selected) {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
-                }
-            });
+            realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR)));
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
             realm.commitTransaction();
@@ -75,12 +71,7 @@ public class DebugPresenter implements DebugContract.Presenter {
             editor.apply();
             UpdateWearJob.scheduleJobNow();
         } else {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.delete(Products.class);
-                }
-            });
+            realm.executeTransaction(realm -> realm.delete(Products.class));
             realm.close();
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = preferences.edit();
@@ -90,17 +81,9 @@ public class DebugPresenter implements DebugContract.Presenter {
     }
 
     @Override
-    public void toggleDebugLaunchesClicked(boolean selected, final Context context) {
-        debugView.showDebugLaunchSnackbar(selected);
-        sharedPreference.setDebugLaunch(selected);
-        if (selected) {
-            sharedPreference.setDebugLaunch(true);
-            DataClient.create("dev", context.getString(R.string.sln_token), true);
-        } else {
-            sharedPreference.setDebugLaunch(false);
-            DataClient.create("1.3", context.getString(R.string.sln_token), false);
-        }
-
+    public void endpointSelectorClicked(String selection) {
+        sharedPreference.setNetworkEndpoint(selection);
+        DataClient.create(context.getString(R.string.sln_token), selection);
 
         //Delete from Database
         realm = Realm.getDefaultInstance();
@@ -120,7 +103,7 @@ public class DebugPresenter implements DebugContract.Presenter {
     @Override
     public void jobEventButtonClicked(Context context) {
         new MaterialDialog.Builder(context)
-                .title("Job Events")
+                .title("Job EventsFragment")
                 .content(JobUtils.getJobRequestStatus())
                 .show();
     }
@@ -165,11 +148,6 @@ public class DebugPresenter implements DebugContract.Presenter {
     @Override
     public boolean getSupporterStatus() {
         return sharedPreference.isDebugSupporterEnabled();
-    }
-
-    @Override
-    public boolean getDebugStatus() {
-        return sharedPreference.isDebugEnabled();
     }
 
     @Override

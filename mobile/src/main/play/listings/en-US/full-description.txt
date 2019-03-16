@@ -1,0 +1,26 @@
+Meet <b>Space Launch Now</b> the <i>best</i> app for keeping track of the next spaceflight event! Get updates and notifications for rocket launches from SpaceX, NASA, ULA, ROSCOSMOS, ISRO, and many more!
+
+Countdown to launch with us... 3... 2... 1... liftoff!
+
+<b><u>Features:</u></b>
+• Track launch and landing information for SpaceX launches!
+•  Notifications for upcoming rocket launches.
+•  History of space flight back to the first manned space flight.
+•  Vehicle details on commonly used launch vehicles by SpaceX, NASA, ULA and others..
+•  Advanced search and filters for finding specific space launches.
+•  Optional Day/Night theme.
+•  Wear OS companion app and watch face with countdown.
+
+<b>Launch Tracking</b>
+Track rocket launches from SpaceX, ULA, and Orbital/ATK as well as international launches from NASA, ROSCOSMOS, ISRO, JAXA and ESA.
+
+<b>Landing and Reuse Information</b>
+Find out if SpaceX is landing their next resused booster on Of Course I Still Love You (OCISLY) or if the launch is expendable.
+
+<b>Science Missions</b>
+ Follow along with NASA resupply missions to the International Space Station, commercial satellite launches from providers like IRIDIUM and science missions like James Webb Space Telescope!
+
+<b>Vehicle Information</b>
+Get to know all the rockets that take us to orbit such as the Soyuz, Atlas, Delta, Ariane, Proton and Falcon 9 launch vehicle families.
+
+Space Launch Now is in no way affiliated with SpaceX, NASA, ULA, ISRO, ESA or any other launch provider.

@@ -1,7 +1,7 @@
 package me.calebjones.spacelaunchnow.utils.analytics;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -54,12 +54,13 @@ public class Analytics {
 
     //Logging methods.
     public void sendScreenView(@NonNull String screenName, @NonNull String state) {
-
-        if (!screenName.equals(mLastScreenName)) {
-            mLastScreenName = screenName;
-            Answers.getInstance().logCustom(new UIEvent(screenName)
-                                                    .putState(state));
-            Timber.v("UI Event: %s - %s", screenName, state);
+        if (mLastScreenName != null) {
+            if (!screenName.equals(mLastScreenName)) {
+                mLastScreenName = screenName;
+                Answers.getInstance().logCustom(new UIEvent(screenName)
+                        .putState(state));
+                Timber.v("UI Event: %s - %s", screenName, state);
+            }
         }
     }
 
@@ -205,7 +206,7 @@ public class Analytics {
         Timber.v("Purchased: %s %s - $%sSKU: %s", products.getName(), products.getType(), products.getPrice(), sku);
     }
 
-    //Custom Answer Events
+    //Custom Answer EventsFragment
     private class MapClicked extends CustomEvent {
 
         MapClicked() {

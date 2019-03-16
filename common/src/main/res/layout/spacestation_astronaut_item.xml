@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/astronaut_icon"
+        android:layout_width="@dimen/material_baseline_grid_8x"
+        android:layout_height="@dimen/material_baseline_grid_8x"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/placeholder"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/astronaut_title"
+        style="@style/MaterialTypography.Locale.Subheading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_baseline_grid_1x"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/astronaut_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Neil Armstrong" />
+
+    <TextView
+        android:id="@+id/astronaut_subtitle"
+        style="@style/MaterialTypography.Locale.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/astronaut_title"
+        app:layout_constraintStart_toStartOf="@+id/astronaut_title"
+        app:layout_constraintTop_toBottomOf="@+id/astronaut_title"
+        tools:text="Commercial - USA" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

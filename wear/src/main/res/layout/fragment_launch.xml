@@ -29,13 +29,13 @@
 
     </RelativeLayout>
 
-    <android.support.wear.widget.BoxInsetLayout
+    <androidx.wear.widget.BoxInsetLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingEnd="15dp"
         android:paddingStart="15dp">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -90,7 +90,7 @@
 
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -105,6 +105,6 @@
                     android:visibility="gone" />
 
             </RelativeLayout>
-        </android.support.v4.widget.SwipeRefreshLayout>
-    </android.support.wear.widget.BoxInsetLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.wear.widget.BoxInsetLayout>
 </LinearLayout>

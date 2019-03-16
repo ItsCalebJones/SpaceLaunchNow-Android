@@ -4,14 +4,16 @@ import org.moallemi.gradle.internal.VersionCodeType
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
+        maven { url "https://jitpack.io" }
         jcenter()
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'io.fabric.tools:gradle:1.25.4'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
     }
 }
+
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
@@ -27,7 +29,7 @@ advancedVersioning {
     }
     codeOptions {
         versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
-        dependsOnTasks 'release'
+        dependsOnTasks 'release', 'publishReleaseApk'
 
     }
     outputOptions {
@@ -66,16 +68,18 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
-    def appVersionCode = app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100000 + advancedVersioning.versionCode
+
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
+
+    def appVersionCode = 2000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
 
     defaultConfig {
         flavorDimensions "release"
         manifestPlaceholders = [applicationLabel: "@string/app_name"]
         applicationId "me.calebjones.spacelaunchnow"
         minSdkVersion 23
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode appVersionCode
         versionName advancedVersioning.versionName
     }
@@ -97,6 +101,7 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix "-debug-b${appVersionCode}"
             manifestPlaceholders = [applicationLabel: "SLN - Debug"]
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
         }
     }
     compileOptions {
@@ -105,29 +110,38 @@ android {
     }
 }
 
+//play {
+//    serviceAccountCredentials = rootProject.file("publisher-key.json")
+//    track = "internal"
+//    releaseStatus = "draft"
+//}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(path: ':data')
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    compileOnly 'com.google.android.wearable:wearable:2.3.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
-        transitive = true
-    }
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.google.code.gson:gson:2.8.4'
-    implementation 'com.pixplicity.easyprefs:library:1.9.0'
-    implementation 'com.evernote:android-job:1.2.5'
-    implementation 'com.android.support:wear:27.1.1'
-    implementation 'com.android.support:palette-v7:27.1.1'
-    implementation 'com.android.support:percent:27.1.1'
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:support-media-compat:27.1.1'
-    implementation 'com.google.android.support:wearable:2.3.0'
-    implementation "com.google.android.gms:play-services-wearable:$rootProject.playServicesVersion"
-    implementation 'com.jakewharton.timber:timber:4.6.0'
-    implementation 'blue.aodev:material-values:1.1.1'
+    implementation deps.butterknife
+    annotationProcessor deps.butterknifeCompiler
+    compileOnly deps.supportWearable
+    implementation deps.crashlytics
+
+    //Networking
+    implementation deps.retrofit
+    implementation deps.converter_gson
+    implementation deps.gson
+    implementation deps.okhttp
+
+
+    implementation deps.easyprefs
+    implementation deps.evernoteJob
+    implementation deps.wear
+    implementation deps.palette
+    implementation deps.percentlayout
+    implementation deps.appcompat
+    implementation deps.legacySupportv4
+    implementation deps.media
+    implementation deps.supportWearable
+    implementation deps.playWearable
+    implementation deps.timber
+    implementation deps.materialValue
+    compileOnly deps.wearable
 }

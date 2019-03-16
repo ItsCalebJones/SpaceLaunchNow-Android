@@ -1,0 +1,526 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/material_baseline_grid_2x"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/main.collapsing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/material_baseline_grid_2x"
+                app:layout_scrollFlags="scroll">
+
+                <ImageView
+                    android:id="@+id/image_background"
+                    android:layout_width="match_parent"
+                    android:layout_height="256dp"
+                    android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax"
+                    app:layout_scrollFlags="scroll" />
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="match_parent"
+                    android:layout_height="256dp"
+                    android:foregroundGravity="center"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/launcher"
+                    app:layout_collapseMode="parallax"
+                    app:layout_scrollFlags="scroll" />
+            </FrameLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+        <LinearLayout
+            android:id="@+id/detail.title_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/detail_title"
+                style="@style/MaterialTypography.Regular.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:maxLines="1"
+                android:paddingTop="8dp"
+                android:text="@string/supporter_title"
+                android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/detail_mission_location"
+                style="@style/MaterialTypography.Regular.Subheading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="4dp"
+                android:maxLines="1"
+                android:text="@string/get_pro_features"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/support_thank_you"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="?attr/colorAccent"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:visibility="invisible">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                android:gravity="center"
+                android:text="@string/thank_you_support"
+                android:textColor="@color/material_typography_primary_text_color_light"
+                android:textSize="@dimen/material_typography_regular_title_text_size" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/material_baseline_grid_1.5x"
+                android:layout_marginRight="@dimen/material_baseline_grid_1.5x"
+                android:text="@string/thank_you"
+                android:textColor="@color/material_typography_secondary_text_color_light" />
+
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                android:layout_marginTop="@dimen/material_baseline_grid_1x"
+                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x">
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imgIcon"
+                        android:layout_width="64dp"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_support"
+                        app:civ_border_color="@color/colorAccent"
+                        app:civ_border_width="4dp"
+                        app:civ_fill_color="@color/colorAccent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtTitle"
+                            style="@style/MaterialTypography.Regular"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                            android:gravity="center_vertical"
+                            android:text="@string/support_development"
+                            android:textSize="@dimen/material_typography_regular_title_text_size" />
+
+                        <TextView
+                            android:id="@+id/subString"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:lines="2"
+                            android:text="@string/supporter_description" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x">
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="64dp"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_money_off"
+                        app:civ_border_color="@color/material_color_green_500"
+                        app:civ_border_width="4dp"
+                        app:civ_fill_color="@color/material_color_green_500" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/MaterialTypography.Regular"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                            android:gravity="center_vertical"
+                            android:text="@string/remove_ads"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:lines="2"
+                            android:text="@string/remove_ads_description" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x">
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="64dp"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_appearance_white"
+                        app:civ_border_color="@color/material_color_teal_500"
+                        app:civ_border_width="4dp"
+                        app:civ_fill_color="@color/material_color_teal_500" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/MaterialTypography.Regular"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                            android:gravity="center_vertical"
+                            android:text="@string/exclusive_widgets"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:lines="2"
+                            android:text="@string/exclusive_widgets_description" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x">
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="64dp"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_earth_96dp"
+                        app:civ_border_color="@color/primary"
+                        app:civ_border_width="4dp"
+                        app:civ_fill_color="@color/primary" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/MaterialTypography.Regular"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                            android:gravity="center_vertical"
+                            android:text="@string/weather_forecast"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:lines="2"
+                            android:text="@string/weather_description" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x">
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="64dp"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_sync_96dp"
+                        app:civ_border_color="@color/material_color_amber_600"
+                        app:civ_border_width="4dp"
+                        app:civ_fill_color="@color/material_color_amber_600" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/MaterialTypography.Regular"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                            android:gravity="center_vertical"
+                            android:text="@string/calendar_sync"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:lines="2"
+                            android:text="@string/calendar_sync_description" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x">
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="64dp"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_watch_96dp"
+                        app:civ_border_color="@color/material_color_deep_orange_900"
+                        app:civ_border_width="4dp"
+                        app:civ_fill_color="@color/material_color_deep_orange_900" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/MaterialTypography.Regular"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                            android:gravity="center_vertical"
+                            android:text="@string/wear_complications"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:lines="2"
+                            android:text="@string/wear_complications_description" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/material_baseline_grid_1x"
+                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x">
+
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="64dp"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
+                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_about"
+                        app:civ_border_color="@color/material_color_cyan_500"
+                        app:civ_border_width="4dp"
+                        app:civ_fill_color="@color/material_color_cyan_500" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/MaterialTypography.Regular"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+                            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                            android:gravity="center_vertical"
+                            android:text="@string/discord"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:lines="2"
+                            android:text="@string/discord_description" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/purchase"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/material_baseline_grid_0.5x"
+                android:text="@string/supporter_title"
+                android:theme="@style/PrimaryButtonTheme" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_supporter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/material_baseline_grid_1x"
+        android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+        android:src="@drawable/ic_money"
+        app:layout_anchor="@id/nested_scroll_view"
+        app:layout_anchorGravity="bottom|right|end" />​
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+

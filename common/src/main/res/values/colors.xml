@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cyanea_primary_reference">#2196F3</color>
+    <color name="cyanea_accent_reference">#FF5252</color>
+    <color name="colorPrimary">#2196F3</color>
+    <!--<color name="colorRecentPrimary">#1976D2</color>-->
+    <!--<color name="colorPrimaryDark">#1976D2</color>-->
+    <!--<color name="colorPrimaryLight">#BBDEFB</color>-->
+    <!--<color name="colorPrimaryAlt">#42a5f5</color>-->
+    <color name="colorAccent">#FF5252</color>
+    <!--<color name="colorAccentAlt">#05A8AA</color>-->
+    <!--<color name="colorAccentLight">#f44336</color>-->
+    <!--<color name="colorTextPrimary">#212121</color>-->
+    <!--<color name="colorTextSecondary">#727272</color>-->
+    <color name="colorStatusGo">#4CAF50</color>
+    <color name="colorStatusNoGo">#d32f2f</color>
+    <color name="materialGrey">#607D8B</color>
+
+    <color name="colorGo">#81c784</color>
+    <color name="View_Separator">#B6B6B6</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#a0000000</color>
+
+    <color name="light_theme_primary_text_color">#80000000</color>
+    <color name="light_theme_secondary_text_color">#424242</color>
+
+    <!--<color name="dark_theme_primary_text_color">#ffffff</color>-->
+    <!--<color name="dark_theme_secondary_text_color">#b3ffffff</color>-->
+    <color name="dark_theme_background">#ff303030</color>
+    <!--<color name="dark_card_background">#424242</color>-->
+    <!--<color name="darkPrimary">#455a64</color>-->
+    <!--<color name="darkPrimary_dark">#ff37474f</color>-->
+    <!--<color name="darkAccent">#F44336</color>-->
+    <!--<color name="darkIcons">#ffffff</color>-->
+
+
+    <color name="slide_one">#448AFF</color>
+    <color name="slide_two">#4db6ac</color>
+    <color name="slide_three">#f44336</color>
+    <color name="slide_four">#3d5afe</color>
+
+    <color name="slide_one_background">#186DFF</color>
+    <color name="slide_two_background">#00897b</color>
+    <color name="slide_three_background">#d32f2f</color>
+    <color name="slide_four_background">#3f51b5</color>
+
+    <color name="black_overlay">#66000000</color>
+</resources>

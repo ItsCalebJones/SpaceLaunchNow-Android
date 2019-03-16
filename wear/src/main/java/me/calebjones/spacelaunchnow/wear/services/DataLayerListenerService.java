@@ -26,7 +26,7 @@ public class DataLayerListenerService extends WearableListenerService {
         for (DataEvent event : dataEvents) {
             if (event.getType() == DataEvent.TYPE_CHANGED) {
                 DataItem item = event.getDataItem();
-                if (item.getUri().getPath().equals("/nextLaunch")) {
+                if (item.getUri().getPath().equals("/supporter")) {
                     DataMap dataMap = DataMapItem.fromDataItem(item).getDataMap();
                     if(dataMap.getBoolean(SUPPORTER_KEY)){
                         SupporterHelper.setSupporter(true);

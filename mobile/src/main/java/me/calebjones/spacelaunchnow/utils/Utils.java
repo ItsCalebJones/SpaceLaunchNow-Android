@@ -32,8 +32,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v4.content.ContextCompat;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.core.content.ContextCompat;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
@@ -53,8 +53,8 @@ import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 
@@ -137,13 +137,7 @@ public class Utils {
 
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
 
-        if (sharedPreference.isNightModeActive(context)) {
-            intentBuilder.setToolbarColor(ContextCompat.getColor(
-                    (context), R.color.darkPrimary));
-        } else {
-            intentBuilder.setToolbarColor(ContextCompat.getColor(
-                    (context), R.color.colorPrimary));
-        }
+        intentBuilder.setToolbarColor(ContextCompat.getColor((context), R.color.colorPrimary));
 
         intentBuilder.setShowTitle(true);
 

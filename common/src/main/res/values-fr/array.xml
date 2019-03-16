@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="agencies">
+        <item>NASA</item>
+        <item>SpaceX</item>
+        <item>ROSCOSMOS</item>
+        <item>Arianespace</item>
+        <item>ULA</item>
+        <item>CASC</item>
+        <item>ISRO</item>
+    </string-array>
+    <string-array name="vehicles">
+        <item>Falcon</item>
+        <item>Proton</item>
+        <item>Soyouz</item>
+        <item>Atlas</item>
+        <item>Delta</item>
+        <item>PSLV/GSLV</item>
+        <item>Longue Marche</item>
+        <item>Ariane</item>
+        <item>Rokot</item>
+    </string-array>
+    <string-array name="country">
+        <item>USA</item>
+        <item>Chine</item>
+        <item>Russie</item>
+        <item>Inde</item>
+        <item>Multi</item>
+    </string-array>
+    <string-array name="location">
+        <item>Cap Canaveral, Floride, USA</item>
+        <item>Centre Spatial Kennedy, Floride, USA</item>
+        <item>Kourou, Guyane Française</item>
+        <item>Cosmodrome de Baïkonour, Kazakhstan, Russie</item>
+        <item>Cosmodrome de Plesetsk, Russie</item>
+        <item>Lancement en mer</item>
+    </string-array>
+    <string-array name="multi_calendar_reminder">
+        <item>Une Minute</item>
+        <item>Cinq Minutes</item>
+        <item>Trente Minutes</item>
+        <item>Une Heure</item>
+        <item>Deux Heures</item>
+        <item>Quatre Heures</item>
+        <item>Un Jour</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>Un Jour</item>
+        <item>Trois Jours</item>
+        <item>Une Semaine</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>Deux</item>
+        <item>Un</item>
+        <item>Cinq</item>
+        <item>Vingt</item>
+        <item>Dix</item>
+        <item>Tous (Déconseillé)</item>
+    </string-array>
+</resources>

@@ -25,7 +25,7 @@ public class CrashlyticsTree extends Timber.Tree {
 
 //        Track INFO level logs as custom Answers events.
 //        if (priority == Log.INFO) {
-//            Answers.getInstance().logCustom(new CustomEvent(message));
+//            Answers.getInstance().logCustom(new CustomEvent(getMessage));
 //        }
 
         if (priority == Log.VERBOSE) {

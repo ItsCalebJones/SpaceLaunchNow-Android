@@ -5,12 +5,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.Group;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +17,16 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.constraintlayout.widget.Group;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
-import me.calebjones.spacelaunchnow.ui.launches.launcher.LauncherLaunchActivity;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.common.ui.launchdetail.launches.launcher.LauncherLaunchActivity;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
 public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdapter.ViewHolder> {

@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.main;
 
+import android.animation.ObjectAnimator;
+import android.animation.StateListAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -10,34 +12,37 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.widget.Toolbar;
+
 import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.ashokvarma.bottomnavigation.BottomNavigationBar;
+import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.crashlytics.android.Crashlytics;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
+
 import com.michaelflisar.gdprdialog.GDPR;
 import com.michaelflisar.gdprdialog.GDPRConsent;
 import com.michaelflisar.gdprdialog.GDPRConsentState;
 import com.michaelflisar.gdprdialog.GDPRDefinitions;
 import com.michaelflisar.gdprdialog.GDPRLocation;
-import com.michaelflisar.gdprdialog.GDPRNetwork;
+import com.michaelflisar.gdprdialog.GDPRLocationCheck;
 import com.michaelflisar.gdprdialog.GDPRSetup;
+import com.michaelflisar.gdprdialog.helper.GDPRPreperationData;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -52,39 +57,38 @@ import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.concurrent.TimeUnit;
 
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.mrapp.android.preference.activity.PreferenceActivity;
 import io.fabric.sdk.android.Fabric;
 import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.common.customviews.generate.Rate;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.events.FilterViewEvent;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.events.list.EventListFragment;
+import me.calebjones.spacelaunchnow.spacestation.SpacestationListFragment;
+import me.calebjones.spacelaunchnow.local.common.BaseActivity;
+import me.calebjones.spacelaunchnow.common.ui.generate.Rate;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
+import me.calebjones.spacelaunchnow.news.ui.NewsViewPager;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
-import me.calebjones.spacelaunchnow.ui.main.news.NewsViewPager;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
-import me.calebjones.spacelaunchnow.ui.settings.AboutActivity;
-import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
-import me.calebjones.spacelaunchnow.ui.settings.fragments.AppearanceFragment;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterActivity;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.ui.AboutActivity;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
+import me.calebjones.spacelaunchnow.astronauts.list.AstronautListFragment;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, NextLaunchFragment.CallBackListener {
@@ -93,15 +97,21 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private static ListPreferences listPreferences;
     @BindView(R.id.adView)
     AdView adView;
-    @BindView(R.id.container)
-    RelativeLayout container;
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.main_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.appBarLayout)
+    AppBarLayout appBarLayout;
+    @BindView(R.id.navigation_view)
+    BottomNavigationBar bottomNavigationView;
     private LaunchesViewPager mlaunchesViewPager;
     private NextLaunchFragment mUpcomingFragment;
     private NewsViewPager mNewsViewpagerFragment;
     private VehiclesViewPager mVehicleViewPager;
-    private Toolbar toolbar;
+    private SpacestationListFragment mSpacestationListFragment;
+    private EventListFragment mEventsFragment;
+    private AstronautListFragment mAstronautsListFragment;
     private Drawer drawer = null;
     private SharedPreferences sharedPref;
     private SwitchPreferences switchPreferences;
@@ -110,19 +120,21 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private boolean adviewEnabled = false;
     private Rate rate;
 
+    private static final String HOME_TAG = "HOME_TAG";
+    private static final String LAUNCHES_TAG = "LAUNCH_VIEWPAGER";
+    private static final String NEWS_TAG = "NEWS_FRAGMENT_VIEWPAGER";
+    private static final String VEHICLE_TAG = "VEHICLE_VIEWPAGER";
+    private static final String ISS_TAG = "ISS_TAG";
+    private static final String ASTRONAUT_TAG = "ASTRONAUT_TAG";
+    private static final String EVENTS_TAG = "EVENTS_TAG";
+    private static final String ASTRONAUT_DETAIL_TAG = "ASTRONAUT_DETAIL_TAG";
+
     static final int SHOW_INTRO = 1;
 
     private int mNavItemId;
     private Snackbar snackbar;
-    public int statusColor;
-
-    public void mayLaunchUrl(Uri parse) {
-        if (customTabActivityHelper.mayLaunchUrl(parse, null, null)) {
-            Timber.v("mayLaunchURL Accepted - %s", parse.toString());
-        } else {
-            Timber.v("mayLaunchURL Denied - %s", parse.toString());
-        }
-    }
+    private String action;
+    private boolean showFilter = false;
 
     public MainActivity() {
         super("Main Activity");
@@ -135,55 +147,37 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         if (!Fabric.isInitialized()) {
             Fabric.with(this, new Crashlytics());
         }
+
+        int m_theme;
+        if (getCyanea().isDark()) {
+            m_theme = R.style.BaseAppTheme_DarkBackground;
+        } else {
+            m_theme = R.style.BaseAppTheme_LightBackground;
+        }
+
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
+            showFilter = true;
             startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
         }
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
-        String action = intent.getAction();
-
-        if ("me.calebjones.spacelaunchnow.NIGHTMODE".equals(action)) {
-            Intent sendIntent = new Intent(this, SettingsActivity.class);
-            sendIntent.putExtra(PreferenceActivity.EXTRA_SHOW_FRAGMENT,
-                    AppearanceFragment.class.getName());
-            startActivity(sendIntent);
-        }
+        action = intent.getAction();
 
         Timber.d("Creating Preference instances.");
         listPreferences = ListPreferences.getInstance(this.context);
         switchPreferences = SwitchPreferences.getInstance(this.context);
 
-        int m_theme;
+
         this.sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         this.context = getApplicationContext();
         customTabActivityHelper = new CustomTabActivityHelper();
 
-        Timber.d("Checking if night mode active.");
-        if (listPreferences.isNightModeActive(this)) {
-            Timber.d("Night mode is active.");
-            switchPreferences.setNightModeStatus(true);
-            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
-        } else {
-            Timber.d("Night mode is not active.");
-            switchPreferences.setNightModeStatus(false);
-            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-        }
-        m_theme = R.style.LightTheme_NoActionBar;
-
-        Timber.d("Checking if theme changed.");
-        if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
-            SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
-            editor.putBoolean("recreate", false);
-            editor.apply();
-            recreate();
-        }
 
         Timber.d("Setting theme.");
         setTheme(m_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Timber.d("Binding views.");
         ButterKnife.bind(this);
 
@@ -194,12 +188,16 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             setupWindowAnimations();
         }
 
-        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         // load saved navigation state if present
         if (null == savedInstanceState) {
-            mNavItemId = R.id.menu_next_launch;
+            mNavItemId = R.id.menu_home;
+        } else if ("SHOW_FILTERS".equals(action)) {
+            getIntent().setAction("");
+            showFilter = true;
+            mNavItemId = R.id.menu_home;
+        } else if (getIntent().getBooleanExtra("SHOW_EVENTS", false)) {
+            mNavItemId = R.id.menu_events;
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
@@ -225,60 +223,64 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         Timber.d("Building DrawerBuilder");
         drawer = new DrawerBuilder()
                 .withActivity(this)
-                .withTranslucentStatusBar(true)
                 .withToolbar(toolbar)
                 .withHasStableIds(true)
+                .withTranslucentStatusBar(false)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.home)
+                        new PrimaryDrawerItem()
+                                .withName(R.string.home)
                                 .withIcon(GoogleMaterial.Icon.gmd_home)
-                                .withIdentifier(R.id.menu_next_launch)
+                                .withIdentifier(R.id.menu_home)
                                 .withSelectable(true),
-                        new PrimaryDrawerItem().withName(R.string.launches)
-                                .withIcon(GoogleMaterial.Icon.gmd_assignment)
-                                .withIdentifier(R.id.menu_launches)
+                        new PrimaryDrawerItem()
+                                .withIcon(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_spacestation_logo, null))
+                                .withName(getString(R.string.spacestations))
+                                .withIdentifier(R.id.menu_iss)
+                                .withIconTintingEnabled(true)
                                 .withSelectable(true),
-                        new PrimaryDrawerItem().withName(R.string.news)
-                                .withIcon(CommunityMaterial.Icon.cmd_newspaper)
-                                .withIdentifier(R.id.menu_news)
+                        new PrimaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_person_outline)
+                                .withName(getString(R.string.astronauts))
+                                .withIdentifier(R.id.menu_astronauts)
                                 .withSelectable(true),
-                        new PrimaryDrawerItem().withName(R.string.vehicles)
-                                .withIcon(FontAwesome.Icon.faw_rocket)
-                                .withIdentifier(R.id.menu_vehicle)
+                        new PrimaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_event)
+                                .withName(getString(R.string.events))
+                                .withIdentifier(R.id.menu_events)
                                 .withSelectable(true),
+                        new DividerDrawerItem(),
+                        new PrimaryDrawerItem()
+                                .withIcon(CommunityMaterial.Icon.cmd_clipboard_outline)
+                                .withName(R.string.whats_new)
+                                .withIdentifier(R.id.menu_new)
+                                .withSelectable(false),
+                        new PrimaryDrawerItem()
+                                .withName(R.string.about)
+                                .withIcon(GoogleMaterial.Icon.gmd_info)
+                                .withIdentifier(R.id.about)
+                                .withSelectable(false),
                         new PrimaryDrawerItem()
                                 .withIcon(CommunityMaterial.Icon.cmd_discord)
                                 .withName(R.string.discord)
                                 .withIdentifier(R.id.menu_discord)
                                 .withSelectable(false),
-                        new DividerDrawerItem(),
-                        new ExpandableDrawerItem().withName(R.string.get_help).withIcon(GoogleMaterial.Icon.gmd_account_box).withDescription(R.string.help_description).withIdentifier(20).withSelectable(false).withSubItems(
-                                new SecondaryDrawerItem()
-                                        .withIcon(GoogleMaterial.Icon.gmd_info_outline)
-                                        .withName(R.string.whats_new)
-                                        .withDescription(R.string.whats_new_subtitle)
-                                        .withIdentifier(R.id.menu_new)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(GoogleMaterial.Icon.gmd_account_box)
-                                        .withName(R.string.about).withDescription(R.string.about_subtitle)
-                                        .withIdentifier(R.id.about)
-                                        .withSelectable(false),
-                                new SecondaryDrawerItem()
-                                        .withIcon(GoogleMaterial.Icon.gmd_feedback)
-                                        .withName(R.string.feedback)
-                                        .withDescription(R.string.feedback_subtitle)
-                                        .withIdentifier(R.id.menu_feedback)
-                                        .withSelectable(false)
-                        ),
+                        new PrimaryDrawerItem()
+                                .withIcon(GoogleMaterial.Icon.gmd_feedback)
+                                .withName(R.string.feedback)
+                                .withIdentifier(R.id.menu_feedback)
+                                .withSelectable(false)
+                        ,
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.settings)
                                 .withIcon(GoogleMaterial.Icon.gmd_settings)
                                 .withIdentifier(R.id.menu_settings)
-                                .withSelectable(true)
+                                .withSelectable(false)
                 ).withOnDrawerItemClickListener((view, position, drawerItem) -> {
                     if (drawerItem != null) {
-                        navigate((int) drawerItem.getIdentifier());
+                        if (mNavItemId != (int) drawerItem.getIdentifier()) {
+                            navigate((int) drawerItem.getIdentifier());
+                        }
                     }
                     return false;
                 }).build();
@@ -304,15 +306,80 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                             .withIdentifier(R.id.menu_support)
                             .withSelectable(false));
         }
+        bottomNavigationView
+                .addItem(new BottomNavigationItem(R.drawable.ic_favorite, getString(R.string.favorites))
+                        .setActiveColorResource(R.color.md_red_700))
+                .addItem(new BottomNavigationItem(R.drawable.ic_satellite_white, getString(R.string.launches))
+                        .setActiveColorResource(R.color.primary))
+                .addItem(new BottomNavigationItem(R.drawable.ic_assignment_white, getString(R.string.news))
+                        .setActiveColorResource(R.color.material_color_deep_orange_500))
+                .addItem(new BottomNavigationItem(R.drawable.ic_rocket, getString(R.string.vehicles))
+                        .setActiveColorResource(R.color.material_color_blue_grey_500))
+                .setFirstSelectedPosition(0)
+                .initialise();
 
+        bottomNavigationView.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int position) {
+                navigateToTab(position);
+            }
 
-        if ("SHOW_FILTERS".equals(action)) {
-            navigate(R.id.menu_next_launch);
-        } else {
-            Timber.d("Navigate to initial fragment.");
-            navigate(mNavItemId);
+            @Override
+            public void onTabUnselected(int position) {
+
+            }
+
+            @Override
+            public void onTabReselected(int position) {
+
+            }
+        });
+    }
+
+    private void navigateToTab(int position) {
+        switch (position) {
+            case 0:
+                mNavItemId = R.id.menu_favorite;
+                break;
+            case 1:
+                mNavItemId = R.id.menu_launches;
+                break;
+            case 2:
+                mNavItemId = R.id.menu_news;
+                break;
+            case 3:
+                mNavItemId = R.id.menu_vehicle;
+                break;
         }
+        navigate(mNavItemId);
+    }
 
+    public void hideBottomNavigation() {
+        bottomNavigationView.setVisibility(View.GONE);
+    }
+
+    public void showBottomNavigation() {
+        bottomNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    public void removeAppBarElevation() {
+        getSupportActionBar().setElevation(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            appBarLayout.setElevation(0);
+            StateListAnimator stateListAnimator = new StateListAnimator();
+            stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(appBarLayout, "elevation", 0));
+            appBarLayout.setStateListAnimator(stateListAnimator);
+        }
+    }
+
+    public void addAppBarElevation() {
+        getSupportActionBar().setElevation(8);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            appBarLayout.setElevation(8);
+            StateListAnimator stateListAnimator = new StateListAnimator();
+            stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(appBarLayout, "elevation", 8));
+            appBarLayout.setStateListAnimator(stateListAnimator);
+        }
     }
 
     private void setupWindowAnimations() {
@@ -329,15 +396,12 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         super.onStart();
         Timber.v("MainActivity onStart!");
         customTabActivityHelper.bindCustomTabsService(this);
-        mayLaunchUrl(Uri.parse("https://launchlibrary.net/"));
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
         Timber.v("MainActivity onStop!");
         customTabActivityHelper.unbindCustomTabsService(this);
-        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
@@ -349,6 +413,22 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     public void onResume() {
         super.onResume();
         Timber.v("onResume");
+
+        if ("SHOW_FILTERS".equals(action)) {
+            navigate(R.id.menu_favorite);
+        } else if (getIntent().getBooleanExtra("SHOW_EVENTS", false)) {
+            navigate(R.id.menu_events);
+        } else {
+            Timber.d("Navigate to initial fragment.");
+            navigate(mNavItemId);
+        }
+        if (getCyanea().getShouldTintNavBar()) {
+            String strColor = String.format("#%06X", 0xFFFFFF & getCyanea().getPrimary());
+            bottomNavigationView.setBarBackgroundColor(strColor);
+        } else {
+            String strColor = String.format("#%06X", 0xFFFFFF & getCyanea().getBackgroundColor());
+            bottomNavigationView.setBarBackgroundColor(strColor);
+        }
         if (rate != null) {
             rate.count();
         }
@@ -401,13 +481,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             recreate();
         }
 
-        if (listPreferences.isNightModeActive(this)) {
-            switchPreferences.setNightModeStatus(true);
-            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
-        } else {
-            switchPreferences.setNightModeStatus(false);
-            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-        }
         // show GDPR Dialog if necessary, the library takes care about if and how to show it
         GDPR.getInstance().checkIfNeedsToBeShown(this, getGDPRSetup());
         configureAdState(GDPR.getInstance().getConsentState());
@@ -417,7 +490,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         snackbar = Snackbar
                 .make(coordinatorLayout, R.string.upgrade_pro, Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .setAction("Yes", view -> {
+                .setAction(getString(R.string.show_me), view -> {
                     Once.markDone("userCheckedSupporter");
                     startActivity(new Intent(context, SupporterActivity.class));
                 });
@@ -429,7 +502,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .title("Official Discord Server")
                 .icon(new IconicsDrawable(this)
                         .icon(FontAwesome.Icon.faw_discord)
-                        .color(Color.rgb(114,137,218))
+                        .color(Color.rgb(114, 137, 218))
                         .sizeDp(24))
                 .content(R.string.join_discord)
                 .negativeText(R.string.button_no)
@@ -476,24 +549,26 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     public void onBackPressed() {
         if (drawer.isDrawerOpen()) {
             drawer.closeDrawer();
-        } else if (mNavItemId != R.id.menu_next_launch) {
-            drawer.setSelection(R.id.menu_next_launch);
-        } else if (mNavItemId == R.id.menu_next_launch) {
-            if(mUpcomingFragment != null){
-                if (mUpcomingFragment.isFilterShown()){
-                    mUpcomingFragment.checkFilter();
-                }else {
-                    checkExitApp();
-                }
+        } else if (mNavItemId != R.id.menu_home
+                && mNavItemId != R.id.menu_vehicle
+                && mNavItemId != R.id.menu_favorite
+                && mNavItemId != R.id.menu_launches
+                && mNavItemId != R.id.menu_news) {
+            mNavItemId = R.id.menu_home;
+            navigate(mNavItemId);
+        } else if (mNavItemId != R.id.menu_favorite) {
+            if (bottomNavigationView.getCurrentSelectedPosition() != 0) {
+                mNavItemId = R.id.menu_favorite;
+                navigate(mNavItemId);
+            }
+        } else if (bottomNavigationView.getCurrentSelectedPosition() == 0 && mUpcomingFragment != null) {
+            if (mUpcomingFragment.isFilterShown()) {
+                mUpcomingFragment.checkFilter();
             } else {
                 checkExitApp();
             }
         } else {
-            if (getFragmentManager().getBackStackEntryCount() != 0) {
-                getFragmentManager().popBackStack();
-            } else {
-                checkExitApp();
-            }
+            checkExitApp();
         }
     }
 
@@ -506,7 +581,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     .onPositive((dialog, which) -> finish())
                     .show();
         } else {
-            super.onBackPressed();
+            finish();
         }
     }
 
@@ -532,6 +607,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
@@ -541,7 +621,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
 
         if (id == R.id.action_consent) {
-            showGDPRIfNecessary(true, GDPRLocation.IN_EAA_OR_UNKNOWN);
+            GDPR.getInstance().resetConsent();
+            showGDPRIfNecessary();
         }
 
         if (id == R.id.action_supporter) {
@@ -556,75 +637,104 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private void navigate(final int itemId) {
         Timber.v("Navigate to %s", itemId);
         // perform the actual navigation logic, updating the main_menu content fragment etc
-        FragmentManager fm = getSupportFragmentManager();
         switch (itemId) {
-            case R.id.menu_next_launch:
-                mNavItemId = R.id.menu_next_launch;
-                // Check to see if we have retained the worker fragment.
-                mUpcomingFragment = (NextLaunchFragment) fm.findFragmentByTag("NEXT_LAUNCH");
-
-
-                // If not retained (or first time running), we need to create it.
+            case R.id.menu_home:
+                navigateToTab(bottomNavigationView.getCurrentSelectedPosition());
+                break;
+            case R.id.menu_favorite:
+                setActionBarTitle("Space Launch Now");
                 if (mUpcomingFragment == null) {
-                    mUpcomingFragment = new NextLaunchFragment();
-                    if ("SHOW_FILTERS".equals(getIntent().getAction())) {
+                    mUpcomingFragment = NextLaunchFragment.newInstance();
+                    if (showFilter) {
                         Bundle bundle = new Bundle();
                         bundle.putBoolean("SHOW_FILTERS", true);
                         mUpcomingFragment.setArguments(bundle);
+                        showFilter = false;
                     }
-                    // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mUpcomingFragment, "NEXT_LAUNCH").commit();
+                }
+                navigateToFragment(mUpcomingFragment, HOME_TAG);
+                if (bottomNavigationView.getChildCount() > 0) {
+                    bottomNavigationView.selectTab(0, false);
+                }
+                addAppBarElevation();
+                showBottomNavigation();
+                if (rate != null) {
+                    rate.showRequest();
                 }
                 break;
             case R.id.menu_launches:
-                mNavItemId = R.id.menu_launches;
-                // Check to see if we have retained the worker fragment.
-                mlaunchesViewPager = (LaunchesViewPager) fm.findFragmentByTag("LAUNCH_VIEWPAGER");
-
-                // If not retained (or first time running), we need to create it.
+                setActionBarTitle("Space Launch Now");
+                removeAppBarElevation();
+                showBottomNavigation();
                 if (mlaunchesViewPager == null) {
-                    mlaunchesViewPager = new LaunchesViewPager();
-                    // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mlaunchesViewPager, "LAUNCH_VIEWPAGER").commit();
+                    mlaunchesViewPager = LaunchesViewPager.newInstance();
                 }
+                navigateToFragment(mlaunchesViewPager, LAUNCHES_TAG);
                 if (rate != null) {
                     rate.showRequest();
                 }
-
                 break;
             case R.id.menu_news:
-                mNavItemId = R.id.menu_news;
                 setActionBarTitle(getString(R.string.space_launch_news));
-                // Check to see if we have retained the worker fragment.
-                mNewsViewpagerFragment = (NewsViewPager) fm.findFragmentByTag("NEWS_FRAGMENT_VIEWPAGER");
+                removeAppBarElevation();
+                showBottomNavigation();
+                if (mNewsViewpagerFragment == null)
+                    mNewsViewpagerFragment = NewsViewPager.newInstance();
+                navigateToFragment(mNewsViewpagerFragment, NEWS_TAG);
 
-                // If not retained (or first time running), we need to create it.
-                if (mNewsViewpagerFragment == null) {
-                    mNewsViewpagerFragment = new NewsViewPager();
-                    // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mNewsViewpagerFragment, "NEWS_FRAGMENT").commit();
-                }
                 if (rate != null) {
                     rate.showRequest();
                 }
+                break;
+            case R.id.menu_iss:
+                setActionBarTitle(getString(R.string.spacestations));
+                mNavItemId = R.id.menu_iss;
+                addAppBarElevation();
+                hideBottomNavigation();
+                if (mSpacestationListFragment == null)
+                    mSpacestationListFragment = SpacestationListFragment.newInstance();
+                navigateToFragment(mSpacestationListFragment, ISS_TAG);
 
+                if (rate != null) {
+                    rate.showRequest();
+                }
+                break;
+            case R.id.menu_astronauts:
+                setActionBarTitle(getString(R.string.astronauts));
+                mNavItemId = R.id.menu_astronauts;
+                removeAppBarElevation();
+                hideBottomNavigation();
+                if (mAstronautsListFragment == null)
+                    mAstronautsListFragment = AstronautListFragment.newInstance();
+                navigateToFragment(mAstronautsListFragment, ASTRONAUT_TAG);
+
+                if (rate != null) {
+                    rate.showRequest();
+                }
+                break;
+            case R.id.menu_events:
+                setActionBarTitle(getString(R.string.events));
+                mNavItemId = R.id.menu_events;
+                addAppBarElevation();
+                hideBottomNavigation();
+                if (mEventsFragment == null)
+                    mEventsFragment = EventListFragment.newInstance();
+                navigateToFragment(mEventsFragment, EVENTS_TAG);
+
+                if (rate != null) {
+                    rate.showRequest();
+                }
                 break;
             case R.id.menu_vehicle:
-                mNavItemId = R.id.menu_vehicle;
                 setActionBarTitle(getString(R.string.vehicles));
-                // Check to see if we have retained the worker fragment.
-                mVehicleViewPager = (VehiclesViewPager) fm.findFragmentByTag("VEHICLE_VIEWPAGER");
+                removeAppBarElevation();
+                showBottomNavigation();
+                if (mVehicleViewPager == null) mVehicleViewPager = VehiclesViewPager.newInstance();
+                navigateToFragment(mVehicleViewPager, VEHICLE_TAG);
 
-                // If not retained (or first time running), we need to create it.
-                if (mVehicleViewPager == null) {
-                    mVehicleViewPager = new VehiclesViewPager();
-                    // Tell it who it is working with.
-                    fm.beginTransaction().replace(R.id.flContent, mVehicleViewPager, "VEHICLE_VIEWPAGER").commit();
-                }
                 if (rate != null) {
                     rate.showRequest();
                 }
-
                 break;
             case R.id.menu_launch:
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
@@ -678,20 +788,35 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
     }
 
+    private void navigateToFragment(Fragment fragment, String TAG) {
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+        Fragment inputFragment = supportFragmentManager.findFragmentByTag(TAG);
+
+        if (inputFragment == null) {
+            fragmentTransaction.replace(R.id.flContent, fragment, TAG)
+                    .addToBackStack(null).commitAllowingStateLoss();
+        } else {
+            fragmentTransaction.replace(R.id.flContent, inputFragment, TAG)
+                    .addToBackStack(null).commitAllowingStateLoss();
+        }
+    }
+
     private void showFeedback() {
         new MaterialDialog.Builder(this)
                 .title(R.string.feedback_title)
                 .autoDismiss(true)
                 .content(R.string.feedback_description)
-                .neutralColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .negativeColor(getCyanea().getAccent())
                 .negativeText(R.string.launch_data)
+
                 .onNegative((dialog, which) -> {
                     String url = getString(R.string.launch_library_reddit);
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     startActivity(i);
                 })
-                .positiveColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                .positiveColor(getCyanea().getPrimary())
                 .positiveText(R.string.app_feedback)
                 .onPositive((dialog, which) -> dialog.getBuilder()
                         .title(R.string.need_support)
@@ -734,66 +859,68 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(FilterViewEvent event) {
-        if (!SupporterHelper.isSupporter()) {
-            if (event.isOpened) {
-                hideAd();
-            } else {
-                showAd();
-            }
+    public void checkHideAd() {
+        hideAd();
+    }
+
+    public void checkShowAd() {
+        if (adviewEnabled) {
+            showAd();
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        int m_theme;
+        if (getCyanea().isDark()) {
+            m_theme = R.style.BaseAppTheme_DarkBackground;
+        } else {
+            m_theme = R.style.BaseAppTheme_LightBackground;
+        }
+        setTheme(m_theme);
         // Check which request we're responding to
         if (requestCode == SHOW_INTRO) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 Once.markDone("showTutorial");
+                showFilter = true;
                 navigate(mNavItemId);
             }
         }
     }
 
-    private void showGDPRIfNecessary(boolean forceShow, GDPRLocation location) {
-        if (forceShow || location == GDPRLocation.IN_EAA_OR_UNKNOWN) {
+    private void showGDPRIfNecessary(boolean forceShow, GDPRPreperationData data) {
+        if (forceShow || data.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN) {
             try {
-                GDPR.getInstance().showDialog(this, getGDPRSetup(), location);
+                GDPR.getInstance().showDialog(this, getGDPRSetup(), data.getLocation());
             } catch (IllegalStateException e) {
                 Timber.e(e);
             }
         }
     }
 
+    private void showGDPRIfNecessary() {
+        GDPRSetup setup = getGDPRSetup();
+        GDPR.getInstance().checkIfNeedsToBeShown(this, setup);
+    }
+
     private GDPRSetup getGDPRSetup() {
 
         return new GDPRSetup(GDPRDefinitions.ADMOB,
                 GDPRDefinitions.FIREBASE_CRASH,
-                new GDPRNetwork("Fabric - Crashlytics",
-                        "https://try.crashlytics.com/terms/",
-                        context.getString(R.string.gdpr_type_crash),
-                        true,
-                        false),
-                new GDPRNetwork("Fabric - Answers",
-                        "https://answers.io/img/onepager/privacy.pdf",
-                        context.getString(R.string.gdpr_type_analytics),
-                        true,
-                        false),
+                GDPRDefinitions.FABRIC_CRASHLYTICS,
+                GDPRDefinitions.FABRIC_ANSWERS,
                 GDPRDefinitions.FIREBASE_ANALYTICS)
                 .withPrivacyPolicy("https://spacelaunchnow.me/app/privacy")
                 .withAllowNoConsent(false)
-                .withExplicitAgeConfirmation(true)
-                .withCheckRequestLocation(true)
                 .withBottomSheet(true)
                 .withForceSelection(true);
     }
 
+
     @Override
-    public void onConsentNeedsToBeRequested(GDPRLocation gdprLocation) {
-        // default: forward the result and show the dialog
-        showGDPRIfNecessary(true, gdprLocation);
+    public void onConsentNeedsToBeRequested(GDPRPreperationData gdprPreperationData) {
+        showGDPRIfNecessary(false, gdprPreperationData);
     }
 
     @Override
@@ -806,10 +933,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     // never happens!
                     break;
                 case NO_CONSENT:
-                    if (!SupporterHelper.isSupporter()) {
-                        Intent intent = new Intent(this, SupporterActivity.class);
-                        startActivity(intent);
-                    }
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
                     break;
@@ -822,11 +945,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     // never happens!
                     break;
                 case NO_CONSENT:
-                    // with the default setup, the dialog will shown in this case again anyways!
-                    if (!SupporterHelper.isSupporter()) {
-                        Intent intent = new Intent(this, SupporterActivity.class);
-                        startActivity(intent);
-                    }
                     break;
                 case NON_PERSONAL_CONSENT_ONLY:
                     break;
@@ -843,12 +961,15 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         boolean allowAds = true;
         GDPRConsent consent = consentState.getConsent();
 
-        if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN && consent == GDPRConsent.UNKNOWN) {
+        if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                && consent == GDPRConsent.UNKNOWN) {
             allowAds = false;
-        }
-
-        if (consent == GDPRConsent.NO_CONSENT || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
+        } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                && consent == GDPRConsent.NO_CONSENT
+                || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
             allowsPersonalAds = false;
+        } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
+            GDPR.getInstance().resetConsent();
         }
 
         Timber.v("Load Ads");
@@ -874,7 +995,13 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 public void onAdLoaded() {
                     Timber.d("Ad loaded successfully.");
                     adviewEnabled = true;
-                    showAd();
+                    if (mUpcomingFragment != null) {
+                        if (!mUpcomingFragment.isFilterShown()) {
+                            showAd();
+                        }
+                    } else {
+                        showAd();
+                    }
                     super.onAdLoaded();
                 }
             });
@@ -887,6 +1014,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     @Override
     public void onNavigateToLaunches() {
-        drawer.setSelection(R.id.menu_launches);
+        bottomNavigationView.selectTab(1);
     }
 }

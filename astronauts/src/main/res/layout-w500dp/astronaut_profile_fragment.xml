@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="@dimen/max_width"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/material_card_edge_margin"
+            android:animateLayoutChanges="true"
+            android:padding="@dimen/material_card_edge_margin"
+            app:cardBackgroundColor="?backgroundColor"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="@dimen/material_card_elevation_resting"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <TextView
+                    android:id="@+id/astronaut_bio_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    android:gravity="center"
+                    android:paddingTop="8dp"
+                    android:text="@string/biography"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:textSize="@dimen/material_typography_regular_title_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/astronaut_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:paddingBottom="8dp"
+                    android:singleLine="false"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:textSize="@dimen/material_typography_regular_subheading_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/astronaut_bio_title" />
+
+                <TextView
+                    android:id="@+id/astronaut_born"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/material_baseline_grid_1x"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginStart="@dimen/material_baseline_grid_2x"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+                    android:textAlignment="textStart"
+                    android:textAppearance="@style/MaterialTypography.Dense.Caption"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/astronaut_status"
+                    tools:text="Born: April 18th, 1991" />
+
+                <TextView
+                    android:id="@+id/astronaut_died"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/material_baseline_grid_1x"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginStart="@dimen/material_baseline_grid_2x"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+                    android:textAlignment="textStart"
+                    android:textAppearance="@style/MaterialTypography.Dense.Caption"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/astronaut_born"
+                    tools:text="Died: April 18th, 1991 (1)"  />
+
+                <TextView
+                    android:id="@+id/astronaut_bio_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/material_baseline_grid_1x"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
+                    android:layout_marginStart="@dimen/material_baseline_grid_2x"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+                    android:textAlignment="textStart"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/astronaut_died"
+                    tools:text="An Astronaut biography." />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/astronaut_twitter_button"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1x"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/astronaut_instagram_button"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/astronaut_bio_text" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/astronaut_instagram_button"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/astronaut_wiki_button"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/astronaut_twitter_button"
+                    app:layout_constraintTop_toBottomOf="@+id/astronaut_bio_text" />
+
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/astronaut_wiki_button"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/astronaut_instagram_button"
+                    app:layout_constraintTop_toBottomOf="@+id/astronaut_bio_text" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/lsp_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/material_baseline_grid_4x"
+            android:layout_marginEnd="@dimen/material_card_edge_margin"
+            android:layout_marginStart="@dimen/material_card_edge_margin"
+            android:layout_marginTop="@dimen/material_card_edge_margin"
+            android:animateLayoutChanges="true"
+            android:paddingBottom="@dimen/material_baseline_grid_4x"
+            android:paddingEnd="@dimen/material_card_edge_margin"
+            android:paddingStart="@dimen/material_card_edge_margin"
+            android:paddingTop="@dimen/material_card_edge_margin"
+            app:cardBackgroundColor="?backgroundColor"
+            app:cardCornerRadius="4dp"
+            app:cardElevation="@dimen/material_card_elevation_resting"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@+id/lsp_wikiButton_one"
+                app:layout_constraintStart_toEndOf="@+id/lsp_wikiButton_one">
+
+
+                <TextView
+                    android:id="@+id/lsp_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    android:gravity="center_horizontal"
+                    android:lines="1"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="8dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:textSize="@dimen/material_typography_regular_title_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="SpaceX" />
+
+                <TextView
+                    android:id="@+id/lsp_type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimary"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="4dp"
+                    android:singleLine="false"
+                    android:textAlignment="center"
+                    android:textColor="@color/dark_primary_text_color_selector"
+                    android:textSize="@dimen/material_typography_regular_subheading_text_size"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lsp_name"
+                    tools:text="Launch Service Provider" />
+
+
+                <ImageView
+                    android:id="@+id/lsp_logo"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="@dimen/material_card_edge_margin"
+                    android:paddingEnd="32dp"
+                    android:paddingStart="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:src="@drawable/placeholder"
+                    tools:src="@drawable/ic_splash"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lsp_type" />
+
+                <TextView
+                    android:id="@+id/lsp_administrator"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
+                    android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
+                    android:textAppearance="@style/MaterialTypography.Regular.Title"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lsp_logo"
+                    tools:text="Elon Musk" />
+
+                <TextView
+                    android:id="@+id/lsp_founded_year"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
+                    android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lsp_administrator"
+                    tools:text="Founded in 2001" />
+
+                <TextView
+                    android:id="@+id/lsp_summary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:paddingLeft="@dimen/material_card_supporting_text_padding_horizontal"
+                    android:paddingRight="@dimen/material_card_supporting_text_padding_horizontal"
+                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lsp_founded_year"
+                    tools:text="asd asd asd asd asd asd asd" />
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/lsp_infoButton_one"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:text="@string/info"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toStartOf="@+id/lsp_wikiButton_one"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lsp_summary" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/lsp_wikiButton_one"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:text="@string/wiki"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/lsp_infoButton_one"
+                    app:layout_constraintTop_toBottomOf="@+id/lsp_summary" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/lsp_agency"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/material_card_edge_margin"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center"
+                    android:padding="@dimen/material_card_edge_margin"
+                    android:paddingBottom="@dimen/material_baseline_grid_4x"
+                    android:text="@string/view_upcoming_launches"
+                    android:textSize="12sp"
+                    android:textColor="?colorPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lsp_infoButton_one" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

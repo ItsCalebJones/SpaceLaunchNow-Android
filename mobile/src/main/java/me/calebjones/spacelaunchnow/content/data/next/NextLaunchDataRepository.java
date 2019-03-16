@@ -1,25 +1,20 @@
 package me.calebjones.spacelaunchnow.content.data.next;
 
 import android.content.Context;
-import android.support.annotation.UiThread;
 
-import com.crashlytics.android.Crashlytics;
-
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.UiThread;
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
-import me.calebjones.spacelaunchnow.content.data.callbacks.Callbacks;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
-import me.calebjones.spacelaunchnow.content.database.SwitchPreferences;
-import me.calebjones.spacelaunchnow.content.util.FilterBuilder;
-import me.calebjones.spacelaunchnow.content.util.QueryBuilder;
+import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
+import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
+import me.calebjones.spacelaunchnow.common.content.util.FilterBuilder;
+import me.calebjones.spacelaunchnow.common.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
@@ -69,8 +64,16 @@ public class NextLaunchDataRepository {
             long timeMaxUpdate = TimeUnit.MINUTES.toMillis(10);
             Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
             if (timeSinceUpdate > timeMaxUpdate || forceRefresh) {
-                Timber.d("%s greater than %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
-                nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
+
+                Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
+                if (!forceRefresh) {
+                    nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
+                }
+                if (forceRefresh) {
+                    RealmResults<Launch> launches = realm.where(Launch.class).findAll();
+                    realm.executeTransaction(realm -> launches.deleteAllFromRealm());
+                }
+
                 getNextUpcomingLaunchesFromNetwork(count, nextLaunchesCallback);
             } else {
                 nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
@@ -132,7 +135,7 @@ public class NextLaunchDataRepository {
             long lastUpdateDiffInHours = TimeUnit.MILLISECONDS.toHours(lastUpdateDiffInMs);
             if (netDiffInHours <= 168) {
                 if (lastUpdateDiffInHours > 24) {
-                    int id = launch.getId();
+                    String id = launch.getId();
                     DataClient.getInstance().getLaunchById(launch.getId(),  new Callback<Launch>() {
                         @Override
                         public void onResponse(Call<Launch> call, Response<Launch> response) {
@@ -148,7 +151,7 @@ public class NextLaunchDataRepository {
                                     dataLoader.getDataSaver().deleteLaunch(id);
                                 }
 
-                                dataLoader.getDataSaver().sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, ErrorUtil.parseLibraryError(response)));
+                                dataLoader.getDataSaver().sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, ErrorUtil.parseSpaceLaunchNowError(response)));
                             }
                         }
 

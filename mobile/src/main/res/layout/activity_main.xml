@@ -1,42 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
-    <android.support.v4.widget.DrawerLayout
+    <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
+        android:theme="?theme"
         tools:openDrawer="start">
 
-        <RelativeLayout
-            android:id="@+id/container"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <include
-                layout="@layout/app_bar_main"
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/adView"
-                />
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:elevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/main_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:theme="?actionBarTheme"
+                    app:popupTheme="?popupTheme"
+                    android:elevation="0dp"/>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <com.ashokvarma.bottomnavigation.BottomNavigationBar
+                android:id="@+id/navigation_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="8dp"
+                android:layout_marginTop="2dp"
+                android:clipToPadding="false"
+                app:bnbElevation="6dp"
+                app:bnbAutoHideEnabled="true"
+                app:bnbActiveColor="?android:attr/textColorPrimary"
+                app:bnbInactiveColor="?android:attr/textColorSecondary"
+                app:bnbBackgroundColor="?backgroundColor"
+                app:bnbMode="mode_fixed"
+                app:bnbBackgroundStyle="background_style_static"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <FrameLayout
+                android:id="@+id/flContent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:elevation="0dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:layout_constraintBottom_toTopOf="@+id/adView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+                app:layout_constraintVertical_bias="0.39" />
+
+            <com.google.android.gms.ads.AdView
                 android:id="@+id/adView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
+                android:clipToPadding="false"
                 android:visibility="gone"
-                ads:adSize="SMART_BANNER"
-                ads:adUnitId="ca-app-pub-9824528399164059/9713798255" />
+                app:adSize="SMART_BANNER"
+                app:adUnitId="ca-app-pub-9824528399164059/9713798255"
+                app:layout_constraintBottom_toTopOf="@+id/navigation_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/flContent" />
 
-        </RelativeLayout>
-    </android.support.v4.widget.DrawerLayout>
-</android.support.design.widget.CoordinatorLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

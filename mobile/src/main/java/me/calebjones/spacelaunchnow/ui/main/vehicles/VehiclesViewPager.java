@@ -3,12 +3,6 @@ package me.calebjones.spacelaunchnow.ui.main.vehicles;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,12 +10,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.tabs.TabLayout;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseFragment;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.local.common.BaseFragment;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.launcher.LauncherFragment;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.orbiter.OrbiterFragment;
-import me.calebjones.spacelaunchnow.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 
 public class VehiclesViewPager extends BaseFragment {
 
@@ -34,6 +34,14 @@ public class VehiclesViewPager extends BaseFragment {
     private static ListPreferences sharedPreference;
     private Context context;
 
+    public static VehiclesViewPager newInstance() {
+
+        VehiclesViewPager u = new VehiclesViewPager();
+        Bundle b = new Bundle();
+        u.setArguments(b);
+
+        return u;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

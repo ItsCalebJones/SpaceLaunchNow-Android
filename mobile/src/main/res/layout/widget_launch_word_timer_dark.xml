@@ -47,7 +47,7 @@
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:textColor="@color/dark_theme_secondary_text_color"
+                    android:textColor="?android:attr/textColorSecondaryInverse"
                     android:textSize="22sp" />
             </LinearLayout>
 
@@ -74,7 +74,7 @@
                     android:scaleX="1.0"
                     android:scaleY="1.0"
                     android:text="- -"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
                     android:textSize="30sp" />
 
                 <TextView
@@ -85,7 +85,7 @@
                     android:lines="1"
                     android:paddingTop="8dp"
                     android:text="@string/lower_days"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
                     android:textSize="14sp" />
 
                 <TextView
@@ -99,7 +99,7 @@
                     android:paddingRight="8dp"
                     android:paddingTop="8dp"
                     android:text="- -"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
                     android:textSize="30sp" />
 
                 <TextView
@@ -110,7 +110,7 @@
                     android:lines="1"
                     android:paddingTop="8dp"
                     android:text="@string/lower_hours"
-                    android:textColor="@color/dark_theme_primary_text_color"
+                    android:textColor="?android:attr/textColorPrimaryInverse"
                     android:textSize="14sp" />
             </LinearLayout>
 

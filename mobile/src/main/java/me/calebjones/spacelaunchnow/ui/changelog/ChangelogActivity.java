@@ -1,12 +1,11 @@
 package me.calebjones.spacelaunchnow.ui.changelog;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 import com.mukesh.MarkdownView;
 
 import butterknife.BindView;
@@ -14,7 +13,7 @@ import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.utils.Utils;
 
-public class ChangelogActivity extends AppCompatActivity {
+public class ChangelogActivity extends CyaneaAppCompatActivity {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;

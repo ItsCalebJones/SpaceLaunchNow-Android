@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/landing_type_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_baseline_grid_2x"
+        android:layout_marginTop="8dp"
+        android:text="Type:"
+        android:textAppearance="@style/MaterialTypography.Regular.Title"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/landing_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:singleLine="false"
+        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/landing_type_title"
+        app:layout_constraintTop_toTopOf="@+id/landing_type_title"
+        tools:text="Autonomous Spaceport Drone Ship (ASDS)" />
+
+    <TextView
+        android:id="@+id/landing_type_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+        android:layout_marginStart="@dimen/material_baseline_grid_2x"
+        android:layout_marginTop="@dimen/material_baseline_grid_1x"
+        android:ellipsize="end"
+        android:paddingBottom="@dimen/material_card_supporting_text_padding_bottom"
+        android:singleLine="false"
+        android:text=""
+        android:textAppearance="@style/MaterialTypography.Regular.Body1"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_type"
+        tools:text="An autonomous spaceport drone ship parked a few hundred km downrange." />
+
+    <TextView
+        android:id="@+id/landing_location_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_baseline_grid_2x"
+        android:layout_marginTop="8dp"
+        android:text="Location:"
+        android:textAppearance="@style/MaterialTypography.Regular.Title"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_type_description" />
+
+    <TextView
+        android:id="@+id/landing_location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+        android:layout_marginStart="8dp"
+        android:ellipsize="end"
+        android:singleLine="false"
+        android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/landing_location_title"
+        app:layout_constraintTop_toTopOf="@+id/landing_location_title"
+        tools:text="Of Course I Still Love You (OCISLY)" />
+
+    <TextView
+        android:id="@+id/landing_location_description"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="@dimen/material_baseline_grid_2x"
+        android:layout_marginStart="@dimen/material_baseline_grid_2x"
+        android:layout_marginTop="@dimen/material_baseline_grid_1x"
+        android:ellipsize="end"
+        android:singleLine="false"
+        android:text=""
+        android:textAlignment="viewStart"
+
+        android:textAppearance="@style/MaterialTypography.Regular.Body1"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_location"
+        tools:text="A autonomous spaceport drone ship parked a few hundred km downrange." />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

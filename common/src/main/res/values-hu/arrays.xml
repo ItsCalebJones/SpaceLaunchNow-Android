@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="widget_presets">
+        <item>Világos</item>
+        <item>Sötét</item>
+        <item>Világos - átlátszó</item>
+        <item>Sötét - átlátszó</item>
+        <item>Kék</item>
+        <item>Piros</item>
+        <item>Zöldeskék</item>
+        <item>Narancssárga</item>
+        <item>Egyedi</item>
+    </string-array>
+    <string-array name="widget_presets_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+    <string-array name="spinner_list_item_array">
+        <item>Összes</item>
+        <item>Elkövetkező</item>
+        <item>Előző</item>
+    </string-array>
+</resources>

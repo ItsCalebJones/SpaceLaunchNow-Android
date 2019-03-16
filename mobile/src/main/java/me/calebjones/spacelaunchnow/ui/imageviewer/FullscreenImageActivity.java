@@ -4,7 +4,7 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
+import androidx.core.app.NavUtils;
 import android.transition.Transition;
 import android.view.MenuItem;
 
@@ -12,8 +12,8 @@ import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
+import me.calebjones.spacelaunchnow.local.common.BaseActivity;
+import me.calebjones.spacelaunchnow.common.GlideApp;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -74,21 +74,6 @@ public class FullscreenImageActivity extends BaseActivity {
                 // load the full version, crossfading from the thumbnail image
                 GlideApp.with(getApplicationContext())
                         .load(imageURL)
-                        .into(photoView);
-            }
-        } else if (getIntent().getStringExtra("image") != null){
-            String image = getIntent().getStringExtra("image");
-            if (image.contains("btc")){
-                GlideApp.with(getApplicationContext())
-                        .load(R.drawable.btc_wallet)
-                        .into(photoView);
-            } else if (image.contains("ltc")){
-                GlideApp.with(getApplicationContext())
-                        .load(R.drawable.ltc_wallet)
-                        .into(photoView);
-            } else if (image.contains("eth")){
-                GlideApp.with(getApplicationContext())
-                        .load(R.drawable.eth_wallet)
                         .into(photoView);
             }
         }

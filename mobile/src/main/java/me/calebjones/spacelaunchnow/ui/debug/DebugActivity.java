@@ -1,17 +1,19 @@
 package me.calebjones.spacelaunchnow.ui.debug;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.utils.ActivityUtils;
 
-public class DebugActivity extends AppCompatActivity implements DebugContract.NavigatorProvider {
+public class DebugActivity extends CyaneaAppCompatActivity implements DebugContract.NavigatorProvider {
 
     private DebugPresenter debugPresenter;
 
@@ -33,8 +35,7 @@ public class DebugActivity extends AppCompatActivity implements DebugContract.Na
         if (debugFragment == null) {
             // Create the fragment
             debugFragment = DebugFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(), debugFragment, R.id.contentFrame);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), debugFragment, R.id.contentFrame);
         }
 
         // Create the presenter

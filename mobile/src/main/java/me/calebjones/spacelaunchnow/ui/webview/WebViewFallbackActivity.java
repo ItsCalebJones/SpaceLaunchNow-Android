@@ -1,7 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.webview;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseActivity;
+import me.calebjones.spacelaunchnow.local.common.BaseActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 
 public class WebViewFallbackActivity extends BaseActivity {

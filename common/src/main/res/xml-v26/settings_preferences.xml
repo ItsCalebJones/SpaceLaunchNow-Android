@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen android:title="@string/settings"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="@string/general"
+        android:summary="@string/general_settings"
+        app:iconSpaceReserved="false">
+        <Preference
+            app:iconSpaceReserved="false"
+            android:key="custom_themes"
+            android:title="Theme Customization"
+            android:summary="Set primary, accent and background colors!">
+        </Preference>
+        <SwitchPreference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:key="local_time"
+            android:summaryOff="@string/local_timezone_off"
+            android:summaryOn="@string/local_timezone_on"
+            android:title="@string/local_timezone" />
+        <SwitchPreference
+            android:defaultValue="false"
+            app:iconSpaceReserved="false"
+            android:key="24_hour_mode"
+            android:summaryOff="@string/time_format_off"
+            android:summaryOn="@string/time_format_on"
+            android:title="@string/time_format" />
+        <SwitchPreference
+            android:defaultValue="false"
+            app:iconSpaceReserved="false"
+            android:key="confirm_exit"
+            android:summary="@string/confirm_exit_summary"
+            android:title="@string/confirm_exit" />
+        <SwitchPreference
+            android:defaultValue="false"
+            app:iconSpaceReserved="false"
+            android:key="debug_logging"
+            android:summary="@string/debug_logging_summary"
+            android:title="@string/debug_logging" />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="calendar_category"
+        android:title="@string/calendar_settings"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            app:iconSpaceReserved="false"
+            android:key="calendar_sync_state"
+            android:summary="@string/auto_calendar_summary"
+            android:title="@string/auto_calendar" />
+
+        <ListPreference
+            android:defaultValue="0"
+            app:iconSpaceReserved="false"
+            android:dependency="calendar_sync_state"
+            android:key="default_calendar_state"
+            android:summary="@string/calendar_account_summary"
+            android:title="@string/calendar_account"
+            android:entries="@array/empty"
+            android:entryValues="@array/empty"
+            />
+
+        <MultiSelectListPreference
+            android:defaultValue="@array/multi_calendar_reminder_default"
+            android:key="calendar_reminder_array"
+            app:iconSpaceReserved="false"
+            android:dependency="calendar_sync_state"
+            android:entries="@array/multi_calendar_reminder"
+            android:entryValues="@array/multi_calendar_reminder_values"
+            android:summary="@string/event_reminder_summary"
+            android:title="@string/event_reminder" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/widgets"
+        android:key="widget_category"
+        app:iconSpaceReserved="false">
+        <ListPreference
+            android:key="widget_presets"
+            app:iconSpaceReserved="false"
+            android:defaultValue="1"
+            android:title="@string/widget_themes"
+            android:summary="@string/widget_themes_summary"
+            android:entries="@array/widget_presets"
+            android:entryValues="@array/widget_presets_values"/>
+
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="0xFF303030"
+            app:iconSpaceReserved="false"
+            android:key="widget_background_color"
+            android:summary="@string/widget_background_summary"
+            android:title="@string/widget_background"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="@color/white"
+            android:key="widget_text_color"
+            app:iconSpaceReserved="false"
+            android:summary="@string/primary_text_summary"
+            android:title="@string/primary_text"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="0xB3FFFFFF"
+            app:iconSpaceReserved="false"
+            android:key="widget_secondary_text_color"
+            android:summary="@string/secondary_text_summary"
+            android:title="@string/secondary_text"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="0xFF455A64"
+            app:iconSpaceReserved="false"
+            android:key="widget_list_accent_color"
+            android:summary="@string/launch_list_widget_accent_summary"
+            android:title="@string/launch_list_widget_accent"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="@color/white"
+            app:iconSpaceReserved="false"
+            android:key="widget_title_text_color"
+            android:summary="@string/launch_list_widget_text_summary"
+            android:title="@string/launch_list_widget_text"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="@color/white"
+            app:iconSpaceReserved="false"
+            android:key="widget_icon_color"
+            android:summary="@string/icon_color_summary"
+            android:title="@string/icon_color"
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="true"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            app:iconSpaceReserved="false"
+            android:key="widget_refresh_enabled"
+            android:summary="@string/hide_refresh_summary"
+            android:title="@string/hide_refresh" />
+        <SwitchPreference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:key="widget_theme_round_corner"
+            android:summary="@string/round_corners_summary"
+            android:title="@string/round_corners" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/weather"
+        android:key="weather_category"
+        app:iconSpaceReserved="false">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="weather"
+            app:iconSpaceReserved="false"
+            android:summary="@string/enable_weather_summary"
+            android:title="@string/enable_weather" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="weather_US_SI"
+            app:iconSpaceReserved="false"
+            android:summaryOn="@string/weather_type_on"
+            android:summaryOff="@string/weather_type_off"
+            android:title="@string/weather_type" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/notification_preferences"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:key="notificationEnabled"
+            android:summaryOff="@string/enable_notifications_off"
+            android:summaryOn="@string/enable_notifications_on"
+            android:title="@string/enable_notifications" />
+        <Preference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:key="notification_filters"
+            android:summary="@string/notification_filter_description"
+            android:title="@string/notification_filters" />
+        <SwitchPreference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:dependency="notificationEnabled"
+            android:key="netstampChanged"
+            android:summaryOff="@string/status_updates_off"
+            android:summaryOn="@string/status_updates_on"
+            android:title="@string/status_updates" />
+        <SwitchPreference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:dependency="notificationEnabled"
+            android:key="inFlight"
+            android:summary="@string/settings_in_flight_summary"
+            android:title="@string/settings_in_flight" />
+        <SwitchPreference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:dependency="notificationEnabled"
+            android:key="success"
+            android:summary="@string/settings_success_summary"
+            android:title="@string/settings_success" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="notificationEnabled"
+            android:key="eventNotifications"
+            android:summary="Receive notifications for post-launch spaceflight events and news."
+            android:title="Events and News Notifications"
+            app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:defaultValue="false"
+            app:iconSpaceReserved="false"
+            android:dependency="notificationEnabled"
+            android:key="webcastOnly"
+            android:summary="@string/webcast_only_summary"
+            android:title="@string/webcast_only" />
+
+        <Preference
+            android:dependency="notificationEnabled"
+            app:iconSpaceReserved="false"
+            android:key="manage_notification_channel"
+            android:summary="Change priorities, ringtones, etc."
+            android:title="Manage Notification Channels" />
+
+        <Preference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:dependency="notificationEnabled"
+            android:key="notifications_new_message_test"
+            android:summary="@string/test_notification_summary"
+            android:title="@string/test_notification" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:dependency="notificationEnabled"
+        app:iconSpaceReserved="false"
+        android:summary="@string/notification_interval_summary"
+        android:title="@string/notification_interval">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:key="twentyFourHour"
+            android:summaryOff="@string/twenty_four_hour_off"
+            android:summaryOn="@string/twenty_four_hour_on"
+            android:title="@string/twenty_four_hour_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:key="oneHour"
+            android:summaryOff="@string/one_hour_off"
+            android:summaryOn="@string/one_hour_on"
+            android:title="@string/one_hour_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:key="tenMinutes"
+            android:summaryOff="@string/ten_minutes_off"
+            android:summaryOn="@string/ten_minutes_on"
+            android:title="@string/ten_minutes_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:key="oneMinute"
+            android:summaryOff="@string/settings_one_minute_off"
+            android:summaryOn="@string/settings_one_minute_on"
+            android:title="@string/settings_one_minute" />
+    </PreferenceCategory>
+</PreferenceScreen>

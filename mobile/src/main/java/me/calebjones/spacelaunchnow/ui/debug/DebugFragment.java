@@ -1,27 +1,35 @@
 package me.calebjones.spacelaunchnow.ui.debug;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.SwitchCompat;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
+import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 
 public class DebugFragment extends Fragment implements DebugContract.View {
 
     @BindView(R.id.supporter_switch)
     SwitchCompat supporterSwitch;
-    @BindView(R.id.debug_launches_switch)
-    SwitchCompat debugLaunchesSwitch;
+    @BindView(R.id.debug_launches_spinner)
+    AppCompatSpinner endpointSelector;
     @BindView(R.id.next_launch_button)
     AppCompatButton nextLaunchButton;
     @BindView(R.id.background_sync_button)
@@ -81,11 +89,6 @@ public class DebugFragment extends Fragment implements DebugContract.View {
     }
 
     @Override
-    public void setDebugLaunches(boolean state) {
-        debugLaunchesSwitch.setChecked(state);
-    }
-
-    @Override
     public void showSnackbarMessage(String message) {
         SnackbarHandler.showInfoSnackbar(getContext(), coordinatorLayout, message);
     }
@@ -94,11 +97,6 @@ public class DebugFragment extends Fragment implements DebugContract.View {
     @OnClick(R.id.supporter_switch)
     void supportSwitchClicked(SwitchCompat view) {
         debugPresenter.toggleSupporterSwitch(view.isChecked());
-    }
-
-    @OnClick(R.id.debug_launches_switch)
-    void debugSwitchCLicked(SwitchCompat view) {
-        debugPresenter.toggleDebugLaunchesClicked(view.isChecked(), getContext());
     }
 
     @OnClick(R.id.next_launch_button)
@@ -133,6 +131,26 @@ public class DebugFragment extends Fragment implements DebugContract.View {
 
     public void initializeViews() {
         supporterSwitch.setChecked(debugPresenter.getSupporterStatus());
-        debugLaunchesSwitch.setChecked(debugPresenter.getDebugStatus());
+        List<String> endpoints = new ArrayList<>();
+
+        endpoints.add(Constants.API_BASE_URL);
+        endpoints.add(Constants.API_DEV_BASE_URL);
+        endpoints.add(Constants.API_DEBUG_BASE_URL);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, endpoints);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        endpointSelector.setAdapter(adapter);
+        endpointSelector.setPrompt("Select Endpoint");
+        endpointSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                debugPresenter.endpointSelectorClicked(adapterView.getItemAtPosition(position).toString());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 }

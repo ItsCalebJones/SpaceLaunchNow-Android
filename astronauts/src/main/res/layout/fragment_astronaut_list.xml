@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/astronaut_coordinator"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <cz.kinst.jakub.view.SimpleStatefulLayout
+        android:id="@+id/astronaut_stateful_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:emptyLayout="@layout/empty_astronauts"
+        app:progressLayout="@layout/custom_progress">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/astronaut_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/astronaut_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </cz.kinst.jakub.view.SimpleStatefulLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/astronaut_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        app:elevation="4dp"
+        android:layout_margin="@dimen/material_baseline_grid_2x"
+        android:src="@drawable/ic_filter"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

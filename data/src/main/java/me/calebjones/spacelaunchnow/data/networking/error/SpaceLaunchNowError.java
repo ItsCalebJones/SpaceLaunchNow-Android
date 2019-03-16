@@ -12,7 +12,7 @@ public class SpaceLaunchNowError {
         return statusCode;
     }
 
-    public String message() {
+    public String getMessage() {
         return message;
     }
 }

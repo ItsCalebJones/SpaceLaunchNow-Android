@@ -9,7 +9,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="product_bottom">16dp</dimen>
     <dimen name="product_bottom_text">48dp</dimen>
-    <dimen name="max_width">400dp</dimen>
 
     <!-- dimensions -->
     <dimen name="image_width">120dp</dimen>
@@ -22,4 +21,6 @@
     <dimen name="header_view_start_margin_bottom">14dp</dimen>
     <dimen name="view_margins">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="collapsed_fab_size">56dp</dimen>
+    <dimen name="extended_fab_height">48dp</dimen>
 </resources>

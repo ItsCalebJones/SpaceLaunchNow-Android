@@ -2,7 +2,6 @@ package me.calebjones.spacelaunchnow.wear.ui.launch;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import androidx.recyclerview.widget.RecyclerView;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.wear.ui.launchdetail.LaunchDetail;

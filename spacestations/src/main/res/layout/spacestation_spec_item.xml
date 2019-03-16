@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/material_baseline_grid_1x"
+    android:layout_marginEnd="@dimen/material_baseline_grid_1x"
+    android:layout_gravity="center">
+
+    <ImageView
+        android:id="@+id/spec_icon"
+        android:layout_width="@dimen/material_baseline_grid_4x"
+        android:layout_height="@dimen/material_baseline_grid_4x"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_astrophysics"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/spec_title"
+        style="@style/MaterialTypography.Locale.Subheading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/spec_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Height" />
+
+    <TextView
+        android:id="@+id/spec_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        style="@style/MaterialTypography.Locale.Caption"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/spec_title"
+        app:layout_constraintStart_toStartOf="@+id/spec_title"
+        app:layout_constraintTop_toBottomOf="@+id/spec_title"
+        tools:text="112.5 m" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,14 +6,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.graphics.Palette;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,23 +15,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.github.florent37.glidepalette.GlidePalette;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.BaseActivity;
-import me.calebjones.spacelaunchnow.content.database.ListPreferences;
+import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
+import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
+import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
-import me.calebjones.spacelaunchnow.data.models.main.LauncherConfig;
+import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
+import me.calebjones.spacelaunchnow.local.common.BaseActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.ui.settings.SettingsActivity;
-import me.calebjones.spacelaunchnow.utils.GlideApp;
 import me.calebjones.spacelaunchnow.utils.Utils;
-import me.calebjones.spacelaunchnow.utils.views.CustomOnOffsetChangedListener;
 import timber.log.Timber;
 
 public class LauncherDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -74,11 +71,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        if (sharedPreference.isNightModeActive(this)) {
-            statusColor = ContextCompat.getColor(context, R.color.darkPrimary_dark);
-        } else {
-            statusColor = ContextCompat.getColor(context, R.color.colorPrimaryDark);
-        }
+        statusColor = getCyanea().getPrimaryDark();
 
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         toolbarTitle = findViewById(R.id.title_text);
@@ -158,53 +151,9 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
     private void applyProfileBackdrop(String drawableURL) {
         Timber.d("LauncherDetailActivity - Loading Backdrop Image url: %s ", drawableURL);
-        int palette;
-        if (ListPreferences.getInstance(context).isNightModeActive(context)) {
-            palette = GlidePalette.Profile.MUTED_DARK;
-        } else {
-            palette = GlidePalette.Profile.VIBRANT;
-        }
         GlideApp.with(this)
                 .load(drawableURL)
                 .centerCrop()
-                .listener(GlidePalette.with(drawableURL)
-                        .use(palette)
-                        .intoCallBack(palette1 -> {
-                            if (ListPreferences.getInstance(context).isNightModeActive(context)) {
-                                if (palette1 != null) {
-                                    Palette.Swatch color = null;
-                                    if (palette1.getDarkMutedSwatch() != null) {
-                                        color = palette1.getDarkMutedSwatch();
-                                    } else if (palette1.getDarkVibrantSwatch() != null) {
-                                        color = palette1.getDarkVibrantSwatch();
-                                    }
-                                    if (color != null) {
-                                        collapsingToolbar.setContentScrimColor(color.getRgb());
-                                        customOnOffsetChangedListener.updateStatusColor(color.getRgb());
-                                        appBarLayout.setBackgroundColor(color.getRgb());
-                                        adapter.updateColor(color.getRgb());
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                }
-                            } else {
-                                if (palette1 != null) {
-                                    Palette.Swatch color = null;
-                                    if (palette1.getVibrantSwatch() != null) {
-                                        color = palette1.getVibrantSwatch();
-                                    } else if (palette1.getMutedSwatch() != null) {
-                                        color = palette1.getMutedSwatch();
-                                    }
-                                    if (color != null) {
-                                        collapsingToolbar.setContentScrimColor(color.getRgb());
-                                        customOnOffsetChangedListener.updateStatusColor(color.getRgb());
-                                        appBarLayout.setBackgroundColor(color.getRgb());
-                                        adapter.updateColor(color.getRgb());
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                }
-                            }
-                        })
-                        .crossfade(true))
                 .into(detail_profile_backdrop);
 
     }

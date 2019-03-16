@@ -1,0 +1,72 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'com.jakewharton.butterknife'
+
+android {
+    compileSdkVersion 28
+
+
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        debug {}
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+
+}
+
+dependencies {
+    implementation project(':common')
+    implementation project(path: ':data')
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation deps.cardview
+    implementation deps.appcompat
+    implementation deps.lifecycleExtensions
+
+    implementation deps.kotlin_stdlib_jdk7
+
+    implementation deps.material
+    implementation deps.retrofit
+    implementation deps.converter_gson
+    implementation deps.gson
+    implementation deps.cyanea
+    implementation deps.statefulLayout
+    implementation deps.okhttp
+    implementation deps.okhttpLogging
+    implementation deps.constraintLayout
+
+    //Twitter
+    implementation deps.twitterCore
+    implementation deps.twitterUi
+
+    implementation deps.glide
+    kapt 'com.github.bumptech.glide:compiler:4.8.0'
+
+    implementation deps.timber
+
+    implementation deps.butterknife
+    annotationProcessor deps.butterknifeCompiler
+
+}
+repositories {
+    mavenCentral()
+}

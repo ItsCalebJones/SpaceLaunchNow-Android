@@ -1,45 +1,38 @@
 package me.calebjones.spacelaunchnow.ui.main.vehicles.orbiter;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
-import android.util.SparseArray;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.RetroFitFragment;
+import me.calebjones.spacelaunchnow.common.base.RetroFitFragment;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
-import me.calebjones.spacelaunchnow.data.models.main.Orbiter;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.interfaces.SpaceLaunchNowService;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
-import me.calebjones.spacelaunchnow.data.networking.responses.base.OrbiterResponse;
-import me.calebjones.spacelaunchnow.ui.launcher.LauncherDetailActivity;
-import me.calebjones.spacelaunchnow.ui.orbiter.OrbiterDetailActivity;
+import me.calebjones.spacelaunchnow.ui.spacecraft.OrbiterDetailActivity;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.OnItemClickListener;
-import me.calebjones.spacelaunchnow.utils.views.SnackbarHandler;
+import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,7 +42,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
 
     private Context context;
     private View view;
-    private OrbiterAdapter adapter;
+    private SpacecraftConfigAdapter adapter;
     private GridLayoutManager layoutManager;
     private List<Agency> items = new ArrayList<Agency>();
 
@@ -68,7 +61,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
-        adapter = new OrbiterAdapter(context);
+        adapter = new SpacecraftConfigAdapter(context);
     }
 
     @Override
@@ -105,7 +98,6 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
         });
         adapter.setOnItemClickListener(recyclerRowClickListener);
         mRecyclerView.setAdapter(adapter);
-        statefulView.showProgress();
         statefulView.setOfflineRetryOnClickListener(v -> loadJSON());
         return view;
     }
@@ -121,6 +113,7 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
     @Override
     public void onResume() {
         if (adapter.getItemCount() == 0) {
+            statefulView.showProgress();
             new Handler().postDelayed(() -> loadJSON(), 100);
         }
         super.onResume();
@@ -128,7 +121,9 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
 
     private void loadJSON() {
         Timber.v("Loading vehicles...");
-        showLoading();
+        if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+            showLoading();
+        }
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
         Call<AgencyResponse> call = request.getAgenciesWithOrbiters(true);
@@ -144,29 +139,33 @@ public class OrbiterFragment extends RetroFitFragment implements SwipeRefreshLay
                     Timber.v("Response pulled from network.");
                 }
 
-                if (response.isSuccessful()) {
-                    AgencyResponse jsonResponse = response.body();
-                    Timber.v("Success %s", response.message());
-                    items = jsonResponse.getAgencies();
-                    statefulView.showContent();
-                    adapter.addItems(items);
-                    Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    if (response.isSuccessful()) {
+                        AgencyResponse jsonResponse = response.body();
+                        Timber.v("Success %s", response.message());
+                        items = jsonResponse.getAgencies();
+                        statefulView.showContent();
+                        adapter.addItems(items);
+                        Analytics.getInstance().sendNetworkEvent("LAUNCHER_INFORMATION", call.request().url().toString(), true);
 
-                } else {
-                    statefulView.showEmpty();
-                    Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).message());
-                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).message());
+                    } else {
+                        statefulView.showEmpty();
+                        Timber.e(ErrorUtil.parseSpaceLaunchNowError(response).getMessage());
+                        SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, ErrorUtil.parseSpaceLaunchNowError(response).getMessage());
+                    }
+                    hideLoading();
                 }
-                hideLoading();
 
             }
 
             @Override
             public void onFailure(Call<AgencyResponse> call, Throwable t) {
                 Timber.e(t.getMessage());
-                statefulView.showOffline();
-                hideLoading();
-                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
+                if(getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    statefulView.showOffline();
+                    hideLoading();
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, t.getLocalizedMessage());
+                }
                 Analytics.getInstance().sendNetworkEvent("VEHICLE_INFORMATION", call.request().url().toString(), false, t.getLocalizedMessage());
             }
         });

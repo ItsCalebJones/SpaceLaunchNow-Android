@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootview"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/astronaut_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="@dimen/material_baseline_grid_2x"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/astronaut_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/launcher" />
+
+
+    <TextView
+        android:id="@+id/astronaut_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_baseline_grid_2x"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="left"
+        android:maxLines="2"
+        tools:text="Neil Armstrong"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="18sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toTopOf="@+id/astronaut_nationality"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/astronaut_image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/astronaut_nationality"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:maxLines="2"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/material_baseline_grid_2x"
+        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+        android:singleLine="false"
+        tools:text="American | NASA"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintBottom_toTopOf="@id/astronaut_status"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/astronaut_image"
+        app:layout_constraintTop_toBottomOf="@+id/astronaut_name" />
+
+    <TextView
+        android:id="@+id/astronaut_status"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:maxLines="2"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/material_baseline_grid_2x"
+        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
+        android:singleLine="false"
+        tools:text="db. 1900 - dd. 2000"
+        android:textColor="?android:textColorSecondary"
+        app:layout_constraintBottom_toBottomOf="@id/astronaut_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/astronaut_image"
+        app:layout_constraintTop_toBottomOf="@+id/astronaut_nationality" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

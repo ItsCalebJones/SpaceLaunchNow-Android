@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="me.calebjones.spacelaunchnow.events">
+
+    <application>
+        <activity
+            android:name=".detail.EventDetailsActivity"
+            android:theme="@style/BaseAppTheme" />
+    </application>
+
+</manifest>

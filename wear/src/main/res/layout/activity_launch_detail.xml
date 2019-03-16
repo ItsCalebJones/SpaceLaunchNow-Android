@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,12 +9,13 @@
     tools:context=".ui.launchdetail.LaunchDetail"
     tools:deviceIds="wear">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.NestedScrollView
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -50,7 +52,7 @@
                         android:layout_marginBottom="@dimen/material_baseline_grid_1x"/>
                 </LinearLayout>
 
-                <android.support.wear.widget.BoxInsetLayout
+                <androidx.wear.widget.BoxInsetLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="@dimen/box_inset_layout_padding">
@@ -67,7 +69,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/launchStatus"
+                                android:id="@+id/status"
                                 style="@style/MaterialTypography.Locale.Subheading"
                                 android:textAlignment="center"
                                 android:layout_width="match_parent"
@@ -124,7 +126,7 @@
                                 android:textColor="?android:textColorSecondary"
                                 android:textSize="10sp" />
 
-                            <android.support.v7.widget.AppCompatButton
+                            <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/explore_button"
                                 android:theme="@style/AppTheme.Button"
                                 android:layout_width="wrap_content"
@@ -132,16 +134,14 @@
                                 android:layout_gravity="center"
                                 android:text="Explore"/>
 
-                            <android.support.v4.widget.Space
+                            <Space
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp" />
                         </LinearLayout>
                     </FrameLayout>
-                </android.support.wear.widget.BoxInsetLayout>
-
-
+                </androidx.wear.widget.BoxInsetLayout>
             </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>
 

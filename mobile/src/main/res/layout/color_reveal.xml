@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/color_reveal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    android:elevation="2dp"
+    tools:visibility="visible"
+    tools:background="@color/primary">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="24dp"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/material_baseline_grid_8x">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/select_launches"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/white"
+                android:textSize="26dp"
+                android:typeface="sans" />
+
+            <TextView
+
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/selection_description"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:typeface="sans" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:padding="12dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/launch_providers_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Launch Service Providers"
+                    android:textAlignment="textStart"
+                    android:textAppearance="@style/MaterialTypography.Locale.Title"
+                    android:textColor="@color/white"
+                    app:layout_constraintStart_toStartOf="@+id/nasa_switch"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/locations_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:text="Launch Locations"
+                    android:textAlignment="textStart"
+                    android:textAppearance="@style/MaterialTypography.Locale.Title"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/ples_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/northrop_switch"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/nasa_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="@string/nasa"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/rl_switch"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_providers_title" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/spacex_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="@string/spacex"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/bo_switch"
+                    app:layout_constraintStart_toStartOf="@+id/nasa_switch"
+                    app:layout_constraintTop_toBottomOf="@id/nasa_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/roscosmos_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="@string/roscosmos"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/arianespace_switch"
+                    app:layout_constraintStart_toStartOf="@+id/spacex_switch"
+                    app:layout_constraintTop_toBottomOf="@id/spacex_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/ula_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="@string/ula"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/isro_switch"
+                    app:layout_constraintStart_toStartOf="@+id/roscosmos_switch"
+                    app:layout_constraintTop_toBottomOf="@id/roscosmos_switch" />
+
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/bo_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="Blue Origin"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/spacex_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/rl_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/rl_switch" />
+
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/arianespace_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="@string/arianespace"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/roscosmos_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/bo_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/bo_switch" />
+
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/isro_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="@string/isro"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/ula_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/arianespace_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/arianespace_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/northrop_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="Northrop Grumman"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/isro_switch"
+                    app:layout_constraintStart_toStartOf="@+id/ula_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/ula_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/rl_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:checked="false"
+                    android:text="Rocket Lab"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/nasa_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/nasa_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_providers_title" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/ples_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="Russia and Kazakhstan"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/casc_switch"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/locations_title" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/casc_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="China"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/ples_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/ples_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/locations_title" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/KSC_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="Kennedy Space Center / Cape Canaveral"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/van_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/casc_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/casc_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/van_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="@string/vandenberg_afb"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/KSC_switch"
+                    app:layout_constraintStart_toStartOf="@+id/ples_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/ples_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/wallops_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="Wallops Island"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/japan_switch"
+                    app:layout_constraintStart_toStartOf="@+id/ples_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/van_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/new_zealand_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="New Zealand"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintEnd_toStartOf="@+id/french_guiana_switch"
+                    app:layout_constraintStart_toStartOf="@+id/ples_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/wallops_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/japan_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="Japan"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/wallops_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/casc_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/KSC_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/french_guiana_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:checked="false"
+                    android:text="French Guiana"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/new_zealand_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/casc_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/japan_switch" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/all_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:checked="false"
+                    android:text="Follow All Launches"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/all_info"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintHorizontal_weight="0.8"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/new_zealand_switch" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/all_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight=".20"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_about"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="0.2"
+                    app:layout_constraintStart_toEndOf="@+id/all_switch"
+                    app:layout_constraintTop_toTopOf="@+id/all_switch" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/action_notification_settings"
+                style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_notification_settings" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/additional_filters"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:typeface="sans" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/these_do_not_affect_launch_notifications"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/white"
+                android:typeface="sans" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_margin="@dimen/material_baseline_grid_1x"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:padding="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                android:orientation="horizontal">
+
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/tbd_launch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".80"
+                    android:checked="true"
+                    android:text="@string/to_be_determined"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/tbd_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".20"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_about" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/persist_last_launch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".80"
+                    android:checked="true"
+                    android:text="@string/keep_launches"
+                    android:textColor="@color/white"
+                    app:buttonTint="@color/white" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/last_launch_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".20"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_about" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -3,7 +3,6 @@ package me.calebjones.spacelaunchnow.ui.intro;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import com.codemybrainsout.onboarder.AhoyOnboarderActivity;
 import com.codemybrainsout.onboarder.AhoyOnboarderCard;
@@ -11,6 +10,7 @@ import com.codemybrainsout.onboarder.AhoyOnboarderCard;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
 import me.calebjones.spacelaunchnow.R;
 
 
@@ -19,6 +19,7 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.BaseAppTheme_LightBackground);
 
 
 
@@ -63,7 +64,7 @@ public class OnboardingActivity extends AhoyOnboarderActivity {
         colorList.add(R.color.slide_four_background);
 
         setColorBackground(colorList);
-        setImageBackground(R.drawable.intro_slide_background);
+//        setImageBackground(R.drawable.intro_slide_background);
         setOnboardPages(pages);
 
     }

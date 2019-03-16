@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="multi_calendar_reminder">
+        <item>Одна минута</item>
+        <item>Пять минут</item>
+        <item>Тридцать минут</item>
+        <item>Один час</item>
+        <item>Два часа</item>
+        <item>Четыре часа</item>
+        <item>Один день</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>Один день</item>
+        <item>Три дня</item>
+        <item>Одна неделя</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>Два</item>
+        <item>Один</item>
+        <item>Пять</item>
+        <item>Двадцать</item>
+        <item>Десять</item>
+        <item>Все (не рекомендовано)</item>
+    </string-array>
+</resources>

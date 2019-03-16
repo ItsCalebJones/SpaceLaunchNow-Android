@@ -24,8 +24,12 @@
 
 -keep public class com.google.android.gms.* { public *; }
 -dontwarn com.google.android.gms.**
-
+-keep class com.google.android.material.** { *; }
+-dontwarn com.google.android.material.**
+-dontnote com.google.android.material.**
 -dontwarn android.support.**
+
+-keep class com.google.firebase.provider.FirebaseInitProvider
 
 -keep public class com.google.ads.** {
    public *;
@@ -240,6 +244,7 @@ public *;
 -dontwarn com.evernote.android.job.gcm.**
 -dontwarn com.evernote.android.job.util.GcmAvailableHelper
 
+-keep class com.evernote.android.job.gcm.PlatformGcmService { *; }
 -keep public class com.evernote.android.job.v21.PlatformJobService
 -keep public class com.evernote.android.job.v14.PlatformAlarmService
 -keep public class com.evernote.android.job.v14.PlatformAlarmReceiver
