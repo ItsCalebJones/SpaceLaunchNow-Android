@@ -169,7 +169,7 @@
     <string name="diameter_full">halkaisija: %.1f metriä</string>
     <string name="stage_full">vaiheiden määrä: %d</string>
     <string name="mass_leo_full">massa maan matalalle kiertoradalle (LEO): %d kg</string>
-    <string name="mass_launch_full">Massa laukaisun aikana: %d kg</string>
+    <string name="mass_launch_full">Massa laukaisun aikana: %d T</string>
     <string name="thrust_full">Työntövoima laukaisun aikana: %d kN</string>
     <string name="upcoming">Tuleva</string>
     <string name="previous">Edellinen</string>

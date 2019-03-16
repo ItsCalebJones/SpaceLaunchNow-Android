@@ -25,9 +25,11 @@ import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
+import me.calebjones.spacelaunchnow.common.ui.launchdetail.launches.agency.AgencyLaunchActivity;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
@@ -234,4 +236,14 @@ public class AstronautProfileFragment extends BaseFragment {
         astronaut.getStatus();
     }
 
+    @OnClick(R2.id.lsp_agency)
+    void launchesClicked(){
+        try {
+            Intent intent = new Intent(context, AgencyLaunchActivity.class);
+            intent.putExtra("lspName", mViewModel.getAstronaut().getValue().getAgency().getName());
+            startActivity(intent);
+        } catch (NullPointerException e){
+            Timber.e(e);
+        }
+    }
 }

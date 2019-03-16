@@ -183,7 +183,7 @@
     <string name="stage_full">Maksymalna liczba stopni: %d</string>
     <string name="mass_leo_full">Masa wynoszona na niską orbitę okołoziemską: %d kg</string>
     <string name="mass_gto_full">Masa wynoszona na orbitę geostacjonarną: %d kg</string>
-    <string name="mass_launch_full">Masa startowa: %d kg</string>
+    <string name="mass_launch_full">Masa startowa: %d T</string>
     <string name="thrust_full">Siła ciągu: %d kN</string>
     <string name="upcoming">Nadchodzące</string>
     <string name="previous">Poprzednie</string>

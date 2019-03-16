@@ -190,7 +190,7 @@
     <string name="stage_full">Maximum trappen: %d</string>
     <string name="mass_leo_full">Massa naar lage baan om de aarde: %d kg</string>
     <string name="mass_gto_full">massa naar geostationaire baan om de aarde: %d kg</string>
-    <string name="mass_launch_full">Massa bij lancering: %d kg</string>
+    <string name="mass_launch_full">Massa bij lancering: %d T</string>
     <string name="thrust_full">Stuwkracht bij lancering: %d kN</string>
     <string name="upcoming">Eerstvolgend</string>
     <string name="previous">Vorige</string>

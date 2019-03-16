@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -102,7 +103,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_astronaut_details);
         ButterKnife.bind(this);
-
+        astronautFabShare.setVisibility(View.GONE);
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -291,6 +292,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         return super.onOptionsItemSelected(item);
     }
 
+    //TODO Get URL for SLN website.
     @OnClick(R2.id.astronaut_fab_share)
     void fabClicked(){
         ShareCompat.IntentBuilder.from(this)

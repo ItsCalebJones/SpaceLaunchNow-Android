@@ -268,10 +268,10 @@ public class NotificationBuilder {
     private static String getTimeFormatted(Context context, Date date) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SimpleDateFormat sdf;
-        if (!DateFormat.is24HourFormat(context)){
-            sdf = Utils.getSimpleDateFormatForUI("h:mm a zzz");
+        if (sharedPref.getBoolean("24_hour_mode", false)) {
+            sdf = Utils.getSimpleDateFormatForUI("k:mm a zzz");
         } else {
-            sdf = Utils.getSimpleDateFormatForUI("HH:mm zzz");
+            sdf = Utils.getSimpleDateFormatForUI("h:mm a zzz");
         }
         //Get launch date
         if (sharedPref.getBoolean("local_time", true)) {
@@ -285,11 +285,12 @@ public class NotificationBuilder {
     private static String getTimeFormattedLong(Context context, Date date) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         SimpleDateFormat sdf;
-        if (!DateFormat.is24HourFormat(context)){
-            sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
-        } else {
+        if (DateFormat.is24HourFormat(context)) {
             sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
+        } else {
+            sdf = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
         }
+        sdf.toLocalizedPattern();
         //Get launch date
         if (sharedPref.getBoolean("local_time", true)) {
             return sdf.format(date);
