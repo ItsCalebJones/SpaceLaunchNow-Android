@@ -136,14 +136,20 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                     holder.landingView.setVisibility(View.INVISIBLE);
                     if (launchItem.getRocket().getLauncherStage() != null && launchItem.getRocket().getLauncherStage().size() >= 1) {
                         if (launchItem.getRocket().getLauncherStage().size() > 1) {
+                            boolean landingAttempt = false;
                             StringBuilder stagesText = new StringBuilder();
                             for (LauncherStage stage : launchItem.getRocket().getLauncherStage()) {
-                                if (stage.getLanding().getLandingLocation() != null) {
-                                    stagesText.append(stage.getLanding().getLandingLocation().getAbbrev()).append(" ");
+                                if (stage.getLanding() != null) {
+                                    if (stage.getLanding().getLandingLocation() != null) {
+                                        landingAttempt = true;
+                                        stagesText.append(stage.getLanding().getLandingLocation().getAbbrev()).append(" ");
+                                    }
                                 }
                             }
-                            holder.landingView.setVisibility(View.VISIBLE);
-                            holder.landing.setText(stagesText.toString());
+                            if (landingAttempt) {
+                                holder.landingView.setVisibility(View.VISIBLE);
+                                holder.landing.setText(stagesText.toString());
+                            }
                         } else if (launchItem.getRocket().getLauncherStage().size() == 1) {
                             if (launchItem.getRocket().getLauncherStage().first().getLanding() != null) {
                                 Landing landing = launchItem.getRocket().getLauncherStage().first().getLanding();

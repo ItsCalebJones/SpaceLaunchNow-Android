@@ -68,6 +68,10 @@ public class NextLaunchDataRepository {
                 if (!forceRefresh) {
                     nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
                 }
+                if (forceRefresh) {
+                    RealmResults<Launch> launches = realm.where(Launch.class).findAll();
+                    realm.executeTransaction(realm -> launches.deleteAllFromRealm());
+                }
                 getNextUpcomingLaunchesFromNetwork(count, nextLaunchesCallback);
             } else {
                 nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
