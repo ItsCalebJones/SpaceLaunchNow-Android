@@ -76,4 +76,6 @@ public class TabsAdapter extends FragmentStatePagerAdapter {
         }
         return "";
     }
+
+
 }

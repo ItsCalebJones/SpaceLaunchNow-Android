@@ -64,6 +64,7 @@ public class NextLaunchDataRepository {
             long timeMaxUpdate = TimeUnit.MINUTES.toMillis(10);
             Timber.d("Time since last upcoming launches sync %s", timeSinceUpdate);
             if (timeSinceUpdate > timeMaxUpdate || forceRefresh) {
+
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
                 if (!forceRefresh) {
                     nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
@@ -72,6 +73,7 @@ public class NextLaunchDataRepository {
                     RealmResults<Launch> launches = realm.where(Launch.class).findAll();
                     realm.executeTransaction(realm -> launches.deleteAllFromRealm());
                 }
+
                 getNextUpcomingLaunchesFromNetwork(count, nextLaunchesCallback);
             } else {
                 nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));

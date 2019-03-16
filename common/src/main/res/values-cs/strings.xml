@@ -6,6 +6,7 @@
     <string name="action_settings">Nastavení</string>
     <string name="status_go">"Start je povolen"</string>
     <string name="status_nogo">Datum startu není potvrzeno</string>
+
     <string name="status_success">"Úspěšný start"</string>
     <string name="status_failure">"Při startu se objevila chyba"</string>
     <string name="spacex_summary">SpaceX navrhuje, konstruuje a vypouští pokročilé rakety a kosmické lode. Společnost byla založená v roce 2002 aby způsobila převrat v kosmonautice. Její hlavní cíl je umožnit lidem život na jiných planetách.</string>
@@ -190,7 +191,7 @@
     <string name="stage_full">Max. stupně: %d</string>
     <string name="mass_leo_full">Hmotnost na LEO: %d kg</string>
     <string name="mass_gto_full">Hmotnost na GTO: %d kg</string>
-    <string name="mass_launch_full">Hmotnost při startu: %d kg</string>
+    <string name="mass_launch_full">Hmotnost při startu: %d T</string>
     <string name="thrust_full">Tah při startu: %d kN</string>
     <string name="upcoming">Nadcházející</string>
     <string name="previous">Předcházející</string>
@@ -220,6 +221,7 @@
     <string name="no_go_description">Toto skryje starty, které mají stav \"nechválen\" a někdy mohou skrýt starty, které se nacházejí v jejich spouštěcím okně, ale jsou zdrženy kvůli technickým nebo vzdálenostním problémům.</string>
     <string name="to_be_determined">Schovat nepotvrzené starty</string>
     <string name="to_be_determined_description">Toto skryje starty, které nemají nepotvrzené datum nebo čas startu. Toto může příležitostně skrýt starty, které byly pro dnešní den zrušeny.</string>
+
     <string name="launch_info">Zachová starty po dobu 24 hodin</string>
     <string name="launch_info_description">Tato možnost zobrazí starty na domovské stránce až po dobu až 24 hodin po startu.</string>
     <string name="home">Domů</string>

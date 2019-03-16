@@ -190,7 +190,7 @@
     <string name="stage_full">Max Stufen: %d</string>
     <string name="mass_leo_full">Masse nach LEO: %d kg</string>
     <string name="mass_gto_full">Masse nach GTO: %d kg</string>
-    <string name="mass_launch_full">Masse zum Start: %d kg</string>
+    <string name="mass_launch_full">Masse zum Start: %d T</string>
     <string name="thrust_full">Schub zum Start: %d kN</string>
     <string name="upcoming">Kommende</string>
     <string name="previous">Vergangene</string>

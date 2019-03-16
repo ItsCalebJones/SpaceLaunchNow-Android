@@ -1,11 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Space Launch Now</string>
-    <string name="news">Actualités</string>
-    <string name="twitter">Twitter</string>
     <string name="action_settings">Paramètres</string>
     <string name="status_go">"Paré au Lancement"</string>
-    <string name="status_nogo">Date de lancement non confirmée</string>
+    <string name="status_nogo">"Date Non Confirmée"</string>
     <string name="status_success">"Lancement Réussi"</string>
     <string name="status_failure">"Échec du Lancement"</string>
     <string name="spacex_summary">SpaceX conçoit, fabrique et lance des fusées et véhicules spatiaux sophistiqués. L\'entreprise a été fondée en 2002 avec l\'objectif de révolutionner les technologies spatiales, leur but ultime étant de permettre aux humains de vivre sur d\'autres planètes.</string>
@@ -33,7 +30,7 @@
     <string name="player_error">Erreur lors de l\'initialisation du lecteur Youtube: %s</string>
     <string name="please_rate">Bonjour ! Vous semblez apprécier cette application, pourriez-vous aller la noter sur le Play Store ? Ça nous aiderait beaucoup !
 
-    \n\nSien revanche vous détestez cette application, nous serions ravis d\'entendre vos commentaires afin de l\'améliorer. Merci!</string>
+    \n\nSi en revanche vous détestez cette application, nous serions ravis d\'entendre vos commentaires afin de l\'améliorer. Merci!</string>
     <string name="please_rate_short">Bonjour, vous semblez aimer cette application. Ça nous aiderait beaucoup si vous nous donniez 5 étoiles sur le Play Store ! Par ailleurs si vous avez des suggestions veuillez nous les transmettre.</string>
     <string name="button_yes">Évaluer l\'application !</string>
     <string name="button_no">Non merci</string>
@@ -68,8 +65,8 @@
     <string name="weather_description">Obtenir les informations météo de la rampe de lancement pour les lancements passés et à venir.</string>
     <string name="calendar_sync">Synchronisation du Calendrier</string>
     <string name="calendar_sync_description">Synchroniser automatiquement les lancements futurs avec votre calendrier.</string>
-    <string name="wear_complications">Cadran Android Wear Dynamique</string>
-    <string name="wear_complications_description">Images dynamiques des véhicules de lancement en fond d\'écran du cadran Android Wear.</string>
+    <string name="dynamic_watch_face">Cadran Android Wear Dynamique</string>
+    <string name="dynamic_watch_face_description">Images dynamiques des véhicules de lancement en fond d\'écran du cadran Android Wear.</string>
     <string name="remove_ads">Retirer les publicités</string>
     <string name="remove_ads_description">Retirer toutes les publicités pour toujours !</string>
     <string name="discord">Discord</string>
@@ -110,13 +107,13 @@
     <string name="family">Famille:</string>
     <string name="configuration">Configuration:</string>
     <string name="vehicle_specifications">Caractéristiques du Véhicule</string>
-    <string name="height">Hauteur :</string>
-    <string name="diameter">Diamètre :</string>
-    <string name="stages">Étages :</string>
+    <string name="height">Hauteur:</string>
+    <string name="diameter">Diamètre:</string>
+    <string name="stages">Étages:</string>
     <string name="mass_to_leo">Masse en LEO :</string>
     <string name="mass_to_gto">Masse en GTO :</string>
-    <string name="mass_at_launch">Masse au Lancement :</string>
-    <string name="thrust_at_launch">Poussée au Lancement :</string>
+    <string name="mass_at_launch">Masse au Lancement:</string>
+    <string name="thrust_at_launch">Poussée au Lancement:</string>
     <string name="watch_launch">Regarder le Lancement</string>
     <string name="estimated_launch_date">Date de Lancement Estimée</string>
     <string name="nothing_here">Rien à voir ici, rafraîchissez depuis le menu ?</string>
@@ -166,6 +163,7 @@
     <string name="title_activity_download">Télécharger</string>
     <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">Restez informé de tous les lancements, missions et véhicules spatiaux.</string>
+    <string name="app_name">Space Launch Now</string>
     <string name="supporter_card_description">Widget exclusif, Cadran Android Wear, Retrait des Pubs et plus.</string>
     <string name="vehicle_card_title">Trouver des Véhicules de Lancement</string>
     <string name="notification_card">Notifications de Lancements</string>
@@ -191,10 +189,10 @@
     <string name="stage_full">Nombre max d\'étages : %d</string>
     <string name="mass_leo_full">Masse en LEO : %d kg</string>
     <string name="mass_gto_full">Masse en GTO : %d kg</string>
-    <string name="mass_launch_full">Masse au Lancement : %d T</string>
+    <string name="mass_launch_full">Masse au Lancement : %d kg</string>
     <string name="thrust_full">Poussée au lancement : %d kN</string>
     <string name="upcoming">À venir</string>
-    <string name="previous">Précédents</string>
+    <string name="previous">Précédent</string>
     <string name="select_country">Sélectionner un pays</string>
     <string name="select_country_description">Choisissez un pays ci-dessous, pour retirer tous les filtres utilisez l\'icône reset dans la barre d\'outils</string>
     <string name="close">Fermer</string>
@@ -231,6 +229,7 @@
     <string name="stay_connected">Rester Connecté</string>
     <string name="connect_description">Échanger avec la Communauté</string>
     <string name="discord_subtitle">Rejoindre la Communauté</string>
+    <string name="twitter">Twitter</string>
     <string name="twitter_subtitle">Échanger sur Twitter</string>
     <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Suivre sur Facebook</string>
@@ -387,9 +386,10 @@
     <string name="wear_os">Wear OS</string>
     <string name="misc">Divers</string>
     <string name="launchers">Lanceurs</string>
-    <string name="orbiters">Astronefs</string>
+    <string name="orbiters">Astronef</string>
     <string name="translate_settings">Participez à la traduction de Space Launch Now !</string>
     <string name="translate">Traduire</string>
+    <string name="news">Actualités</string>
     <string name="get_help">Obtenir de l\'aide</string>
     <string name="help_description">Aide et Support</string>
     <string name="gdpr_dialog_disagree_info">Je comprends que je verrai toujours des pubs si je ne suis pas un Supporter, mais elles peuvent être moins pertinentes.</string>
@@ -398,6 +398,8 @@
     <string name="gdpr_type_cloud_database">Base de données dans le cloud</string>
     <string name="gdpr_type_crash">Rapports de crash</string>
     <string name="gdpr_type_analytics">Rapports d\'utilisation</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Test vide</string>
     <string name="space_launch_news">Actualités Spatiales</string>
     <string name="consent_body">Cette application utilise Google Firebase pour les données d\'utilisation et Google AdMod pour les publicités. Vos données d\'utilisation anonymes peuvent être utilisées pour personnaliser les publicités dans cette application. Vous pouvez retirer votre permission à tout moment dans les paramètres de cette application.</string>
     <string name="data_consent">Utilisation des données personnelles</string>
@@ -448,47 +450,9 @@
     <string name="date_unconfirmed">La date affichée est une estimation \"au plus tôt\".</string>
     <string name="source">Sélectionner une source</string>
     <string name="long_press_share">Appuyer longtemps pour partager.</string>
-    <string name="no_astronauts">Aucun astronaute trouvé.</string>
-    <string name="notification_filters">Filtres des Notifications</string>
-    <string name="notification_filter_description">Choisir quelles notifications de lancement vous préférez.</string>
-    <string name="biography">Biographie</string>
-    <string name="profile">Profil</string>
-    <string name="flights">Vols</string>
-    <string name="single_use">Usage Unique</string>
-    <string name="docked">Amarré :</string>
-    <string name="human_rated">Vols Habités :</string>
-    <string name="no_active_expeditions">Aucune Expédition Active</string>
-    <string name="past_expeditions">Expéditions Passées</string>
-    <string name="expeditions">Expéditions</string>
-    <string name="deorbited">Déorbitée : %s</string>
-    <string name="founded">Fondée : %s</string>
-    <string name="status">Statut : %s</string>
-    <string name="height_plain">Hauteur</string>
-    <string name="width_plain">Largeur</string>
-    <string name="mass_plain">Masse</string>
-    <string name="height_unit">%s m</string>
-    <string name="width_unit">%s m</string>
-    <string name="mass_unit">%s T</string>
-    <string name="volume_plain">Volume</string>
-    <string name="volume_unit">%s m³</string>
-    <string name="crew_plain">Équipage</string>
-    <string name="orbit">Orbite</string>
-    <string name="details_fill">%s Détails</string>
-    <string name="total_fill">Total : %s</string>
-    <string name="start_fill">Début : %s</string>
-    <string name="end_fill">Fin : %s</string>
-    <string name="spacestations">Stations Spatiales</string>
-    <string name="astronauts">Astronautes</string>
-    <string name="events">Événements</string>
-    <string name="favorites">Favoris</string>
-    <string name="show_me">Montrez Moi</string>
-    <string name="docked_alt">Amarré</string>
-    <string name="no_spacestations">Aucune Station Trouvée</string>
-    <string name="no_events">Aucun Événement Trouvé</string>
-    <string name="founded_alt">Fondée:</string>
-    <string name="status_alt">Statut:</string>
-    <string name="de_orbited">Désorbitée :</string>
     <string name="mission_agency">Agence de la Mission</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Test vide</string>
+    <string name="tab_text_2">Onglet 2</string>
+    <string name="tab_text_1">Onglet 1</string>
+    <string name="tab_text_3">Onglet 3</string>
+    <string name="section_format">Hello World de : %1$d</string>
 </resources>

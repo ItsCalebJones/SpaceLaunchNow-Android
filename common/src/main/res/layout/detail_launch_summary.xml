@@ -67,6 +67,7 @@
 
 
                 <me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView
+
                     android:id="@+id/countdown_layout"
                     layout="@layout/countdown_layout_view"
                     android:layout_width="0dp"

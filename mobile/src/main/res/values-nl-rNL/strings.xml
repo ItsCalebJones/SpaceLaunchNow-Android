@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Instellingen</string>
+    <string name="status_go">"Klaar voor lancering"</string>
+    <string name="status_nogo">"Lancering n.t.b."</string>
+    <string name="status_success">"Succesvolle lancering"</string>
+    <string name="status_failure">"Er heeft zich een fout tijdens de lancering voorgedaan"</string>
+    <string name="spacex_summary">SpaceX ontwerpt, maakt en lanceert raketten en ruimtevaartuigen. Het bedrijf is opgericht in 2002 met het doel om mensen te laten leven op andere planeten.</string>
+    <string name="usaf_summary">De United States Air Force is de luchtmacht tak van de United States Armed Forces en een van de zeven American Uniformed Services.</string>
+    <string name="casc_summary">China Aerospace Science and Technology Corporation (CASC) is de hoofdaannemer voor het Chinese ruimtevaartprogramma. CASC is eigendom van de regering en heeft verschillende dochterondernemingen die verantwoordelijk zijn voor het ontwerpen en ontwikkelen van ruimtevaartuigen, raketten en grondsystemen.</string>
+    <string name="cnsa_summary">China National Space Administration (CNSA) is China\'s nationale ruimtevaartorganisatie en is verantwoordelijk voor het nationale ruimtevaartprogramma en voor het plannen en ontwikkelen van de verschillende ruimtevaartactiviteiten.</string>
+    <string name="isro_summary">Indian Space Research Organisation (ISRO) is India\'s nationale ruimtevaartorganisatie. Het hoofdkwartier is gevestigd in Bengaluru. Hun doel is om \"gebruik te maken van ruimtevaart technologie voor nationale ontwikkelingen, terwijl men bezig is met ruimtevaartonderzoek en ontdekking\".</string>
+    <string name="slide_one_title">Space Launch Now</string>
+    <string name="slide_two_title">Notificaties voor Lanceringen</string>
+    <string name="slide_three_title">Vind Raketten</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="unknown_administrator">Onbekende Administrator</string>
+    <string name="unknown_year">Jaar van oprichting - niet bekend.</string>
+    <string name="improve_our_data">Help onze data te verbeteren</string>
+    <string name="improve_our_data_content">Geïnteresseerd om te helpen om de data te verbeteren? Word lid van de Space Launch Now Discord server en vraag hoe je een Librarian kunt worden!</string>
+    <string name="no_launches_found">Geen lanceringen gevonden</string>
+    <string name="landing_information">Landingsinformatie</string>
+    <string name="payload">Lading: %d (kg)</string>
+    <string name="spacecraft_format">%s Ruimtevaartuig</string>
+    <string name="crew_capacity">Bemanningscapaciteit %s</string>
+    <string name="current_weather">Huidige weersvoorspelling</string>
+    <string name="upcoming_with_space">"Binnenkort "</string>
+    <string name="previous_with_space">"Vorige "</string>
+    <string name="watch">Bekijk</string>
+    <string name="notification_launch_successful">Lancering was een succes!</string>
+    <string name="notification_launch_liftoff">Liftoff! Raket is nu in de lucht!</string>
+    <string name="notification_one_minute">Lanceerpoging in minder dan 1 minuut om %s</string>
+    <string name="notification_ten_minutes">Lanceerpoging in minder dan 10 minuten om %s</string>
+    <string name="notification_one_hour">Lanceerpoging in minder dan 1 uur om %s</string>
+    <string name="notification_twenty_four_hours">Lanceerpoging in minder dan 24 uur om %s</string>
+    <string name="settings_in_flight">Onderweg</string>
+    <string name="settings_in_flight_summary">Ontvang notificaties wanneer een lancering bezig is.</string>
+    <string name="settings_success">Gelukt</string>
+    <string name="settings_success_summary">Ontvang een notificatie wanneer een lancering succesvol was.</string>
+    <string name="settings_one_minute">Één minuut</string>
+    <string name="settings_one_minute_on">Ontvang een notificatie wanneer een lancering binnen één minuut is.</string>
+    <string name="settings_one_minute_off">Ontvang geen notificatie wanneer een lancering binnen één minuut is.</string>
+</resources>

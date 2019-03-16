@@ -5,9 +5,7 @@
 /build
 /captures
 gradle.properties
-
 mobile/src/main/res/values/api_keys.xml
-
 *.apk
 keystore.properties
 mobile/keystore.properties

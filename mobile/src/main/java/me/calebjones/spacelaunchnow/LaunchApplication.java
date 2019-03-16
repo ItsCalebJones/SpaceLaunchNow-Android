@@ -284,7 +284,6 @@ public class LaunchApplication extends MultiDexApplication {
             firebaseMessaging.subscribeToTopic("prod_v2");
             firebaseMessaging.unsubscribeFromTopic("debug_v2");
         }
-        migrateNotifications();
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
         boolean netstampChanged = Prefs.getBoolean("netstampChanged", true);
@@ -505,6 +504,7 @@ public class LaunchApplication extends MultiDexApplication {
             Prefs.putBoolean("tenMinutes", tenMinutes);
         }
     }
+
 
     private void setupCrashlytics() {
         /*

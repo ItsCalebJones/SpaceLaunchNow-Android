@@ -6,6 +6,7 @@
     <string name="action_settings">Ajustes</string>
     <string name="status_go">"Prosseguir para lançamento"</string>
     <string name="status_nogo">Data de lançamento não confirmada</string>
+
     <string name="status_success">"Lançamento bem-sucedido"</string>
     <string name="status_failure">"Ocorreu falha no lançamento"</string>
     <string name="spacex_summary">A SpaceX projeta, fabrica e lança foguetes e espaçonaves avançadas. A empresa foi fundada em 2002 para revolucionar a tecnologia espacial, com o objetivo final de permitir que as pessoas vivam em outros planetas.</string>
@@ -190,7 +191,7 @@
     <string name="stage_full">Estágios Máximos: %d</string>
     <string name="mass_leo_full">Massa para LEO: %d kg</string>
     <string name="mass_gto_full">Massa para GTO: %d kg</string>
-    <string name="mass_launch_full">Massa no Lançamento: %d kg</string>
+    <string name="mass_launch_full">Massa no Lançamento: %d T</string>
     <string name="thrust_full">Impulso no Lançamento: %d kN</string>
     <string name="upcoming">Futuro</string>
     <string name="previous">Anterior</string>
@@ -397,6 +398,7 @@
     <string name="gdpr_type_cloud_database">banco de dados em nuvem</string>
     <string name="gdpr_type_crash">reportar travamento</string>
     <string name="gdpr_type_analytics">reportar análise</string>
+
     <string name="space_launch_news">Novidades de Lançamentos Espaciais</string>
     <string name="consent_body">Este aplicativo usa o Google Firebase para estatística e Google AdMod para exibição de anúncios. Seus dados anônimos podem ser usados para personalizar anúncios nesse aplicativos. Você pode retirar a permissão a qualquer tempo de dentro das configurações nesses aplicativos.</string>
     <string name="data_consent">Consentimento de Dados</string>
@@ -407,6 +409,7 @@
     <string name="unknown_mission_or_payload">Carga ou Missão Desconhecida</string>
     <string name="view_more_launches">Ver mais lançamentos</string>
     <string name="view_rocket_launches">Ver lançamentos da %s</string>
+
     <string name="refresh">Atualizar</string>
     <string name="search">Buscar</string>
     <string name="date">Data</string>
@@ -440,6 +443,7 @@
     <string name="settings_success">Sucesso</string>
     <string name="settings_success_summary">Receba notificações quando um lançamento for confirmado como bem-sucedido ou não.</string>
     <string name="settings_one_minute">Um Minuto</string>
+
     <string name="settings_one_minute_on">Receba notificações quando um Lançamento estiver aguardando um minuto.</string>
     <string name="settings_one_minute_off">Não notifique quando o Lançamento estiver aguardando um minuto.</string>
     <string name="no_live_stream_available">Nenhuma transmissão ao vivo disponível.</string>

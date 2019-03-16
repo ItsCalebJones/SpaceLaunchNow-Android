@@ -21,7 +21,7 @@ import me.calebjones.spacelaunchnow.common.R;
 public class NotificationHelper extends ContextWrapper {
     private NotificationManager notifManager;
     public static final String CHANNEL_LAUNCH_IMMINENT = "me.calebjones.spacelaunchnow.LAUNCH_IMMINENT";
-    public static final String CHANNEL_LAUNCH_IMMINENT_NAME = "Launch Notification (Less then One Hour)";
+    public static final String CHANNEL_LAUNCH_IMMINENT_NAME = "Launch Notification (Less than One Hour)";
     public static final String CHANNEL_LAUNCH_REMINDER = "me.calebjones.spacelaunchnow.LAUNCH_REMINDER";
     public static final String CHANNEL_LAUNCH_REMINDER_NAME = "Launch Notification (24 Hour)";
     public static final String CHANNEL_LAUNCH_WEEKLY = "me.calebjones.spacelaunchnow.LAUNCH_WEEKLY_DIGEST";

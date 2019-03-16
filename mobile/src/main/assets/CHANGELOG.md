@@ -5,6 +5,7 @@ A space launch tracker for Android using data from the Launch Library API.
 ## Changelog
 #### Updated 6-11-2018
 ---
+
 ### Version 3.0.0
 #### Overview
 A large update adding Astronaut information, Spacestation data and Event notifications!
@@ -16,7 +17,12 @@ A large update adding Astronaut information, Spacestation data and Event notific
 * Added additional launch notification filters.
 * Various bug fixes and usability improvements.
 
-### Version 2.7.0
+### Version 2.6.7
+#### Overview
+Fix a bunch of bugs and get the latest translations.
+
+### Version 2.6.5
+
 #### Overview
 Added notifications for launch failures and partial-failure, bug fixes!
 

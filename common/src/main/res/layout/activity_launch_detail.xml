@@ -54,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="-48dp"
             android:minHeight="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
         <LinearLayout
@@ -62,6 +63,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed|snap"
             android:paddingBottom="8dp">
 
             <TextView

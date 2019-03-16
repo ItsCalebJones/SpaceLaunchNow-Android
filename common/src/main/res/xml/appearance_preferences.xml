@@ -19,6 +19,7 @@
         android:summaryOff="@string/time_format_off"
         android:summaryOn="@string/time_format_on"
         android:title="@string/time_format" />
+
     <PreferenceCategory android:title="@string/widgets"
         android:key="widget_category">
         <ListPreference

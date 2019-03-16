@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">設定</string>
+    <string name="status_go">"打ち上げOK"</string>
+    <string name="status_nogo">"打ち上げ結構"</string>
+    <string name="status_success">"打ち上げ成功"</string>
+    <string name="status_failure">"打ち上げ失敗"</string>
+    <string name="spacex_summary">SpaceXはロケットを設計から打ち上げまで全部自社で行います。この会社は2002年に地球以外の惑星に住むのを目標として誕生しました。</string>
+    <!-- TODO: Remove or change this placeholder text -->
+</resources>
