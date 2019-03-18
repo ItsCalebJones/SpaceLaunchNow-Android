@@ -11,8 +11,8 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import java.util.Set;
 
-import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.common.content.wear.WearWatchfaceManager;
+import me.calebjones.spacelaunchnow.common.content.worker.WearSyncWorker;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
@@ -39,7 +39,7 @@ public class ListenerServiceFromWear extends WearableListenerService {
                 Intent supporterIntent = new Intent(getApplicationContext(), SupporterActivity.class);
                 startActivity(supporterIntent);
             } else {
-                UpdateWearJob.scheduleJobNow();
+                WearSyncWorker.syncImmediately();
             }
         }
     }

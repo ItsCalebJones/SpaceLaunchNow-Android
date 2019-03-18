@@ -1,37 +1,41 @@
-package me.calebjones.spacelaunchnow.widgets;
+package me.calebjones.spacelaunchnow.common.content.worker;
 
-import androidx.annotation.NonNull;
-
-import com.evernote.android.job.Job;
-import com.evernote.android.job.JobRequest;
+import android.content.Context;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 import io.realm.Realm;
-import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.data.networking.DataSaver;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import retrofit2.Call;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class SyncWidgetJob extends Job {
+public class WidgetSyncWorker extends Worker {
 
-    public static final String TAG = Constants.ACTION_CHECK_NEXT_LAUNCH_TIMER + "_SYNC_WIDGET";
+    private Context context;
+    private WorkerParameters parameters;
+
+    public WidgetSyncWorker(@NonNull Context context, @NonNull WorkerParameters params) {
+        super(context, params);
+        this.context = context;
+        parameters = params;
+    }
 
 
-    public static void scheduleImmediately() {
-        new JobRequest.Builder(SyncWidgetJob.TAG)
-                .startNow()
-                .setUpdateCurrent(true)
-                .build()
-                .schedule();
+    public static void immediateOnetimeWorker() {
+        WorkManager.getInstance().enqueue(new OneTimeWorkRequest.Builder(WidgetSyncWorker.class)
+                .build());
     }
 
     private static boolean isLaunchTimeChanged(Launch previous, Launch item) {
@@ -45,8 +49,8 @@ public class SyncWidgetJob extends Job {
 
     @NonNull
     @Override
-    protected Result onRunJob(Params params) {
-        Timber.d("Running job ID: %s Tag: %s", params.getId(), params.getTag());
+    public Result doWork() {
+        Timber.d("Running job ID: %s Tag: %s", parameters.getId(), parameters.getTags());
         Call<LaunchResponse> call = DataClient.getInstance().getNextUpcomingLaunchesForWidgets(20, 0);
 
         try {
@@ -82,10 +86,6 @@ public class SyncWidgetJob extends Job {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return Result.SUCCESS;
+        return Result.success();
     }
-
-
 }
-
-

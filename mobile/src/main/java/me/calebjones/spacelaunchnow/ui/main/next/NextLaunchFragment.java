@@ -43,8 +43,8 @@ import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
-import me.calebjones.spacelaunchnow.common.content.jobs.SyncCalendarJob;
-import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
+import me.calebjones.spacelaunchnow.common.content.worker.CalendarSyncWorker;
+import me.calebjones.spacelaunchnow.common.content.worker.WearSyncWorker;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
@@ -588,11 +588,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 for (int id : listIds) {
                     launchListManager.updateAppWidget(id);
                 }
-
-                UpdateWearJob.scheduleJobNow();
+                WearSyncWorker.syncImmediately();
                 fetchData(true);
                 if (switchPreferences.getCalendarStatus()) {
-                    SyncCalendarJob.scheduleImmediately();
+                    CalendarSyncWorker.syncImmediately();
                 }
             }
         }

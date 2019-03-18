@@ -53,7 +53,7 @@ dependencies {
     implementation deps.cyanea
 
     implementation deps.inAppbilling
-    implementation deps.evernoteJob
+    implementation deps.workManager
 
     // Iconography
     implementation deps.iconicsCore

@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -43,6 +45,7 @@ import me.calebjones.spacelaunchnow.astronauts.data.AstronautDataRepository;
 import me.calebjones.spacelaunchnow.astronauts.data.Callbacks;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
@@ -151,6 +154,26 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         viewModel = ViewModelProviders.of(this).get(AstronautDetailViewModel.class);
         // update UI
         viewModel.getAstronaut().observe(this, this::updateViews);
+
+        if (!SupporterHelper.isSupporter()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            astronautAdView.loadAd(adRequest);
+            astronautAdView.setAdListener(new AdListener() {
+
+                @Override
+                public void onAdLoaded() {
+                    astronautAdView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAdFailedToLoad(int error) {
+                    astronautAdView.setVisibility(View.GONE);
+                }
+
+            });
+        } else {
+            astronautAdView.setVisibility(View.GONE);
+        }
     }
 
     private void enableDisableSwipeRefresh(boolean enable) {

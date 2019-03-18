@@ -40,8 +40,8 @@ import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.content.worker.WearSyncWorker;
 import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
-import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import timber.log.Timber;
 
@@ -261,7 +261,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         getRealm().beginTransaction();
         getRealm().copyToRealmOrUpdate(product);
         getRealm().commitTransaction();
-        UpdateWearJob.scheduleJobNow();
+        WearSyncWorker.syncImmediately();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean("weather", true);
@@ -328,7 +328,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         } else {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.billing_not_available));
         }
-        UpdateWearJob.scheduleJobNow();
+        WearSyncWorker.syncImmediately();
     }
 
     @Override

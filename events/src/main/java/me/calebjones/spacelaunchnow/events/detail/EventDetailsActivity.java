@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -54,6 +56,7 @@ import me.calebjones.spacelaunchnow.common.content.LaunchStatusUtil;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ExpeditionAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.SpacestationAdapter;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView;
 import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
@@ -207,6 +210,26 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
         // update UI
         viewModel.getEvent().observe(this, this::updateViews);
         fetchData(eventId);
+
+        if (!SupporterHelper.isSupporter()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            eventAdView.loadAd(adRequest);
+            eventAdView.setAdListener(new AdListener() {
+
+                @Override
+                public void onAdLoaded() {
+                    eventAdView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAdFailedToLoad(int error) {
+                    eventAdView.setVisibility(View.GONE);
+                }
+
+            });
+        } else {
+            eventAdView.setVisibility(View.GONE);
+        }
     }
 
     private void enableDisableSwipeRefresh(boolean enable) {

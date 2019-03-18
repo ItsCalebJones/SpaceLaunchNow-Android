@@ -43,8 +43,8 @@ import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.content.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.common.content.calendar.model.Calendar;
 import me.calebjones.spacelaunchnow.common.content.calendar.model.CalendarItem;
-import me.calebjones.spacelaunchnow.common.content.jobs.SyncCalendarJob;
 import me.calebjones.spacelaunchnow.common.content.notifications.NotificationBuilder;
+import me.calebjones.spacelaunchnow.common.content.worker.CalendarSyncWorker;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.common.ui.settings.util.CalendarPermissionListener;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
@@ -130,7 +130,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 break;
             case "calendar_count":
                 calendarSyncManager.resyncAllEvents();
-                SyncCalendarJob.scheduleImmediately();
+                CalendarSyncWorker.syncImmediately();
                 break;
             case "calendar_sync_state":
                 Timber.v("Calendar Sync State: %s", Prefs.getBoolean(key, false));

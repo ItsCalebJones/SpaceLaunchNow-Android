@@ -135,31 +135,7 @@
         <service
             android:name=".widgets.launchlist.LaunchListWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-        <service
-            android:name="com.evernote.android.job.v21.PlatformJobService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name="com.evernote.android.job.v14.PlatformAlarmService"
-            android:exported="false" />
 
-        <receiver
-            android:name="com.evernote.android.job.v14.PlatformAlarmReceiver"
-            android:exported="false">
-            <intent-filter>
-
-                <!-- Keep the filter for legacy intents -->
-                <action android:name="com.evernote.android.job.v14.RUN_JOB" />
-                <action android:name="net.vrallev.android.job.v14.RUN_JOB" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.evernote.android.job.JobBootReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
 
         <service
             android:name=".widgets.WidgetJobService"
@@ -204,16 +180,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launch_list_info" />
         </receiver>
-
-        <service
-            android:name="com.evernote.android.job.gcm.PlatformGcmService"
-            android:enabled="false"
-            android:exported="true"
-            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
-            <intent-filter>
-                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
-            </intent-filter>
-        </service>
 
         <receiver android:name=".content.receivers.OnUpgradeReceiver">
             <intent-filter>

@@ -224,7 +224,7 @@ dependencies {
     // Billing
     implementation deps.inAppbilling
 
-    implementation deps.evernoteJob
+    implementation deps.workManager
 
 
     // Views and Animations

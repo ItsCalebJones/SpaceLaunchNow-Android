@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.FileProvider;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,9 +18,8 @@ import java.io.IOException;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.content.worker.WearSyncWorker;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
-import me.calebjones.spacelaunchnow.common.content.jobs.JobUtils;
-import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
@@ -69,7 +67,7 @@ public class DebugPresenter implements DebugContract.Presenter {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("weather", true);
             editor.apply();
-            UpdateWearJob.scheduleJobNow();
+            WearSyncWorker.syncImmediately();
         } else {
             realm.executeTransaction(realm -> realm.delete(Products.class));
             realm.close();
@@ -102,10 +100,7 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void jobEventButtonClicked(Context context) {
-        new MaterialDialog.Builder(context)
-                .title("Job EventsFragment")
-                .content(JobUtils.getJobRequestStatus())
-                .show();
+
     }
 
     @Override

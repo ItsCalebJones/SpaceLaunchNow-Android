@@ -7,6 +7,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 
+import me.calebjones.spacelaunchnow.common.content.worker.WidgetSyncWorker;
 import me.calebjones.spacelaunchnow.widgets.launchcard.LaunchCardCompactManager;
 import me.calebjones.spacelaunchnow.widgets.launchlist.LaunchListManager;
 import me.calebjones.spacelaunchnow.widgets.launchlist.LaunchListWidgetProvider;
@@ -56,7 +57,7 @@ public class WidgetJobService extends JobIntentService {
                 launchListManager.updateAppWidget(id);
             }
         } else {
-            SyncWidgetJob.scheduleImmediately();
+            WidgetSyncWorker.immediateOnetimeWorker();
         }
     }
 }

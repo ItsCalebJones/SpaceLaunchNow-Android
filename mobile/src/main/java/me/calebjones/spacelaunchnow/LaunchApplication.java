@@ -7,9 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.webkit.WebView;
@@ -21,7 +18,6 @@ import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
-import com.evernote.android.job.JobManager;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.jaredrummler.cyanea.Cyanea;
@@ -38,7 +34,9 @@ import com.twitter.sdk.android.tweetui.TweetUi;
 import java.util.Locale;
 import java.util.TimeZone;
 
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 import io.fabric.sdk.android.Fabric;
@@ -46,23 +44,20 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper;
+import me.calebjones.spacelaunchnow.common.content.worker.CalendarSyncWorker;
+import me.calebjones.spacelaunchnow.common.content.worker.WearSyncWorker;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
-import me.calebjones.spacelaunchnow.common.content.jobs.DataJobCreator;
-import me.calebjones.spacelaunchnow.common.content.jobs.SyncCalendarJob;
-import me.calebjones.spacelaunchnow.common.content.jobs.SyncWearJob;
-import me.calebjones.spacelaunchnow.common.content.jobs.UpdateWearJob;
-import me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.utils.Connectivity;
 import me.calebjones.spacelaunchnow.data.models.Constants;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
-import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.common.utils.Connectivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
-import me.calebjones.spacelaunchnow.widgets.WidgetJobCreator;
 import timber.log.Timber;
 
 public class LaunchApplication extends MultiDexApplication {
@@ -173,8 +168,6 @@ public class LaunchApplication extends MultiDexApplication {
 
     private void setupData(final boolean update) {
         DataClient.create(getString(R.string.sln_token), sharedPreference.getNetworkEndpoint());
-        JobManager.create(context).addJobCreator(new DataJobCreator());
-        JobManager.instance().addJobCreator(new WidgetJobCreator());
         startJobs();
     }
 
@@ -522,11 +515,8 @@ public class LaunchApplication extends MultiDexApplication {
     }
 
     private void startJobs() {
-        new Thread(() -> {
-            SyncWearJob.scheduleJob();
-            UpdateWearJob.scheduleJobNow();
-            SyncCalendarJob.scheduleDailyJob();
-        }).start();
+        CalendarSyncWorker.scheduleWorker();
+        WearSyncWorker.schedulePeriodicWorker();
     }
 
     @Override
