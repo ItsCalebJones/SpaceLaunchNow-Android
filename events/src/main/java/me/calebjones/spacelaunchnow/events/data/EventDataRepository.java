@@ -65,7 +65,10 @@ public class EventDataRepository {
 
     //TODO fix query
     public RealmResults<Event> getEventsFromRealm() {
-        RealmQuery<Event> query = realm.where(Event.class).isNotNull("id");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, -24);
+        Date date = calendar.getTime();
+        RealmQuery<Event> query = realm.where(Event.class).isNotNull("id").greaterThanOrEqualTo("date", date);
         return query.sort("date", Sort.ASCENDING).findAll();
     }
 
