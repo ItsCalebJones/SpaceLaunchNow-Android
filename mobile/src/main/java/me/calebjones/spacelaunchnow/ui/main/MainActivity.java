@@ -415,6 +415,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         Timber.v("onResume");
 
         if ("SHOW_FILTERS".equals(action)) {
+            getIntent().setAction("");
+            showFilter = true;
+            mNavItemId = R.id.menu_home;
             navigate(R.id.menu_favorite);
         } else if (getIntent().getBooleanExtra("SHOW_EVENTS", false)) {
             navigate(R.id.menu_events);
@@ -651,6 +654,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                         mUpcomingFragment.setArguments(bundle);
                         showFilter = false;
                     }
+                } else if (showFilter){
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("SHOW_FILTERS", true);
+                    mUpcomingFragment.setArguments(bundle);
+                    showFilter = false;
                 }
                 navigateToFragment(mUpcomingFragment, HOME_TAG);
                 if (bottomNavigationView.getChildCount() > 0) {
