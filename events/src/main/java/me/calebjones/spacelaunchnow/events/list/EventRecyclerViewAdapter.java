@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,6 +63,12 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         holder.eventDescription.setText(holder.mItem.getDescription());
         holder.eventType.setText(holder.mItem.getType().getName());
 
+        if (holder.mItem.getVideoUrl() != null){
+            holder.watchLive.setVisibility(View.VISIBLE);
+        } else {
+            holder.watchLive.setVisibility(View.GONE);
+        }
+
         GlideApp.with(context)
                 .load(holder.mItem.getFeatureImage())
                 .placeholder(R.drawable.placeholder)
@@ -86,6 +93,8 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
         TextView eventType;
         @BindView(R2.id.details)
         AppCompatButton details;
+        @BindView(R2.id.watchButton)
+        AppCompatImageButton watchLive;
         public Event mItem;
 
         public ViewHolder(View view) {
@@ -99,6 +108,14 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
             Intent intent = new Intent(context, EventDetailsActivity.class);
             intent.putExtra("eventId", event.getId());
             context.startActivity(intent);
+        }
+
+        @OnClick(R2.id.watchButton)
+        void onWawtchClick(View v){
+            Event event = events.get(getAdapterPosition());
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(event.getVideoUrl()));
+            context.startActivity(i);
         }
     }
 }

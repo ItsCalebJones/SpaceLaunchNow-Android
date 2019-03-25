@@ -521,7 +521,7 @@ public class NotificationBuilder {
                 bitmap = Utils.getBitMapFromUrl(context, event.getFeatureImage());
             } catch (ExecutionException | InterruptedException e) {
                 Timber.e(e);
-            }
+            }-
             if (bitmap != null) {
                 mBuilder.setLargeIcon(bitmap);
                 wearableExtender.setBackground(bitmap);

@@ -125,6 +125,10 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
     TextView eventSpacestationCardSubTitle;
     @BindView(R2.id.spacestation_recycler_view)
     RecyclerView spacestationRecyclerView;
+    @BindView(R2.id.event_web_button)
+    AppCompatButton eventWebButton;
+    @BindView(R2.id.event_watch_button)
+    AppCompatButton eventWatchButton;
 
 
 
@@ -287,6 +291,18 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
             adapter.addItems(event.getLaunches());
         } else {
             launchCard.setVisibility(View.GONE);
+        }
+
+        if (event.getNewsUrl() != null){
+            eventWebButton.setVisibility(View.VISIBLE);
+        } else {
+            eventWebButton.setVisibility(View.GONE);
+        }
+
+        if (event.getVideoUrl() != null){
+            eventWatchButton.setVisibility(View.VISIBLE);
+        } else {
+            eventWatchButton.setVisibility(View.GONE);
         }
 
         if (event.getExpeditions() != null && event.getExpeditions().size() > 0){

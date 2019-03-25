@@ -241,6 +241,7 @@
                             <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/event_watch_button"
                                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                                android:visibility="gone"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
@@ -260,6 +261,7 @@
                             <androidx.appcompat.widget.AppCompatButton
                                 android:id="@+id/event_web_button"
                                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                                android:visibility="gone"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
