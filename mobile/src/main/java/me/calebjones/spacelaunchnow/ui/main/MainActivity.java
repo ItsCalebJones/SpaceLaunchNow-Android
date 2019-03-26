@@ -654,11 +654,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                         mUpcomingFragment.setArguments(bundle);
                         showFilter = false;
                     }
-                } else if (showFilter){
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("SHOW_FILTERS", true);
-                    mUpcomingFragment.setArguments(bundle);
-                    showFilter = false;
                 }
                 navigateToFragment(mUpcomingFragment, HOME_TAG);
                 if (bottomNavigationView.getChildCount() > 0) {
