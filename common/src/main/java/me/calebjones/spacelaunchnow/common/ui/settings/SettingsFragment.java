@@ -310,23 +310,27 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     private void checkWidgetPreset(Integer arrayPosition) {
-        int backgroundColor = backgroundArray[arrayPosition];
-        int primaryTextColor = textPrimaryArray[arrayPosition];
-        int secondaryTextColor = textSecondaryArray[arrayPosition];
-        int accentColor = accentArray[arrayPosition];
-        int textTitleColor = titleTextArray[arrayPosition];
-        Timber.v("Preset # %d", arrayPosition);
-        if (arrayPosition != 8) {
-            widgetBackgroundColor.saveValue(backgroundColor);
-            widgetTextColor.saveValue(primaryTextColor);
-            widgetSecondaryTextColor.saveValue(secondaryTextColor);
-            widgetIconColor.saveValue(primaryTextColor);
-            widgetAccentColor.saveValue(accentColor);
-            widgetTitleColor.saveValue(textTitleColor);
-            isCustomColor = false;
-            Timber.v("Applied widget colors");
-        } else {
-            isCustomColor = true;
+        try {
+            int backgroundColor = backgroundArray[arrayPosition];
+            int primaryTextColor = textPrimaryArray[arrayPosition];
+            int secondaryTextColor = textSecondaryArray[arrayPosition];
+            int accentColor = accentArray[arrayPosition];
+            int textTitleColor = titleTextArray[arrayPosition];
+            Timber.v("Preset # %d", arrayPosition);
+            if (arrayPosition != 8) {
+                widgetBackgroundColor.saveValue(backgroundColor);
+                widgetTextColor.saveValue(primaryTextColor);
+                widgetSecondaryTextColor.saveValue(secondaryTextColor);
+                widgetIconColor.saveValue(primaryTextColor);
+                widgetAccentColor.saveValue(accentColor);
+                widgetTitleColor.saveValue(textTitleColor);
+                isCustomColor = false;
+                Timber.v("Applied widget colors");
+            } else {
+                isCustomColor = true;
+            }
+        } catch (Exception e) {
+            Timber.e(e);
         }
     }
 
@@ -476,7 +480,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
 
-
     private void setCalendarPreference() {
         calendarList = Calendar.getWritableCalendars(context.getContentResolver());
 
@@ -486,7 +489,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         for (int i = 0; i < calendarList.size(); i++) {
             Calendar calendar = calendarList.get(i);
             String calendarName;
-            if (calendar.displayName.equals(calendar.accountName)){
+            if (calendar.displayName.equals(calendar.accountName)) {
                 calendarName = calendar.accountName;
             } else {
                 calendarName = calendar.displayName + " - " + calendar.accountName;
@@ -503,7 +506,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         String summary;
         final CalendarItem calendarItem = mRealm.where(CalendarItem.class).findFirst();
 
-        if (calendarItem != null){
+        if (calendarItem != null) {
             summary = getString(R.string.current_calendar) + " " + calendarItem.getAccountName();
         } else {
             summary = getString(R.string.select_calendar);
@@ -552,7 +555,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             calendarItem.setId(calendarList.get(0).id);
 
             if (calendarItem != null) {
-                summary = getString(R.string.default_calendar) + " " +calendarItem.getAccountName();
+                summary = getString(R.string.default_calendar) + " " + calendarItem.getAccountName();
             } else {
                 summary = getString(R.string.select_calendar);
             }
@@ -615,7 +618,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void showPermissionGranted(String permission) {
         switchPreferences.setCalendarStatus(true);
         setCalendarPreference();
-        if (mRealm.where(CalendarItem.class).findFirst() == null){
+        if (mRealm.where(CalendarItem.class).findFirst() == null) {
             setDefaultCalendar();
         }
     }
@@ -625,7 +628,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         SwitchPreference calendarSyncState = (SwitchPreference) findPreference("calendar_sync_state");
         calendarSyncState.setChecked(false);
         switchPreferences.setCalendarStatus(false);
-        if (isPermanentlyDenied){
+        if (isPermanentlyDenied) {
             Toast.makeText(context, R.string.calendar_permissions_denied, Toast.LENGTH_LONG).show();
         }
     }
