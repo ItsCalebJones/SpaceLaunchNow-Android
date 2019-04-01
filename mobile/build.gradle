@@ -195,7 +195,6 @@ dependencies {
     implementation project(':spacestations')
     implementation project(':events')
     implementation deps.multidex
-
     // Android Official Libraries
     implementation deps.archcore_coreRuntime
     implementation deps.appcompat
@@ -211,31 +210,21 @@ dependencies {
     implementation deps.playWearable
     implementation deps.playAds
     implementation deps.constraintLayout
-
     implementation deps.easyprefs
-
     // Architecture and Tools
     implementation deps.once
     implementation deps.crashlytics
-
     implementation deps.dexter
     implementation deps.statefulLayout
-
     // Billing
     implementation deps.inAppbilling
-
     implementation deps.workManager
-
-
     // Views and Animations
     implementation deps.materialDialogCore
     implementation deps.materialDialogCommons
     implementation deps.photoView
-
     implementation deps.GDPRDialog
-
     implementation deps.transitionseverywhere
-
     implementation deps.materialAbout
     implementation deps.markdownView
     implementation deps.colorpicker
@@ -253,43 +242,31 @@ dependencies {
     implementation deps.gpuImageLibrary
     implementation deps.materialdrawer
     implementation deps.forecast
-
-
     // HTTP Related libraries
     implementation deps.retrofit
     implementation deps.okhttp
     implementation deps.converter_gson
     implementation deps.gson
     implementation deps.calendarprovider
-
     // Iconography
     implementation deps.iconicsCore
     implementation deps.googleMaterialTypeface
     implementation deps.communityMaterialTypeface
     implementation deps.weathericon
     implementation deps.fontawesomeTypeface
-
     implementation deps.rxjava
     implementation deps.rxandroid
-
     implementation deps.badge
-
     //Twitter
     implementation deps.twitterCore
     implementation deps.twitterUi
-
     // Firebase Messaging
     implementation deps.firebaseMessaging
-
     implementation deps.timber
-
     implementation deps.butterknife
     annotationProcessor deps.butterknifeCompiler
-
     implementation deps.bottomNavigation
     implementation deps.preferences
-
-
 }
 
 apply plugin: 'com.google.gms.google-services'

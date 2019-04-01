@@ -117,20 +117,17 @@ android {
 //}
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':data')
     implementation deps.butterknife
     annotationProcessor deps.butterknifeCompiler
     compileOnly deps.supportWearable
     implementation deps.crashlytics
-
     //Networking
     implementation deps.retrofit
     implementation deps.converter_gson
     implementation deps.gson
     implementation deps.okhttp
-
-
     implementation deps.easyprefs
     implementation deps.evernoteJob
     implementation deps.wear
