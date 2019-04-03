@@ -17,22 +17,22 @@ public class SupporterHelper {
         if (productID.equals(SKU_TWO_DOLLAR)) {
             product.setName("Founder 2016 - Bronze");
             product.setDescription("This ensures you will always have access to every supporter features.");
-            product.setType("Supporter");
+            product.setType("SupporterActivity");
             product.setPrice(2);
         } else if (productID.equals(SKU_SIX_DOLLAR)){
             product.setName("Founder 2016 - Silver");
             product.setDescription("This ensures you will always have access to every supporter features.");
-            product.setType("Supporter");
+            product.setType("SupporterActivity");
             product.setPrice(6);
         } else if (productID.equals(SKU_TWELVE_DOLLAR)){
             product.setName("Founder 2016 - Gold");
             product.setDescription("This ensures you will always have access to every supporter features.");
-            product.setType("Supporter");
+            product.setType("SupporterActivity");
             product.setPrice(12);
         } else if (productID.equals(SKU_THIRTY_DOLLAR)) {
             product.setName("Founder 2016 - Platinum");
             product.setDescription("This ensures you will always have access to every supporter features.");
-            product.setType("Supporter");
+            product.setType("SupporterActivity");
             product.setPrice(30);
         }
         return product;
