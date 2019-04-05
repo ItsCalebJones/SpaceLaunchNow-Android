@@ -18,6 +18,7 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.Set;
 
+import me.calebjones.spacelaunchnow.wear.ui.supporter.SupporterActivity;
 import timber.log.Timber;
 
 public class ComplicationTapBroadcastReceiver extends BroadcastReceiver {
@@ -38,7 +39,7 @@ public class ComplicationTapBroadcastReceiver extends BroadcastReceiver {
 //        ProviderUpdateRequester requester = new ProviderUpdateRequester(context, provider);
 //        requester.requestUpdate(complicationId);
         this.context = context;
-        checkCompanionInstalled();
+        checkCompanionInstalled(context);
     }
 
     /**
@@ -57,17 +58,16 @@ public class ComplicationTapBroadcastReceiver extends BroadcastReceiver {
                 context, complicationId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private void checkCompanionInstalled() {
+    private void checkCompanionInstalled(Context context) {
         Task<CapabilityInfo> capabilityInfo = Wearable.getCapabilityClient(context).getCapability("start_activity", CapabilityClient.FILTER_REACHABLE);
-        capabilityInfo.addOnCompleteListener(new OnCompleteListener<CapabilityInfo>() {
-            @Override
-            public void onComplete(@NonNull Task<CapabilityInfo> task) {
-                if (task.isSuccessful()) {
-                    nodeId = pickBestNodeId(task.getResult().getNodes());
-                    sendMessage();
-                } else {
-                    if (task.getException() != null) Timber.e(task.getException());
-                }
+        capabilityInfo.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                nodeId = pickBestNodeId(task.getResult().getNodes());
+                sendMessage();
+            } else {
+                if (task.getException() != null) Timber.e(task.getException());
+                Intent myIntent = new Intent(context, SupporterActivity.class);
+                context.startActivity(myIntent);
             }
         });
     }

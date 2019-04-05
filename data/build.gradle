@@ -31,20 +31,18 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     androidTestImplementation('androidx.test.espresso:espresso-core:3.1.0-alpha4', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation deps.kotlin_stdlib_jdk7
     implementation deps.rxjava
     implementation deps.rxandroid
-
     implementation deps.retrofit
     implementation deps.okhttp
     implementation deps.converter_simplexml
     implementation deps.converter_gson
     implementation deps.adapter_rxjava
     implementation deps.gson
-
     implementation deps.timber
 }

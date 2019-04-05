@@ -107,7 +107,7 @@ ext.deps = [
         circleImageView                : "de.hdodenhof:circleimageview:2.2.0",
         customtabs                     : "saschpe.android:customtabs:2.0.0",
         transitionseverywhere          : "com.andkulikov:transitionseverywhere:1.8.0",
-        androidyoutubeplayer_core      : "com.pierfrancescosoffritti.androidyoutubeplayer:core:8.0.1",
+        androidyoutubeplayer_core      : "com.pierfrancescosoffritti.androidyoutubeplayer:core:9.0.1",
         androidyoutubeplayer_chromecast: "com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.15",
         statefulLayout                 : "cz.kinst.jakub:android-stateful-layout-simple:2.0.7",
         photoView                      : "com.github.chrisbanes:PhotoView:2.0.0",

@@ -40,80 +40,56 @@ dependencies {
     implementation deps.lifecycleExtensions
     implementation deps.browser
     implementation deps.constraintLayout
-
     implementation deps.playWearable
     implementation deps.material
     implementation deps.playAds
-
     implementation deps.kotlin_stdlib_jdk7
-
     implementation deps.materialdrawer
     implementation deps.materialDialogCore
     implementation deps.materialDialogCommons
     implementation deps.cyanea
-
     implementation deps.inAppbilling
     implementation deps.workManager
-
     // Iconography
     implementation deps.iconicsCore
     implementation deps.googleMaterialTypeface
     implementation deps.communityMaterialTypeface
     implementation deps.weathericon
     implementation deps.fontawesomeTypeface
-
     implementation deps.expandableLayout
     implementation deps.expandableTextview
-
     implementation deps.forecast
-
     implementation deps.dexter
-
     implementation deps.easyprefs
-
     implementation deps.staticMaps
     implementation deps.once
     implementation deps.circleImageView
-
     implementation deps.calendarprovider
-
     // Firebase Messaging
     implementation deps.firebaseCore
     implementation deps.firebaseMessaging
-
     // HTTP Related libraries
     implementation deps.retrofit
     implementation deps.converter_gson
     implementation deps.gson
-
     implementation deps.glide
     implementation 'androidx.legacy:legacy-support-v4:1.0.0-alpha1'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.0-alpha1'
     kapt deps.glideCompiler
     implementation deps.glideTransformation
-
     implementation deps.timber
-
     implementation deps.butterknife
     kapt deps.butterknifeCompiler
-
     implementation deps.materialValue
-
-
     implementation deps.autoValue
     annotationProcessor deps.autoValueProcessor
-
     implementation deps.statefulLayout
-
     // YouTube Player
     implementation deps.androidyoutubeplayer_core
     implementation deps.androidyoutubeplayer_chromecast
-
     implementation deps.rxjava
     implementation deps.rxandroid
-
     implementation deps.transitionseverywhere
     implementation deps.customtabs
     implementation deps.preferences
-
 }
