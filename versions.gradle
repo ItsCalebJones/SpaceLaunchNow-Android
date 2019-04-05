@@ -101,7 +101,7 @@ ext.deps = [
         materialdrawer                 : "com.mikepenz:materialdrawer:6.1.0",
         materialDialogCore             : "com.afollestad.material-dialogs:core:0.9.6.0",
         materialDialogCommons          : "com.afollestad.material-dialogs:commons:0.9.6.0",
-        cyanea                         : "com.jaredrummler:cyanea:1.0.1",
+        cyanea                         : "com.github.jaredrummler:Cyanea:e3a38f0d13",
         expandableLayout               : "net.cachapa.expandablelayout:expandablelayout:2.9.2",
         expandableTextview             : "at.blogc:expandabletextview:1.0.5",
         circleImageView                : "de.hdodenhof:circleimageview:2.2.0",
