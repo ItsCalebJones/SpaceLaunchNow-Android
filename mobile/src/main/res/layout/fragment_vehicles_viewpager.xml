@@ -15,9 +15,7 @@
         android:elevation="4dp"
         app:tabBackground="@color/colorPrimary"
         app:tabGravity="fill"
-        app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/material_color_white"
-        app:tabTextColor="@color/material_color_white_70_percent" />
+        app:tabMode="fixed" />
 
 
 

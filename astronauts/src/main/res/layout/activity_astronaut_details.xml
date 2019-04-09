@@ -1,4 +1,5 @@
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootview"
     android:layout_width="match_parent"
@@ -88,7 +89,6 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/astronaut_detail_tabs"
-            style="@style/BaseAppTheme.TabBarOverlay"
             android:layout_width="fill_parent"
             android:layout_height="?attr/actionBarSize" />
 

@@ -11,6 +11,7 @@ import android.zetterstrom.com.forecast.models.DataPoint;
 import android.zetterstrom.com.forecast.models.Forecast;
 
 import com.github.pwittchen.weathericonview.WeatherIconView;
+import com.jaredrummler.cyanea.Cyanea;
 
 import java.text.SimpleDateFormat;
 
@@ -22,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 
 public class WeatherCard extends CardView {
 
@@ -99,6 +101,7 @@ public class WeatherCard extends CardView {
     private boolean current = true;
     private Forecast forecast;
     private String location;
+    private Cyanea cyanea;
 
     public WeatherCard(Context context) {
         super(context);
@@ -141,6 +144,7 @@ public class WeatherCard extends CardView {
 
     public void setTitle(String title) {
         weatherTitle.setText(title);
+        weatherTitle.setTextColor(Utils.getTitleTextColor(cyanea.getPrimary()));
     }
 
     private void updateCurrentWeatherView(Forecast forecast, String location) {

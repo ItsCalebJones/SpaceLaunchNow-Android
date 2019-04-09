@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.local.common.BaseFragment;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.ui.main.vehicles.launcher.LauncherFragment;
@@ -55,10 +56,13 @@ public class VehiclesViewPager extends BaseFragment {
 
         View inflatedView = inflater.inflate(R.layout.fragment_vehicles_viewpager, container, false);
 
-        TabLayout tabLayout = (TabLayout) inflatedView.findViewById(R.id.tabLayout);
+        tabLayout = inflatedView.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.launchers));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.orbiters));
-        viewPager = (ViewPager) inflatedView.findViewById(R.id.viewpager);
+        viewPager = inflatedView.findViewById(R.id.viewpager);
+
+        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
+                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
 
         pagerAdapter = new PagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount());

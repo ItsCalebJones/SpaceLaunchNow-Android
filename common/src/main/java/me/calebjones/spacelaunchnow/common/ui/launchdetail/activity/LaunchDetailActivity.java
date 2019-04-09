@@ -205,6 +205,9 @@ public class LaunchDetailActivity extends BaseActivity
         } );
 
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
+                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+        tabLayout.setBackgroundColor(getCyanea().getPrimary());
 
         //Grab information from Intent
         Intent mIntent = getIntent();
@@ -362,7 +365,9 @@ public class LaunchDetailActivity extends BaseActivity
             findProfileLogo(launch);
             findRocketImage(launch);
             detail_mission_location.setText(launch.getPad().getName());
+            detail_mission_location.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
             detail_rocket.setText(launch.getName());
+            detail_rocket.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
         } else if (this.isDestroyed()) {
             Timber.v("DetailLaunch is destroyed, stopping loading data.");
         }

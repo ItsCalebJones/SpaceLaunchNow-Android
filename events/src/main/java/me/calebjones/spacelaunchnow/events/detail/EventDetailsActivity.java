@@ -274,7 +274,11 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
     private void updateViews(Event event) {
         this.event = event;
         eventTitle.setText(event.getName());
+        eventTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+
         eventSubtitle.setText(event.getLocation());
+        eventSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+
         eventCardTitle.setText("Overview");
         eventType.setText(event.getType().getName());
         SimpleDateFormat df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");

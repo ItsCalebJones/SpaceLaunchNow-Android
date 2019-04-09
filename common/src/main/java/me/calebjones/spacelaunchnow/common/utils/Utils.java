@@ -458,5 +458,30 @@ public class Utils {
             return "";
         }
     }
+
+
+    public static int getTitleTextColor(int color) {
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        double lum = (((0.299 * red) + ((0.587 * green) + (0.114 * blue))));
+        return lum > 220 ? 0xFF000000 : 0xFFFFFFFF;
+    }
+
+    public static int getSecondaryTitleTextColor(int color) {
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        double lum = (((0.299 * red) + ((0.587 * green) + (0.114 * blue))));
+        return lum > 220 ? 0x80000000 : 0xFFFFFFFF;
+    }
+
+    public static boolean getIconColor(int color) {
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+        double lum = (((0.299 * red) + ((0.587 * green) + (0.114 * blue))));
+        return lum < 220;
+    }
 }
 

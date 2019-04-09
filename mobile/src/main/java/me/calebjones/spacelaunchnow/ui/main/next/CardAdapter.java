@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.crashlytics.android.Crashlytics;
 
 import java.net.URI;
@@ -36,6 +35,7 @@ import io.reactivex.disposables.Disposable;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.ui.views.DialogAdapter;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.common.youtube.models.VideoListItem;
 import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
@@ -43,7 +43,6 @@ import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.GlideApp;
-import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.common.ui.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView;
@@ -63,11 +62,16 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     private SimpleDateFormat fullDate;
     private SimpleDateFormat shortDate;
     private int color;
+    private int primaryTextColor;
+    private int secondaryTextColor;
 
     public CardAdapter(Context context, int color) {
         launchList = new RealmList<>();
         this.context = context;
         this.color = color;
+
+        primaryTextColor = Utils.getTitleTextColor(color);
+        secondaryTextColor = Utils.getSecondaryTitleTextColor(color);
 
         if (DateFormat.is24HourFormat(context)) {
             fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
@@ -105,6 +109,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
+        holder.title.setTextColor(primaryTextColor);
+        holder.location.setTextColor(secondaryTextColor);
+        holder.launchDateCompact.setTextColor(secondaryTextColor);
         if (launchItem.isValid()) {
             Timber.i("Binding %s", launchItem.getName());
             String title;
@@ -128,7 +135,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                     //Retrieve missionType
                     if (launchItem.getMission() != null) {
-                        Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName(), true);
+                        Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName(), Utils.getIconColor(color));
                     } else {
                         holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
                     }

@@ -47,6 +47,7 @@ import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
 import me.spacelaunchnow.astronauts.R2;
@@ -131,6 +132,9 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         tabs.addTab(tabs.newTab().setText(getString(R.string.profile)));
         tabs.addTab(tabs.newTab().setText(getString(R.string.flights)));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+        tabs.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
+                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+        tabs.setBackgroundColor(getCyanea().getPrimary());
         astronautDataRepository = new AstronautDataRepository(this, getRealm());
 
         appbar.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(getCyanea().getPrimaryDark(), getWindow()));
@@ -212,8 +216,13 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
 
     private void updateViews(Astronaut astronaut) {
         this.astronaut = astronaut;
+
         astronautTitle.setText(astronaut.getName());
+        astronautTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+
         astronautSubtitle.setText(astronaut.getNationality());
+        astronautSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+
         GlideApp.with(this)
                 .load(astronaut.getProfileImage())
                 .thumbnail(GlideApp.with(this)

@@ -13,11 +13,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import me.calebjones.spacelaunchnow.common.base.BaseFragment;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.news.R;
 import me.calebjones.spacelaunchnow.news.ui.news.NewsListFragment;
 import me.calebjones.spacelaunchnow.news.ui.twitter.TwitterFragment;
 
-public class NewsViewPager extends Fragment {
+public class NewsViewPager extends BaseFragment {
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -44,6 +46,8 @@ public class NewsViewPager extends Fragment {
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.news));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.twitter));
+        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
+                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter

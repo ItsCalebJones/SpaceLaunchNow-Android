@@ -8,7 +8,7 @@
     android:layout_margin="@dimen/material_baseline_grid_1x"
     android:padding="@dimen/material_baseline_grid_1x"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="?attr/colorPrimary"
+    app:cardBackgroundColor="?attr/colorAccent"
     app:cardCornerRadius="10dp">
 
     <LinearLayout

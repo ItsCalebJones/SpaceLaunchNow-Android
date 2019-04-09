@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.local.common.BaseFragment;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
@@ -52,6 +53,8 @@ public class LaunchesViewPager extends BaseFragment {
         View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
+        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
+                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
 //        tabLayout.addTab(tabLayout.newTab().setText("Following"));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.upcoming));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.previous));

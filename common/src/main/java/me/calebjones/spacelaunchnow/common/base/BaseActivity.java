@@ -1,17 +1,25 @@
 package me.calebjones.spacelaunchnow.common.base;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 
+import androidx.annotation.ColorRes;
+import androidx.core.graphics.drawable.DrawableCompat;
 import io.realm.Realm;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import timber.log.Timber;
 
 public class BaseActivity extends CyaneaAppCompatActivity {
 
-    public BaseActivity(){}
+    public BaseActivity() {
+    }
 
-    public BaseActivity (String screenName){
+    public BaseActivity(String screenName) {
         name = screenName;
     }
 
@@ -55,9 +63,15 @@ public class BaseActivity extends CyaneaAppCompatActivity {
 
 
     public Realm getRealm() {
-        if(realm.isClosed()){
+        if (realm.isClosed()) {
             realm = Realm.getDefaultInstance();
         }
         return realm;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        return true;
     }
 }
