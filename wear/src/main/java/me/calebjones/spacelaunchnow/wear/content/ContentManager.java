@@ -69,7 +69,7 @@ public class ContentManager {
         this.context = context;
         realm = Realm.getDefaultInstance();
         retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(context.getString(R.string.sln_token),
-                Constants.API_DEV_BASE_URL);
+                Constants.API_BASE_URL);
         sharedPreferences = context.getSharedPreferences("timestamp", 0);
         this.contentCallback = callback;
     }

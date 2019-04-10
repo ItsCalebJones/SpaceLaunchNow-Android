@@ -94,13 +94,13 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
                 case ComplicationData.TYPE_SHORT_TEXT:
                     complicationData = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
                             .setShortTitle(ComplicationText.plainText("Become"))
-                            .setShortText(ComplicationText.plainText("SupporterActivity"))
+                            .setShortText(ComplicationText.plainText("Supporter"))
                             .setTapAction(supporterPendingIntent)
                             .build();
                     break;
                 case ComplicationData.TYPE_LONG_TEXT:
                     complicationData = new ComplicationData.Builder(ComplicationData.TYPE_LONG_TEXT)
-                            .setLongText(ComplicationText.plainText("Become a SupporterActivity"))
+                            .setLongText(ComplicationText.plainText("Become a Supporter"))
                             .setTapAction(supporterPendingIntent)
                             .build();
                     break;

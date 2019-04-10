@@ -39,7 +39,9 @@ public class ComplicationTapBroadcastReceiver extends BroadcastReceiver {
 //        ProviderUpdateRequester requester = new ProviderUpdateRequester(context, provider);
 //        requester.requestUpdate(complicationId);
         this.context = context;
-        checkCompanionInstalled(context);
+        Intent supportIntent = new Intent(context, SupporterActivity.class);
+        supportIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(supportIntent);
     }
 
     /**

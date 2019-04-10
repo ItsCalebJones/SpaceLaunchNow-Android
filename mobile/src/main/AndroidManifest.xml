@@ -61,9 +61,6 @@
             android:value="@string/GoogleMapsKey" />
 
         <activity
-            android:name=".common.ui.spacecraft.OrbiterDetailActivity"
-            android:theme="@style/BaseAppTheme" />
-        <activity
             android:name=".ui.launcher.LauncherDetailActivity"
             android:theme="@style/BaseAppTheme" />
 

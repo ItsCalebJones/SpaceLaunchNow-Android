@@ -96,7 +96,6 @@
                     android:gravity="center"
                     android:singleLine="false"
                     android:text="@string/unknown_agency_type"
-                    android:textAlignment="textStart"
                     android:textAppearance="@style/MaterialTypography.Regular.Title"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="18sp"
@@ -115,7 +114,6 @@
                     android:paddingBottom="@dimen/material_baseline_grid_1x"
                     android:singleLine="false"
                     android:text=""
-                    android:textAlignment="textStart"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="@dimen/material_typography_regular_subheading_text_size"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -716,7 +714,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
-                    app:constraint_referenced_ids="core_information,serial_number_title,serial_number_text,status_title,status_text,previous_title,previous_text,flight_proven,flight_proven_title" />
+                    app:constraint_referenced_ids="core_information,previous_title,previous_text,flight_proven,flight_proven_title" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/launcher_launches"

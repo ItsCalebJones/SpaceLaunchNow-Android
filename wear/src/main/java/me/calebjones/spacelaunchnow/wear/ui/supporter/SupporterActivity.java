@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.wear.ui.supporter;
 
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
@@ -49,6 +50,9 @@ public class SupporterActivity extends WearableActivity implements BillingProces
 
         // Enables Always-on
         setAmbientEnabled();
+        supporterButton.setOnClickListener(v -> {
+            makePurchase();
+        });
     }
 
     private void makePurchase() {

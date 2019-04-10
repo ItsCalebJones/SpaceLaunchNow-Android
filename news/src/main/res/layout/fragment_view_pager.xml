@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:elevation="12dp"
     android:clipToPadding="true"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity">
+    android:layout_height="match_parent">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"

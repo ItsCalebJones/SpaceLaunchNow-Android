@@ -45,8 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:clipToPadding="false"
-                    app:layoutManager="LinearLayoutManager" />
+                    android:clipToPadding="false" />
 
             </androidx.cardview.widget.CardView>
         </cz.kinst.jakub.view.SimpleStatefulLayout>

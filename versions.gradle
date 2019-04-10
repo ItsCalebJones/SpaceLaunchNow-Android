@@ -64,7 +64,7 @@ ext.deps = [
         roomCompiler                   : "androidx.room:room-compiler:$roomVersion",
         paging                         : "androidx.paging:paging-runtime-ktx:2.1.0-beta01",
         preferences                    : "androidx.preference:preference:1.1.0-alpha03",
-        workManager                    : "android.arch.work:work-runtime:1.0.0",
+        workManager                    : "androidx.work:work-runtime:2.0.1",
 
         //Google
         material                       : "com.google.android.material:material:1.0.0",
