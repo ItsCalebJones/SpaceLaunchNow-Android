@@ -334,179 +334,181 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             Timber.d("onClick at %s", position);
 
             final Launch launch = launchList.get(position);
-            Intent sendIntent = new Intent();
+            if (launch != null && launch.isValid()) {
+                Intent sendIntent = new Intent();
 
-            Date date = launch.getNet();
-            String launchDate = fullDate.format(date);
+                Date date = launch.getNet();
+                String launchDate = fullDate.format(date);
 
-            switch (v.getId()) {
-                case R.id.watchButton:
-                    Timber.d("Watch: %s", launch.getVidURLs().size());
-                    Analytics.getInstance().sendButtonClicked("Watch Button - Opening Dialogue");
-                    if (launch.getVidURLs().size() > 0) {
-                        final DialogAdapter adapter = new DialogAdapter((index, item, longClick) -> {
-                            try {
-                                if (longClick) {
-                                    Intent sendIntent1 = new Intent();
-                                    sendIntent1.setAction(Intent.ACTION_SEND);
-                                    sendIntent1.putExtra(Intent.EXTRA_TEXT, item.getVideoURL().toString()); // Simple text and URL to share
-                                    sendIntent1.setType("text/plain");
-                                    context.startActivity(sendIntent1);
-                                    Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
-                                } else {
-                                    Uri watchUri = Uri.parse(item.getVideoURL().toString());
-                                    Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
-                                    context.startActivity(i);
-                                    Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
-                                }
-                            } catch (ArrayIndexOutOfBoundsException e) {
-                                Timber.e(e);
-                                Toast.makeText(context, "Ops, an error occurred.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        for (RealmStr s : launch.getVidURLs()) {
-                            //Do your stuff here
-                            try {
-                                URI uri = new URI(s.getVal());
-
-                                String name;
-                                YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context, context.getResources().getString(R.string.GoogleMapsKey));
-                                if (uri.getHost().contains("youtube")){
-                                    name = "YouTube";
-                                    String youTubeURL = getYouTubeID(s.getVal());
-                                    if (youTubeURL.contains("spacex/live")){
-                                        adapter.add(new VideoListItem.Builder(context)
-                                                .content("YouTube - SpaceX Livestream")
-                                                .videoURL(s.getVal())
-                                                .build());
+                switch (v.getId()) {
+                    case R.id.watchButton:
+                        Timber.d("Watch: %s", launch.getVidURLs().size());
+                        Analytics.getInstance().sendButtonClicked("Watch Button - Opening Dialogue");
+                        if (launch.getVidURLs().size() > 0) {
+                            final DialogAdapter adapter = new DialogAdapter((index, item, longClick) -> {
+                                try {
+                                    if (longClick) {
+                                        Intent sendIntent1 = new Intent();
+                                        sendIntent1.setAction(Intent.ACTION_SEND);
+                                        sendIntent1.putExtra(Intent.EXTRA_TEXT, item.getVideoURL().toString()); // Simple text and URL to share
+                                        sendIntent1.setType("text/plain");
+                                        context.startActivity(sendIntent1);
+                                        Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
                                     } else {
-                                        youTubeAPIHelper.getVideoById(youTubeURL,
-                                                new Callback<VideoResponse>() {
-                                            @Override
-                                            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                                                if (response.isSuccessful()) {
-                                                    if (response.body() != null) {
-                                                        List<Video> videos = response.body().getVideos();
-                                                        if (videos.size() > 0) {
-                                                            try {
-                                                                adapter.add(new VideoListItem.Builder(context)
-                                                                        .content(videos.get(0).getSnippet().getTitle())
-                                                                        .videoURL(s.getVal())
-                                                                        .build());
-                                                            } catch (Exception e){
+                                        Uri watchUri = Uri.parse(item.getVideoURL().toString());
+                                        Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
+                                        context.startActivity(i);
+                                        Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
+                                    }
+                                } catch (ArrayIndexOutOfBoundsException e) {
+                                    Timber.e(e);
+                                    Toast.makeText(context, "Ops, an error occurred.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            for (RealmStr s : launch.getVidURLs()) {
+                                //Do your stuff here
+                                try {
+                                    URI uri = new URI(s.getVal());
+
+                                    String name;
+                                    YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context, context.getResources().getString(R.string.GoogleMapsKey));
+                                    if (uri.getHost().contains("youtube")) {
+                                        name = "YouTube";
+                                        String youTubeURL = getYouTubeID(s.getVal());
+                                        if (youTubeURL.contains("spacex/live")) {
+                                            adapter.add(new VideoListItem.Builder(context)
+                                                    .content("YouTube - SpaceX Livestream")
+                                                    .videoURL(s.getVal())
+                                                    .build());
+                                        } else {
+                                            youTubeAPIHelper.getVideoById(youTubeURL,
+                                                    new Callback<VideoResponse>() {
+                                                        @Override
+                                                        public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                                                            if (response.isSuccessful()) {
+                                                                if (response.body() != null) {
+                                                                    List<Video> videos = response.body().getVideos();
+                                                                    if (videos.size() > 0) {
+                                                                        try {
+                                                                            adapter.add(new VideoListItem.Builder(context)
+                                                                                    .content(videos.get(0).getSnippet().getTitle())
+                                                                                    .videoURL(s.getVal())
+                                                                                    .build());
+                                                                        } catch (Exception e) {
+                                                                            adapter.add(new VideoListItem.Builder(context)
+                                                                                    .content(name)
+                                                                                    .videoURL(s.getVal())
+                                                                                    .build());
+                                                                        }
+                                                                    } else {
+                                                                        adapter.add(new VideoListItem.Builder(context)
+                                                                                .content(name)
+                                                                                .videoURL(s.getVal())
+                                                                                .build());
+                                                                    }
+                                                                } else {
+                                                                    adapter.add(new VideoListItem.Builder(context)
+                                                                            .content(name)
+                                                                            .videoURL(s.getVal())
+                                                                            .build());
+                                                                }
+                                                            } else {
                                                                 adapter.add(new VideoListItem.Builder(context)
                                                                         .content(name)
                                                                         .videoURL(s.getVal())
                                                                         .build());
                                                             }
-                                                        } else {
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<VideoResponse> call, Throwable t) {
                                                             adapter.add(new VideoListItem.Builder(context)
                                                                     .content(name)
                                                                     .videoURL(s.getVal())
                                                                     .build());
                                                         }
-                                                    } else {
-                                                        adapter.add(new VideoListItem.Builder(context)
-                                                                .content(name)
-                                                                .videoURL(s.getVal())
-                                                                .build());
-                                                    }
-                                                } else {
-                                                    adapter.add(new VideoListItem.Builder(context)
-                                                            .content(name)
-                                                            .videoURL(s.getVal())
-                                                            .build());
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<VideoResponse> call, Throwable t) {
-                                                adapter.add(new VideoListItem.Builder(context)
-                                                        .content(name)
-                                                        .videoURL(s.getVal())
-                                                        .build());
-                                            }
-                                        });
+                                                    });
+                                        }
+                                    } else {
+                                        name = uri.getHost();
+                                        adapter.add(new VideoListItem.Builder(context)
+                                                .content(name)
+                                                .videoURL(s.getVal())
+                                                .build());
                                     }
-                                } else {
-                                    name = uri.getHost();
-                                    adapter.add(new VideoListItem.Builder(context)
-                                            .content(name)
-                                            .videoURL(s.getVal())
-                                            .build());
-                                }
 
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
+                                } catch (URISyntaxException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
+                                    .title(R.string.source)
+                                    .content(R.string.long_press_share)
+                                    .adapter(adapter, null)
+                                    .negativeText(R.string.cancel);
+                            builder.show();
+                        }
+                        break;
+                    case R.id.exploreButton:
+                        Timber.d("Explore: %s", launchList.get(position).getId());
+                        Analytics.getInstance().sendButtonClicked("Explore Button", launch.getName());
+
+                        Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
+                        exploreIntent.putExtra("TYPE", "launch");
+                        exploreIntent.putExtra("launchID", launch.getId());
+                        context.startActivity(exploreIntent);
+                        break;
+                    case R.id.shareButton:
+                        String message;
+                        if (launch.getVidURLs().size() > 0) {
+                            if (launch.getPad().getLocation() != null) {
+
+                                message = launch.getName() + " launching from "
+                                        + launch.getPad().getLocation().getName() + "\n\n"
+                                        + launchDate;
+                            } else if (launch.getPad().getLocation() != null) {
+                                message = launch.getName() + " launching from "
+                                        + launch.getPad().getLocation().getName() + "\n\n"
+                                        + launchDate;
+                            } else {
+                                message = launch.getName()
+                                        + "\n\n"
+                                        + launchDate;
+                            }
+                        } else {
+                            if (launch.getPad().getLocation() != null) {
+
+                                message = launch.getName() + " launching from "
+                                        + launch.getPad().getLocation().getName() + "\n\n"
+                                        + launchDate;
+                            } else if (launch.getPad().getLocation() != null) {
+                                message = launch.getName() + " launching from "
+                                        + launch.getPad().getLocation().getName() + "\n\n"
+                                        + launchDate;
+                            } else {
+                                message = launch.getName()
+                                        + "\n\n"
+                                        + launchDate;
                             }
                         }
+                        ShareCompat.IntentBuilder.from((Activity) context)
+                                .setType("text/plain")
+                                .setChooserTitle("Share: " + launch.getName())
+                                .setText(String.format("%s\n\nWatch Live: %s", message, launch.getSlug()))
+                                .startChooser();
+                        Analytics.getInstance().sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
+                        break;
+                    case R.id.background:
+                        Timber.d("Explore: %s", launchList.get(position).getId());
+                        Analytics.getInstance().sendButtonClicked("Title Card", launch.getName());
 
-                        MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
-                                .title(R.string.source)
-                                .content(R.string.long_press_share)
-                                .adapter(adapter, null)
-                                .negativeText(R.string.cancel);
-                        builder.show();
-                    }
-                    break;
-                case R.id.exploreButton:
-                    Timber.d("Explore: %s", launchList.get(position).getId());
-                    Analytics.getInstance().sendButtonClicked("Explore Button", launch.getName());
-
-                    Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
-                    exploreIntent.putExtra("TYPE", "launch");
-                    exploreIntent.putExtra("launchID", launch.getId());
-                    context.startActivity(exploreIntent);
-                    break;
-                case R.id.shareButton:
-                    String message;
-                    if (launch.getVidURLs().size() > 0) {
-                        if (launch.getPad().getLocation() != null) {
-
-                            message = launch.getName() + " launching from "
-                                    + launch.getPad().getLocation().getName() + "\n\n"
-                                    + launchDate;
-                        } else if (launch.getPad().getLocation() != null) {
-                            message = launch.getName() + " launching from "
-                                    + launch.getPad().getLocation().getName() + "\n\n"
-                                    + launchDate;
-                        } else {
-                            message = launch.getName()
-                                    + "\n\n"
-                                    + launchDate;
-                        }
-                    } else {
-                        if (launch.getPad().getLocation() != null) {
-
-                            message = launch.getName() + " launching from "
-                                    + launch.getPad().getLocation().getName() + "\n\n"
-                                    + launchDate;
-                        } else if (launch.getPad().getLocation() != null) {
-                            message = launch.getName() + " launching from "
-                                    + launch.getPad().getLocation().getName() + "\n\n"
-                                    + launchDate;
-                        } else {
-                            message = launch.getName()
-                                    + "\n\n"
-                                    + launchDate;
-                        }
-                    }
-                    ShareCompat.IntentBuilder.from((Activity) context)
-                            .setType("text/plain")
-                            .setChooserTitle("Share: " + launch.getName())
-                            .setText(String.format("%s\n\nWatch Live: %s", message, launch.getSlug()))
-                            .startChooser();
-                    Analytics.getInstance().sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
-                    break;
-                case R.id.background:
-                    Timber.d("Explore: %s", launchList.get(position).getId());
-                    Analytics.getInstance().sendButtonClicked("Title Card", launch.getName());
-
-                    Intent titleIntent = new Intent(context, LaunchDetailActivity.class);
-                    titleIntent.putExtra("TYPE", "launch");
-                    titleIntent.putExtra("launchID", launch.getId());
-                    context.startActivity(titleIntent);
-                    break;
+                        Intent titleIntent = new Intent(context, LaunchDetailActivity.class);
+                        titleIntent.putExtra("TYPE", "launch");
+                        titleIntent.putExtra("launchID", launch.getId());
+                        context.startActivity(titleIntent);
+                        break;
+                }
             }
         }
     }

@@ -244,15 +244,6 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
         swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(false));
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.info_menu, menu);
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -265,25 +256,7 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
             return true;
         }
 
-        if (id == R.id.info) {
-            new MaterialDialog.Builder(this)
-                    .title(me.calebjones.spacelaunchnow.common.R.string.improve_our_data)
-                    .icon(new IconicsDrawable(this)
-                            .icon(FontAwesome.Icon.faw_discord)
-                            .color(Color.rgb(114, 137, 218))
-                            .sizeDp(24))
-                    .content(R.string.improve_our_data_content)
-                    .negativeText(R.string.button_no)
-                    .positiveText(R.string.ok)
-                    .onNegative((dialog, which) -> dialog.dismiss())
-                    .onPositive((dialog, which) -> {
-                        String discordUrl = getString(R.string.discord_url);
-                        Intent discordIntent = new Intent(Intent.ACTION_VIEW);
-                        discordIntent.setData(Uri.parse(discordUrl));
-                        startActivity(discordIntent);
-                    })
-                    .show();
-        }
+
 
         return super.onOptionsItemSelected(item);
     }

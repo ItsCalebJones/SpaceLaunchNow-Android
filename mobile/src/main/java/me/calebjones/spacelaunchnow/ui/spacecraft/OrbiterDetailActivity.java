@@ -131,7 +131,10 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
         } else {
 
             toolbarSubTitle.setText(agency.getType());
+            toolbarSubTitle.setTextColor(me.calebjones.spacelaunchnow.common.utils.Utils.getTitleTextColor(getCyanea().getPrimary()));
             toolbarTitle.setText(agency.getName());
+            toolbarTitle.setTextColor(me.calebjones.spacelaunchnow.common.utils.Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+
 
             if (agency.getSpacecraftConfigs() != null) {
                 adapter.clear();
@@ -164,14 +167,6 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.info_menu, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -189,27 +184,6 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
             onBackPressed();
             return true;
         }
-
-        if (id == R.id.info) {
-            new MaterialDialog.Builder(this)
-                    .title(R.string.improve_our_data)
-                    .icon(new IconicsDrawable(this)
-                            .icon(FontAwesome.Icon.faw_discord)
-                            .color(Color.rgb(114, 137, 218))
-                            .sizeDp(24))
-                    .content(R.string.improve_our_data_content)
-                    .negativeText(R.string.button_no)
-                    .positiveText(R.string.ok)
-                    .onNegative((dialog, which) -> dialog.dismiss())
-                    .onPositive((dialog, which) -> {
-                        String discordUrl = getString(R.string.discord_url);
-                        Intent discordIntent = new Intent(Intent.ACTION_VIEW);
-                        discordIntent.setData(Uri.parse(discordUrl));
-                        startActivity(discordIntent);
-                    })
-                    .show();
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

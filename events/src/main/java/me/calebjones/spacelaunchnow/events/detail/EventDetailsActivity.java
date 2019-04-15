@@ -191,9 +191,9 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
         }
 
         if (getCyanea().isDark()){
-            color = ContextCompat.getColor(this, R.color.material_color_white);
+            color = ContextCompat.getColor(this, R.color.white);
         } else {
-            color = ContextCompat.getColor(this, R.color.material_color_black);
+            color = ContextCompat.getColor(this, R.color.black);
         }
 
         linearLayoutManager = new LinearLayoutManager(this);
@@ -375,15 +375,6 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
         eventDetailSwipeRefresh.post(() -> eventDetailSwipeRefresh.setRefreshing(false));
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.info_menu, menu);
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -394,26 +385,6 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
-        }
-
-        if (id == R.id.info) {
-            new MaterialDialog.Builder(this)
-                    .title(R.string.improve_our_data)
-                    .icon(new IconicsDrawable(this)
-                            .icon(FontAwesome.Icon.faw_discord)
-                            .color(Color.rgb(114, 137, 218))
-                            .sizeDp(24))
-                    .content(R.string.improve_our_data_content)
-                    .negativeText(R.string.button_no)
-                    .positiveText(R.string.ok)
-                    .onNegative((dialog, which) -> dialog.dismiss())
-                    .onPositive((dialog, which) -> {
-                        String discordUrl = getString(R.string.discord_url);
-                        Intent discordIntent = new Intent(Intent.ACTION_VIEW);
-                        discordIntent.setData(Uri.parse(discordUrl));
-                        startActivity(discordIntent);
-                    })
-                    .show();
         }
 
         return super.onOptionsItemSelected(item);

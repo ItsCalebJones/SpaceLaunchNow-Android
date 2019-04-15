@@ -98,25 +98,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_baseline_grid_2x"
             android:layout_marginTop="8dp"
-            android:text="@string/unknown_orbiter"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/crew_capacity"
-            tools:text="Soyuz" />
-
-        <ImageView
-            android:id="@+id/orbiter_description_expand"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="24dp"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true"
-            android:padding="@dimen/material_baseline_grid_0.5x"
-            android:scaleType="centerCrop"
-            android:src="@drawable/triangle"
-            app:layout_constraintBottom_toBottomOf="@+id/orbiter_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/orbiter_name" />
+            tools:text="Details" />
 
         <View
             android:id="@+id/orbiter_divider"
@@ -133,7 +118,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/orbiter_name" />
 
-        <at.blogc.android.views.ExpandableTextView
+        <TextView
             android:id="@+id/orbiter_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -213,22 +198,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/orbiter_description"
-            tools:text="Soyuz History" />
-
-        <ImageView
-            android:id="@+id/orbiter_history_expand"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="24dp"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true"
-            android:padding="@dimen/material_baseline_grid_0.5x"
-            android:src="@drawable/triangle"
-            app:layout_constraintBottom_toBottomOf="@+id/orbiter_history"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintStart_toEndOf="@+id/orbiter_history"
-            app:layout_constraintTop_toTopOf="@+id/orbiter_history" />
+            tools:text="History" />
 
         <View
             android:id="@+id/orbiter_history_divider"
