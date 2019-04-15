@@ -205,8 +205,8 @@ public class LaunchDetailActivity extends BaseActivity
         } );
 
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
-                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()),
+                Utils.getTitleTextColor(getCyanea().getPrimary()));
         tabLayout.setBackgroundColor(getCyanea().getPrimary());
 
         //Grab information from Intent

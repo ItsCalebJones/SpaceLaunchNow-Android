@@ -36,6 +36,7 @@ import butterknife.ButterKnife;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.spacestation.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
 import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
@@ -126,6 +127,9 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
         tabs.addTab(tabs.newTab().setText(getString(R.string.expeditions)));
         tabs.addTab(tabs.newTab().setText(getString(R.string.docked_alt)));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+        tabs.setTabTextColors(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()),
+                Utils.getTitleTextColor(getCyanea().getPrimary()));
+        tabs.setBackgroundColor(getCyanea().getPrimary());
         spacestationDataRepository = new SpacestationDataRepository(this, getRealm());
 
         appbar.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(getCyanea().getPrimaryDark(), getWindow()));
@@ -189,6 +193,8 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
         this.spacestation = spacestation;
         spacestationTitle.setText(spacestation.getName());
         spacestationSubtitle.setText(spacestation.getType().getName());
+        spacestationSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+        spacestationTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
         GlideApp.with(this)
                 .load(spacestation.getImageUrl())
                 .placeholder(R.drawable.placeholder)
