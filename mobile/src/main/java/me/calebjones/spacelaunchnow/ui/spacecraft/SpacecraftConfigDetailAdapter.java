@@ -84,10 +84,7 @@ public class SpacecraftConfigDetailAdapter extends RecyclerView.Adapter<Spacecra
         holder.orbiterTitle.setText(spacecraftConfig.getName());
         holder.orbiterSubtitle.setText(spacecraftConfig.getCapability());
 
-        holder.orbiterName.setText(String.format(context.getString(R.string.spacecraft_details), spacecraftConfig.getName()));
         holder.orbiterDescription.setText(spacecraftConfig.getDetails());
-
-        holder.orbiterHistory.setText(String.format(context.getString(R.string.spacecraft_history), spacecraftConfig.getName()));
         holder.orbiterHistoryDescription.setText(spacecraftConfig.getHistory());
 
         if (backgroundColor != 0) {
@@ -107,7 +104,7 @@ public class SpacecraftConfigDetailAdapter extends RecyclerView.Adapter<Spacecra
 
         if (spacecraftConfig.getFlightLife() != null) {
             holder.flightLife.setVisibility(View.VISIBLE);
-            holder.flightLife.setText(spacecraftConfig.getFlightLife());
+            holder.flightLife.setText(String.format(context.getString(me.calebjones.spacelaunchnow.R.string.flight_life), spacecraftConfig.getFlightLife()));
         } else {
             holder.flightLife.setVisibility(View.GONE);
         }
@@ -210,16 +207,12 @@ public class SpacecraftConfigDetailAdapter extends RecyclerView.Adapter<Spacecra
         TextView orbiterSubtitle;
         @BindView(R2.id.orbiter_name)
         TextView orbiterName;
-        @BindView(R2.id.orbiter_description_expand)
-        View orbiterDescriptionExpand;
         @BindView(R2.id.orbiter_description)
-        ExpandableTextView orbiterDescription;
+        TextView orbiterDescription;
         @BindView(R2.id.orbiter_history)
         TextView orbiterHistory;
         @BindView(R2.id.orbiter_history_description)
-        ExpandableTextView orbiterHistoryDescription;
-        @BindView(R2.id.orbiter_history_expand)
-        View orbiterHistoryExpand;
+        TextView orbiterHistoryDescription;
         @BindView(R2.id.wikiButton)
         AppCompatButton wikiButton;
         @BindView(R2.id.infoButton)
@@ -241,26 +234,6 @@ public class SpacecraftConfigDetailAdapter extends RecyclerView.Adapter<Spacecra
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-        }
-
-        @OnClick(R2.id.orbiter_history_expand)
-        public void onHistoryViewClicked() {
-            orbiterHistoryDescription.toggle();
-            if (orbiterHistoryDescription.isExpanded()) {
-                orbiterHistoryExpand.animate().rotation(0).start();
-            } else {
-                orbiterHistoryExpand.animate().rotation(180).start();
-            }
-        }
-
-        @OnClick(R2.id.orbiter_description_expand)
-        public void onDescriptionViewClicked() {
-            orbiterDescription.toggle();
-            if (orbiterDescription.isExpanded()) {
-                orbiterDescriptionExpand.animate().rotation(0).start();
-            } else {
-                orbiterDescriptionExpand.animate().rotation(180).start();
-            }
         }
     }
 }

@@ -107,24 +107,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/material_baseline_grid_2x"
                 android:layout_marginTop="8dp"
-                android:text="@string/unknown_orbiter"
+                android:text="@string/details"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/crew_capacity" />
-
-            <ImageView
-                android:id="@+id/orbiter_description_expand"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginEnd="24dp"
-                android:adjustViewBounds="true"
-                android:cropToPadding="true"
-                android:padding="@dimen/material_baseline_grid_0.5x"
-                android:scaleType="centerCrop"
-                android:src="@drawable/triangle"
-                app:layout_constraintBottom_toBottomOf="@+id/orbiter_name"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/orbiter_name" />
 
             <View
                 android:id="@+id/orbiter_divider"
@@ -141,7 +127,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orbiter_name" />
 
-            <at.blogc.android.views.ExpandableTextView
+            <TextView
                 android:id="@+id/orbiter_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -149,11 +135,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
-                android:maxLines="2"
                 android:text="@string/description_unavailable"
                 android:textAlignment="viewStart"
                 android:textColor="?android:textColorSecondary"
-                app:animation_duration="500"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orbiter_divider" />
@@ -210,33 +194,17 @@
                 app:layout_constraintStart_toEndOf="@+id/human_rated"
                 app:layout_constraintTop_toTopOf="@+id/human_rated" />
 
-
             <TextView
                 android:id="@+id/orbiter_history"
-                tools:text="Soyuz History"
+                tools:text="History"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/material_baseline_grid_2x"
                 android:layout_marginTop="16dp"
-                android:text="@string/unknown_orbiter"
+                android:text="History"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orbiter_description" />
-
-            <ImageView
-                android:id="@+id/orbiter_history_expand"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_marginEnd="24dp"
-                android:adjustViewBounds="true"
-                android:cropToPadding="true"
-                android:padding="@dimen/material_baseline_grid_0.5x"
-                android:src="@drawable/triangle"
-                app:layout_constraintBottom_toBottomOf="@+id/orbiter_history"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintStart_toEndOf="@+id/orbiter_history"
-                app:layout_constraintTop_toTopOf="@+id/orbiter_history" />
 
             <View
                 android:id="@+id/orbiter_history_divider"
@@ -254,7 +222,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orbiter_history" />
 
-            <at.blogc.android.views.ExpandableTextView
+            <TextView
                 android:id="@+id/orbiter_history_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -266,7 +234,6 @@
                 android:text="@string/description_unavailable"
                 android:textAlignment="viewStart"
                 android:textColor="?android:textColorSecondary"
-                app:animation_duration="500"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -299,7 +266,6 @@
                 tools:text="Height: Unknown (m)"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:text="Height: Unknown (m)"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -330,8 +296,7 @@
                 android:id="@+id/flight_life"
                 tools:text="One week free flight, up to two years while docked to the International Space Station."
                 android:layout_width="0dp"
-                android:layout_height="40dp"
-
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:text=""
                 app:layout_constraintEnd_toEndOf="parent"

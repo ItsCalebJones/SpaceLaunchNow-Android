@@ -98,6 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_baseline_grid_2x"
             android:layout_marginTop="8dp"
+            android:text="@string/details"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/crew_capacity"
@@ -126,11 +127,9 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:maxLines="2"
             android:text="@string/description_unavailable"
             android:textAlignment="viewStart"
             android:textColor="?android:textColorSecondary"
-            app:animation_duration="500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/orbiter_divider" />
@@ -194,7 +193,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/material_baseline_grid_2x"
             android:layout_marginTop="16dp"
-            android:text="@string/unknown_orbiter"
+            android:text="@string/history"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/orbiter_description"
@@ -216,7 +215,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/orbiter_history" />
 
-        <at.blogc.android.views.ExpandableTextView
+        <TextView
             android:id="@+id/orbiter_history_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -224,11 +223,9 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
-            android:maxLines="2"
             android:text="@string/description_unavailable"
             android:textAlignment="viewStart"
             android:textColor="?android:textColorSecondary"
-            app:animation_duration="500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -260,7 +257,6 @@
             android:id="@+id/height"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:text="Height: Unknown (m)"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -291,7 +287,7 @@
         <TextView
             android:id="@+id/flight_life"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
 
             android:text=""
