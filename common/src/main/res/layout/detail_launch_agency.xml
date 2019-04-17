@@ -28,7 +28,6 @@
             android:paddingEnd="@dimen/material_card_edge_margin"
             android:paddingStart="@dimen/material_card_edge_margin"
             android:paddingTop="@dimen/material_card_edge_margin"
-            app:cardBackgroundColor="?backgroundColor"
             app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
@@ -186,7 +185,7 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/lsp_agency"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/material_card_edge_margin"
@@ -198,8 +197,7 @@
                     android:paddingBottom="@dimen/material_baseline_grid_4x"
                     android:text="@string/view_upcoming_launches"
                     android:textSize="12sp"
-                    android:textColor="?colorAccent"
-                    android:theme="@style/PrimaryButtonTheme"
+                    android:theme="@style/ExploreButtonTheme"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

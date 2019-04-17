@@ -101,7 +101,6 @@ public class WeatherCard extends CardView {
     private boolean current = true;
     private Forecast forecast;
     private String location;
-    private Cyanea cyanea;
 
     public WeatherCard(Context context) {
         super(context);
@@ -144,7 +143,6 @@ public class WeatherCard extends CardView {
 
     public void setTitle(String title) {
         weatherTitle.setText(title);
-        weatherTitle.setTextColor(Utils.getTitleTextColor(cyanea.getPrimary()));
     }
 
     private void updateCurrentWeatherView(Forecast forecast, String location) {

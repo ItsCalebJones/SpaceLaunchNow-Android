@@ -242,6 +242,8 @@ dependencies {
     implementation deps.gpuImageLibrary
     implementation deps.materialdrawer
     implementation deps.forecast
+    implementation deps.materialValue
+
     // HTTP Related libraries
     implementation deps.retrofit
     implementation deps.okhttp

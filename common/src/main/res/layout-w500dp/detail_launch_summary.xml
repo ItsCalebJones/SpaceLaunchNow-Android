@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/launch_summary"
     android:layout_width="match_parent"
@@ -27,10 +26,10 @@
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
             android:visibility="visible"
-            card_view:cardCornerRadius="4dp"
-            card_view:cardElevation="@dimen/material_card_elevation_resting"
-            card_view:cardPreventCornerOverlap="true"
-            card_view:cardUseCompatPadding="true">
+            app:cardCornerRadius="4dp"
+            app:cardElevation="@dimen/material_card_elevation_resting"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
 
             <androidx.constraintlayout.widget.ConstraintLayout
 

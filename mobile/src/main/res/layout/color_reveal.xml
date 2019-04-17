@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:visibility="gone"
     android:elevation="2dp"
-    tools:visibility="visible"
+    tools:visibility="invisible"
     tools:background="@color/primary">
 
     <androidx.core.widget.NestedScrollView
