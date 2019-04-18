@@ -11,6 +11,11 @@
         <item>Dismissed</item>
         <item>Resigned during Training</item>
     </string-array>
+    <string-array name="time_format_array">
+        <item>Default</item>
+        <item>12-Hour AM/PM Format</item>
+        <item>24-Hour Format</item>
+    </string-array>
     <string-array name="widget_presets">
         <item>Light</item>
         <item>Dark</item>

@@ -483,34 +483,47 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
         Date windowStart = detailLaunch.getWindowStart();
         Date windowEnd = detailLaunch.getWindowEnd();
+        SimpleDateFormat dateFormat;
 
-        DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault());
+        if (sharedPref.getString("time_format", "Default").contains("12-Hour")) {
+            dateFormat = Utils.getSimpleDateFormatForUI("h:mm a zzz");
+        } else if (sharedPref.getString("time_format", "Default").contains("24-Hour")) {
+            dateFormat = Utils.getSimpleDateFormatForUI("HH:mm zzz");
+        } else if (android.text.format.DateFormat.is24HourFormat(context)) {
+            dateFormat = Utils.getSimpleDateFormatForUI("HH:mm zzz");
+        } else {
+            dateFormat = Utils.getSimpleDateFormatForUI("h:mm a zzz");
+        }
+
+        dateFormat.toLocalizedPattern();
+
+        if (!sharedPref.getBoolean("local_time", false)){
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        } else {
+            dateFormat.setTimeZone(TimeZone.getDefault());
+        }
+
 
         if (windowStart.equals(windowEnd)) {
             // Window Start and Window End match - meaning instantaneous.
 
             TimeZone timeZone = dateFormat.getTimeZone();
 
-            launchWindowText.setText(Html.fromHtml(String.format("<b>Instantaneous Launch Window</b><br>%s %s",
-                    dateFormat.format(windowStart),
-                    timeZone.getDisplayName(false, TimeZone.SHORT))));
+            launchWindowText.setText(Html.fromHtml(String.format("<b>Instantaneous Launch Window</b><br>%s",
+                    dateFormat.format(windowStart))));
         } else if (windowStart.after(windowEnd)) {
             // Launch data is not trustworthy - start is after end.
 
             TimeZone timeZone = dateFormat.getTimeZone();
 
-            launchWindowText.setText(String.format("%s %s",
-                    dateFormat.format(windowStart),
-                    timeZone.getDisplayName(false, TimeZone.SHORT)));
+            launchWindowText.setText(dateFormat.format(windowStart));
         } else if (windowStart.before(windowEnd)) {
             // Launch Window is properly configured
 
-            TimeZone timeZone = dateFormat.getTimeZone();
             String difference = Utils.printDifference(windowStart, windowEnd);
-            launchWindowText.setText(Html.fromHtml(String.format("<b>Launch Window</b><br>%s - %s %s<br>%s",
+            launchWindowText.setText(Html.fromHtml(String.format("<b>Launch Window</b><br>%s - %s<br>%s",
                     dateFormat.format(windowStart),
                     dateFormat.format(windowEnd),
-                    timeZone.getDisplayName(false, TimeZone.SHORT),
                     difference)));
         }
     }

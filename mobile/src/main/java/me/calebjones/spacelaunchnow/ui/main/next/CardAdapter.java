@@ -4,9 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import androidx.core.app.ShareCompat;
 
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,8 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,6 +65,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     private Context context;
     private SimpleDateFormat fullDate;
     private SimpleDateFormat shortDate;
+    private SharedPreferences sharedPref;
     private int color;
     private int primaryTextColor;
     private int secondaryTextColor;
@@ -69,17 +74,34 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         launchList = new RealmList<>();
         this.context = context;
         this.color = color;
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         primaryTextColor = Utils.getTitleTextColor(color);
         secondaryTextColor = Utils.getSecondaryTitleTextColor(color);
+        setupDates();
+    }
 
-        if (DateFormat.is24HourFormat(context)) {
+    public void setupDates() {
+        if (sharedPref.getString("time_format", "Default").contains("12-Hour")) {
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
+        } else if (sharedPref.getString("time_format", "Default").contains("24-Hour")) {
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
+        } else if (DateFormat.is24HourFormat(context)) {
             fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
         } else {
             fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
         }
+
         fullDate.toLocalizedPattern();
         shortDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
+
+        if (!sharedPref.getBoolean("local_time", false)){
+            fullDate.setTimeZone(TimeZone.getTimeZone("UTC"));
+            shortDate.setTimeZone(TimeZone.getTimeZone("UTC"));
+        } else {
+            fullDate.setTimeZone(TimeZone.getDefault());
+            shortDate.setTimeZone(TimeZone.getDefault());
+        }
     }
 
     public void addItems(List<Launch> launchList) {
@@ -93,6 +115,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     }
 
     public void clear() {
+        setupDates();
         if (launchList != null) {
             launchList.clear();
             this.notifyDataSetChanged();

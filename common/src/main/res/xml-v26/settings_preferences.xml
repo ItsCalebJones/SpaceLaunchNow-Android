@@ -19,13 +19,15 @@
             android:summaryOff="@string/local_timezone_off"
             android:summaryOn="@string/local_timezone_on"
             android:title="@string/local_timezone" />
-        <SwitchPreference
-            android:defaultValue="false"
+        <ListPreference
+            android:defaultValue="Default"
             app:iconSpaceReserved="false"
-            android:key="24_hour_mode"
-            android:summaryOff="@string/time_format_off"
-            android:summaryOn="@string/time_format_on"
-            android:title="@string/time_format" />
+            android:key="time_format"
+            android:summary="@string/time_format_description"
+            android:title="@string/time_format"
+            android:entries="@array/time_format_array"
+            android:entryValues="@array/time_format_array"
+            />
         <SwitchPreference
             android:defaultValue="false"
             app:iconSpaceReserved="false"
