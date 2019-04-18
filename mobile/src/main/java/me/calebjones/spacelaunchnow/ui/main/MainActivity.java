@@ -558,6 +558,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 && mNavItemId != R.id.menu_launches
                 && mNavItemId != R.id.menu_news) {
             mNavItemId = R.id.menu_home;
+            drawer.setSelection(R.id.menu_home, false);
             navigate(mNavItemId);
         } else if (mNavItemId != R.id.menu_favorite) {
             if (bottomNavigationView.getCurrentSelectedPosition() != 0) {
