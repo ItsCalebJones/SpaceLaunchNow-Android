@@ -6,13 +6,8 @@ import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.ChannelClient;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import java.util.Set;
-
-import me.calebjones.spacelaunchnow.common.content.wear.WearWatchfaceManager;
-import me.calebjones.spacelaunchnow.common.content.worker.WearSyncWorker;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
@@ -38,19 +33,12 @@ public class ListenerServiceFromWear extends WearableListenerService {
             if(!SupporterHelper.isSupporter()) {
                 Intent supporterIntent = new Intent(getApplicationContext(), SupporterActivity.class);
                 startActivity(supporterIntent);
-            } else {
-                WearSyncWorker.syncImmediately();
             }
         }
     }
 
     @Override
     public void onCapabilityChanged (CapabilityInfo capabilityInfo){
-        Set<Node> nodes = capabilityInfo.getNodes();
-        if (nodes.size() > 0) {
-            WearWatchfaceManager wearWatchfaceManager = new WearWatchfaceManager(getApplicationContext());
-            wearWatchfaceManager.updateWear();
-        }
     }
 
     @Override

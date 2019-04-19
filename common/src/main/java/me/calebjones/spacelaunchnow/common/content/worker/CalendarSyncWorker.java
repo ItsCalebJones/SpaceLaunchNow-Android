@@ -49,7 +49,13 @@ public class CalendarSyncWorker extends Worker {
     }
 
     public static void syncImmediately() {
+        WorkManager.getInstance().cancelAllWorkByTag("syncCalendar");
         WorkManager.getInstance().enqueue(new OneTimeWorkRequest.Builder(CalendarSyncWorker.class)
+                .setConstraints(new Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .setRequiresBatteryNotLow(true)
+                        .build())
+                .addTag("syncCalendar")
                 .build());
     }
 
