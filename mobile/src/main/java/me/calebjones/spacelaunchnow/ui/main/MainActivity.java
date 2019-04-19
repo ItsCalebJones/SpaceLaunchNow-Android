@@ -439,8 +439,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             showRemainingCount();
         }
         if (!rate.isShown()) {
-            if (!Once.beenDone(Once.THIS_APP_VERSION, "showChangelog")) {
-
+            if (!Once.beenDone(Once.THIS_APP_VERSION, "showChangelog")
+                    && Once.beenDone("appOpen", Amount.moreThan(1))) {
                 Once.markDone("showChangelog");
                 final Handler handler = new Handler();
                 handler.postDelayed(() -> showChangelogSnackbar(), 1000);
@@ -454,7 +454,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                             final Handler handler = new Handler();
                             handler.postDelayed(() -> showRemoveAd(), 5000);
                         }
-                    } else if (Once.beenDone("appOpen", Amount.moreThan(1))) {
+                    } else if (Once.beenDone("appOpen", Amount.moreThan(10))) {
                         if (!Once.beenDone("showDiscord") && !Once.beenDone("discordResponse")) {
                             Once.markDone("showDiscord");
                             final Handler handler = new Handler();
