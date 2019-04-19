@@ -300,64 +300,71 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void hideView() {
-        // get the center for the clipping circle
-        int x = (int) (fab.getX() + fab.getWidth() / 2);
-        int y = (int) (fab.getY() + fab.getHeight() / 2);
+        try {
+            // get the center for the clipping circle
+            int x = (int) (fab.getX() + fab.getWidth() / 2);
+            int y = (int) (fab.getY() + fab.getHeight() / 2);
 
-        // get the initial radius for the clipping circle
-        int initialRadius = Math.max(colorReveal.getWidth(), colorReveal.getHeight());
+            // get the initial radius for the clipping circle
+            int initialRadius = Math.max(colorReveal.getWidth(), colorReveal.getHeight());
 
-        // create the animation (the final radius is zero)
-        Animator anim =
-                ViewAnimationUtils.createCircularReveal(colorReveal, x, y, initialRadius, 0);
+            // create the animation (the final radius is zero)
+            Animator anim =
+                    ViewAnimationUtils.createCircularReveal(colorReveal, x, y, initialRadius, 0);
 
-        // make the view invisible when the animation is done
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
+            // make the view invisible when the animation is done
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
 
-                colorReveal.setVisibility(View.INVISIBLE);
-            }
-        });
+                    colorReveal.setVisibility(View.INVISIBLE);
+                }
+            });
 
-        // start the animation
-        anim.start();
+            // start the animation
+            anim.start();
 
 
-        mainActivity.showBottomNavigation();
-        mainActivity.checkShowAd();
-        mSwipeRefreshLayout.setEnabled(true);
+            mainActivity.showBottomNavigation();
+            mainActivity.checkShowAd();
+            mSwipeRefreshLayout.setEnabled(true);
+        } catch (IllegalStateException exception) {
+            Timber.e(exception);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void showView() {
-        // get the center for the clipping circle
-        int x = (int) (fab.getX() + fab.getWidth() / 2);
-        int y = (int) (fab.getY() + fab.getHeight() / 2);
+        try {
+            // get the center for the clipping circle
+            int x = (int) (fab.getX() + fab.getWidth() / 2);
+            int y = (int) (fab.getY() + fab.getHeight() / 2);
 
-        // get the final radius for the clipping circle
-        int finalRadius = Math.max(colorReveal.getWidth(), colorReveal.getHeight());
+            // get the final radius for the clipping circle
+            int finalRadius = Math.max(colorReveal.getWidth(), colorReveal.getHeight());
 
-        // create the animator for this view (the start radius is zero)
-        Animator anim =
-                ViewAnimationUtils.createCircularReveal(colorReveal, x, y, 0, finalRadius);
+            // create the animator for this view (the start radius is zero)
+            Animator anim = ViewAnimationUtils.createCircularReveal(colorReveal, x, y, 0, finalRadius);
 
-        // make the view invisible when the animation is done
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
+            // make the view invisible when the animation is done
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
 
-                super.onAnimationEnd(animation);
-            }
-        });
+                    super.onAnimationEnd(animation);
+                }
+            });
 
-        colorReveal.setVisibility(View.VISIBLE);
-        anim.start();
+            colorReveal.setVisibility(View.VISIBLE);
+            anim.start();
 
-        mainActivity.hideBottomNavigation();
-        mainActivity.checkHideAd();
-        mSwipeRefreshLayout.setEnabled(false);
+            mainActivity.hideBottomNavigation();
+            mainActivity.checkHideAd();
+            mSwipeRefreshLayout.setEnabled(false);
+        } catch (IllegalStateException exception) {
+            Timber.e(exception);
+        }
     }
 
     public void fetchData(boolean forceRefresh) {
@@ -387,7 +394,8 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                     if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
                         SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                     }
-                }if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                }
+                if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
             }
