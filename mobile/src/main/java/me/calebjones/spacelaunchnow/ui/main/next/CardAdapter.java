@@ -83,17 +83,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
     public void setupDates() {
         if (sharedPref.getString("time_format", "Default").contains("12-Hour")) {
-            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
+            fullDate = Utils.getSimpleDateFormatForUI("EEE, MMMM d, yyyy h:mm a zzz");
         } else if (sharedPref.getString("time_format", "Default").contains("24-Hour")) {
-            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
+            fullDate = Utils.getSimpleDateFormatForUI("EEE, MMMM d, yyyy HH:mm zzz");
         } else if (DateFormat.is24HourFormat(context)) {
-            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
+            fullDate = Utils.getSimpleDateFormatForUI("EEE, MMMM d, yyyy HH:mm zzz");
         } else {
-            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
+            fullDate = Utils.getSimpleDateFormatForUI("EEE, MMMM d, yyyy h:mm a zzz");
         }
 
         fullDate.toLocalizedPattern();
-        shortDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy");
+        shortDate = Utils.getSimpleDateFormatForUI("EEE, MMMM d, yyyy");
 
         if (!sharedPref.getBoolean("local_time", false)){
             fullDate.setTimeZone(TimeZone.getTimeZone("UTC"));
