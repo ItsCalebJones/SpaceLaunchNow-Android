@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -523,7 +524,9 @@ public class NotificationBuilder {
                 Timber.e(e);
             }
             if (bitmap != null) {
-                mBuilder.setLargeIcon(bitmap);
+                NotificationCompat.BigPictureStyle bpStyle = new NotificationCompat.BigPictureStyle();
+                bpStyle.bigPicture(bitmap).build();
+                mBuilder.setStyle(bpStyle);
                 wearableExtender.setBackground(bitmap);
             }
         }
