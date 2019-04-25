@@ -212,7 +212,11 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
 
         viewModel = ViewModelProviders.of(this).get(EventDetailViewModel.class);
         // update UI
-        viewModel.getEvent().observe(this, this::updateViews);
+        viewModel.getEvent().observe(this, event -> {
+            if (event != null) {
+                updateViews(event);
+            }
+        });
         fetchData(eventId);
 
         if (!SupporterHelper.isSupporter()) {
@@ -276,7 +280,9 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
         eventTitle.setText(event.getName());
         eventTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
 
-        eventSubtitle.setText(event.getLocation());
+        if (event.getLocation() != null) {
+            eventSubtitle.setText(event.getLocation());
+        }
         eventSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
 
         eventCardTitle.setText("Overview");

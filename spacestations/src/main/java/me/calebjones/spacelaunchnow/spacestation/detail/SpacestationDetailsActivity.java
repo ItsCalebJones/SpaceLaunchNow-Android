@@ -152,7 +152,11 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
 
         viewModel = ViewModelProviders.of(this).get(SpacestationDetailViewModel.class);
         // update UI
-        viewModel.getSpacestation().observe(this, this::updateViews);
+        viewModel.getSpacestation().observe(this, spacestation -> {
+            if (spacestation != null) {
+                updateViews(spacestation);
+            }
+        });
     }
 
     private void enableDisableSwipeRefresh(boolean enable) {

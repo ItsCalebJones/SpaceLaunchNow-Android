@@ -157,7 +157,11 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
 
         viewModel = ViewModelProviders.of(this).get(AstronautDetailViewModel.class);
         // update UI
-        viewModel.getAstronaut().observe(this, this::updateViews);
+        viewModel.getAstronaut().observe(this, astronaut -> {
+            if (astronaut != null) {
+                updateViews(astronaut);
+            }
+        });
 
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
