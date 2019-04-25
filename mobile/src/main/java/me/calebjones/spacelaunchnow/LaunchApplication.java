@@ -46,7 +46,6 @@ import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper;
 import me.calebjones.spacelaunchnow.common.content.worker.CalendarSyncWorker;
-import me.calebjones.spacelaunchnow.common.content.worker.WearSyncWorker;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
@@ -516,7 +515,6 @@ public class LaunchApplication extends MultiDexApplication {
 
     private void startJobs() {
         CalendarSyncWorker.scheduleWorker();
-        WearSyncWorker.schedulePeriodicWorker();
     }
 
     @Override

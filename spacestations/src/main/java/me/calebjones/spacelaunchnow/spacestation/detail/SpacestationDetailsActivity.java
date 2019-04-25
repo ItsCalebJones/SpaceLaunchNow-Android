@@ -27,6 +27,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
@@ -195,14 +196,18 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
 
     private void updateViews(Spacestation spacestation) {
         this.spacestation = spacestation;
-        spacestationTitle.setText(spacestation.getName());
-        spacestationSubtitle.setText(spacestation.getType().getName());
-        spacestationSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
-        spacestationTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
-        GlideApp.with(this)
-                .load(spacestation.getImageUrl())
-                .placeholder(R.drawable.placeholder)
-                .into(spacestationProfileImage);
+        try {
+            spacestationTitle.setText(spacestation.getName());
+            spacestationSubtitle.setText(spacestation.getType().getName());
+            spacestationSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+            spacestationTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+            GlideApp.with(this)
+                    .load(spacestation.getImageUrl())
+                    .placeholder(R.drawable.placeholder)
+                    .into(spacestationProfileImage);
+        } catch (NullPointerException e) {
+            Timber.e(e);
+        }
     }
 
     private void updateViewModel(Spacestation spacestation) {

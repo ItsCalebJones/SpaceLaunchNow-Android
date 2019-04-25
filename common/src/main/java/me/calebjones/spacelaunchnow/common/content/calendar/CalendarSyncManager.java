@@ -74,11 +74,7 @@ public class CalendarSyncManager extends BaseManager {
 
     private void handleActionSyncAll() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        if (switchPreferences.getCalendarStatus()) {
-            launches = QueryBuilder.buildSwitchQuery(context, mRealm);
-        } else {
-            launches = QueryBuilder.buildSwitchQuery(context, mRealm, true);
-        }
+        launches = QueryBuilder.buildSwitchQuery(context, mRealm);
 
         RealmList<Launch> launchResults = new RealmList<>();
 

@@ -32,6 +32,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
@@ -115,20 +116,20 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         astronautDetailSwipeRefresh.setOnRefreshListener(this);
         viewPager.setAdapter(mSectionsPagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabs));
-        viewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled( int position, float v, int i1 ) {
+            public void onPageScrolled(int position, float v, int i1) {
             }
 
             @Override
-            public void onPageSelected( int position ) {
+            public void onPageSelected(int position) {
             }
 
             @Override
-            public void onPageScrollStateChanged( int state ) {
-                enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+            public void onPageScrollStateChanged(int state) {
+                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
             }
-        } );
+        });
         tabs.addTab(tabs.newTab().setText(getString(R.string.profile)));
         tabs.addTab(tabs.newTab().setText(getString(R.string.flights)));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
@@ -162,7 +163,6 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
                 updateViews(astronaut);
             }
         });
-
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
             astronautAdView.loadAd(adRequest);
@@ -220,19 +220,22 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
 
     private void updateViews(Astronaut astronaut) {
         this.astronaut = astronaut;
+        try {
+            astronautTitle.setText(astronaut.getName());
+            astronautTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
 
-        astronautTitle.setText(astronaut.getName());
-        astronautTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+            astronautSubtitle.setText(astronaut.getNationality());
+            astronautSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
 
-        astronautSubtitle.setText(astronaut.getNationality());
-        astronautSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
-
-        GlideApp.with(this)
-                .load(astronaut.getProfileImage())
-                .thumbnail(GlideApp.with(this)
-                        .load(astronaut.getProfileImageThumbnail()))
-                .placeholder(R.drawable.placeholder)
-                .into(astronautProfileImage);
+            GlideApp.with(this)
+                    .load(astronaut.getProfileImage())
+                    .thumbnail(GlideApp.with(this)
+                            .load(astronaut.getProfileImageThumbnail()))
+                    .placeholder(R.drawable.placeholder)
+                    .into(astronautProfileImage);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
     }
 
     private void updateViewModel(Astronaut astronaut) {
@@ -285,7 +288,6 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -302,7 +304,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
 
     //TODO Get URL for SLN website.
     @OnClick(R2.id.astronaut_fab_share)
-    void fabClicked(){
+    void fabClicked() {
         ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
                 .setChooserTitle(astronaut.getName())

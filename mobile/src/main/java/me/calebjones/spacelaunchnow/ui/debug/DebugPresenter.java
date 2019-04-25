@@ -18,7 +18,6 @@ import java.io.IOException;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.content.worker.WearSyncWorker;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.Products;
@@ -67,7 +66,6 @@ public class DebugPresenter implements DebugContract.Presenter {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean("weather", true);
             editor.apply();
-            WearSyncWorker.syncImmediately();
         } else {
             realm.executeTransaction(realm -> realm.delete(Products.class));
             realm.close();
