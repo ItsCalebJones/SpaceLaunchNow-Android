@@ -442,14 +442,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     private void showLoading() {
         Timber.v("Show Loading...");
-        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED) && mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
         }
     }
 
     private void hideLoading() {
         Timber.v("Hide Loading...");
-        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+        if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED) && mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
         }
     }
