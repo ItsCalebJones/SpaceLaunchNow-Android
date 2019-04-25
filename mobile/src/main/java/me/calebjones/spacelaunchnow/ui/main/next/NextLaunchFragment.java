@@ -317,8 +317,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-
-                    colorReveal.setVisibility(View.INVISIBLE);
+                    if (colorReveal != null) {
+                        colorReveal.setVisibility(View.INVISIBLE);
+                    }
                 }
             });
 
