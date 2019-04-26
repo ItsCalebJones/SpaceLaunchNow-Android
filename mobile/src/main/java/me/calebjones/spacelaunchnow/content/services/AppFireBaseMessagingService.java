@@ -62,6 +62,7 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
         boolean netstampChanged = Prefs.getBoolean("netstampChanged", true);
+        boolean webcastLive = Prefs.getBoolean("notificationEnabled", true);
         boolean webcastOnly = Prefs.getBoolean("webcastOnly", false);
         boolean twentyFourHour = Prefs.getBoolean("twentyFourHour", true);
         boolean oneHour = Prefs.getBoolean("oneHour", true);
@@ -116,6 +117,11 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
             if (notificationType.contains("oneMinute") && oneMinute) {
                 if (checkWebcast(data, webcastOnly)) return;
                 NotificationBuilder.notifyUserOneMinute(context, getLaunchFromJSON(data));
+            }
+
+            if (notificationType.contains("webcastLive") && webcastLive) {
+                if (checkWebcast(data, webcastOnly)) return;
+                NotificationBuilder.notifyUserLaunchWebcastLive(context, getLaunchFromJSON(data));
             }
 
             if (notificationType.contains("event_notification") && eventNotifications) {

@@ -243,8 +243,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             case "notificationEnabled":
                 if (Prefs.getBoolean(key, true)) {
                     firebaseMessaging.subscribeToTopic("notificationEnabled");
+                    firebaseMessaging.subscribeToTopic("webcastLive");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("notificationEnabled");
+                    firebaseMessaging.unsubscribeFromTopic("webcastLive");
                 }
                 break;
             case "netstampChanged":

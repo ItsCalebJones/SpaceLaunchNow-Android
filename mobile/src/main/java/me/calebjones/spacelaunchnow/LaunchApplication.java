@@ -423,12 +423,15 @@ public class LaunchApplication extends MultiDexApplication {
 
         if (notificationEnabled) {
             firebaseMessaging.subscribeToTopic("notificationEnabled");
+            firebaseMessaging.subscribeToTopic("webcastLive");
         } else {
             firebaseMessaging.unsubscribeFromTopic("notificationEnabled");
+            firebaseMessaging.unsubscribeFromTopic("webcastLive");
         }
 
         if (netstampChanged) {
             firebaseMessaging.subscribeToTopic("netstampChanged");
+
         } else {
             firebaseMessaging.unsubscribeFromTopic("netstampChanged");
         }

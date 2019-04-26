@@ -402,6 +402,16 @@ public class NotificationBuilder {
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
     }
 
+    public static void notifyUserLaunchWebcastLive(Context context, Launch launch) {
+        String title;
+        String expandedText;
+
+        title = "\uD83D\uDD34 Webcast Live - " + launch.getName();
+        expandedText = "The live webcast has started!";
+
+        buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
+    }
+
     public static void notifyUserTest(Context context, Launch launch) {
         String title;
         String expandedText;
