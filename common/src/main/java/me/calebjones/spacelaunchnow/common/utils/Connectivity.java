@@ -24,11 +24,15 @@ public class Connectivity {
     }
 
     public static String getNetworkStatus(Context context){
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null && cm.getActiveNetworkInfo() != null){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && cm.getActiveNetworkInfo().getTypeName() != null) {
-                return cm.getActiveNetworkInfo().getTypeName();
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm != null && cm.getActiveNetworkInfo() != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && cm.getActiveNetworkInfo().getTypeName() != null) {
+                    return cm.getActiveNetworkInfo().getTypeName();
+                }
             }
+        } catch (Exception e){
+            return "Unknown";
         }
         return "Unknown";
     }
