@@ -24,8 +24,10 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -304,6 +306,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             case "custom_themes":
                 Intent intent = new Intent(context, CyaneaSettingsActivity.class);
                 context.startActivity(intent);
+                break;
+            case "locale_changer":
+                ActivityCompat.finishAffinity(getActivity());
+                Intent mainIntent = null;
+                try {
+                    mainIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
+                    context.startActivity(mainIntent);
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
                 break;
         }
         return true;

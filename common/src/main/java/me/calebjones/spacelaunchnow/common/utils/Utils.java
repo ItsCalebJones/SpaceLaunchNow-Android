@@ -23,8 +23,11 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -44,9 +47,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import androidx.browser.customtabs.CustomTabsIntent;
@@ -407,7 +414,7 @@ public class Utils {
 
         // Just one long word. Chop it off.
         if (end == -1)
-            return text.substring(0, max-3) + "...";
+            return text.substring(0, max - 3) + "...";
 
         // Step forward as long as textWidth allows.
         int newEnd = end;
@@ -429,7 +436,7 @@ public class Utils {
         long different = endDate.getTime() - startDate.getTime();
 
         System.out.println("startDate : " + startDate);
-        System.out.println("endDate : "+ endDate);
+        System.out.println("endDate : " + endDate);
         System.out.println("different : " + different);
 
         long secondsInMilli = 1000;
@@ -446,13 +453,13 @@ public class Utils {
         long elapsedMinutes = different / minutesInMilli;
 
         if (elapsedDays > 0) {
-            return (String.format(Locale.ENGLISH,"Open for %d days, %d hours and %d minutes.\n",
+            return (String.format(Locale.ENGLISH, "Open for %d days, %d hours and %d minutes.\n",
                     elapsedDays, elapsedHours, elapsedMinutes));
-        } else if (elapsedHours > 0){
-            return (String.format(Locale.ENGLISH,"Open for %d hours and %d minutes.\n",
+        } else if (elapsedHours > 0) {
+            return (String.format(Locale.ENGLISH, "Open for %d hours and %d minutes.\n",
                     elapsedHours, elapsedMinutes));
-        } else if (elapsedMinutes > 0){
-            return (String.format(Locale.ENGLISH,"Open for %d minutes.\n",
+        } else if (elapsedMinutes > 0) {
+            return (String.format(Locale.ENGLISH, "Open for %d minutes.\n",
                     elapsedHours, elapsedMinutes));
         } else {
             return "";
@@ -483,5 +490,37 @@ public class Utils {
         double lum = (((0.299 * red) + ((0.587 * green) + (0.114 * blue))));
         return lum < 220;
     }
+
+    public static ContextWrapper changeLang(Context context, String lang_code){
+        Locale sysLocale;
+
+        Resources rs = context.getResources();
+        Configuration config = rs.getConfiguration();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            sysLocale = config.getLocales().get(0);
+        } else {
+            sysLocale = config.locale;
+        }
+        if (!lang_code.equals("") && !sysLocale.getLanguage().equals(lang_code)) {
+            Locale locale = new Locale(lang_code);
+            Locale.setDefault(locale);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                config.setLocale(locale);
+            } else {
+                config.locale = locale;
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                context = context.createConfigurationContext(config);
+            } else {
+                context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
+            }
+        }
+
+        return new ContextWrapper(context);
+    }
+
+
 }
+
 

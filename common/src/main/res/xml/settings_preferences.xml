@@ -12,6 +12,13 @@
             android:title="Theme Customization"
             app:iconSpaceReserved="false"/>
         <SwitchPreference
+            android:key="locale_changer"
+            android:defaultValue="true"
+            android:summaryOn="Use your devices language."
+            android:summaryOff="Force English language."
+            android:title="Use System Language"
+            app:iconSpaceReserved="false"/>
+        <SwitchPreference
             android:defaultValue="true"
             android:key="local_time"
             android:summaryOff="@string/local_timezone_off"

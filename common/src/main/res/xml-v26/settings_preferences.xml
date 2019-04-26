@@ -13,6 +13,13 @@
             android:summary="Set primary, accent and background colors!">
         </Preference>
         <SwitchPreference
+            android:key="locale_changer"
+            android:defaultValue="true"
+            android:summaryOn="Use your devices language."
+            android:summaryOff="Force English language."
+            android:title="Use System Language"
+            app:iconSpaceReserved="false"/>
+        <SwitchPreference
             android:defaultValue="true"
             app:iconSpaceReserved="false"
             android:key="local_time"

@@ -1,15 +1,15 @@
 package me.calebjones.spacelaunchnow.common.base;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
-
 import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+import com.pixplicity.easyprefs.library.Prefs;
 
-import androidx.annotation.ColorRes;
-import androidx.core.graphics.drawable.DrawableCompat;
+import java.util.Locale;
+
 import io.realm.Realm;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import timber.log.Timber;
@@ -31,6 +31,22 @@ public class BaseActivity extends CyaneaAppCompatActivity {
         super.onCreate(savedInstanceState);
         Timber.d("onCreate");
         realm = Realm.getDefaultInstance();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        Context context;
+        if (!Prefs.getBoolean("locale_changer", true)){
+            context = Utils.changeLang(newBase, "en-US");
+        } else {
+            context = Utils.changeLang(newBase,  Locale.getDefault().getLanguage());
+        }
+        super.attachBaseContext(context);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override

@@ -8,8 +8,9 @@ import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NavUtils;
 import me.calebjones.spacelaunchnow.common.R;
+import me.calebjones.spacelaunchnow.common.base.BaseActivity;
 
-public class SettingsActivity extends CyaneaAppCompatActivity {
+public class SettingsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
