@@ -3,10 +3,20 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 3-14-2019
+#### Updated 4-26-2019
 ---
 
-### Version 3.0.0 (Latest)
+### Version 3.0.2 (Latest)
+
+#### Changelog
+* Added option to force use of English language.
+* Fixed issue with using UTC and local date format.
+* Added Day to date string formats.
+* Improvements to Event notifications.
+* Fix a bunch of new crashes.
+
+---
+### Version 3.0.0
 #### Overview
 A large update adding Astronaut information, Spacestation data and Event notifications!
 
@@ -17,7 +27,6 @@ A large update adding Astronaut information, Spacestation data and Event notific
 * Added additional launch notification filters.
 * Various bug fixes and usability improvements.
 
----
 ### Version 2.6.7
 #### Overview
 Fix a bunch of bugs and get the latest translations.

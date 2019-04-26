@@ -50,6 +50,7 @@ import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
@@ -182,14 +183,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final int color;
         filterViewShowing = false;
 
         if (adapter == null) {
             adapter = new CardAdapter(context, mainActivity.getCyanea().getPrimary());
         }
-
-        color = mainActivity.getCyanea().getPrimary();
 
         super.onCreateView(inflater, container, savedInstanceState);
 
@@ -198,7 +196,11 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         unbinder = ButterKnife.bind(this, view);
 
         setUpSwitches();
-        colorReveal.setBackgroundColor(color);
+        if (!Utils.getIconColor(getCyanea().getPrimary())){
+            colorReveal.setBackgroundColor(getCyanea().getAccent());
+        } else {
+            colorReveal.setBackgroundColor(getCyanea().getPrimary());
+        }
         fabExtensionAnimator = new FabExtensionAnimator(fab);
         fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)), true);
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showFilters")) {
