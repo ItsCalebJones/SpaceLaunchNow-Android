@@ -407,7 +407,7 @@ public class NotificationBuilder {
         String expandedText;
 
         title = "\uD83D\uDD34 Webcast Live - " + launch.getName();
-        expandedText = "The live webcast has started!";
+        expandedText = "The live webcast has started - click here to watch!";
 
         buildNotification(context, launch, title, expandedText, CHANNEL_LAUNCH_REMINDER);
     }
