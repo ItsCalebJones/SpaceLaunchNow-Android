@@ -64,6 +64,9 @@ dependencies {
 
     implementation deps.timber
 
+    implementation deps.easyprefs
+    implementation deps.once
+
     implementation deps.butterknife
     annotationProcessor deps.butterknifeCompiler
 
