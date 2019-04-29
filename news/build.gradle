@@ -41,6 +41,7 @@ dependencies {
     implementation deps.cardview
     implementation deps.appcompat
     implementation deps.lifecycleExtensions
+    implementation deps.browser
 
     implementation deps.kotlin_stdlib_jdk7
 

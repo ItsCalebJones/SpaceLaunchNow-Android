@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -31,13 +30,13 @@ import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.data.models.news.Article;
 import timber.log.Timber;
 
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_IMMINENT;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_REMINDER;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_LAUNCH_SILENT;
 import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_NEWS;
-import static me.calebjones.spacelaunchnow.common.content.notifications.NotificationHelper.CHANNEL_NEWS_NAME;
 
 public class NotificationBuilder {
 
@@ -440,6 +439,10 @@ public class NotificationBuilder {
         buildEventNotification(context, event, title, expandedText, CHANNEL_NEWS);
     }
 
+    public static void notifyUserNewsItem(Context context, Article article) {
+        buildNewsNotification(context, article, CHANNEL_NEWS);
+    }
+
     private static void buildEventNotification(Context context, Event event, String title, String expandedText, String channelNewsName) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         NotificationCompat.Builder mBuilder;
@@ -501,28 +504,13 @@ public class NotificationBuilder {
                 .extend(wearableExtender)
                 .setContentIntent(eventIntent);
 
-//        if (event.getWebcastLive() && event.getVideoUrl() != null) {
-//            Intent watchLive = new Intent(Intent.ACTION_VIEW, Uri.parse(event.getVideoUrl()));
-//
-//
-//
-//            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, watchLive, 0);
-//
-//            NotificationCompat.Action channelSettings =
-//                    new NotificationCompat.Action.Builder(R.drawable.ic_notifications_white,
-//                            "Watch Live", contentIntent)
-//                            .build();
-//
-//            mBuilder.addAction(channelSettings);
-//        }
-
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
                 "default ringtone");
         Uri alarmSound = Uri.parse(ringtoneBox);
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else {
-            mBuilder.setChannelId(channelNewsName).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_EVENT);
+            mBuilder.setChannelId(channelNewsName).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
         }
 
         if (event.getFeatureImage() != null
@@ -537,6 +525,102 @@ public class NotificationBuilder {
                 NotificationCompat.BigPictureStyle bpStyle = new NotificationCompat.BigPictureStyle();
                 bpStyle.bigPicture(bitmap).build();
                 mBuilder.setStyle(bpStyle);
+                wearableExtender.setBackground(bitmap);
+            }
+        }
+
+        if (isDoNotDisturb) {
+            mBuilder.setPriority(Notification.PRIORITY_LOW);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
+                mBuilder.setPriority(Notification.PRIORITY_HIGH);
+            }
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
+                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
+            mBuilder.setVibrate(new long[]{750, 750});
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
+                && sharedPref.getBoolean("notifications_new_message_led", true)) {
+            mBuilder.setLights(Color.GREEN, 3000, 3000);
+        }
+
+        mNotifyManager.notify(notificationId, mBuilder.build());
+    }
+
+    private static void buildNewsNotification(Context context, Article article, String channelNewsName) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        NotificationCompat.Builder mBuilder;
+        NotificationManager mNotifyManager;
+        int notificationId;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationHelper notificationHelper = new NotificationHelper(context);
+            mBuilder = new NotificationCompat.Builder(context, CHANNEL_NEWS);
+            mNotifyManager = notificationHelper.getManager();
+        } else {
+            mBuilder = new NotificationCompat.Builder(context);
+            mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        boolean isDoNotDisturb = sharedPref.getBoolean("do_not_disturb_status", false);
+
+        if (isDoNotDisturb) {
+            try {
+                isDoNotDisturb = isTimeBetweenTwoTime(sharedPref.getString("do_not_disturb_start_time", "22:00"),
+                        sharedPref.getString("do_not_disturb_end_time", "08:00"),
+                        new SimpleDateFormat("HH:mm").format(new Date()));
+            } catch (ParseException e) {
+                Timber.e(e);
+                isDoNotDisturb = false;
+            }
+        }
+
+        Intent resultIntent;
+        try {
+            resultIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
+        resultIntent.putExtra("newsUrl", article.getUrl());
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent eventIntent = PendingIntent.getActivity(context,
+                2,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mBuilder.setSubText(article.getNewsSite());
+        mBuilder.setContentText("Click the notification to read the article!");
+
+        NotificationCompat.WearableExtender wearableExtender =
+                new NotificationCompat.WearableExtender()
+                        .setHintHideIcon(true);
+
+        notificationId = Utils.getUniqueId();
+
+        mBuilder.setContentTitle(article.getTitle())
+                .setSmallIcon(R.drawable.ic_rocket)
+                .setAutoCancel(true)
+                .extend(wearableExtender)
+                .setContentIntent(eventIntent);
+
+        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
+                "default ringtone");
+        if (isDoNotDisturb) {
+            mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
+        } else {
+            mBuilder.setChannelId(channelNewsName).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+        }
+
+        if (article.getFeaturedImage() != null
+                && article.getFeaturedImage().length() > 0) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = Utils.getBitMapFromUrl(context, article.getFeaturedImage());
+            } catch (ExecutionException | InterruptedException e) {
+                Timber.e(e);
+            }
+            if (bitmap != null) {
+                mBuilder.setLargeIcon(bitmap);
                 wearableExtender.setBackground(bitmap);
             }
         }

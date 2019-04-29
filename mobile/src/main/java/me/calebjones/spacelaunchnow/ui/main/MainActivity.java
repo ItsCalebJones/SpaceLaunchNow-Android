@@ -132,6 +132,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private Snackbar snackbar;
     private String action;
     private boolean showFilter = false;
+    private String newsUrl;
 
     public MainActivity() {
         super("Main Activity");
@@ -189,6 +190,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         // load saved navigation state if present
         if (null == savedInstanceState) {
             mNavItemId = R.id.menu_home;
+        } else if (intent.getExtras() != null && intent.getExtras().containsKey("newsUrl")) {
+            newsUrl = intent.getExtras().getString("newsUrl");
+            mNavItemId = R.id.menu_news;
+            bottomNavigationView.selectTab(2, false);
         } else if ("SHOW_FILTERS".equals(action)) {
             getIntent().setAction("");
             showFilter = true;
@@ -416,6 +421,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             showFilter = true;
             mNavItemId = R.id.menu_home;
             navigate(R.id.menu_favorite);
+        } else if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("newsUrl")) {
+            newsUrl = getIntent().getExtras().getString("newsUrl");
+            mNavItemId = R.id.menu_news;
+            bottomNavigationView.selectTab(2, false);
+            navigate(R.id.menu_news);
         } else if (getIntent().getBooleanExtra("SHOW_EVENTS", false)) {
             navigate(R.id.menu_events);
         } else {
@@ -679,8 +689,21 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 setActionBarTitle(getString(R.string.space_launch_news));
                 removeAppBarElevation();
                 showBottomNavigation();
-                if (mNewsViewpagerFragment == null)
+                if (mNewsViewpagerFragment == null) {
                     mNewsViewpagerFragment = NewsViewPager.newInstance();
+                    if (newsUrl != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("newsUrl", newsUrl);
+                        mNewsViewpagerFragment.setArguments(bundle);
+                        newsUrl = null;
+                    }
+                } else if (newsUrl != null) {
+                    mNewsViewpagerFragment = NewsViewPager.newInstance();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("newsUrl", newsUrl);
+                    mNewsViewpagerFragment.setArguments(bundle);
+                    newsUrl = null;
+                }
                 navigateToFragment(mNewsViewpagerFragment, NEWS_TAG);
 
                 if (rate != null) {
@@ -1016,5 +1039,18 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     @Override
     public void onNavigateToLaunches() {
         bottomNavigationView.selectTab(1);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if (extras.containsKey("newsUrl")) {
+                newsUrl = extras.getString("newsUrl");
+                mNavItemId = R.id.menu_news;
+                navigate(R.id.menu_news);
+                bottomNavigationView.selectTab(2, false);
+            }
+        }
     }
 }

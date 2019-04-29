@@ -14,11 +14,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.news.R;
 
@@ -134,8 +136,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
             rootView.setOnClickListener(v -> {
                 NewsItem news = newsList.get(getAdapterPosition());
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(news.getUrl()));
-                context.startActivity(intent);
+                Utils.openCustomTab(context, news.getUrl());
             });
         }
     }

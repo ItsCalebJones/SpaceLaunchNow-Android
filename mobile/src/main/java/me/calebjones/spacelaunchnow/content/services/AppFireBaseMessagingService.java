@@ -24,6 +24,7 @@ import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Location;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.main.Rocket;
+import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import timber.log.Timber;
 
@@ -124,6 +125,10 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
                 NotificationBuilder.notifyUserLaunchWebcastLive(context, getLaunchFromJSON(data));
             }
 
+            if (notificationType.contains("featured_news") && eventNotifications) {
+                NotificationBuilder.notifyUserNewsItem(context, getArticleFromJSON(data));
+            }
+
             if (notificationType.contains("event_notification") && eventNotifications) {
                 NotificationBuilder.notifyUserEventUpcoming(context, getEventFromJSON(data));
             }
@@ -157,6 +162,10 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
 
     private Event getEventFromJSON(JSONObject data) throws JSONException  {
         return RetrofitBuilder.getGson().fromJson(data.getString("event"), Event.class);
+    }
+
+    private Article getArticleFromJSON(JSONObject data) throws JSONException  {
+        return RetrofitBuilder.getGson().fromJson(data.getString("item"), Article.class);
     }
 
     private boolean checkWebcast(JSONObject data, boolean webcastOnly) throws JSONException {

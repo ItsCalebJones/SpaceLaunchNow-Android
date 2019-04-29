@@ -45,6 +45,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.jaredrummler.cyanea.Cyanea;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -55,6 +56,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.browser.customtabs.CustomTabsIntent;
 import me.calebjones.spacelaunchnow.common.R;
@@ -164,7 +166,7 @@ public class Utils {
     public static void openCustomTab(Context context, String url) {
         CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
                 .addDefaultShareMenuItem()
-                .setToolbarColor(context.getResources().getColor(R.color.colorPrimary))
+                .setToolbarColor(Cyanea.getInstance().getPrimary())
                 .setShowTitle(true)
                 .build();
 
@@ -520,6 +522,11 @@ public class Utils {
         return new ContextWrapper(context);
     }
 
+    private final static AtomicInteger c = new AtomicInteger(0);
+
+    public static int getUniqueId() {
+        return c.incrementAndGet();
+    }
 
 }
 

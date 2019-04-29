@@ -2,6 +2,8 @@ package me.calebjones.spacelaunchnow.news.ui;
 
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -18,6 +21,7 @@ import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.news.R;
 import me.calebjones.spacelaunchnow.news.ui.news.NewsListFragment;
 import me.calebjones.spacelaunchnow.news.ui.twitter.TwitterFragment;
+import timber.log.Timber;
 
 public class NewsViewPager extends BaseFragment {
 
@@ -40,6 +44,13 @@ public class NewsViewPager extends BaseFragment {
                              Bundle savedInstanceState) {
         this.context = getActivity().getApplicationContext();
 
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            if (bundle.containsKey("newsUrl")){
+                Timber.v("Received bundle.");
+                Utils.openCustomTab(context, bundle.getString("newsUrl"));
+            }
+        }
 
         View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 

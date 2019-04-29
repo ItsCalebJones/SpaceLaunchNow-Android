@@ -235,9 +235,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
             case "eventNotifications":
                 if (Prefs.getBoolean(key, true)) {
-                    firebaseMessaging.subscribeToTopic("eventNotifications");
+                    firebaseMessaging.subscribeToTopic("events");
+                    firebaseMessaging.subscribeToTopic("featured_news");
                 } else {
-                    firebaseMessaging.unsubscribeFromTopic("eventNotifications");
+                    firebaseMessaging.unsubscribeFromTopic("events");
+                    firebaseMessaging.unsubscribeFromTopic("featured_news");
                 }
                 break;
             case "notificationEnabled":

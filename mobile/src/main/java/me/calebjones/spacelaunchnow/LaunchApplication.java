@@ -315,8 +315,10 @@ public class LaunchApplication extends MultiDexApplication {
 
         if (events) {
             firebaseMessaging.subscribeToTopic("events");
+            firebaseMessaging.subscribeToTopic("featured_news");
         } else {
             firebaseMessaging.unsubscribeFromTopic("events");
+            firebaseMessaging.unsubscribeFromTopic("featured_news");
         }
 
         if (ksc) {
