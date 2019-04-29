@@ -9,6 +9,8 @@ A space launch tracker for Android using data from the Launch Library API.
 ### Version 3.0.2 (Latest)
 
 #### Changelog
+* Added News notifications for featured articles.
+* Added Webcast live notifications.
 * Added option to force use of English language.
 * Fixed issue with using UTC and local date format.
 * Added Day to date string formats.
