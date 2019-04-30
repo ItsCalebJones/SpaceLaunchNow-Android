@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -37,6 +40,7 @@ import butterknife.ButterKnife;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.spacestation.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
@@ -158,6 +162,26 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
                 updateViews(spacestation);
             }
         });
+
+        if (!SupporterHelper.isSupporter()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            spacestationAdView.loadAd(adRequest);
+            spacestationAdView.setAdListener(new AdListener() {
+
+                @Override
+                public void onAdLoaded() {
+                    spacestationAdView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAdFailedToLoad(int error) {
+                    spacestationAdView.setVisibility(View.GONE);
+                }
+
+            });
+        } else {
+            spacestationAdView.setVisibility(View.GONE);
+        }
     }
 
     private void enableDisableSwipeRefresh(boolean enable) {

@@ -163,6 +163,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
                 updateViews(astronaut);
             }
         });
+
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
             astronautAdView.loadAd(adRequest);

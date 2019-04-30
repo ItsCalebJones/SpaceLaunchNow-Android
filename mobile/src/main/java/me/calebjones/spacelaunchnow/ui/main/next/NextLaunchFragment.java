@@ -237,6 +237,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             }
         });
 
+
         /*Set up Pull to refresh*/
         mSwipeRefreshLayout.setOnRefreshListener(this);
 

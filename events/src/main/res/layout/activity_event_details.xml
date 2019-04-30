@@ -85,16 +85,6 @@
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
                 android:textColor="@android:color/white" />
-
-            <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/event_adView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center|top"
-                android:visibility="gone"
-                ads:adSize="SMART_BANNER"
-                ads:adUnitId="ca-app-pub-9824528399164059/6658958027"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -123,6 +113,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
+                    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/event_adView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|top"
+                        android:visibility="gone"
+                        ads:adSize="SMART_BANNER"
+                        ads:adUnitId="ca-app-pub-9824528399164059/6658958027"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardRootView"
