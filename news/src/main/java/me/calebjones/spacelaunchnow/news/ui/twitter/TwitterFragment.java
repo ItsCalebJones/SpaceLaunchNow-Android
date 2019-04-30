@@ -91,7 +91,7 @@ public class TwitterFragment extends BaseFragment {
         timeline = new TwitterListTimeline.Builder()
                 .slugWithOwnerScreenName("space-launch-news", "SpaceLaunchNow")
                 .build();
-        int style = 0;
+        int style;
         if (getCyanea().isDark()){
             style = R.style.SpaceLaunchNowTweetStyleDark;
         } else {

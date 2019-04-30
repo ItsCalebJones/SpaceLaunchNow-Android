@@ -47,7 +47,9 @@ public class NewsViewPager extends BaseFragment {
         if (bundle != null) {
             if (bundle.containsKey("newsUrl")){
                 Timber.v("Received bundle.");
-                new Handler().postDelayed(() -> Utils.openCustomTab(context, bundle.getString("newsUrl")), 500);
+                String url = bundle.getString("newsUrl");
+                new Handler().postDelayed(() -> Utils.openCustomTab(context, url), 500);
+                getArguments().remove("newsUrl");
             }
         }
 

@@ -426,7 +426,7 @@
     <string name="upcoming_with_space">Upcoming</string>
     <string name="previous_with_space">Previous</string>
     <string name="watch">Watch</string>
-    <string name="notification_schedule_changed">SCHEDULE UPDATE: Next attempt no earlier then %s</string>
+    <string name="notification_schedule_changed">SCHEDULE UPDATE: Next attempt no earlier than %s</string>
     <string name="notification_launch_successful">The launch was successful!</string>
     <string name="notification_launch_failure">A launch failure has occurred.</string>
     <string name="notification_launch_partial_failure">The launch was a partial failure.</string>

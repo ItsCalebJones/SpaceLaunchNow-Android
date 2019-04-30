@@ -589,7 +589,7 @@ public class NotificationBuilder {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder.setSubText(article.getNewsSite());
-        mBuilder.setContentText("Click the notification to read the article!");
+        mBuilder.setContentText(article.getTitle());
 
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
@@ -597,7 +597,7 @@ public class NotificationBuilder {
 
         notificationId = Utils.getUniqueId();
 
-        mBuilder.setContentTitle(article.getTitle())
+        mBuilder.setContentTitle("New Featured Article via " + article.getNewsSite())
                 .setSmallIcon(R.drawable.ic_rocket)
                 .setAutoCancel(true)
                 .extend(wearableExtender)

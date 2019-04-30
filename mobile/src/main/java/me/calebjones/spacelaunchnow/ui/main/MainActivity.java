@@ -188,21 +188,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
         setSupportActionBar(toolbar);
         // load saved navigation state if present
-        if (null == savedInstanceState) {
-            mNavItemId = R.id.menu_home;
-        } else if (intent.getExtras() != null && intent.getExtras().containsKey("newsUrl")) {
-            newsUrl = intent.getExtras().getString("newsUrl");
-            mNavItemId = R.id.menu_news;
-            bottomNavigationView.selectTab(2, false);
-        } else if ("SHOW_FILTERS".equals(action)) {
-            getIntent().setAction("");
-            showFilter = true;
-            mNavItemId = R.id.menu_home;
-        } else if (getIntent().getBooleanExtra("SHOW_EVENTS", false)) {
-            mNavItemId = R.id.menu_events;
-        } else {
-            mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
-        }
+
 
         Timber.d("Building account header.");
         AccountHeader headerResult = new AccountHeaderBuilder()
@@ -336,6 +322,23 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
             }
         });
+
+        if (null == savedInstanceState) {
+            mNavItemId = R.id.menu_home;
+        } else if (intent.getExtras() != null && intent.getExtras().containsKey("newsUrl")) {
+            newsUrl = intent.getExtras().getString("newsUrl");
+            mNavItemId = R.id.menu_news;
+            bottomNavigationView.selectTab(2, false);
+            intent.getExtras().clear();
+        } else if ("SHOW_FILTERS".equals(action)) {
+            getIntent().setAction("");
+            showFilter = true;
+            mNavItemId = R.id.menu_home;
+        } else if (getIntent().getBooleanExtra("SHOW_EVENTS", false)) {
+            mNavItemId = R.id.menu_events;
+        } else {
+            mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
+        }
     }
 
     private void navigateToTab(int position) {
@@ -426,6 +429,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             mNavItemId = R.id.menu_news;
             bottomNavigationView.selectTab(2, false);
             navigate(R.id.menu_news);
+            getIntent().getExtras().clear();
         } else if (getIntent().getBooleanExtra("SHOW_EVENTS", false)) {
             navigate(R.id.menu_events);
         } else {
@@ -1050,6 +1054,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 mNavItemId = R.id.menu_news;
                 navigate(R.id.menu_news);
                 bottomNavigationView.selectTab(2, false);
+                intent.getExtras().clear();
             }
         }
     }
