@@ -189,12 +189,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         setSupportActionBar(toolbar);
         // load saved navigation state if present
 
-
         Timber.d("Building account header.");
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withCompactStyle(false)
-                .withHeaderBackground(new ImageHolder(getString(R.string.header_image)))
+                .withHeaderBackground(R.drawable.plain_badge)
                 .withSavedInstance(savedInstanceState)
                 .build();
 
@@ -207,13 +206,12 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .setSnackBarParent(coordinatorLayout)
                 .build();
 
-
         Timber.d("Building DrawerBuilder");
         drawer = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withHasStableIds(true)
-                .withTranslucentStatusBar(false)
+                .withTranslucentStatusBar(true)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         new PrimaryDrawerItem()
