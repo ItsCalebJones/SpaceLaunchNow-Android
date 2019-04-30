@@ -4,13 +4,26 @@
     <string-array name="status">
         <item>Active</item>
         <item>Retired</item>
+        <item>Deceased</item>
         <item>In-Training</item>
         <item>Lost in Flight</item>
         <item>Lost in Training</item>
         <item>Died While in Active Service</item>
         <item>Dismissed</item>
         <item>Resigned during Training</item>
+
     </string-array>
+    <integer-array name="status_value">
+        <item>1</item>
+        <item>2</item>
+        <item>11</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </integer-array>
     <string-array name="time_format_array">
         <item>Default</item>
         <item>12-Hour AM/PM Format</item>

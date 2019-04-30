@@ -302,8 +302,9 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
                          **/
                         statusIDsSelection = which;
                         statusIDs = new ArrayList<>();
-                        for (Integer integer: statusIDsSelection){
-                            statusIDs.add(integer + 1);
+                        int[] valueArray = getResources().getIntArray(R.array.status_value);
+                        for (int integer: statusIDsSelection){
+                            statusIDs.add(valueArray[integer]);
                         }
                         fetchData(false, false, true);
                         return true;
