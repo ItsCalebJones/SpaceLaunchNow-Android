@@ -148,10 +148,8 @@ public class NotificationBuilder {
         Uri alarmSound = Uri.parse(ringtoneBox);
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
-        } else if (channelId.contains(CHANNEL_LAUNCH_IMMINENT)) {
-            mBuilder.setChannelId(CHANNEL_LAUNCH_IMMINENT).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_ALARM);
         } else {
-            mBuilder.setChannelId(channelId).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_EVENT);
+            mBuilder.setChannelId(channelId).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
         }
 
         if (launch.getRocket().getConfiguration().getImageUrl() != null

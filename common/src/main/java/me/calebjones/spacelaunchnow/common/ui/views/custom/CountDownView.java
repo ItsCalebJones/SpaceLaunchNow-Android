@@ -98,7 +98,9 @@ public class CountDownView extends ConstraintLayout {
                 countdownSeconds.setText("00");
                 countdownStatus.setVisibility(View.VISIBLE);
                 countdownStatus.setText("+");
-                countUpTimer(launch.getNet().getTime());
+                if (launch.isValid()) {
+                    countUpTimer(launch.getNet().getTime());
+                }
             }
 
             @Override

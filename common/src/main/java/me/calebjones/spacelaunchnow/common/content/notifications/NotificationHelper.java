@@ -62,6 +62,7 @@ public class NotificationHelper extends ContextWrapper {
         launchImminent.setLightColor(ContextCompat.getColor(this, R.color.primary));
         launchImminent.setShowBadge(true);
         launchImminent.setSound(alarmSound, audioAttributes);
+        launchImminent.setBypassDnd(false);
         launchImminent.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         getManager().createNotificationChannel(launchImminent);
 
@@ -71,6 +72,7 @@ public class NotificationHelper extends ContextWrapper {
         statusChanged.enableVibration(true);
         statusChanged.setLightColor(Color.RED);
         statusChanged.setShowBadge(true);
+        launchImminent.setBypassDnd(false);
         statusChanged.setSound(alarmSound, audioAttributes);
         getManager().createNotificationChannel(statusChanged);
 
@@ -79,6 +81,7 @@ public class NotificationHelper extends ContextWrapper {
         launchReminder.enableLights(false);
         launchReminder.setLightColor(Color.RED);
         launchReminder.setShowBadge(true);
+        launchImminent.setBypassDnd(false);
         launchImminent.setSound(alarmSound, audioAttributes);
         getManager().createNotificationChannel(launchReminder);
 
@@ -87,6 +90,7 @@ public class NotificationHelper extends ContextWrapper {
         launchWeeklySummary.enableLights(false);
         launchWeeklySummary.setLightColor(Color.RED);
         launchWeeklySummary.setShowBadge(true);
+        launchImminent.setBypassDnd(false);
         launchWeeklySummary.setSound(alarmSound, audioAttributes);
         getManager().createNotificationChannel(launchWeeklySummary);
 
@@ -95,6 +99,7 @@ public class NotificationHelper extends ContextWrapper {
         newsChannel.enableLights(false);
         newsChannel.setLightColor(Color.RED);
         newsChannel.setShowBadge(true);
+        launchImminent.setBypassDnd(false);
         newsChannel.setSound(alarmSound, audioAttributes);
         getManager().createNotificationChannel(newsChannel);
 
@@ -103,6 +108,7 @@ public class NotificationHelper extends ContextWrapper {
         silentChannel.enableLights(false);
         silentChannel.setLightColor(Color.RED);
         silentChannel.setShowBadge(true);
+        launchImminent.setBypassDnd(false);
         getManager().createNotificationChannel(silentChannel);
 
     }

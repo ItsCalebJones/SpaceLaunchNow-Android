@@ -211,7 +211,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withHasStableIds(true)
-                .withTranslucentStatusBar(true)
+                .withTranslucentStatusBar(false)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         new PrimaryDrawerItem()
