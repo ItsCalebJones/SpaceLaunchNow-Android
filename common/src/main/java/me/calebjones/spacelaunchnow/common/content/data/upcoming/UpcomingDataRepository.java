@@ -33,10 +33,8 @@ public class UpcomingDataRepository {
     }
 
     private void getUpcomingLaunchesFromNetwork(int count, String search, String lspName, String serialNumber, Integer launcherId, Callbacks.ListCallbackMini callback) {
-
         callback.onNetworkStateChanged(true);
-        dataLoader.getUpcomingLaunchesList(30, count, search, lspName, serialNumber, launcherId, new Callbacks.ListNetworkCallbackMini() {
-            @Override
+        dataLoader.getUpcomingLaunchesList(30, count, search, lspName, serialNumber, launcherId, new Callbacks.ListNetworkCallbackMini() { @Override
             public void onSuccess(List<LaunchList> launches, int next, int total) {
 
                     callback.onNetworkStateChanged(false);

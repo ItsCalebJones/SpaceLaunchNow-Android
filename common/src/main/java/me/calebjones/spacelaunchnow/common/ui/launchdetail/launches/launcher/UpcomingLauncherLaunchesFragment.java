@@ -96,6 +96,9 @@ public class UpcomingLauncherLaunchesFragment extends BaseFragment {
             lspName = getArguments().getString(LSP_NAME);
             launcherId = getArguments().getInt(LAUNCHER_ID);
             serialNumber = getArguments().getString(SERIAL_NUMBER);
+            if (launcherId == 0){
+                launcherId = null;
+            }
         }
         context = getActivity();
         upcomingDataRepository = new UpcomingDataRepository(context, getRealm());
