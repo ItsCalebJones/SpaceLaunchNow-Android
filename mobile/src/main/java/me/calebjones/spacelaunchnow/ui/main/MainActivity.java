@@ -193,7 +193,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withCompactStyle(false)
-                .withHeaderBackground(R.drawable.plain_badge)
+                .withAccountHeader(R.layout.header_view)
                 .withSavedInstance(savedInstanceState)
                 .build();
 
