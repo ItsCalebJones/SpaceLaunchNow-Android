@@ -3,11 +3,19 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 4-26-2019
+#### Updated 5-9-2019
 ---
 
-### Version 3.0.2 (Latest)
+### Version 3.0.3 (Latest)
+#### Changelog
+* Fixed an issue where sometimes notifications ignored Do Not Disturb settings.
+* Fixed an issue where launch history wasn't loading for specific SpaceX boosters.
+* Added filter for deceased Astronauts
+* Improved Badge icon for number of launches counter.
+* Changed Navigation drawer image.
 
+---
+### Version 3.0.2
 #### Changelog
 * Added News notifications for featured articles.
 * Added Webcast live notifications.
@@ -17,7 +25,7 @@ A space launch tracker for Android using data from the Launch Library API.
 * Improvements to Event notifications.
 * Fix a bunch of new crashes.
 
----
+
 ### Version 3.0.0
 #### Overview
 A large update adding Astronaut information, Spacestation data and Event notifications!
