@@ -6,7 +6,12 @@ A space launch tracker for Android using data from the Launch Library API.
 #### Updated 5-9-2019
 ---
 
-### Version 3.0.3 (Latest)
+### Version 3.0.4 (Latest)
+#### Changelog
+* Fixed an issue where the Japanese switch wasn't working properly.
+* Fixed an issue with background workers not respecting schedules.
+
+### Version 3.0.3
 #### Changelog
 * Fixed an issue where sometimes notifications ignored Do Not Disturb settings.
 * Fixed an issue where launch history wasn't loading for specific SpaceX boosters.
@@ -14,7 +19,7 @@ A space launch tracker for Android using data from the Launch Library API.
 * Improved Badge icon for number of launches counter.
 * Changed Navigation drawer image.
 
----
+
 ### Version 3.0.2
 #### Changelog
 * Added News notifications for featured articles.
