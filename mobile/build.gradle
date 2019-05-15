@@ -227,8 +227,8 @@ dependencies {
     implementation deps.transitionseverywhere
     implementation deps.materialAbout
     implementation deps.markdownView
-    implementation deps.colorpicker
-    implementation deps.cyanea
+    implementation deps.colorPicker
+    implementation deps.aesthetic
     implementation deps.glide
     annotationProcessor deps.glideCompiler
     implementation deps.glidepalette

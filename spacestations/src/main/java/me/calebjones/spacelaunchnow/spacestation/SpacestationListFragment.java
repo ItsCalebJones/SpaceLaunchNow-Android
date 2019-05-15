@@ -56,6 +56,7 @@ public class SpacestationListFragment extends BaseFragment implements SwipeRefre
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dataRepository = new SpacestationDataRepository(getContext(), getRealm());
+        setScreenName("SpaceStation List Fragment");
     }
 
     @Override

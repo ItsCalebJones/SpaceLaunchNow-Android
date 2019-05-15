@@ -1,19 +1,27 @@
 package me.calebjones.spacelaunchnow.events.detail;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ShareCompat;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.viewpager.widget.PagerAdapter;
+
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -21,55 +29,31 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-import com.mikepenz.iconics.IconicsDrawable;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.ShareCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.PagerAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
-import jp.wasabeef.glide.transformations.ColorFilterTransformation;
 import me.calebjones.spacelaunchnow.common.GlideApp;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
-import me.calebjones.spacelaunchnow.common.content.LaunchStatusUtil;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ExpeditionAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.SpacestationAdapter;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView;
-import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
-import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.events.R;
 import me.calebjones.spacelaunchnow.events.R2;
 import me.calebjones.spacelaunchnow.events.data.Callbacks;
 import me.calebjones.spacelaunchnow.events.data.EventDataRepository;
 import timber.log.Timber;
 
-public class EventDetailsActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener, SwipeRefreshLayout.OnRefreshListener {
+public class EventDetailsActivity extends BaseActivityOld implements AppBarLayout.OnOffsetChangedListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R2.id.event_profile_backdrop)
@@ -166,8 +150,8 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
         eventDetailSwipeRefresh.setOnRefreshListener(this);
         eventDataRepository = new EventDataRepository(this, getRealm());
 
-        appbar.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(getCyanea().getPrimaryDark(), getWindow()));
-        appbar.addOnOffsetChangedListener(this);
+//        appbar.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(getCyanea().getPrimaryDark(), getWindow()));
+//        appbar.addOnOffsetChangedListener(this);
 
         //Grab information from Intent
         Intent mIntent = getIntent();
@@ -190,19 +174,19 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         }
 
-        if (getCyanea().isDark()){
-            color = ContextCompat.getColor(this, R.color.white);
-        } else {
-            color = ContextCompat.getColor(this, R.color.black);
-        }
+//        if (getCyanea().isDark()){
+//            color = ContextCompat.getColor(this, R.color.white);
+//        } else {
+//            color = ContextCompat.getColor(this, R.color.black);
+//        }
 
         linearLayoutManager = new LinearLayoutManager(this);
-        adapter = new ListAdapter(this, getCyanea().isDark());
+        adapter = new ListAdapter(this, false);
         launchRecyclerView.setLayoutManager(linearLayoutManager);
         launchRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
         launchRecyclerView.setAdapter(adapter);
 
-        expeditionAdapter = new ExpeditionAdapter(this, getCyanea().isDark());
+        expeditionAdapter = new ExpeditionAdapter(this, false);
         expeditionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         expeditionRecyclerView.setAdapter(expeditionAdapter);
 
@@ -278,12 +262,12 @@ public class EventDetailsActivity extends BaseActivity implements AppBarLayout.O
     private void updateViews(Event event) {
         this.event = event;
         eventTitle.setText(event.getName());
-        eventTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+//        eventTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
 
         if (event.getLocation() != null) {
             eventSubtitle.setText(event.getLocation());
         }
-        eventSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+//        eventSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
 
         eventCardTitle.setText("Overview");
         eventType.setText(event.getType().getName());

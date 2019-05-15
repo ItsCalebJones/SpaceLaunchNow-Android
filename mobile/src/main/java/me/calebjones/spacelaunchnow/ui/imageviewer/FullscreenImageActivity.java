@@ -13,13 +13,13 @@ import com.github.chrisbanes.photoview.PhotoView;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.GlideApp;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FullscreenImageActivity extends BaseActivity {
+public class FullscreenImageActivity extends BaseActivityOld {
 
 
     private String imageURL;

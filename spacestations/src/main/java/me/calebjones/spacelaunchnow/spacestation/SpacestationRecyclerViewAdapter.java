@@ -77,7 +77,7 @@ public class SpacestationRecyclerViewAdapter extends RecyclerView.Adapter<Spaces
                     holder.statusPill.setCardBackgroundColor(ContextCompat.getColor(context, R.color.material_color_deep_orange_500));
                     break;
                 default:
-                    holder.statusPill.setCardBackgroundColor(ContextCompat.getColor(context, R.color.cyanea_primary));
+                    holder.statusPill.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
                     break;
             }
         }

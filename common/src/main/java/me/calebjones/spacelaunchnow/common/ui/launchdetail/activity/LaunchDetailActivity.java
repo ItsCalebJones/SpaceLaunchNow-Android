@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,8 +13,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,8 +26,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-import com.mikepenz.iconics.IconicsDrawable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,6 +43,7 @@ import io.realm.Realm;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.common.ui.generate.Rate;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.data.Callbacks;
@@ -116,9 +113,6 @@ public class LaunchDetailActivity extends BaseActivity
     private DetailsDataRepository detailsDataRepository;
     private DetailsViewModel model;
 
-    public LaunchDetailActivity() {
-        super("Launch Detail Activity");
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +125,7 @@ public class LaunchDetailActivity extends BaseActivity
         sharedPreference = ListPreferences.getInstance(context);
         detailsDataRepository = new DetailsDataRepository(context, getRealm());
 
-        statusColor = getCyanea().getPrimaryDark();
+//        statusColor = getCyanea().getPrimaryDark();
 
         if (getSharedPreferences("theme_changed", 0).getBoolean("recreate", false)) {
             SharedPreferences.Editor editor = getSharedPreferences("theme_changed", 0).edit();
@@ -205,9 +199,9 @@ public class LaunchDetailActivity extends BaseActivity
         } );
 
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()),
-                Utils.getTitleTextColor(getCyanea().getPrimary()));
-        tabLayout.setBackgroundColor(getCyanea().getPrimary());
+//        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()),
+//                Utils.getTitleTextColor(getCyanea().getPrimary()));
+//        tabLayout.setBackgroundColor(getCyanea().getPrimary());
 
         //Grab information from Intent
         Intent mIntent = getIntent();
@@ -311,7 +305,7 @@ public class LaunchDetailActivity extends BaseActivity
                 .title(R.string.feedback_title)
                 .autoDismiss(true)
                 .content(R.string.feedback_description)
-                .neutralColor(getCyanea().getPrimary())
+//                .neutralColor(getCyanea().getPrimary())
                 .negativeText(R.string.launch_data)
                 .onNegative((dialog, which) -> {
                     String url = getString(R.string.launch_library_reddit);
@@ -365,9 +359,9 @@ public class LaunchDetailActivity extends BaseActivity
             findProfileLogo(launch);
             findRocketImage(launch);
             detail_mission_location.setText(launch.getPad().getName());
-            detail_mission_location.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+//            detail_mission_location.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
             detail_rocket.setText(launch.getName());
-            detail_rocket.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+//            detail_rocket.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
         } else if (this.isDestroyed()) {
             Timber.v("DetailLaunch is destroyed, stopping loading data.");
         }

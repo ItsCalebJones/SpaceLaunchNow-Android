@@ -3,14 +3,11 @@ package me.calebjones.spacelaunchnow.common.ui.settings;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
-
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NavUtils;
 import me.calebjones.spacelaunchnow.common.R;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 
-public class SettingsActivity extends BaseActivity {
+public class SettingsActivity extends BaseActivityOld {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

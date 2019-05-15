@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.button.MaterialButton;
 
@@ -186,7 +187,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         filterViewShowing = false;
 
         if (adapter == null) {
-            adapter = new CardAdapter(context, mainActivity.getCyanea().getPrimary());
+            adapter = new CardAdapter(context, Aesthetic.get().colorPrimary().blockingFirst());
         }
 
         super.onCreateView(inflater, container, savedInstanceState);
@@ -196,11 +197,12 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         unbinder = ButterKnife.bind(this, view);
 
         setUpSwitches();
-        if (!Utils.getIconColor(getCyanea().getPrimary())){
-            colorReveal.setBackgroundColor(getCyanea().getAccent());
-        } else {
-            colorReveal.setBackgroundColor(getCyanea().getPrimary());
-        }
+        //TODO
+//        if (!Utils.getIconColor(getCyanea().getPrimary())){
+//            colorReveal.setBackgroundColor(getCyanea().getAccent());
+//        } else {
+//            colorReveal.setBackgroundColor(getCyanea().getPrimary());
+//        }
         fabExtensionAnimator = new FabExtensionAnimator(fab);
         fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)), true);
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showFilters")) {
@@ -208,7 +210,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             colorReveal.setVisibility(View.VISIBLE);
             filterViewShowing = true;
             fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Close", ContextCompat.getDrawable(context, R.drawable.ic_close)), true);
-            mainActivity.hideBottomNavigation();
+
             mainActivity.checkHideAd();
             mSwipeRefreshLayout.setEnabled(false);
         }
@@ -329,7 +331,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             anim.start();
 
 
-            mainActivity.showBottomNavigation();
             mainActivity.checkShowAd();
             mSwipeRefreshLayout.setEnabled(true);
         } catch (IllegalStateException exception) {
@@ -362,7 +363,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             colorReveal.setVisibility(View.VISIBLE);
             anim.start();
 
-            mainActivity.hideBottomNavigation();
             mainActivity.checkHideAd();
             mSwipeRefreshLayout.setEnabled(false);
         } catch (IllegalStateException exception) {
@@ -481,7 +481,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
 
         if (filterViewShowing) {
-            mainActivity.hideBottomNavigation();
             mainActivity.checkHideAd();
         }
     }

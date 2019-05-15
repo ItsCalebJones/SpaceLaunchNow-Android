@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.appcompat.widget.Toolbar;
 
-import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +29,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.BadgeTabLayout;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
@@ -42,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class AgencyLaunchActivity extends BaseActivity implements UpcomingAgencyLaunchesFragment.OnFragmentInteractionListener,
+public class AgencyLaunchActivity extends BaseActivityOld implements UpcomingAgencyLaunchesFragment.OnFragmentInteractionListener,
         PreviousAgencyLaunchesFragment.OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
 
 

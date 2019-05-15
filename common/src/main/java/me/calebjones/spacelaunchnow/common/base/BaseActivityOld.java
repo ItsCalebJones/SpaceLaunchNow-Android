@@ -2,24 +2,26 @@ package me.calebjones.spacelaunchnow.common.base;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
-import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+
+import com.afollestad.aesthetic.Aesthetic;
+import com.afollestad.aesthetic.AestheticActivity;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.Locale;
 
 import io.realm.Realm;
+import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import timber.log.Timber;
 
-public class BaseActivity extends CyaneaAppCompatActivity {
+public class BaseActivityOld extends AestheticActivity {
 
-    public BaseActivity() {
+    public BaseActivityOld() {
     }
 
-    public BaseActivity(String screenName) {
+    public BaseActivityOld(String screenName) {
         name = screenName;
     }
 
@@ -29,6 +31,13 @@ public class BaseActivity extends CyaneaAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Aesthetic.Companion.isFirstTime()) {
+            Aesthetic.get()
+                    .colorPrimaryRes(R.color.material_color_blue_500)
+                    .colorAccentRes(R.color.material_color_red_500)
+                    .colorCardViewBackgroundRes(R.color.white)
+                    .apply();
+        }
         Timber.d("onCreate");
         realm = Realm.getDefaultInstance();
     }

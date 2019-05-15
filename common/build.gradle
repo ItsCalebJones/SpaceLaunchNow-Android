@@ -47,9 +47,10 @@ dependencies {
     implementation deps.materialdrawer
     implementation deps.materialDialogCore
     implementation deps.materialDialogCommons
-    implementation deps.cyanea
     implementation deps.inAppbilling
     implementation deps.workManager
+    implementation deps.colorPicker
+    implementation deps.aesthetic
 
     // Iconography
     implementation deps.iconicsCore

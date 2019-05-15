@@ -1,18 +1,13 @@
 package me.calebjones.spacelaunchnow.astronauts.detail;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -20,8 +15,6 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-import com.mikepenz.iconics.IconicsDrawable;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -32,7 +25,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
@@ -47,8 +39,6 @@ import me.calebjones.spacelaunchnow.astronauts.data.Callbacks;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
-import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
 import me.spacelaunchnow.astronauts.R2;
@@ -133,13 +123,13 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         tabs.addTab(tabs.newTab().setText(getString(R.string.profile)));
         tabs.addTab(tabs.newTab().setText(getString(R.string.flights)));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-        tabs.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
-                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
-        tabs.setBackgroundColor(getCyanea().getPrimary());
+//        tabs.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
+//                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+//        tabs.setBackgroundColor(getCyanea().getPrimary());
         astronautDataRepository = new AstronautDataRepository(this, getRealm());
 
-        appbar.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(getCyanea().getPrimaryDark(), getWindow()));
-        appbar.addOnOffsetChangedListener(this);
+//        appbar.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(getCyanea().getPrimaryDark(), getWindow()));
+//        appbar.addOnOffsetChangedListener(this);
 
         //Grab information from Intent
         Intent mIntent = getIntent();
@@ -223,10 +213,10 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         this.astronaut = astronaut;
         try {
             astronautTitle.setText(astronaut.getName());
-            astronautTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+//            astronautTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
 
             astronautSubtitle.setText(astronaut.getNationality());
-            astronautSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+//            astronautSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(Aesthetic.get().isDark().blockingFirst(false)));
 
             GlideApp.with(this)
                     .load(astronaut.getProfileImage())

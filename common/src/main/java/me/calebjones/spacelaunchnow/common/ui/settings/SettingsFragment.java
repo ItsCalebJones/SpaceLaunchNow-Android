@@ -9,9 +9,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.jaredrummler.android.colorpicker.ColorPreference;
 import com.jaredrummler.android.colorpicker.ColorPreferenceCompat;
-import com.jaredrummler.cyanea.prefs.CyaneaSettingsActivity;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -24,10 +25,8 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -71,6 +70,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private ColorPreferenceCompat widgetIconColor;
     private ColorPreferenceCompat widgetAccentColor;
     private ColorPreferenceCompat widgetTitleColor;
+    private ColorPreferenceCompat themePrimary;
+    private ColorPreferenceCompat themeSecondary;
+    private ColorPreferenceCompat themeBackground;
     private SwitchPreference widgetRoundCorners;
     private SwitchPreference widgetHideSettings;
     private FirebaseMessaging firebaseMessaging;
@@ -307,9 +309,34 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     firebaseMessaging.unsubscribeFromTopic("success");
                 }
                 break;
-            case "custom_themes":
-                Intent intent = new Intent(context, CyaneaSettingsActivity.class);
-                context.startActivity(intent);
+            case "custom_themes_is_dark":
+                if (Prefs.getBoolean(key, false)) {
+                    themeBackground.saveValue(getResources().getColor(R.color.custom_background_material_dark));
+                    Aesthetic.get()
+                            .isDark(true)
+                            .colorNavigationBarRes(R.color.custom_background_material_dark)
+                            .colorWindowBackground(Prefs.getInt("custom_themes_background",
+                                    R.color.custom_background_material_dark),
+                                    null)
+                            .colorCardViewBackground(Prefs.getInt("custom_themes_background",
+                                    R.color.custom_background_material_dark),
+                                    null)
+                            .activityTheme(R.style.BaseAppTheme_DarkBackground)
+                            .apply();
+                } else {
+                    themeBackground.saveValue(getResources().getColor(R.color.custom_background_material_light));
+                    Aesthetic.get()
+                            .isDark(false)
+                            .colorNavigationBarRes(R.color.custom_background_material_light)
+                            .colorWindowBackground(Prefs.getInt("custom_themes_background",
+                                    R.color.custom_background_material_light),
+                                    null)
+                            .colorCardViewBackground(Prefs.getInt("custom_themes_background",
+                                    R.color.custom_background_material_light),
+                                    null)
+                            .activityTheme(R.style.BaseAppTheme_LightBackground)
+                            .apply();
+                }
                 break;
             case "locale_changer":
                 ActivityCompat.finishAffinity(getActivity());
@@ -388,8 +415,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             });
         }
-        SwitchPreference calendarSyncState = (SwitchPreference) findPreference("calendar_sync_state");
-        PreferenceCategory calendarCategory = (PreferenceCategory) findPreference("calendar_category");
+        SwitchPreference calendarSyncState = findPreference("calendar_sync_state");
+        PreferenceCategory calendarCategory = findPreference("calendar_category");
         if (!SupporterHelper.isSupporter()) {
             calendarSyncState.setChecked(false);
             calendarSyncState.setEnabled(false);
@@ -401,15 +428,41 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 Toast.makeText(context, R.string.calendar_permissions_denied, Toast.LENGTH_LONG).show();
             }
         }
+
+        themePrimary = findPreference("custom_themes_primary");
+        themePrimary.setOnPreferenceChangeListener((preference, newValue) -> {
+            Aesthetic.get()
+                    .colorPrimary( (int) newValue, null)
+                    .apply();
+            return true;
+        });
+        themeSecondary = findPreference("custom_themes_accent");
+        themeSecondary.setOnPreferenceChangeListener((preference, newValue) -> {
+            Aesthetic.get()
+                    .colorAccent( (int) newValue, null)
+                    .apply();
+            return true;
+        });
+        themeBackground = findPreference("custom_themes_background");
+        themeBackground.setOnPreferenceChangeListener((preference, newValue) -> {
+            Aesthetic.get()
+                    .attribute(R.attr.cardBackground, (int) newValue, null, true)
+                    .colorNavigationBar((int) newValue, null)
+                    .colorCardViewBackground( (int) newValue, null)
+                    .colorWindowBackground( (int) newValue, null)
+                    .apply();
+            return true;
+        });
+
         widgetPresets = findPreference("widget_presets");
-        widgetBackgroundColor = (ColorPreferenceCompat) findPreference("widget_background_color");
-        widgetTextColor = (ColorPreferenceCompat) findPreference("widget_text_color");
-        widgetSecondaryTextColor = (ColorPreferenceCompat) findPreference("widget_secondary_text_color");
-        widgetIconColor = (ColorPreferenceCompat) findPreference("widget_icon_color");
-        widgetRoundCorners = (SwitchPreference) findPreference("widget_theme_round_corner");
-        widgetAccentColor = (ColorPreferenceCompat) findPreference("widget_list_accent_color");
-        widgetTitleColor = (ColorPreferenceCompat) findPreference("widget_title_text_color");
-        widgetHideSettings = (SwitchPreference) findPreference("widget_refresh_enabled");
+        widgetBackgroundColor = findPreference("widget_background_color");
+        widgetTextColor = findPreference("widget_text_color");
+        widgetSecondaryTextColor = findPreference("widget_secondary_text_color");
+        widgetIconColor = findPreference("widget_icon_color");
+        widgetRoundCorners = findPreference("widget_theme_round_corner");
+        widgetAccentColor = findPreference("widget_list_accent_color");
+        widgetTitleColor = findPreference("widget_title_text_color");
+        widgetHideSettings = findPreference("widget_refresh_enabled");
         if (!SupporterHelper.isSupporter()) {
             Preference themes = findPreference("custom_themes");
             themes.setEnabled(false);
@@ -420,13 +473,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             weather.setEnabled(false);
             weather.setSelectable(false);
 
-            PreferenceCategory prefCatWeather = (PreferenceCategory) findPreference("weather_category");
+            PreferenceCategory prefCatWeather = findPreference("weather_category");
             prefCatWeather.setTitle(prefCatWeather.getTitle() + " " + getString(R.string.supporter_feature));
             Preference measurement = findPreference("weather_US_SI");
             measurement.setEnabled(false);
             measurement.setSelectable(false);
 
-            PreferenceCategory prefCatWidget = (PreferenceCategory) findPreference("widget_category");
+            PreferenceCategory prefCatWidget = findPreference("widget_category");
             prefCatWidget.setTitle(prefCatWidget.getTitle() + " " + getString(R.string.supporter_feature));
 
 
@@ -516,7 +569,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         final CharSequence[] nameSequences = listName.toArray(new CharSequence[listName.size()]);
         final CharSequence[] countSequences = listCount.toArray(new CharSequence[listCount.size()]);
-        ListPreference calendarPrefList = (ListPreference) findPreference("default_calendar_state");
+        ListPreference calendarPrefList = findPreference("default_calendar_state");
 
 
         String summary;
@@ -564,7 +617,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         final List<Calendar> calendarList = Calendar.getWritableCalendars(context.getContentResolver());
 
         if (calendarList.size() > 0) {
-            ListPreference calendarPreference = (ListPreference) findPreference("default_calendar_state");
+            ListPreference calendarPreference = findPreference("default_calendar_state");
             String summary;
             final CalendarItem calendarItem = new CalendarItem();
             calendarItem.setAccountName(calendarList.get(0).accountName);
@@ -583,7 +636,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             setCalendarPreference();
         } else {
             Toast.makeText(context, R.string.no_calendars_available, Toast.LENGTH_LONG).show();
-            SwitchPreference calendarSyncState = (SwitchPreference) findPreference("calendar_sync_state");
+            SwitchPreference calendarSyncState = findPreference("calendar_sync_state");
             calendarSyncState.setChecked(false);
             switchPreferences.setCalendarStatus(false);
         }
@@ -641,7 +694,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     public void showPermissionDenied(String permission, boolean isPermanentlyDenied) {
         Prefs.putBoolean("calendar_sync_state", false);
-        SwitchPreference calendarSyncState = (SwitchPreference) findPreference("calendar_sync_state");
+        SwitchPreference calendarSyncState = findPreference("calendar_sync_state");
         calendarSyncState.setChecked(false);
         switchPreferences.setCalendarStatus(false);
         if (isPermanentlyDenied) {

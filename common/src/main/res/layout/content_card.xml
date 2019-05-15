@@ -11,8 +11,8 @@ android:layout_marginStart="8dp"
 android:layout_marginTop="@dimen/material_baseline_grid_1x"
 android:maxWidth="400dp"
 android:layout_gravity="center"
+android:background="?cardBackground"
 app:cardMaxElevation="2dp"
-app:cardBackgroundColor="?backgroundColor"
 app:cardCornerRadius="8dp"
 app:cardElevation="2dp">
 

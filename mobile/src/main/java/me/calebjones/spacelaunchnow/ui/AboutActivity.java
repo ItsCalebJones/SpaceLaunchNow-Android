@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.settings.DebugAuthManager;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
@@ -29,7 +29,7 @@ import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 
-public class AboutActivity extends BaseActivity {
+public class AboutActivity extends BaseActivityOld {
     
     private Context context;
 

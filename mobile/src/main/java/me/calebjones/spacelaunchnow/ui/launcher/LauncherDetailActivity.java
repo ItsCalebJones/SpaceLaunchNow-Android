@@ -29,7 +29,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.GlideApp;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
@@ -39,7 +39,7 @@ import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-public class LauncherDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
+public class LauncherDetailActivity extends BaseActivityOld implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     private boolean mIsAvatarShown = true;
@@ -71,7 +71,7 @@ public class LauncherDetailActivity extends BaseActivity implements AppBarLayout
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        statusColor = getCyanea().getPrimaryDark();
+//        statusColor = getCyanea().getPrimaryDark();
 
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         toolbarTitle = findViewById(R.id.title_text);

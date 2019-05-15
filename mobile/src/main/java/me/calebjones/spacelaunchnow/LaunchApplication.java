@@ -20,7 +20,6 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.jaredrummler.cyanea.Cyanea;
 import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
 import com.mikepenz.materialdrawer.util.DrawerImageLoader;
@@ -80,7 +79,6 @@ public class LaunchApplication extends MultiDexApplication {
         super.onCreate();
         context = this;
         firebaseMessaging = FirebaseMessaging.getInstance();
-        Cyanea.init(this, getResources());
         setupAndCheckOnce();
         setupAds();
         setupPreferences();

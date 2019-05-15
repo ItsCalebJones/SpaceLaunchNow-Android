@@ -61,8 +61,8 @@ public class VehiclesViewPager extends BaseFragment {
         tabLayout.addTab(tabLayout.newTab().setText(R.string.orbiters));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
-        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
-                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+//        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
+//                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
 
         pagerAdapter = new PagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount());

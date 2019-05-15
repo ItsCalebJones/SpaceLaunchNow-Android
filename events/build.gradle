@@ -52,7 +52,7 @@ dependencies {
     implementation deps.appcompat
     implementation deps.legacySupportv4
     implementation deps.lifecycleExtensions
-    implementation deps.cyanea
+    implementation deps.aesthetic
 
     implementation deps.iconicsCore
     implementation deps.googleMaterialTypeface

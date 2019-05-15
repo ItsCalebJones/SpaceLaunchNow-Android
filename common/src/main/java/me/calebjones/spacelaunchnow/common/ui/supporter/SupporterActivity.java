@@ -29,6 +29,7 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -40,6 +41,7 @@ import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import timber.log.Timber;
@@ -73,10 +75,6 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     private boolean isRefreshable = true;
     private BottomSheetDialog dialog;
 
-    public SupporterActivity() {
-        super("Supporter Activity");
-    }
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
@@ -85,11 +83,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int m_theme;
         final Context context = this;
-
-        m_theme = R.style.BaseAppTheme;
-        setTheme(m_theme);
 
         setContentView(R.layout.activity_support);
         ButterKnife.bind(this);
@@ -187,6 +181,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
     @OnClick({R2.id.purchase, R2.id.fab_supporter})
     public void checkClick() {
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, null);
         View view = getLayoutInflater().inflate(R.layout.seekbar_dialog_supporter, null);
         dialog = new BottomSheetDialog(this);
         dialog.setContentView(view);

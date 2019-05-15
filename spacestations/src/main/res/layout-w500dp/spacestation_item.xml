@@ -17,7 +17,7 @@
         android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
         android:maxWidth="400dp"
         android:layout_gravity="center"
-        app:cardBackgroundColor="?backgroundColor"
+        android:background="?cardBackground"
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="8dp"
         app:cardElevation="2dp">

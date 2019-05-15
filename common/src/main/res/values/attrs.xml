@@ -5,4 +5,7 @@
     </declare-styleable>
     <attr name="shareIconColor" format="reference" />
     <attr name="cardTitleBarColor" format="reference" />
+    <attr format="color" name="colorNavBackground"/>
+    <attr format="color" name="cardBackground"/>
+    <attr format="color" name="colorCardHeaderBackground"/>
 </resources>

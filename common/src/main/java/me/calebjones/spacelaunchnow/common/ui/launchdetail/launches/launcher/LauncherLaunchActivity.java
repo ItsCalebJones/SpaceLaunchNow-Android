@@ -29,14 +29,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.BadgeTabLayout;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import timber.log.Timber;
 
-public class LauncherLaunchActivity extends BaseActivity implements UpcomingLauncherLaunchesFragment.OnFragmentInteractionListener,
+public class LauncherLaunchActivity extends BaseActivityOld implements UpcomingLauncherLaunchesFragment.OnFragmentInteractionListener,
         PreviousLauncherLaunchesFragment.OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
 
 

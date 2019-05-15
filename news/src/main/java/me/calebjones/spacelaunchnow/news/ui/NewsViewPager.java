@@ -1,6 +1,5 @@
 package me.calebjones.spacelaunchnow.news.ui;
 
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +15,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
+import me.calebjones.spacelaunchnow.events.list.EventListFragment;
 import me.calebjones.spacelaunchnow.news.R;
 import me.calebjones.spacelaunchnow.news.ui.news.NewsListFragment;
 import me.calebjones.spacelaunchnow.news.ui.twitter.TwitterFragment;
@@ -57,9 +57,8 @@ public class NewsViewPager extends BaseFragment {
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.news));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.events));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.twitter));
-        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
-                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter
@@ -101,7 +100,8 @@ public class NewsViewPager extends BaseFragment {
 
             switch (position) {
                 case 0: return new NewsListFragment();
-                case 1: return new TwitterFragment();
+                case 1: return new EventListFragment();
+                case 2: return new TwitterFragment();
                 default:
                     return null;
             }

@@ -12,10 +12,8 @@
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/colorPrimary"
         android:elevation="12dp"
         app:tabGravity="fill"
-        app:tabBackground="@color/colorPrimary"
         app:tabMode="fixed" />
 
     <androidx.viewpager.widget.ViewPager

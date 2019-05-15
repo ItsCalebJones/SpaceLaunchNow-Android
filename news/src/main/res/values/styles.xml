@@ -16,12 +16,12 @@
 
 <resources>
     <style name="SpaceLaunchNowTweetStyle" parent="tw__TweetLightWithActionsStyle">
-        <item name="tw__container_bg_color">?backgroundColor</item>
+        <item name="tw__container_bg_color">?cardBackground</item>
         <item name="tw__action_color">?colorPrimary</item>
         <item name="tw__primary_text_color">@color/black</item>
     </style>
     <style name="SpaceLaunchNowTweetStyleDark" parent="tw__TweetDarkWithActionsStyle">
-        <item name="tw__container_bg_color">?backgroundColor</item>
+        <item name="tw__container_bg_color">?cardBackground</item>
         <item name="tw__action_color">?colorPrimary</item>
         <item name="tw__primary_text_color">@color/dark_primary_text_color_selector</item>
     </style>

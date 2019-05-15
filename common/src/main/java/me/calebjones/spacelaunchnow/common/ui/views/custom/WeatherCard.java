@@ -11,7 +11,6 @@ import android.zetterstrom.com.forecast.models.DataPoint;
 import android.zetterstrom.com.forecast.models.Forecast;
 
 import com.github.pwittchen.weathericonview.WeatherIconView;
-import com.jaredrummler.cyanea.Cyanea;
 
 import java.text.SimpleDateFormat;
 

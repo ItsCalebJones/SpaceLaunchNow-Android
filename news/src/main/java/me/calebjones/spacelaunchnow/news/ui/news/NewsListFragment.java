@@ -68,6 +68,7 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dataRepository = new NewsDataRepository(getContext(), getRealm());
+        setScreenName("News List Fragment");
     }
 
     @Override
