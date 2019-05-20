@@ -87,7 +87,6 @@ public class LaunchApplication extends MultiDexApplication {
         setupRealm();
         setupForecast();
         setupWebView();
-        setupTheme();
         setupDrawableLoader();
         setupNotificationChannels();
         setupTwitter();
@@ -138,19 +137,6 @@ public class LaunchApplication extends MultiDexApplication {
                 GlideApp.with(imageView.getContext()).clear(imageView);
             }
         });
-    }
-
-
-    private void setupTheme() {
-        if (sharedPreference.isNightThemeEnabled()) {
-            if (sharedPreference.isDayNightAutoEnabled()) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            }
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        }
     }
 
 

@@ -68,6 +68,9 @@ import timber.log.Timber;
 
 public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final int FAB_MODE_FILTER = 1;
+    private static final int FAB_MODE_CLOSE = 2;
+    private static final int FAB_MODE_APPLY = 3;
     @BindView(R.id.van_switch)
     AppCompatCheckBox vanSwitch;
     @BindView(R.id.ples_switch)
@@ -198,11 +201,16 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         setUpSwitches();
         //TODO
-//        if (!Utils.getIconColor(getCyanea().getPrimary())){
-//            colorReveal.setBackgroundColor(getCyanea().getAccent());
-//        } else {
-//            colorReveal.setBackgroundColor(getCyanea().getPrimary());
-//        }
+        if (!Utils.getIconColor(Aesthetic.get().colorPrimary().blockingFirst())){
+            int color = Aesthetic.get().colorAccent().blockingFirst();
+            colorReveal.setBackgroundColor(color);
+            fab.setBackgroundColor(color);
+        } else {
+            int color = Aesthetic.get().colorPrimary().blockingFirst();
+            colorReveal.setBackgroundColor(Aesthetic.get().colorPrimary().blockingFirst());
+            fab.setBackgroundColor(color);
+        }
+
         fabExtensionAnimator = new FabExtensionAnimator(fab);
         fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)), true);
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showFilters")) {

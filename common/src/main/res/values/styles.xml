@@ -31,6 +31,7 @@
         <!--Custom Attributes-->
         <item name="colorCardHeaderBackground">@color/material_drawer_background</item>
         <item name="cardBackground">@color/material_drawer_background</item>
+        <item name="fabAccent">@color/colorAccent</item>
     </style>
 
     <!-- Base application theme. -->

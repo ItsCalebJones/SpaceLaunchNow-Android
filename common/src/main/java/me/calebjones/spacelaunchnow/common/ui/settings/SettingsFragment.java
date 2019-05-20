@@ -312,6 +312,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             case "custom_themes_is_dark":
                 if (Prefs.getBoolean(key, false)) {
                     themeBackground.saveValue(getResources().getColor(R.color.custom_background_material_dark));
+                    themePrimary.saveValue(getResources().getColor(R.color.darkPrimary));
+                    themeSecondary.saveValue(getResources().getColor(R.color.darkAccent));
                     Aesthetic.get()
                             .isDark(true)
                             .colorNavigationBarRes(R.color.custom_background_material_dark)
@@ -321,10 +323,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             .colorCardViewBackground(Prefs.getInt("custom_themes_background",
                                     R.color.custom_background_material_dark),
                                     null)
+                            .colorPrimary(Prefs.getInt("custom_themes_primary",
+                                    R.color.darkPrimary),
+                                    null)
+                            .colorAccent(Prefs.getInt("custom_themes_accent",
+                                    R.color.darkAccent),
+                                    null)
+                            .attribute(R.attr.fabAccent, getResources().getColor(R.color.darkAccent), null, true)
                             .activityTheme(R.style.BaseAppTheme_DarkBackground)
                             .apply();
                 } else {
                     themeBackground.saveValue(getResources().getColor(R.color.custom_background_material_light));
+                    themePrimary.saveValue(getResources().getColor(R.color.colorPrimary));
+                    themeSecondary.saveValue(getResources().getColor(R.color.colorAccent));
                     Aesthetic.get()
                             .isDark(false)
                             .colorNavigationBarRes(R.color.custom_background_material_light)
@@ -334,6 +345,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             .colorCardViewBackground(Prefs.getInt("custom_themes_background",
                                     R.color.custom_background_material_light),
                                     null)
+                            .colorPrimary(Prefs.getInt("custom_themes_primary",
+                                    R.color.colorPrimary),
+                                    null)
+                            .colorAccent(Prefs.getInt("custom_themes_accent",
+                                    R.color.colorAccent),
+                                    null)
+                            .attribute(R.attr.fabAccent, getResources().getColor(R.color.colorAccent), null, true)
                             .activityTheme(R.style.BaseAppTheme_LightBackground)
                             .apply();
                 }
@@ -439,6 +457,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         themeSecondary = findPreference("custom_themes_accent");
         themeSecondary.setOnPreferenceChangeListener((preference, newValue) -> {
             Aesthetic.get()
+                    .attribute(R.attr.fabAccent, (int) newValue, null, true)
                     .colorAccent( (int) newValue, null)
                     .apply();
             return true;
@@ -464,10 +483,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         widgetTitleColor = findPreference("widget_title_text_color");
         widgetHideSettings = findPreference("widget_refresh_enabled");
         if (!SupporterHelper.isSupporter()) {
-            Preference themes = findPreference("custom_themes");
-            themes.setEnabled(false);
-            themes.setSelectable(false);
-            themes.setTitle(themes.getTitle() + " " + getString(R.string.supporter_feature));
+            PreferenceCategory themes = findPreference("appearance_category");
+            themes.setSummary("Become a supporter to fully customize!" );
+            themePrimary.setEnabled(false);
+            themePrimary.setSelectable(false);
+            themePrimary.setSummary(themePrimary.getSummary() + " " + getString(R.string.supporter_feature));
+
+            themeSecondary.setEnabled(false);
+            themeSecondary.setSelectable(false);
+            themeSecondary.setSummary(themeSecondary.getSummary() + " " + getString(R.string.supporter_feature));
+
+            themeBackground.setEnabled(false);
+            themeBackground.setSelectable(false);
+            themeBackground.setSummary(themeBackground.getSummary() + " " + getString(R.string.supporter_feature));
 
             Preference weather = findPreference("weather");
             weather.setEnabled(false);

@@ -6,46 +6,6 @@
         android:title="@string/general"
         android:summary="@string/general_settings"
         app:iconSpaceReserved="false">
-        <Preference
-            app:iconSpaceReserved="false"
-            android:key="custom_themes"
-            android:title="Theme Customization"
-            android:summary="Set primary, accent and background colors!">
-        </Preference>
-        <SwitchPreference
-            app:iconSpaceReserved="false"
-            android:defaultValue="false"
-            android:key="custom_themes_is_dark"
-            android:title="Dark Theme">
-        </SwitchPreference>
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="0xFF2196F3"
-            app:iconSpaceReserved="false"
-            android:key="custom_themes_primary"
-            android:title="Theme Primary Color"
-            app:cpv_allowPresets="true"
-            app:cpv_showColorShades="true"
-            app:cpv_previewSize="large"
-            app:cpv_showAlphaSlider="true"/>
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="0xFFFF5252"
-            app:iconSpaceReserved="false"
-            android:key="custom_themes_accent"
-            android:title="Theme Accent Color"
-            app:cpv_allowPresets="true"
-            app:cpv_showColorShades="true"
-            app:cpv_previewSize="large"
-            app:cpv_showAlphaSlider="true"/>
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="@color/custom_background_material_light"
-            app:iconSpaceReserved="false"
-            android:key="custom_themes_background"
-            android:title="Theme Background Color"
-            app:cpv_allowPresets="true"
-            app:cpv_colorPresets="@array/background_color_presets"
-            app:cpv_showColorShades="false"
-            app:cpv_previewSize="large"
-            app:cpv_showAlphaSlider="true"/>
         <SwitchPreference
             android:key="locale_changer"
             android:defaultValue="true"
@@ -82,6 +42,49 @@
             android:summary="@string/debug_logging_summary"
             android:title="@string/debug_logging" />
 
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="appearance_category"
+        android:title="@string/appearance"
+        android:summary="@string/appearance_description"
+        app:iconSpaceReserved="false">
+        <SwitchPreference
+            app:iconSpaceReserved="false"
+            android:defaultValue="false"
+            android:key="custom_themes_is_dark"
+            android:title="Dark Theme">
+        </SwitchPreference>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="0xFF2196F3"
+            app:iconSpaceReserved="false"
+            android:key="custom_themes_primary"
+            android:title="Primary Color"
+            android:summary="Set a custom primary color."
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="true"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="false"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="0xFFFF5252"
+            app:iconSpaceReserved="false"
+            android:key="custom_themes_accent"
+            android:title="Accent Color"
+            android:summary="Set a custom accent color."
+            app:cpv_allowPresets="true"
+            app:cpv_showColorShades="true"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="false"/>
+        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
+            android:defaultValue="@color/custom_background_material_light"
+            app:iconSpaceReserved="false"
+            android:key="custom_themes_background"
+            android:title="Background Color"
+            android:summary="Set a custom background color."
+            app:cpv_allowPresets="true"
+            app:cpv_colorPresets="@array/background_color_presets"
+            app:cpv_showColorShades="false"
+            app:cpv_previewSize="large"
+            app:cpv_showAlphaSlider="false"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="calendar_category"

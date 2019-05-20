@@ -79,7 +79,7 @@
                 android:maxLines="1"
                 android:text=""
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse"
+                android:textColor="@color/white"
                 />
 
             <TextView
@@ -92,7 +92,7 @@
                 android:maxLines="1"
                 android:text=""
                 android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Inverse"
+                android:textColor="@color/white"
                 />
         </LinearLayout>
 

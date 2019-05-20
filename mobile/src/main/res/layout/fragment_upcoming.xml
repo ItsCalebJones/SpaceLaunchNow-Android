@@ -145,6 +145,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:elevation="@dimen/material_baseline_grid_1.5x"
+                    app:backgroundTint="?fabAccent"
                     app:layout_behavior="me.calebjones.spacelaunchnow.utils.views.animator.BottomTransientBarBehavior" />
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -27,6 +27,7 @@ open class BaseActivity : AestheticActivity() {
                 colorCardViewBackgroundRes(R.color.white)
                 attributeRes(R.attr.colorCardHeaderBackground, R.color.material_color_blue_500)
                 attributeRes(R.attr.cardBackground, R.color.material_drawer_background)
+                attributeRes(R.attr.fabAccent, R.color.material_color_red_500)
                 isDark(false)
                 colorNavigationBarRes(Prefs.getInt("custom_themes_background",
                         R.color.custom_background_material_light))

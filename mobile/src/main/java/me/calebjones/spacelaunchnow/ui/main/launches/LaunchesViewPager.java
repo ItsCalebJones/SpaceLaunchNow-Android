@@ -122,7 +122,7 @@ public class LaunchesViewPager extends BaseFragment {
         super.onDestroyView();
         Timber.v("onDestroyView");
         viewPager.clearOnPageChangeListeners();
-        tabLayout.setOnTabSelectedListener(null);
+        tabLayout.clearOnTabSelectedListeners();
         pagerAdapter = null;
     }
 
