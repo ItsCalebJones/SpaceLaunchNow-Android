@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,6 +33,7 @@ import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.BadgeTabLayout;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
@@ -107,6 +109,8 @@ public class AgencyLaunchActivity extends BaseActivityOld implements UpcomingAge
             }
         } );
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()),
+                Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
         swipeRefresh.setOnRefreshListener(this);
         getFeaturedAgencies();
     }

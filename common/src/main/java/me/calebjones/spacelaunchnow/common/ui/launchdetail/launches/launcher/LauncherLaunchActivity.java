@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -32,6 +33,7 @@ import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.BadgeTabLayout;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import timber.log.Timber;
@@ -113,6 +115,8 @@ public class LauncherLaunchActivity extends BaseActivityOld implements UpcomingL
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()),
+                Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
         menu.setVisibility(View.GONE);
     }
 

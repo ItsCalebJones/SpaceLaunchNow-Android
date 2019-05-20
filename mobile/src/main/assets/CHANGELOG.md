@@ -3,9 +3,15 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 5-9-2019
+#### Updated 5-20-2019
 ---
 
+### Version 3.1.0 (Latest)
+#### Changelog
+* Re-engineered the theme engine to support more varied styles.
+* Added Dark Mode for all users!
+
+---
 ### Version 3.0.3 (Latest)
 #### Changelog
 * Fixed an issue where sometimes notifications ignored Do Not Disturb settings.
@@ -14,7 +20,7 @@ A space launch tracker for Android using data from the Launch Library API.
 * Improved Badge icon for number of launches counter.
 * Changed Navigation drawer image.
 
----
+
 ### Version 3.0.2
 #### Changelog
 * Added News notifications for featured articles.

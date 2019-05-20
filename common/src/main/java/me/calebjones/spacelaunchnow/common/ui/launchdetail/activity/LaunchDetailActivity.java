@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -199,9 +200,8 @@ public class LaunchDetailActivity extends BaseActivity
         } );
 
         tabLayout.setupWithViewPager(viewPager);
-//        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()),
-//                Utils.getTitleTextColor(getCyanea().getPrimary()));
-//        tabLayout.setBackgroundColor(getCyanea().getPrimary());
+        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()),
+                Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
 
         //Grab information from Intent
         Intent mIntent = getIntent();

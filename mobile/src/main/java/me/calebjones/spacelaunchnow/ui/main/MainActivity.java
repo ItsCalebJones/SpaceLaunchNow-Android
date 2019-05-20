@@ -213,21 +213,24 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                         new PrimaryDrawerItem()
                                 .withName(R.string.home)
                                 .withIcon(GoogleMaterial.Icon.gmd_home)
+
                                 .withIdentifier(R.id.menu_home)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
                                 .withName(R.string.launches)
-                                .withIcon(GoogleMaterial.Icon.gmd_satellite)
+                                .withIcon(getResources().getDrawable(R.drawable.ic_satellite_white))
                                 .withIdentifier(R.id.menu_launches)
+                                .withIconTintingEnabled(true)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
                                 .withName("News and Events")
-                                .withIcon(GoogleMaterial.Icon.gmd_assessment)
+                                .withIcon(GoogleMaterial.Icon.gmd_assignment)
                                 .withIdentifier(R.id.menu_news)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
                                 .withName(R.string.vehicles)
-                                .withIcon(FontAwesome.Icon.faw_rocket)
+                                .withIcon(getResources().getDrawable(R.drawable.ic_rocket))
+                                .withIconTintingEnabled(true)
                                 .withIdentifier(R.id.menu_vehicle)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
@@ -237,7 +240,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withIconTintingEnabled(true)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
-                                .withIcon(GoogleMaterial.Icon.gmd_person_outline)
+                                .withIcon(FontAwesome.Icon.faw_user_astronaut)
                                 .withName(getString(R.string.astronauts))
                                 .withIdentifier(R.id.menu_astronauts)
                                 .withSelectable(true),
