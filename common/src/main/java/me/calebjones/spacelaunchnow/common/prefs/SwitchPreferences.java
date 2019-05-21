@@ -775,7 +775,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         return this.sharedPrefs.getBoolean(PREFS_SWITCH_JAPAN, true);
     }
 
-    public void setSwitchMojave(boolean key) {
+    public void setSwitchJapan(boolean key) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_SWITCH_JAPAN, key);
@@ -820,7 +820,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         setSwitchBO(true);
         setSwitchRL(true);
         setSwitchNorthrop(true);
-        setSwitchMojave(true);
+        setSwitchJapan(true);
         setSwitchNZ(true);
         setSwitchFG(true);
         setSwitchWallops(true);

@@ -12,7 +12,13 @@ A space launch tracker for Android using data from the Launch Library API.
 * Added Dark Mode for all users!
 
 ---
-### Version 3.0.3 (Latest)
+### Version 3.0.4 (Latest)
+#### Changelog
+* Fixed an issue where the Japanese switch wasn't working properly.
+* Fixed an issue with background workers not respecting schedules.
+
+
+### Version 3.0.3
 #### Changelog
 * Fixed an issue where sometimes notifications ignored Do Not Disturb settings.
 * Fixed an issue where launch history wasn't loading for specific SpaceX boosters.

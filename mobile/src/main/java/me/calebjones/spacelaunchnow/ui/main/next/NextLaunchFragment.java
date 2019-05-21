@@ -737,6 +737,13 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         checkAll();
     }
 
+    @OnClick(R.id.japan_switch)
+    public void japan_switch() {
+        confirm();
+        switchPreferences.setSwitchJapan(!switchPreferences.getSwitchJapan());
+        checkAll();
+    }
+
     @OnClick(R.id.all_switch)
     public void all_switch() {
         confirm();

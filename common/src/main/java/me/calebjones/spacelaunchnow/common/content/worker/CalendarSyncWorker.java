@@ -43,7 +43,9 @@ public class CalendarSyncWorker extends Worker {
         PeriodicWorkRequest calendarSync =
                 new PeriodicWorkRequest.Builder(CalendarSyncWorker.class, 3, TimeUnit.HOURS)
                         .setConstraints(constraints)
+                        .addTag("syncCalendar")
                         .build();
+        WorkManager.getInstance().cancelAllWorkByTag("syncCalendar");
         WorkManager.getInstance()
                 .enqueue(calendarSync);
     }
