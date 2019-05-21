@@ -44,17 +44,13 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.bumptech.glide.Glide;
-import com.jaredrummler.cyanea.Cyanea;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -166,7 +162,7 @@ public class Utils {
     public static void openCustomTab(Context context, String url) {
         CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
                 .addDefaultShareMenuItem()
-                .setToolbarColor(Cyanea.getInstance().getPrimary())
+                .setToolbarColor(Aesthetic.get().colorPrimary().blockingFirst())
                 .setShowTitle(true)
                 .build();
 

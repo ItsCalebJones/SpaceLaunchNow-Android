@@ -1,26 +1,19 @@
 package me.calebjones.spacelaunchnow.spacestation.detail;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.tabs.TabLayout;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-import com.mikepenz.iconics.IconicsDrawable;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -30,7 +23,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
@@ -41,10 +33,8 @@ import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.spacestation.R2;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
-import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.spacestation.R;
 import me.calebjones.spacelaunchnow.spacestation.data.Callbacks;
@@ -54,7 +44,7 @@ import me.calebjones.spacelaunchnow.spacestation.detail.fragments.expeditions.Sp
 import me.calebjones.spacelaunchnow.spacestation.detail.fragments.detail.SpacestationDetailFragment;
 import timber.log.Timber;
 
-public class SpacestationDetailsActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener, SwipeRefreshLayout.OnRefreshListener {
+public class SpacestationDetailsActivity extends BaseActivityOld implements AppBarLayout.OnOffsetChangedListener, SwipeRefreshLayout.OnRefreshListener {
 
 
     @BindView(R2.id.spacestation_profile_backdrop)
@@ -132,13 +122,13 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
         tabs.addTab(tabs.newTab().setText(getString(R.string.expeditions)));
         tabs.addTab(tabs.newTab().setText(getString(R.string.docked_alt)));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-        tabs.setTabTextColors(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()),
-                Utils.getTitleTextColor(getCyanea().getPrimary()));
-        tabs.setBackgroundColor(getCyanea().getPrimary());
+//        tabs.setTabTextColors(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()),
+//                Utils.getTitleTextColor(getCyanea().getPrimary()));
+//        tabs.setBackgroundColor(getCyanea().getPrimary());
         spacestationDataRepository = new SpacestationDataRepository(this, getRealm());
 
-        appbar.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(getCyanea().getPrimaryDark(), getWindow()));
-        appbar.addOnOffsetChangedListener(this);
+//        appbar.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(getCyanea().getPrimaryDark(), getWindow()));
+//        appbar.addOnOffsetChangedListener(this);
 
         //Grab information from Intent
         Intent mIntent = getIntent();
@@ -223,8 +213,8 @@ public class SpacestationDetailsActivity extends BaseActivity implements AppBarL
         try {
             spacestationTitle.setText(spacestation.getName());
             spacestationSubtitle.setText(spacestation.getType().getName());
-            spacestationSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
-            spacestationTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+//            spacestationSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+//            spacestationTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
             GlideApp.with(this)
                     .load(spacestation.getImageUrl())
                     .placeholder(R.drawable.placeholder)

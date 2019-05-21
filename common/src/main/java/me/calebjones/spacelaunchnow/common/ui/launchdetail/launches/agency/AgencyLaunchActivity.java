@@ -7,12 +7,12 @@ import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.appcompat.widget.Toolbar;
 
-import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -30,9 +30,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.BadgeTabLayout;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.responses.base.AgencyResponse;
@@ -42,7 +43,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class AgencyLaunchActivity extends BaseActivity implements UpcomingAgencyLaunchesFragment.OnFragmentInteractionListener,
+public class AgencyLaunchActivity extends BaseActivityOld implements UpcomingAgencyLaunchesFragment.OnFragmentInteractionListener,
         PreviousAgencyLaunchesFragment.OnFragmentInteractionListener, SwipeRefreshLayout.OnRefreshListener {
 
 
@@ -108,6 +109,8 @@ public class AgencyLaunchActivity extends BaseActivity implements UpcomingAgency
             }
         } );
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()),
+                Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
         swipeRefresh.setOnRefreshListener(this);
         getFeaturedAgencies();
     }

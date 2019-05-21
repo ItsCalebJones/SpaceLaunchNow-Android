@@ -69,6 +69,8 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
     public EventListFragment() {
     }
 
+
+
     @SuppressWarnings("unused")
     public static EventListFragment newInstance() {
         return new EventListFragment();
@@ -78,6 +80,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dataRepository = new EventDataRepository(getContext(), getRealm());
+        setScreenName("Events List Fragment");
     }
 
     @Override

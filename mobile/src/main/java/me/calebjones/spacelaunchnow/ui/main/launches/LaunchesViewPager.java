@@ -53,8 +53,8 @@ public class LaunchesViewPager extends BaseFragment {
         View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
-        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
-                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+//        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
+//                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
 //        tabLayout.addTab(tabLayout.newTab().setText("Following"));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.upcoming));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.previous));
@@ -122,7 +122,7 @@ public class LaunchesViewPager extends BaseFragment {
         super.onDestroyView();
         Timber.v("onDestroyView");
         viewPager.clearOnPageChangeListeners();
-        tabLayout.setOnTabSelectedListener(null);
+        tabLayout.clearOnTabSelectedListeners();
         pagerAdapter = null;
     }
 

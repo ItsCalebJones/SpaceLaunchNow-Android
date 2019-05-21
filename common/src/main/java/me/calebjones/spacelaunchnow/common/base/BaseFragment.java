@@ -6,17 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.jaredrummler.cyanea.app.CyaneaFragment;
+import androidx.fragment.app.Fragment;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import io.realm.Realm;
 
-public class BaseFragment extends CyaneaFragment {
+public class BaseFragment extends Fragment {
     private Realm realm;
     private String screenName = "Unknown (Name not set)";
+    private FirebaseAnalytics firebaseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseAnalytics = FirebaseAnalytics.getInstance(getContext());
     }
 
     @Override
@@ -48,6 +52,9 @@ public class BaseFragment extends CyaneaFragment {
 
     @Override
     public void onResume() {
+        if (getActivity() != null) {
+            firebaseAnalytics.setCurrentScreen(getActivity(), screenName, null);
+        }
         super.onResume();
     }
 
@@ -57,13 +64,13 @@ public class BaseFragment extends CyaneaFragment {
     }
 
     public Realm getRealm() {
-        if (realm != null && !realm.isClosed()){
+        if (realm != null && !realm.isClosed()) {
             realm = Realm.getDefaultInstance();
         }
         return realm;
     }
 
-    public void setScreenName(String screenName){
+    public void setScreenName(String screenName) {
         this.screenName = screenName;
     }
 }

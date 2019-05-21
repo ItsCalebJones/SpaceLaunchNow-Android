@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/material_baseline_grid_2x"
     android:layout_marginTop="@dimen/material_baseline_grid_1x"
+    android:background="?cardBackground"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp"
     app:cardPreventCornerOverlap="true"

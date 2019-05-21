@@ -6,9 +6,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.appcompat.widget.Toolbar;
 import me.calebjones.spacelaunchnow.common.R;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 
-public class WebViewFallbackActivity extends BaseActivity {
+public class WebViewFallbackActivity extends BaseActivityOld {
     public static final String EXTRA_URL = "extra.url";
 
     @Override

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_favorite"
+        android:enabled="true"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/favorites"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_launches"
+        android:enabled="true"
+        android:icon="@drawable/ic_satellite_white"
+        android:title="@string/launches"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_news"
+        android:enabled="true"
+        android:icon="@drawable/ic_assignment_white"
+        android:title="@string/news"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_vehicle"
+        android:enabled="true"
+        android:icon="@drawable/ic_rocket"
+        android:title="@string/vehicles"
+        app:showAsAction="ifRoom" />
+</menu>

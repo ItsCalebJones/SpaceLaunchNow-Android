@@ -93,6 +93,7 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dataRepository = new AstronautDataRepository(getContext(), getRealm());
+        setScreenName("Astronaut List Fragment");
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -35,6 +36,13 @@ public class TwitterFragment extends BaseFragment {
     private LinearLayoutManager linearLayoutManager;
     private TweetTimelineRecyclerViewAdapter timelineAdapter;
     private TwitterListTimeline timeline;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setScreenName("Twitter Fragment");
+    }
 
 
     @Override
@@ -92,7 +100,7 @@ public class TwitterFragment extends BaseFragment {
                 .slugWithOwnerScreenName("space-launch-news", "SpaceLaunchNow")
                 .build();
         int style;
-        if (getCyanea().isDark()){
+        if (Aesthetic.get().isDark().blockingFirst(false)){
             style = R.style.SpaceLaunchNowTweetStyleDark;
         } else {
             style = R.style.SpaceLaunchNowTweetStyle;

@@ -2,8 +2,9 @@
 ext {
     app = [
             versionMajor: 3,
-            versionMinor: 0,
-            versionPatch: 4
+            versionMinor: 1,
+            versionPatch: 0
+
 
     ]
     // Sdk and tools
@@ -96,12 +97,13 @@ ext.deps = [
         converter_gson                 : "com.squareup.retrofit2:converter-gson:2.3.0",
         adapter_rxjava                 : "com.squareup.retrofit2:adapter-rxjava2:2.4.0",
         gson                           : "com.google.code.gson:gson:2.8.4",
+        aesthetic                      : "com.afollestad:aesthetic:1.0.0-beta05",
 
         //Views
+        colorPicker                    : "com.jaredrummler:colorpicker:1.1.0",
         materialdrawer                 : "com.mikepenz:materialdrawer:6.1.0",
         materialDialogCore             : "com.afollestad.material-dialogs:core:0.9.6.0",
         materialDialogCommons          : "com.afollestad.material-dialogs:commons:0.9.6.0",
-        cyanea                         : "com.github.jaredrummler:Cyanea:e3a38f0d13",
         expandableLayout               : "net.cachapa.expandablelayout:expandablelayout:2.9.2",
         expandableTextview             : "at.blogc:expandabletextview:1.0.5",
         circleImageView                : "de.hdodenhof:circleimageview:2.2.0",
@@ -114,7 +116,6 @@ ext.deps = [
         GDPRDialog                     : "com.github.MFlisar:GDPRDialog:1.2.8",
         materialAbout                  : "com.github.jrvansuita:MaterialAbout:0.2.3",
         markdownView                   : "com.github.mukeshsolanki:MarkdownView-Android:1.0.4",
-        colorpicker                    : "com.jaredrummler:colorpicker:1.0.5",
         onboarding                     : "com.codemybrainsout.onboarding:onboarder:1.0.4",
         materialdaterangepicker        : "com.borax12.materialdaterangepicker:library:1.9",
         recyclerview_fastscroll        : "com.simplecityapps:recyclerview-fastscroll:1.0.20",

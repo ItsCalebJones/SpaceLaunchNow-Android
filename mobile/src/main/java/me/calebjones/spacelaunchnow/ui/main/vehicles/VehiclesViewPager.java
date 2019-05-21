@@ -47,22 +47,18 @@ public class VehiclesViewPager extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        int mlayout;
         this.context = getActivity().getApplicationContext();
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
         setHasOptionsMenu(true);
 
-        View inflatedView = inflater.inflate(R.layout.fragment_vehicles_viewpager, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.launchers));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.orbiters));
         viewPager = inflatedView.findViewById(R.id.viewpager);
-
-        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
-                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
 
         pagerAdapter = new PagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount());

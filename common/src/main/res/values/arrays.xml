@@ -13,6 +13,20 @@
         <item>Resigned during Training</item>
 
     </string-array>
+    <color name="custom_background_material_light">#FFFAFAFA</color>
+    <color name="custom_background_material_dark">#FF303030</color>
+    <color name="custom_background_black">#FF000000</color>
+    <color name="custom_background_dark_green">#FF182628</color>
+    <color name="custom_background_dark_blue">#FF21263A</color>
+
+    <integer-array name="background_color_presets">
+        <item>@color/custom_background_material_light</item>
+        <item>@color/custom_background_material_dark</item>
+        <item>@color/custom_background_black</item>
+        <item>@color/custom_background_dark_green</item>
+        <item>@color/custom_background_dark_blue</item>
+    </integer-array>
+
     <integer-array name="status_value">
         <item>1</item>
         <item>2</item>

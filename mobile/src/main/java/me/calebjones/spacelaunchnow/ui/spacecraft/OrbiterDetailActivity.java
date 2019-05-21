@@ -2,27 +2,21 @@ package me.calebjones.spacelaunchnow.ui.spacecraft;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.appcompat.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
+
 import android.view.MenuItem;
 import android.view.ViewPropertyAnimator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-import com.mikepenz.iconics.IconicsDrawable;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +25,7 @@ import io.realm.RealmResults;
 
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.R;
-import me.calebjones.spacelaunchnow.common.base.BaseActivity;
+import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.utils.CustomOnOffsetChangedListener;
@@ -41,7 +35,7 @@ import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import timber.log.Timber;
 
-public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener {
+public class OrbiterDetailActivity extends BaseActivityOld implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PERCENTAGE_TO_ANIMATE_AVATAR = 20;
     private boolean mIsAvatarShown = true;
@@ -73,7 +67,7 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        statusColor = getCyanea().getPrimaryDark();
+//        statusColor = getCyanea().getPrimaryDark();
 
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         toolbarSubTitle = findViewById(R.id.detail_sub_title);
@@ -131,9 +125,9 @@ public class OrbiterDetailActivity extends BaseActivity implements AppBarLayout.
         } else {
 
             toolbarSubTitle.setText(agency.getType());
-            toolbarSubTitle.setTextColor(me.calebjones.spacelaunchnow.common.utils.Utils.getTitleTextColor(getCyanea().getPrimary()));
+//            toolbarSubTitle.setTextColor(me.calebjones.spacelaunchnow.common.utils.Utils.getTitleTextColor(getCyanea().getPrimary()));
             toolbarTitle.setText(agency.getName());
-            toolbarTitle.setTextColor(me.calebjones.spacelaunchnow.common.utils.Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+//            toolbarTitle.setTextColor(me.calebjones.spacelaunchnow.common.utils.Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
 
 
             if (agency.getSpacecraftConfigs() != null) {

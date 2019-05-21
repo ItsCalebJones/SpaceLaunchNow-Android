@@ -7,13 +7,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.jaredrummler.cyanea.app.CyaneaAppCompatActivity;
+import com.afollestad.aesthetic.AestheticActivity;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.utils.ActivityUtils;
 
-public class DebugActivity extends CyaneaAppCompatActivity implements DebugContract.NavigatorProvider {
+public class DebugActivity extends AestheticActivity implements DebugContract.NavigatorProvider {
 
     private DebugPresenter debugPresenter;
 

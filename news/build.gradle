@@ -35,6 +35,7 @@ android {
 
 dependencies {
     implementation project(':common')
+    implementation project(':events')
     implementation project(path: ':data')
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -42,6 +43,7 @@ dependencies {
     implementation deps.appcompat
     implementation deps.lifecycleExtensions
     implementation deps.browser
+    implementation deps.aesthetic
 
     implementation deps.kotlin_stdlib_jdk7
 
@@ -49,7 +51,6 @@ dependencies {
     implementation deps.retrofit
     implementation deps.converter_gson
     implementation deps.gson
-    implementation deps.cyanea
     implementation deps.statefulLayout
     implementation deps.okhttp
     implementation deps.okhttpLogging

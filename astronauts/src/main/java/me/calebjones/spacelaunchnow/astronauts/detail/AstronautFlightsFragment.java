@@ -11,6 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.afollestad.aesthetic.Aesthetic;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -48,7 +51,7 @@ public class AstronautFlightsFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.astronaut_flight_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         linearLayoutManager = new LinearLayoutManager(context);
-        adapter = new ListAdapter(context, getCyanea().isDark());
+        adapter = new ListAdapter(context, Aesthetic.get().isDark().blockingFirst(false));
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
         recyclerView.setAdapter(adapter);

@@ -29,9 +29,9 @@
     <!--<color name="dark_theme_secondary_text_color">#b3ffffff</color>-->
     <color name="dark_theme_background">#ff303030</color>
     <!--<color name="dark_card_background">#424242</color>-->
-    <!--<color name="darkPrimary">#455a64</color>-->
+    <color name="darkPrimary">#455a64</color>
     <!--<color name="darkPrimary_dark">#ff37474f</color>-->
-    <!--<color name="darkAccent">#F44336</color>-->
+    <color name="darkAccent">#F44336</color>
     <!--<color name="darkIcons">#ffffff</color>-->
 
 

@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.button.MaterialButton;
 
@@ -67,6 +68,9 @@ import timber.log.Timber;
 
 public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final int FAB_MODE_FILTER = 1;
+    private static final int FAB_MODE_CLOSE = 2;
+    private static final int FAB_MODE_APPLY = 3;
     @BindView(R.id.van_switch)
     AppCompatCheckBox vanSwitch;
     @BindView(R.id.ples_switch)
@@ -186,7 +190,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         filterViewShowing = false;
 
         if (adapter == null) {
-            adapter = new CardAdapter(context, mainActivity.getCyanea().getPrimary());
+            adapter = new CardAdapter(context, Aesthetic.get().colorPrimary().blockingFirst());
         }
 
         super.onCreateView(inflater, container, savedInstanceState);
@@ -196,11 +200,17 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         unbinder = ButterKnife.bind(this, view);
 
         setUpSwitches();
-        if (!Utils.getIconColor(getCyanea().getPrimary())){
-            colorReveal.setBackgroundColor(getCyanea().getAccent());
+        //TODO
+        if (!Utils.getIconColor(Aesthetic.get().colorPrimary().blockingFirst())){
+            int color = Aesthetic.get().colorAccent().blockingFirst();
+            colorReveal.setBackgroundColor(color);
+            fab.setBackgroundColor(color);
         } else {
-            colorReveal.setBackgroundColor(getCyanea().getPrimary());
+            int color = Aesthetic.get().colorPrimary().blockingFirst();
+            colorReveal.setBackgroundColor(Aesthetic.get().colorPrimary().blockingFirst());
+            fab.setBackgroundColor(color);
         }
+
         fabExtensionAnimator = new FabExtensionAnimator(fab);
         fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)), true);
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showFilters")) {
@@ -208,7 +218,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             colorReveal.setVisibility(View.VISIBLE);
             filterViewShowing = true;
             fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Close", ContextCompat.getDrawable(context, R.drawable.ic_close)), true);
-            mainActivity.hideBottomNavigation();
+
             mainActivity.checkHideAd();
             mSwipeRefreshLayout.setEnabled(false);
         }
@@ -329,7 +339,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             anim.start();
 
 
-            mainActivity.showBottomNavigation();
             mainActivity.checkShowAd();
             mSwipeRefreshLayout.setEnabled(true);
         } catch (IllegalStateException exception) {
@@ -362,7 +371,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             colorReveal.setVisibility(View.VISIBLE);
             anim.start();
 
-            mainActivity.hideBottomNavigation();
             mainActivity.checkHideAd();
             mSwipeRefreshLayout.setEnabled(false);
         } catch (IllegalStateException exception) {
@@ -481,7 +489,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         }
 
         if (filterViewShowing) {
-            mainActivity.hideBottomNavigation();
             mainActivity.checkHideAd();
         }
     }

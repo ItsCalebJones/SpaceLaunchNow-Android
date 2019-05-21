@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="8dp"
+        android:background="?colorPrimary"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/astronaut_collapsing"
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            android:background="?colorPrimary"
             app:contentScrim="?colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
@@ -51,6 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-48dp"
+            android:background="?colorPrimary"
             android:minHeight="?attr/actionBarSize"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
@@ -58,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:background="?colorPrimary"
             android:orientation="vertical"
             android:paddingBottom="8dp">
 
@@ -89,6 +93,7 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/astronaut_detail_tabs"
+            android:background="?colorPrimary"
             android:layout_width="fill_parent"
             android:layout_height="?attr/actionBarSize" />
 
