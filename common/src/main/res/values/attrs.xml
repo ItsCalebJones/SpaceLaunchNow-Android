@@ -9,4 +9,5 @@
     <attr format="color" name="fabAccent"/>
     <attr format="color" name="cardBackground"/>
     <attr format="color" name="colorCardHeaderBackground"/>
+    <attr format="color" name="colorTextPrimaryInverse"/>
 </resources>

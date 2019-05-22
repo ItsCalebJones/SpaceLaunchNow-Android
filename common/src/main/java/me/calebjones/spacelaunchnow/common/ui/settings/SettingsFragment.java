@@ -49,6 +49,7 @@ import me.calebjones.spacelaunchnow.common.content.worker.CalendarSyncWorker;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.common.ui.settings.util.CalendarPermissionListener;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import timber.log.Timber;
 
@@ -329,6 +330,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             .colorAccent(Prefs.getInt("custom_themes_accent",
                                     R.color.darkAccent),
                                     null)
+                            .attribute(R.attr.colorTextPrimaryInverse, getResources().getColor(R.color.material_drawer_background), null, true)
                             .attribute(R.attr.fabAccent, getResources().getColor(R.color.darkAccent), null, true)
                             .activityTheme(R.style.BaseAppTheme_DarkBackground)
                             .apply();
@@ -351,6 +353,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                             .colorAccent(Prefs.getInt("custom_themes_accent",
                                     R.color.colorAccent),
                                     null)
+                            .attribute(R.attr.colorTextPrimaryInverse, getResources().getColor(R.color.material_drawer_background), null, true)
                             .attribute(R.attr.fabAccent, getResources().getColor(R.color.colorAccent), null, true)
                             .activityTheme(R.style.BaseAppTheme_LightBackground)
                             .apply();
@@ -449,8 +452,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         themePrimary = findPreference("custom_themes_primary");
         themePrimary.setOnPreferenceChangeListener((preference, newValue) -> {
+
             Aesthetic.get()
                     .colorPrimary( (int) newValue, null)
+                    .attribute(R.attr.colorTextPrimaryInverse, Utils.getTitleTextColor((int) newValue), null, true)
                     .apply();
             return true;
         });
