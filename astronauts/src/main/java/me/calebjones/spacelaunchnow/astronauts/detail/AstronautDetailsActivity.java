@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -39,6 +40,7 @@ import me.calebjones.spacelaunchnow.astronauts.data.Callbacks;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
 import me.spacelaunchnow.astronauts.R2;
@@ -213,10 +215,10 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         this.astronaut = astronaut;
         try {
             astronautTitle.setText(astronaut.getName());
-//            astronautTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+            astronautTitle.setTextColor(Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
 
             astronautSubtitle.setText(astronaut.getNationality());
-//            astronautSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(Aesthetic.get().isDark().blockingFirst(false)));
+            astronautSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
 
             GlideApp.with(this)
                     .load(astronaut.getProfileImage())

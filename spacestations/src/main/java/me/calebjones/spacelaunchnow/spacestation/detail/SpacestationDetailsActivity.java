@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -33,6 +34,7 @@ import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.spacestation.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
@@ -213,8 +215,8 @@ public class SpacestationDetailsActivity extends BaseActivityOld implements AppB
         try {
             spacestationTitle.setText(spacestation.getName());
             spacestationSubtitle.setText(spacestation.getType().getName());
-//            spacestationSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
-//            spacestationTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+            spacestationSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
+            spacestationTitle.setTextColor(Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
             GlideApp.with(this)
                     .load(spacestation.getImageUrl())
                     .placeholder(R.drawable.placeholder)

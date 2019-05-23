@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -262,12 +263,12 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
     private void updateViews(Event event) {
         this.event = event;
         eventTitle.setText(event.getName());
-//        eventTitle.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+        eventTitle.setTextColor(Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
 
         if (event.getLocation() != null) {
             eventSubtitle.setText(event.getLocation());
         }
-//        eventSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+        eventSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
 
         eventCardTitle.setText("Overview");
         eventType.setText(event.getType().getName());

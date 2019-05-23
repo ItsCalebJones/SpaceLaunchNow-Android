@@ -359,9 +359,9 @@ public class LaunchDetailActivity extends BaseActivity
             findProfileLogo(launch);
             findRocketImage(launch);
             detail_mission_location.setText(launch.getPad().getName());
-//            detail_mission_location.setTextColor(Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
+            detail_mission_location.setTextColor(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
             detail_rocket.setText(launch.getName());
-//            detail_rocket.setTextColor(Utils.getTitleTextColor(getCyanea().getPrimary()));
+            detail_rocket.setTextColor(Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
         } else if (this.isDestroyed()) {
             Timber.v("DetailLaunch is destroyed, stopping loading data.");
         }
@@ -381,7 +381,6 @@ public class LaunchDetailActivity extends BaseActivity
     }
 
     private void findProfileLogo(Launch launch) {
-
         String locationCountryCode;
         try {
             if (launch.getRocket().getConfiguration().getLaunchServiceProvider() != null) {

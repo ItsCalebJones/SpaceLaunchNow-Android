@@ -201,15 +201,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
         setUpSwitches();
         //TODO
-        if (!Utils.getIconColor(Aesthetic.get().colorPrimary().blockingFirst())){
-            int color = Aesthetic.get().colorAccent().blockingFirst();
-            colorReveal.setBackgroundColor(color);
-            fab.setBackgroundColor(color);
-        } else {
-            int color = Aesthetic.get().colorPrimary().blockingFirst();
-            colorReveal.setBackgroundColor(Aesthetic.get().colorPrimary().blockingFirst());
-            fab.setBackgroundColor(color);
-        }
+        setBackgroundColor();
 
         fabExtensionAnimator = new FabExtensionAnimator(fab);
         fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)), true);
@@ -255,6 +247,16 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         no_data.setVisibility(View.VISIBLE);
         viewMoreLaunches.setVisibility(View.GONE);
         return view;
+    }
+
+    private void setBackgroundColor() {
+        if (!Utils.getIconColor(Aesthetic.get().colorPrimary().blockingFirst())){
+            int color = Aesthetic.get().colorAccent().blockingFirst();
+            colorReveal.setBackgroundColor(color);
+        } else {
+            int color = Aesthetic.get().colorPrimary().blockingFirst();
+            colorReveal.setBackgroundColor(Aesthetic.get().colorPrimary().blockingFirst());
+        }
     }
 
     private void setFabExtended(boolean extended) {
@@ -312,6 +314,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void hideView() {
+        setBackgroundColor();
         try {
             // get the center for the clipping circle
             int x = (int) (fab.getX() + fab.getWidth() / 2);
@@ -348,6 +351,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void showView() {
+        setBackgroundColor();
         try {
             // get the center for the clipping circle
             int x = (int) (fab.getX() + fab.getWidth() / 2);
