@@ -89,8 +89,8 @@ dependencies {
     // YouTube Player
     implementation deps.androidyoutubeplayer_core
     implementation deps.androidyoutubeplayer_chromecast
-    implementation deps.rxjava
-    implementation deps.rxandroid
+    api deps.rxjava
+    api deps.rxandroid
     implementation deps.transitionseverywhere
     implementation deps.customtabs
     implementation deps.preferences

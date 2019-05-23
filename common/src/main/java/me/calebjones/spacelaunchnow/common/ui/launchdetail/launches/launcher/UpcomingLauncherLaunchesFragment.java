@@ -113,7 +113,7 @@ public class UpcomingLauncherLaunchesFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_launch_list, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        adapter = new ListAdapter(context, Aesthetic.get().isDark().blockingFirst(false));
+        adapter = new ListAdapter(context, Aesthetic.get().isDark().blockingFirst());
         linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));

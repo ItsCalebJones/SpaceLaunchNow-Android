@@ -108,6 +108,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     Toolbar toolbar;
     @BindView(R.id.appBarLayout)
     AppBarLayout appBarLayout;
+    @BindView(R.id.navigation_view)
+    BottomNavigationBar bottomNavigationView;
     private LaunchesViewPager mlaunchesViewPager;
     private NextLaunchFragment mUpcomingFragment;
     private NewsViewPager mNewsViewpagerFragment;
@@ -306,6 +308,18 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .bottomNavigationIconTextMode(BottomNavIconTextMode.BLACK_WHITE_AUTO)
                 .apply();
 
+        bottomNavigationView
+                .addItem(new BottomNavigationItem(R.drawable.ic_favorite, getString(R.string.favorites))
+                        .setActiveColorResource(R.color.md_red_700))
+                .addItem(new BottomNavigationItem(R.drawable.ic_satellite_white, getString(R.string.launches))
+                        .setActiveColorResource(R.color.primary))
+                .addItem(new BottomNavigationItem(R.drawable.ic_assignment_white, getString(R.string.news))
+                        .setActiveColorResource(R.color.material_color_deep_orange_500))
+                .addItem(new BottomNavigationItem(R.drawable.ic_rocket, getString(R.string.vehicles))
+                        .setActiveColorResource(R.color.material_color_blue_grey_500))
+                .setBarBackgroundColor(String.format("#%06X", 0xFFFFFF & Aesthetic.get().colorWindowBackground().blockingFirst()))
+                .setFirstSelectedPosition(0)
+                .initialise();
 
         if (null == savedInstanceState) {
             mNavItemId = R.id.menu_home;

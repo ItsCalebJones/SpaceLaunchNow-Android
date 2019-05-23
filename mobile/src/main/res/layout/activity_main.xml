@@ -38,6 +38,26 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
+            <com.ashokvarma.bottomnavigation.BottomNavigationBar
+                android:id="@+id/navigation_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="8dp"
+                android:layout_marginTop="2dp"
+                android:clipToPadding="false"
+                android:tag=":aesthetic_ignore"
+                android:visibility="gone"
+                app:bnbElevation="6dp"
+                app:bnbAutoHideEnabled="true"
+                app:bnbActiveColor="?android:attr/textColorPrimary"
+                app:bnbInactiveColor="?android:attr/textColorSecondary"
+                app:bnbMode="mode_fixed"
+                app:bnbBackgroundStyle="background_style_static"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <FrameLayout
                 android:id="@+id/flContent"
                 android:layout_width="match_parent"
@@ -58,7 +78,7 @@
                 android:visibility="gone"
                 app:adSize="SMART_BANNER"
                 app:adUnitId="ca-app-pub-9824528399164059/9713798255"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/navigation_view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/flContent" />

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.crashlytics.android.Crashlytics;
 
 import java.lang.reflect.Field;
@@ -92,7 +93,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
         if (adapter == null) {
             Timber.v("Creating new ListAdapter");
-            adapter = new ListAdapter(getContext(), false);
+            adapter = new ListAdapter(getContext(), Aesthetic.get().isDark().blockingFirst());
         }
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);

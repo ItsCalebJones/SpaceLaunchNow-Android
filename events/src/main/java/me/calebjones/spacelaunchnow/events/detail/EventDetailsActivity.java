@@ -182,7 +182,7 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
 //        }
 
         linearLayoutManager = new LinearLayoutManager(this);
-        adapter = new ListAdapter(this, false);
+        adapter = new ListAdapter(this, Aesthetic.get().isDark().blockingFirst());
         launchRecyclerView.setLayoutManager(linearLayoutManager);
         launchRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
         launchRecyclerView.setAdapter(adapter);

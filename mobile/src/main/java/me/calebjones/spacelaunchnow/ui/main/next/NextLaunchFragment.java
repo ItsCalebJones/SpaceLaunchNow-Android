@@ -7,6 +7,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -214,7 +215,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             mainActivity.checkHideAd();
             mSwipeRefreshLayout.setEnabled(false);
         }
+        fab.setTag(":aesthetic_ignore");
         fab.setOnClickListener(v -> checkFilter());
+        fab.setBackgroundTintList(ColorStateList.valueOf(Aesthetic.get().colorAccent().blockingFirst()));
         fab.setVisibility(View.GONE);
         if (switchPreferences.getNextFABHidden()) {
             fab.setVisibility(View.GONE);

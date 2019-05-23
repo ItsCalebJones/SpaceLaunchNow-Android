@@ -599,6 +599,8 @@ public class NotificationBuilder {
                 .setSmallIcon(R.drawable.ic_rocket)
                 .setAutoCancel(true)
                 .extend(wearableExtender)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(article.getTitle()))
                 .setContentIntent(eventIntent);
 
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
