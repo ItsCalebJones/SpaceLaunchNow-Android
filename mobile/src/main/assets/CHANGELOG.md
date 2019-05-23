@@ -10,6 +10,7 @@ A space launch tracker for Android using data from the Launch Library API.
 #### Changelog
 * Re-engineered the theme engine to support more varied styles. Unfortunately this means previous theme settings will be reset.
 * Added Dark Mode for all users!
+* Fix an issue where launch data for SpaceX cores wasn't loading for some users.
 
 ---
 ### Version 3.0.4 (Latest)
