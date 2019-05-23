@@ -8,7 +8,7 @@ A space launch tracker for Android using data from the Launch Library API.
 
 ### Version 3.1.0 (Latest)
 #### Changelog
-* Re-engineered the theme engine to support more varied styles.
+* Re-engineered the theme engine to support more varied styles. Unfortunately this means previous theme settings will be reset.
 * Added Dark Mode for all users!
 
 ---

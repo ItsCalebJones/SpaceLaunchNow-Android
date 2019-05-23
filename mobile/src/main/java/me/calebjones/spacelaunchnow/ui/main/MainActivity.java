@@ -320,7 +320,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             showFilter = true;
             mNavItemId = R.id.menu_home;
         } else if (getIntent().getBooleanExtra("SHOW_EVENTS", false)) {
-            mNavItemId = R.id.menu_events;
+            mNavItemId = R.id.menu_news;
+            navigate(mNavItemId);
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
