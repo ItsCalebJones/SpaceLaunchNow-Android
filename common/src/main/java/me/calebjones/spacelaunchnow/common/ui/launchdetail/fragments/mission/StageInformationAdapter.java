@@ -60,7 +60,7 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
         if (stage.getLauncher() != null) {
             Launcher launcher = stage.getLauncher();
             holder.viewCoreLaunches.setVisibility(View.VISIBLE);
-            holder.viewCoreLaunches.setText(String.format("View %s Launches", stage.getLauncher().getSerialNumber()));
+            holder.viewCoreLaunches.setText(String.format(context.getString(R.string.view_x_launches), stage.getLauncher().getSerialNumber()));
             holder.viewCoreLaunches.setOnClickListener(v -> {
                 Intent launches = new Intent(context, LauncherLaunchActivity.class);
                 launches.putExtra("serialNumber", launcher.getSerialNumber());
@@ -73,9 +73,9 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
                         .placeholder(R.drawable.placeholder)
                         .into(holder.coreImage);
             }
-            holder.coreInformation.setText(String.format("%s Information", launcher.getSerialNumber()));
+            holder.coreInformation.setText(String.format(context.getString(R.string.booster_information), launcher.getSerialNumber()));
             if (stage.getType() != null) {
-                holder.coreInformationSubtitle.setText(String.format("First Stage - %s", stage.getType()));
+                holder.coreInformationSubtitle.setText(String.format(context.getString(R.string.first_stage_x), stage.getType()));
             }
             holder.details.setText(launcher.getDetails());
             holder.serialNumberText.setText(stage.getLauncher().getSerialNumber());
@@ -95,7 +95,7 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
         }
 
         if (launch.getMission() != null && launch.getMission().getName() != null) {
-            holder.landingInformationTitle.setText(String.format("%s Landing Information", launch.getMission().getName()));
+            holder.landingInformationTitle.setText(String.format(context.getString(R.string.x_landing_information), launch.getMission().getName()));
         }
 
         holder.landingGroup.setVisibility(View.GONE);
@@ -153,7 +153,7 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
                 holder.landingMore.setVisibility(View.VISIBLE);
                 holder.landingMore.setOnClickListener((View v) -> {
                     MaterialDialog dialog = new MaterialDialog.Builder(context)
-                            .title("Additional Landing Information")
+                            .title(context.getString(R.string.additional_landing_information))
                             .customView(R.layout.landing_information, true)
                             .positiveText("Close")
                             .show();

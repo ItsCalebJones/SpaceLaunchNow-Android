@@ -225,7 +225,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withIconTintingEnabled(true)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
-                                .withName("News and Events")
+                                .withName(R.string.news_and_events)
                                 .withIcon(GoogleMaterial.Icon.gmd_assignment)
                                 .withIdentifier(R.id.menu_news)
                                 .withSelectable(true),

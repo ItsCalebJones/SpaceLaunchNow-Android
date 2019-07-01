@@ -163,7 +163,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
     private void fetchPastWeather() {
         future = false;
-        weatherCard.setTitle("Launch Day Weather");
+        weatherCard.setTitle(getString(R.string.launch_day_weather));
         if (detailLaunch.getPad() != null) {
 
             Pad pad = detailLaunch.getPad();
@@ -427,7 +427,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                     videosEmpty.setVisibility(View.VISIBLE);
                 }
                 watchButton.setVisibility(View.GONE);
-                errorMessage.setText("Video sources unavailable.");
+                errorMessage.setText(getString(R.string.video_source_unavailable));
                 errorMessage.setVisibility(View.VISIBLE);
             }
 
@@ -435,7 +435,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             mDate = detailLaunch.getNet();
             dateText = output.format(mDate);
 
-            launchDate.setText(Html.fromHtml("<b>Launch Date</b><br>" + dateText));
+            launchDate.setText(Html.fromHtml(R.string.launch_date + dateText));
 
             if (detailLaunch.getWindowStart() != null && detailLaunch.getWindowStart() != null) {
                 setWindowStamp();
@@ -509,7 +509,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
             TimeZone timeZone = dateFormat.getTimeZone();
 
-            launchWindowText.setText(Html.fromHtml(String.format("<b>Instantaneous Launch Window</b><br>%s",
+            launchWindowText.setText(Html.fromHtml(String.format(getString(R.string.instantaneous_launch_window),
                     dateFormat.format(windowStart))));
         } else if (windowStart.after(windowEnd)) {
             // Launch data is not trustworthy - start is after end.
@@ -521,7 +521,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             // Launch Window is properly configured
 
             String difference = Utils.printDifference(windowStart, windowEnd);
-            launchWindowText.setText(Html.fromHtml(String.format("<b>Launch Window</b><br>%s - %s<br>%s",
+            launchWindowText.setText(Html.fromHtml(String.format(getString(R.string.launch_window_extras),
                     dateFormat.format(windowStart),
                     dateFormat.format(windowEnd),
                     difference)));

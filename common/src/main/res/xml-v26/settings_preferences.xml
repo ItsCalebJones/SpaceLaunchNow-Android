@@ -9,9 +9,9 @@
         <SwitchPreference
             android:key="locale_changer"
             android:defaultValue="true"
-            android:summaryOn="Use your devices language."
-            android:summaryOff="Force English language."
-            android:title="Use System Language"
+            android:summaryOn="@string/force_english_off"
+            android:summaryOff="@string/force_english"
+            android:title="@string/use_system_language"
             app:iconSpaceReserved="false"/>
         <SwitchPreference
             android:defaultValue="true"
@@ -52,14 +52,14 @@
             app:iconSpaceReserved="false"
             android:defaultValue="false"
             android:key="custom_themes_is_dark"
-            android:title="Dark Theme">
+            android:title="@string/dark_theme">
         </SwitchPreference>
         <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
             android:defaultValue="0xFF2196F3"
             app:iconSpaceReserved="false"
             android:key="custom_themes_primary"
-            android:title="Primary Color"
-            android:summary="Set a custom primary color."
+            android:title="@string/primary_color_title"
+            android:summary="@string/primary_color_summary"
             app:cpv_allowPresets="true"
             app:cpv_showColorShades="true"
             app:cpv_previewSize="large"
@@ -68,8 +68,8 @@
             android:defaultValue="0xFFFF5252"
             app:iconSpaceReserved="false"
             android:key="custom_themes_accent"
-            android:title="Accent Color"
-            android:summary="Set a custom accent color."
+            android:title="@string/accent_color_title"
+            android:summary="@string/accent_color_summary"
             app:cpv_allowPresets="true"
             app:cpv_showColorShades="true"
             app:cpv_previewSize="large"
@@ -78,8 +78,8 @@
             android:defaultValue="@color/custom_background_material_light"
             app:iconSpaceReserved="false"
             android:key="custom_themes_background"
-            android:title="Background Color"
-            android:summary="Set a custom background color."
+            android:title="@string/background_color_title"
+            android:summary="@string/background_color_summary"
             app:cpv_allowPresets="true"
             app:cpv_colorPresets="@array/background_color_presets"
             app:cpv_showColorShades="false"
