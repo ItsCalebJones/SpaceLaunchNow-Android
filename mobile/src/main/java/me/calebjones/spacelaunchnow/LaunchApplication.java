@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
@@ -36,8 +37,6 @@ import java.util.TimeZone;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.multidex.MultiDex;
-import androidx.multidex.MultiDexApplication;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -58,7 +57,7 @@ import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.analytics.CrashlyticsTree;
 import timber.log.Timber;
 
-public class LaunchApplication extends MultiDexApplication {
+public class LaunchApplication extends Application {
 
     public static final String TAG = "Space Launch Now";
     private static ListPreferences sharedPreference;
@@ -67,12 +66,6 @@ public class LaunchApplication extends MultiDexApplication {
     private Context context;
     private FirebaseMessaging firebaseMessaging;
     private BillingProcessor bp;
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
 
     @Override
     public void onCreate() {
