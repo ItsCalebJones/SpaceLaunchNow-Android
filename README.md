@@ -43,6 +43,7 @@ Add a api_keys.xml to res/values.
     <string name="GoogleMapsKey">yourGoogleMapsKey</string>
     <string name="banner_ad_unit_id">yourAdUnitID</string>
     <string name="rsa_key">yourGoogleBillingRSAKey</string>
+    <string name="sln_token">noNeedToChangeThis</string>
 </resources>
 ```
 
@@ -55,7 +56,25 @@ AI_VERSION_CODE=3
 ```
 
 ### Replace google-services.json 
-Replce the google-services.json with your own.
+Replace the google-services.json with your own.
+
+### AndroidX
+Update `gradle.properties` to include the following lines if you have issues pertaining to AndroidX,
+e.g. an Adapter or Activity doesn't match the required type:
+
+```groovy
+android.useAndroidX=true
+android.enableJetifier=true
+```
+
+### Memory issues when building
+If you're seeing stalled command-line builds, or warnings/errors pertaining to running out of memory
+while building, you can increase the amount of memory allocated to Gradle using the following line
+in `gradle.properties`
+
+```groovy
+org.gradle.jvmargs=-Xmx3g -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
+```
 
 ## License
 
