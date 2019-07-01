@@ -194,7 +194,6 @@ dependencies {
     implementation project(':news')
     implementation project(':spacestations')
     implementation project(':events')
-    implementation deps.multidex
     // Android Official Libraries
     implementation deps.archcore_coreRuntime
     implementation deps.appcompat
