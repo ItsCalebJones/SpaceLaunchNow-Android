@@ -89,7 +89,7 @@ public class CalendarSyncManager extends BaseManager {
         for (final Launch launch : launchResults) {
                 syncCalendar(launch);
         }
-        calendarUtil.deleteDuplicates(context, mRealm, "Space Launch Now", CalendarContract.Events.DESCRIPTION);
+//        calendarUtil.deleteDuplicates(context, mRealm, "Space Launch Now", CalendarContract.Events.DESCRIPTION);
     }
 
     private void syncCalendar(final Launch launchRealm) {
@@ -97,13 +97,13 @@ public class CalendarSyncManager extends BaseManager {
             boolean success = calendarUtil.updateEvent(context, launchRealm);
             if (!success) {
                 Timber.e("Unable to update event %s, assuming deleted.", launchRealm.getName());
-                final Integer id = calendarUtil.addEvent(context, launchRealm);
+                final Long id = calendarUtil.addEvent(context, launchRealm);
                 if (id != null) {
                     mRealm.executeTransaction(realm -> launchRealm.setEventID(id));
                 }
             }
         } else {
-            final Integer id = calendarUtil.addEvent(context, launchRealm);
+            final Long id = calendarUtil.addEvent(context, launchRealm);
             if (id != null) {
                 mRealm.executeTransaction(realm -> launchRealm.setEventID(id));
             }

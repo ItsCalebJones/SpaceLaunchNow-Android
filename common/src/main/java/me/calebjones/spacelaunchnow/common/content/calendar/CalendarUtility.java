@@ -46,7 +46,7 @@ public class CalendarUtility {
         this.calendarItem = calendarItem;
     }
 
-    public Integer addEvent(Context context, Launch launch) {
+    public Long addEvent(Context context, Launch launch) {
         Timber.v("Adding launch event: %s", launch.getName());
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
@@ -93,7 +93,7 @@ public class CalendarUtility {
         }
         event.timezone = TimeZone.getDefault().getDisplayName();
 
-        int id = event.create(context.getContentResolver());
+        Long id = event.create(context.getContentResolver());
         for (int time : prefSelected) {
             setReminder(context, id, time);
         }
