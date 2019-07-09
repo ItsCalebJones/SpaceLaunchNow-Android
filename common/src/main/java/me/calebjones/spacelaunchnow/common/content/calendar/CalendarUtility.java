@@ -100,7 +100,7 @@ public class CalendarUtility {
         return id;
     }
 
-    public boolean updateEvent(Context context, Launch launch) {
+    public boolean updateEvent(Context context, Launch launch, Long eventID) {
         Timber.v("Updating launch event: %s", launch.getName());
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
 
@@ -149,7 +149,7 @@ public class CalendarUtility {
             }
             calEvent.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
 
-            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, launch.getEventID());
+            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
 
             try {
                 return updateUri != null && cr.update(updateUri, calEvent, null, null) > 0;
@@ -183,7 +183,7 @@ public class CalendarUtility {
         return iNumRowsDeleted;
     }
 
-    private int deleteEvent(Context context, Long id) {
+    public int deleteEvent(Context context, Long id) {
         Timber.v("Deleting launch event: %s", id);
         int iNumRowsDeleted = 0;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
