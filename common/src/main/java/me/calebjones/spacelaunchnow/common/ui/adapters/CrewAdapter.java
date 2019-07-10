@@ -43,8 +43,14 @@ public class CrewAdapter extends RecyclerView.Adapter<CrewAdapter.ViewHolder> {
         AstronautFlight item = astronauts.get(i);
         holder.title.setText(item.getAstronaut().getName());
         holder.subtitle.setText(item.getRole());
+        String image;
+        if (item.getAstronaut().getProfileImageThumbnail() != null){
+            image = item.getAstronaut().getProfileImageThumbnail();
+        } else {
+            image = item.getAstronaut().getProfileImage();
+        }
         GlideApp.with(context)
-                .load(item.getAstronaut().getProfileImageThumbnail())
+                .load(image)
                 .placeholder(R.drawable.placeholder)
                 .thumbnail(0.5f)
                 .circleCrop()

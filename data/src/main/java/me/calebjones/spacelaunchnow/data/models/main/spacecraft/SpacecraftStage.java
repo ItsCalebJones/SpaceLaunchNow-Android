@@ -10,6 +10,7 @@ import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
+import me.calebjones.spacelaunchnow.data.models.main.astronaut.AstronautFlight;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.DockingEvent;
 
 public class SpacecraftStage extends RealmObject {
@@ -28,13 +29,13 @@ public class SpacecraftStage extends RealmObject {
     public String destination;
     @SerializedName("launch_crew")
     @Expose
-    public RealmList<Astronaut> launchCrew = null;
+    public RealmList<AstronautFlight> launchCrew = null;
     @SerializedName("onboard_crew")
     @Expose
-    public RealmList<Astronaut> onboardCrew = null;
+    public RealmList<AstronautFlight> onboardCrew = null;
     @SerializedName("landing_crew")
     @Expose
-    public RealmList<Astronaut> landingCrew = null;
+    public RealmList<AstronautFlight> landingCrew = null;
     @SerializedName("spacecraft")
     @Expose
     public Spacecraft spacecraft;
@@ -77,27 +78,27 @@ public class SpacecraftStage extends RealmObject {
         this.destination = destination;
     }
 
-    public RealmList<Astronaut> getLaunchCrew() {
+    public RealmList<AstronautFlight> getLaunchCrew() {
         return launchCrew;
     }
 
-    public void setLaunchCrew(RealmList<Astronaut> launchCrew) {
+    public void setLaunchCrew(RealmList<AstronautFlight> launchCrew) {
         this.launchCrew = launchCrew;
     }
 
-    public RealmList<Astronaut> getOnboardCrew() {
+    public RealmList<AstronautFlight> getOnboardCrew() {
         return onboardCrew;
     }
 
-    public void setOnboardCrew(RealmList<Astronaut> onboardCrew) {
+    public void setOnboardCrew(RealmList<AstronautFlight> onboardCrew) {
         this.onboardCrew = onboardCrew;
     }
 
-    public RealmList<Astronaut> getLandingCrew() {
+    public RealmList<AstronautFlight> getLandingCrew() {
         return landingCrew;
     }
 
-    public void setLandingCrew(RealmList<Astronaut> landingCrew) {
+    public void setLandingCrew(RealmList<AstronautFlight> landingCrew) {
         this.landingCrew = landingCrew;
     }
 

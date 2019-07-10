@@ -78,7 +78,6 @@ public class NextLaunchDataRepository {
             } else {
                 nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
             }
-            checkForStaleLaunches();
         } else {
             getNextUpcomingLaunchesFromNetwork(count, nextLaunchesCallback);
         }
@@ -116,55 +115,6 @@ public class NextLaunchDataRepository {
                 callback.onError("An error has occurred! Uh oh.", throwable);
             }
         });
-    }
-
-    private void checkForStaleLaunches(){
-        Date currentDate = new Date();
-        Realm mRealm = Realm.getDefaultInstance();
-        RealmResults<Launch> launches = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm);
-        for (Launch launch : launches) {
-            Date lastUpdate = launch.getLastUpdate();
-            if (lastUpdate == null){
-                lastUpdate = currentDate;
-            }
-            Date net = launch.getNet();
-            // Check time between NET and NOW
-            long netDiffInMs = currentDate.getTime() - net.getTime();
-            long netDiffInHours = TimeUnit.MILLISECONDS.toHours(netDiffInMs);
-            long lastUpdateDiffInMs = currentDate.getTime() - lastUpdate.getTime();
-            long lastUpdateDiffInHours = TimeUnit.MILLISECONDS.toHours(lastUpdateDiffInMs);
-            if (netDiffInHours <= 168) {
-                if (lastUpdateDiffInHours > 24) {
-                    String id = launch.getId();
-                    DataClient.getInstance().getLaunchById(launch.getId(),  new Callback<Launch>() {
-                        @Override
-                        public void onResponse(Call<Launch> call, Response<Launch> response) {
-                            if (response.isSuccessful()) {
-                                List<Launch> launchList = new ArrayList<>();
-                                launchList.add(response.body());
-                                dataLoader.getDataSaver().saveLaunchesToRealm(launchList, false);
-
-                                dataLoader.getDataSaver().sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, true, call));
-
-                            } else {
-                                if (response.code() == 404) {
-                                    dataLoader.getDataSaver().deleteLaunch(id);
-                                }
-
-                                dataLoader.getDataSaver().sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, ErrorUtil.parseSpaceLaunchNowError(response)));
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Launch> call, Throwable t) {
-                            dataLoader.getDataSaver().deleteLaunch(id);
-                            dataLoader.getDataSaver().sendResult(new Result(Constants.ACTION_GET_UP_LAUNCHES_BY_ID, false, call, t.getLocalizedMessage()));
-                        }
-                    });
-                }
-            }
-        }
-        mRealm.close();
     }
 }
 

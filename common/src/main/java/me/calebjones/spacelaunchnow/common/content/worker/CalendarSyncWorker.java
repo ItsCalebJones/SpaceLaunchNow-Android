@@ -79,7 +79,7 @@ public class CalendarSyncWorker extends Worker {
                         Timber.v("UpcomingLaunches Count: %s", launchResponse.getCount());
                         dataSaver.saveLaunchesToRealm(launchResponse.getLaunches(), false);
                         CalendarSyncManager calendarSyncManager = new CalendarSyncManager(context);
-                        calendarSyncManager.resyncAllEvents();
+                        calendarSyncManager.syncAllEevnts();
                     }
                 }
             } catch (IOException e) {
