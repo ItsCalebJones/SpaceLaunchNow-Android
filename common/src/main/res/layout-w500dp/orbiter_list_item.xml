@@ -75,7 +75,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="First Flight"
+                android:text="@string/first_flight_orbiter"
                 android:textAppearance="@style/MaterialTypography.Regular.Title"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -153,7 +153,7 @@
                 android:ellipsize="end"
                 android:gravity="start"
                 android:singleLine="false"
-                android:text="Active: "
+                android:text="@string/active_orbiter"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                 app:layout_constraintStart_toStartOf="parent"
@@ -178,7 +178,7 @@
                 android:ellipsize="end"
                 android:gravity="start"
                 android:singleLine="false"
-                android:text="Human Rated: "
+                android:text="@string/human_rated_orbiter"
                 android:textAlignment="viewStart"
                 android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                 app:layout_constraintStart_toStartOf="parent"
@@ -201,7 +201,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/material_baseline_grid_2x"
                 android:layout_marginTop="16dp"
-                android:text="History"
+                android:text="@string/history"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orbiter_description" />
@@ -246,7 +246,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/material_baseline_grid_2x"
                 android:layout_marginTop="16dp"
-                android:text="Specifications"
+                android:text="@string/specifications_orbiter"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orbiter_history_description" />
@@ -257,7 +257,7 @@
                 android:layout_width="0dp"
                 android:layout_height="21dp"
                 android:ellipsize="end"
-                android:text="Diameter: Unknown (m)"
+                android:text="@string/diameter_unknown_m"
                 app:layout_constraintStart_toStartOf="@+id/height"
                 app:layout_constraintTop_toBottomOf="@+id/height" />
 
@@ -267,7 +267,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:text="Height: Unknown (m)"
+                android:text="@string/height_unknown_m"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="@+id/flight_life"
                 app:layout_constraintTop_toBottomOf="@+id/flight_life" />
@@ -278,7 +278,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:text="Payload: Unknown (kg)"
+                android:text="@string/payload_unknown_kg"
                 app:layout_constraintStart_toStartOf="@+id/diameter"
                 app:layout_constraintTop_toBottomOf="@+id/diameter" />
 
@@ -288,7 +288,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Crew Capacity: Unknown"
+                android:text="@string/crew_capacity_unknown"
                 app:layout_constraintStart_toStartOf="@+id/human_rated"
                 app:layout_constraintTop_toBottomOf="@+id/human_rated" />
 

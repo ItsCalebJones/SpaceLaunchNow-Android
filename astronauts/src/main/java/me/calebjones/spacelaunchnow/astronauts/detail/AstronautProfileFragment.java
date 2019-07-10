@@ -170,14 +170,14 @@ public class AstronautProfileFragment extends BaseFragment {
         if (bornDate != null && deathDate == null) {
             int bornYear = astronaut.getDateOfBirth().getYear();
             int currentYear = Calendar.getInstance().getTime().getYear();
-            astronautBorn.setText(String.format("Born: %s (%s)", bornDate, currentYear - bornYear));
+            astronautBorn.setText(getString(R.string.born, bornDate, currentYear - bornYear));
             astronautDied.setVisibility(View.GONE);
         }
         if (deathDate != null && bornDate != null) {
             int bornYear = astronaut.getDateOfBirth().getYear();
             int diedYear =  astronaut.getDateOfDeath().getYear();
-            astronautBorn.setText(String.format("Born: %s", bornDate));
-            astronautDied.setText(String.format("Died: %s (%s)", deathDate, diedYear - bornYear));
+            astronautBorn.setText(getString(R.string.born_one_argument, bornDate));
+            astronautDied.setText(getString(R.string.died_two_arguments, deathDate, diedYear - bornYear));
             astronautDied.setVisibility(View.VISIBLE);
         }
 
