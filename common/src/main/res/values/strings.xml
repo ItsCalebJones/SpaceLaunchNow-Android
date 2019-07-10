@@ -418,6 +418,7 @@
     <string name="improve_our_data">Help Improve our Data</string>
     <string name="improve_our_data_content">Interested in helping improve the accuracy of our spaceflight data? Join us on the Space Launch Now Discord server and ask about becoming a librarian.</string>
     <string name="no_launches_found">No launches found.</string>
+    <string name="landing_information">Landing Information</string>
     <string name="payload">Payload: %d (kg)</string>
     <string name="spacecraft_format">%s Spacecraft</string>
     <string name="crew_capacity">Crew Capacity: %s</string>
@@ -491,10 +492,28 @@
     <string name="no_expeditions">No Expeditions Found</string>
     <string name="no_docked">No Docked Vehicles</string>
     <string name="no_news">No News Loaded</string>]
+    
     <string name="spacecraft_default_title">Spacecraft Details</string>
     <string name="spacecraft_default_sub_title">Unknown Spacecraft</string>
     <string name="history">History</string>
     <string name="time_format_description">Select preferred time format.</string>
+    <string name="launch_service_providers">Launch Service Providers</string>
+    <string name="launch_locations">Launch Locations</string>
+    <string name="northrop_grumman">Northrop Grumman</string>
+    <string name="blue_origin">Blue Origin</string>
+    <string name="rocket_lab">Rocket Lab</string>
+    <string name="russia_and_kazakhstan">Russia and Kazakhstan</string>
+    <string name="china">China</string>
+    <string name="kennedy_space_center_cape_canaveral">Kennedy Space Center / Cape Canaveral</string>
+    <string name="wallops_island">Wallops Island</string>
+    <string name="new_zealand">New Zealand</string>
+    <string name="japan">Japan</string>
+    <string name="french_guiana">French Guiana</string>
+    <string name="follow_all_launches">Follow All Launches</string>
+    <string name="dynamic_watch_face">Dynamic Watch Face</string>
+    <string name="dynamic_watch_face_description">Dynamic pictures of launch vehicles as watch face background.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="news_and_events">News and Events</string>
     <string name="view_x_launches">View %s Launches</string>
     <string name="booster_information">%s Information</string>
@@ -507,7 +526,6 @@
     <string name="instantaneous_launch_window"><![CDATA[<b>Instantaneous Launch Window</b><br>%1$s]]></string>
     <string name="launch_window_extras"><![CDATA[<b>Launch Window</b><br>%1$s - %2$s<br>%3$s]]></string>
     <string name="read_more">Read More</string>
-    <string name="landing_information">Landing Information</string>
     <string name="serial_number">Serial Number:</string>
     <string name="status_booster">Status:</string>
     <string name="flights_booster">Flights:</string>
@@ -537,17 +555,4 @@
     <string name="born">Born: %1$s (%2$d)</string>
     <string name="born_one_argument">Born: %1$s</string>
     <string name="died_two_arguments">Died: %1$s (%2$d)</string>
-    <string name="launch_service_providers">Launch Service Providers</string>
-    <string name="launch_locations">Launch Locations</string>
-    <string name="northrop_grumman">Northrop Grumman</string>
-    <string name="blue_origin">Blue Origin</string>
-    <string name="rocket_lab">Rocket Lab</string>
-    <string name="russia_and_kazakhstan">Russia and Kazakhstan</string>
-    <string name="china">China</string>
-    <string name="kennedy_space_center_cape_canaveral">Kennedy Space Center / Cape Canaveral</string>
-    <string name="wallops_island">Wallops Island</string>
-    <string name="new_zealand">New Zealand</string>
-    <string name="japan">Japan</string>
-    <string name="french_guiana">French Guiana</string>
-    <string name="follow_all_launches">Follow All Launches</string>
 </resources>

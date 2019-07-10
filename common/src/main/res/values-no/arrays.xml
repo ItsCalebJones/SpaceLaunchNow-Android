@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="status">
+        <item>I trening</item>
+        <item>Aktiv</item>
+        <item>Pensjonert</item>
+        <item>tapt under flyving</item>
+        <item>Tapt under opptrening</item>
+        <item>Døde under aktiv tjeneste</item>
+        <item>Avvist</item>
+        <item>Gikk av under trening</item>
+    </string-array>
+    <string-array name="widget_presets">
+        <item>Lys</item>
+        <item>Mørk</item>
+        <item>Lys - Gjennomsiktig</item>
+        <item>Mørk - Gjennomsiktig</item>
+        <item>Materiell Blå</item>
+        <item>Materiell Rød</item>
+        <item>Materiell Blågrønn</item>
+        <item>Materiell Oransje</item>
+        <item>Tilpasset</item>
+    </string-array>
+    <string-array name="spinner_list_item_array">
+        <item>Alle</item>
+        <item>Kommende</item>
+        <item>Tidligere</item>
+    </string-array>
+</resources>

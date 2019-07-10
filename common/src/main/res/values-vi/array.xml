@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="agencies">
+        <item>NASA</item>
+        <item>SpaceX</item>
+        <item>ROSCOSMOS</item>
+        <item>Arienespace</item>
+        <item>ULA</item>
+        <item>CASC</item>
+        <item>ISRO</item>
+    </string-array>
+    <string-array name="country">
+        <item>Hoa Kì</item>
+        <item>Trung Quốc</item>
+        <item>Nga</item>
+        <item>Ấn Độ</item>
+        <item>Đa</item>
+    </string-array>
+    <string-array name="location">
+        <item>Cape Canaveral, Florida, Hoa Kì</item>
+        <item>Trung tâm Thiên văn Kennedy, Florida</item>
+        <item>Đảo Wallops, Virginia, Hoa Kì</item>
+        <item>Căn cứ không quân Vandenberg, California, Hoa Kì</item>
+        <item>Cửu Giang, Trung Quốc</item>
+        <item>Thái Nguyên, Trung Quốc</item>
+        <item>Trạm phóng vệ tinh Tây Xương, Trung Quốc</item>
+        <item>Trạm phóng vệ tinh Văn Xương, Trung Quốc</item>
+        <item>Kourou, Guiana thuộc Pháp</item>
+        <item>Sriharikota, Ấn Độ</item>
+        <item>Kagoshima/Tanegashima, Nhật Bản</item>
+        <item>Trạm phóng Baikonur, Kazakhstan, Nga</item>
+        <item>Trạm phóng Plesetsk, Nga</item>
+        <item>Kapustin Yar, Nga</item>
+        <item>Trạm phóng Svobodney, Nga</item>
+        <item>Dombarovskiy, Nga</item>
+        <item>Phóng ở biển</item>
+        <item>Woomera, Úc</item>
+        <item>Kaitorete Spit, New Zealand</item>
+        <item>Khu nhà phóng Kodiak, Hoa Kì</item>
+        <item>Trạm phóng Sohae, Triều Tiên</item>
+    </string-array>
+    <string-array name="multi_calendar_reminder">
+        <item>Một phút</item>
+        <item>Năm phút</item>
+        <item>Ba mươi phút</item>
+        <item>Một giờ</item>
+        <item>Hai giờ</item>
+        <item>Bốn giờ</item>
+        <item>Một ngày</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>Một ngày</item>
+        <item>Ba ngày</item>
+        <item>Một tuần</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>Hai</item>
+        <item>Một</item>
+        <item>Năm</item>
+        <item>Hai mươi</item>
+        <item>Mười</item>
+        <item>Tất cả (Không được khuyến khích)</item>
+    </string-array>
+</resources>

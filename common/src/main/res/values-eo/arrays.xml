@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="status">
+        <item>En Trejnado</item>
+        <item>Aktiva</item>
+        <item>Malaktiva</item>
+        <item>Perdita en Fluĝo</item>
+        <item>Perdita en Trejnado</item>
+        <item>Morta Dum Aktiva Servo</item>
+        <item>Malakceptita</item>
+        <item>Rezigna dum Trejnado</item>
+    </string-array>
+</resources>

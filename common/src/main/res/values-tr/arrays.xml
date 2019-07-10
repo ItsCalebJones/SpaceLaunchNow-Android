@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="status">
+        <item>Eğitimde</item>
+        <item>Aktif</item>
+        <item>Emekli</item>
+        <item>Uçuşta Kayıp</item>
+        <item>Eğitimde Kayıp</item>
+        <item>Aktif Servis Yaparken Öldü</item>
+        <item>Reddedildi</item>
+        <item>Eğitim Sırasında İstifa</item>
+    </string-array>
+</resources>

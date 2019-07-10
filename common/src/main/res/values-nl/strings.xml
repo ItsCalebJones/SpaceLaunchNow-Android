@@ -67,8 +67,8 @@
     <string name="weather_description">Krijg weerinformatie vanaf het lanceerplatform voor vorige en aankomende lanceringen.</string>
     <string name="calendar_sync">Kalender synchronisatie</string>
     <string name="calendar_sync_description">Synchroniseer aankomende lanceringen automatisch naar je kalender.</string>
-    <string name="wear_complications">Dynamisch Watch Face</string>
-    <string name="wear_complications_description">Dynamische foto\'s van raketten als watch face achtergrond.</string>
+    <string name="wear_complications">Wear OS Complicaties</string>
+    <string name="wear_complications_description">Krijg Space Launch Now complicaties op je Wear OS horloge!</string>
     <string name="remove_ads">Verwijder reclame</string>
     <string name="remove_ads_description">Verwijder alle reclame voor altijd!</string>
     <string name="discord">Discord</string>
@@ -488,6 +488,24 @@
     <string name="status_alt">Status:</string>
     <string name="de_orbited">Uit baan rond de aarde: %s</string>
     <string name="mission_agency">Agentschap missies</string>
+    <string name="no_expeditions">Geen Expedities Gevonden</string>
+    <string name="no_docked">Geen Aangekoppelde Ruimtevaartuigen</string>
+    ]
+    
+    <string name="spacecraft_default_title">Ruimtevaartuig Details</string>
+    <string name="spacecraft_default_sub_title">Onbekend Ruimtevaartuig</string>
+    <string name="dynamic_watch_face">Dynamisch Watch Face</string>
+    <string name="dynamic_watch_face_description">Dynamische foto\'s van raketten als watch face achtergrond.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hallo blanco fragment</string>
+    <string name="news_and_events">Nieuws en Evenementen</string>
+    <string name="view_x_launches">Bekijk %s lanceringen</string>
+    <string name="booster_information">%s informatie</string>
+    <string name="first_stage_x">Eerste trap - %s</string>
+    <string name="x_landing_information">%s Landings informatie</string>
+    <string name="additional_landing_information">Extra landings informatie</string>
+    <string name="launch_day_weather">Weer tijdens lancering</string>
+    <string name="video_source_unavailable">Geen video\'s beschikbaar</string>
+    <string name="launch_date"><![CDATA[<b>Lanceerdatum</b><br>]]></string>
+    <string name="launch_window_extras"><![CDATA[<b>Lanceer Window</b><br>%1$s - %2$s<br>%3$s]]></string>
 </resources>

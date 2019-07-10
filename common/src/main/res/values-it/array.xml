@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="agencies">
+        <item>NASA</item>
+        <item>SpaceX</item>
+        <item>ROSCOSMOS</item>
+        <item>Arianespace</item>
+        <item>ULA</item>
+        <item>ISRO</item>
+    </string-array>
+    <string-array name="country">
+        <item>USA</item>
+        <item>Cina</item>
+        <item>Russia</item>
+        <item>India</item>
+        <item>Multi</item>
+    </string-array>
+    <string-array name="location">
+        <item>Cape Canaveral, FL, USA</item>
+        <item>Kennedy Space Center, FL, USA</item>
+        <item>Wallops Island, Virginia, USA</item>
+        <item>Vandenberg AFB, CA, USA</item>
+        <item>Jiuquan, Cina</item>
+        <item>Taiyuan, Cina</item>
+        <item>Xichang Satellite Launching Center, Cina</item>
+        <item>Wechang Satellite Launching Center, Cina</item>
+        <item>Kourou, Guiana Francese</item>
+        <item>Sriharikota, India</item>
+        <item>Kagoshima / Tanegashima, Giappone</item>
+        <item>Baikonur Cosmodrome, Kazakhstan, Russia</item>
+        <item>Plesetsk Cosmodrome, Russia</item>
+        <item>Kapustin Yar, Russia</item>
+        <item>Svobodney Cosmodrome, Russia</item>
+        <item>Dombarovskiy, Russia</item>
+        <item>Lancio dal mare</item>
+        <item>Woomera, Australia</item>
+    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Un minuto</item>
         <item>Cinque minuti</item>

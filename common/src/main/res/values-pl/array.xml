@@ -9,68 +9,56 @@
         <item>CASC</item>
         <item>ISRO</item>
     </string-array>
-    <string-array name="vehicles">
-        <item>Falcon</item>
-        <item>Proton</item>
-        <item>Soyuz</item>
-        <item>Atlas</item>
-        <item>Delta</item>
-        <item>PSLV/GSLV</item>
-        <item>Longa Marcha</item>
-        <item>Ariane</item>
-        <item>Zenit</item>
-        <item>Rokot</item>
-    </string-array>
     <string-array name="country">
-        <item>EUA</item>
-        <item>China</item>
-        <item>Rússia</item>
-        <item>Índia</item>
-        <item>Multinacional</item>
+        <item>USA</item>
+        <item>Chiny</item>
+        <item>Rosja</item>
+        <item>Indie</item>
+        <item>Multi</item>
     </string-array>
     <string-array name="location">
-        <item>Cabo Canaveral, FL, EUA</item>
-        <item>Centro Espacial Kennedy, FL, EUA</item>
-        <item>Wallops Island, Virgínia, EUA</item>
-        <item>BFA de Vandenberg, CA, EUA</item>
-        <item>Jiuquan, China</item>
-        <item>Taiyuan, China</item>
-        <item>Centro de Lançamento de Satélites de Xichang, China</item>
-        <item>Centro de Lançamento de Satélites de Wechang, China</item>
-        <item>Kourou, Guiana Francesa</item>
-        <item>Sriharikota, Índia</item>
-        <item>Kagoshima / Tanegashima, Japão</item>
-        <item>Cosmódromo de Baikonur, Cazaquistão, Rússia</item>
-        <item>Cosmódromo de Plesetsk, Rússia</item>
-        <item>Kapustin Yar, Rússia</item>
-        <item>Cosmódromo de Svobodney, Rússia</item>
-        <item>Dombarovskiy, Rússia</item>
-        <item>Sea Launch</item>
-        <item>Woomera, Austrália</item>
-        <item>Kiatorete Spit, Nova Zelândia</item>
-        <item>Complexo de Lançamento de Kodiak, EUA</item>
-        <item>Estação de Lançamento de Ohae, Coreia do Norte</item>
+        <item>Przylądek Canaveral, Floryda, USA</item>
+        <item>Centrum Kosmiczne im. Kennedy\'ego, Floryda, USA</item>
+        <item>Wallops Island, Wirginia, USA</item>
+        <item>Vandenberg Air Force Base, CA, USA</item>
+        <item>Jiuquan, Chiny</item>
+        <item>Taiyuan, Chiny</item>
+        <item>Centrum Startowe Satelitów Xichang, Chiny</item>
+        <item>Centrum Startowe Satelitów Wenchang, Chiny</item>
+        <item>Kourou, Gujana Francuska</item>
+        <item>Sriharikota, Indie</item>
+        <item>Kagoshima / Tanegashima, Japonia</item>
+        <item>Kosmodrom Bajkonur, Kazachstan</item>
+        <item>Kosmodrom Plesieck, Rosja</item>
+        <item>Kapustin Jar, Rosja</item>
+        <item>Kosmodrom Swobodny, Rosja</item>
+        <item>Dombarovskiy, Rosja</item>
+        <item>Start morski</item>
+        <item>Woomera, Australia</item>
+        <item>Kiatorete Spit, New Zealand</item>
+        <item>Pacific Spaceport Complex, Alaska, US</item>
+        <item>Sohae Launch Station, Korea Północna</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
-        <item>Um Minuto</item>
-        <item>Cinco Minutos</item>
-        <item>Trinta Minutos</item>
-        <item>Uma Hora</item>
-        <item>Duas Horas</item>
-        <item>Quatro Horas</item>
-        <item>Um Dia</item>
+        <item>Jedna minuta</item>
+        <item>Pięć minut</item>
+        <item>Trzydzieści minut</item>
+        <item>Jedna godzina</item>
+        <item>Dwie godziny</item>
+        <item>Cztery godziny</item>
+        <item>Jeden dzień</item>
     </string-array>
     <string-array name="sync_timer">
-        <item>Um dia</item>
-        <item>Três dias</item>
-        <item>Uma Semana</item>
+        <item>Jeden dzień</item>
+        <item>Trzy dni</item>
+        <item>Jeden tydzień</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>Dois</item>
-        <item>Um</item>
-        <item>Cinco</item>
-        <item>Vinte</item>
-        <item>Dez</item>
-        <item>Todos (não recomendado)</item>
+        <item>Dwa</item>
+        <item>Jeden</item>
+        <item>Pięć</item>
+        <item>Dwadzieścia</item>
+        <item>Dziesięć</item>
+        <item>Wszystkie (niezalecane)</item>
     </string-array>
 </resources>

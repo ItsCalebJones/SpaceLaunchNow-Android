@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <resources>
+    <string name="news">Новости</string>
+    <string name="twitter">Twitter</string>
     <string name="action_settings">Настройки</string>
-    <string name="status_go">"Готово к пуску"</string>
+    <string name="status_go">"Готово к Пуску"</string>
     <string name="status_nogo">НЕ готово к пуску</string>
     <string name="status_success">"Пуск был успешным"</string>
     <string name="status_failure">"Произошел сбой в полете"</string>
@@ -64,8 +66,6 @@
     <string name="weather_description">Получить информацию о погоде со стартовой площадки для исторических и предстоящих запусков.</string>
     <string name="calendar_sync">Синхронизация с календарем</string>
     <string name="calendar_sync_description">Автоматическая синхронизация предстоящих пусков с календарем.</string>
-    <string name="wear_complications">Динамический циферблат для смарт-часов</string>
-    <string name="wear_complications_description">Сменяющиеся фотографии ракет как фон на циферблате.</string>
     <string name="remove_ads">Убрать рекламу</string>
     <string name="remove_ads_description">Уберите все рекламные баннеры навсегда!</string>
     <string name="discord">Discord</string>
@@ -106,6 +106,8 @@
     <string name="family">Семейство:</string>
     <string name="configuration">Конфигурация:</string>
     <string name="vehicle_specifications">Характеристики ракеты-носителя</string>
+    <string name="height">Рост:</string>
+    <string name="diameter">Диаметр:</string>
     <string name="watch_launch">Смотреть запуск</string>
     <string name="estimated_launch_date">Предполагаемая дата запуска</string>
     <string name="nothing_here">Ничего здесь, обновить из меню?</string>
@@ -119,9 +121,38 @@
     <string name="no_launches">Э-э-э ... не запускает!</string>
     <string name="select_launches">Выберите Запуски, чтобы следовать</string>
     <string name="selection_description">Ваш выбор будет виден на домашней странице и отправлять уведомления перед запуском.</string>
+    <string name="nasa">NASA</string>
+    <string name="roscosmos">Роскосмос</string>
+    <string name="all">Всё</string>
+    <string name="lower_days">день</string>
+    <string name="lower_hours">часов</string>
     <string name="unknown_administrator">Неизвестный администратор</string>
     <string name="unknown_year">Год основания - неизвестен.</string>
     <string name="improve_our_data">Помогите улучшить наши данные</string>
     <string name="improve_our_data_content">Заинтересованы в улучшении точности представленных данных? Заходите на Discord сервер Space Launch Now и попросите стать помощником.</string>
+    <string name="biography">биография</string>
     <string name="mission_agency">Агентство миссии</string>
+    
+    
+    ]
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <string name="dynamic_watch_face">Динамический циферблат для смарт-часов</string>
+    <string name="dynamic_watch_face_description">Сменяющиеся фотографии ракет как фон на циферблате.</string>
 </resources>

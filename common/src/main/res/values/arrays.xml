@@ -1,47 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="empty"/>
     <string-array name="status">
+        <item>In-Training</item>
         <item>Active</item>
         <item>Retired</item>
-        <item>Deceased</item>
-        <item>In-Training</item>
         <item>Lost in Flight</item>
         <item>Lost in Training</item>
         <item>Died While in Active Service</item>
         <item>Dismissed</item>
         <item>Resigned during Training</item>
-
-    </string-array>
-    <color name="custom_background_material_light">#FFFAFAFA</color>
-    <color name="custom_background_material_dark">#FF303030</color>
-    <color name="custom_background_black">#FF000000</color>
-    <color name="custom_background_dark_green">#FF182628</color>
-    <color name="custom_background_dark_blue">#FF21263A</color>
-
-    <integer-array name="background_color_presets">
-        <item>@color/custom_background_material_light</item>
-        <item>@color/custom_background_material_dark</item>
-        <item>@color/custom_background_black</item>
-        <item>@color/custom_background_dark_green</item>
-        <item>@color/custom_background_dark_blue</item>
-    </integer-array>
-
-    <integer-array name="status_value">
-        <item>1</item>
-        <item>2</item>
-        <item>11</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-    </integer-array>
-    <string-array name="time_format_array">
-        <item>Default</item>
-        <item>12-Hour AM/PM Format</item>
-        <item>24-Hour Format</item>
     </string-array>
     <string-array name="widget_presets">
         <item>Light</item>
@@ -54,7 +21,6 @@
         <item>Material Orange</item>
         <item>Custom</item>
     </string-array>
-
     <string-array name="widget_presets_values">
         <item>0</item>
         <item>1</item>
@@ -71,60 +37,4 @@
         <item>Upcoming</item>
         <item>Previous</item>
     </string-array>
-
-    <integer-array name="widget_presets_values_text_primary">
-        <item>0xDE000000</item>
-        <item>0xFFFFFFFF</item>
-        <item>0xFFFFFFFF</item>
-        <item>0xDE000000</item>
-        <item>0xFFFFFFFF</item>
-        <item>0xFFFFFFFF</item>
-        <item>0xFFFFFFFF</item>
-        <item>0xFFFFFFFF</item>
-        <item>0x00000000</item>
-    </integer-array>
-    <integer-array name="widget_presets_values_text_secondary">
-        <item>0x8A000000</item>
-        <item>0xB3FFFFFF</item>
-        <item>0xB3FFFFFF</item>
-        <item>0x8A000000</item>
-        <item>0xB3FFFFFF</item>
-        <item>0xB3FFFFFF</item>
-        <item>0xB3FFFFFF</item>
-        <item>0xB3FFFFFF</item>
-        <item>0x00000000</item>
-    </integer-array>
-    <integer-array name="widget_presets_values_background">
-        <item>0xFFFAFAFA</item>
-        <item>0xFF303030</item>
-        <item>0x40FAFAFA</item>
-        <item>0x40303030</item>
-        <item>0xFF2196F3</item>
-        <item>0xFFF44336</item>
-        <item>0xFF009688</item>
-        <item>0xFFFF9800</item>
-        <item>0x00000000</item>
-    </integer-array>
-    <integer-array name="widget_presets_values_accent">
-        <item>0xFF42a5f5</item>
-        <item>0xFF455a64</item>
-        <item>0x4042a5f5</item>
-        <item>0x40455a64</item>
-        <item>0xFF2196F3</item>
-        <item>0xFFF44336</item>
-        <item>0xFF009688</item>
-        <item>0xFFFF9800</item>
-        <item>0x00000000</item>
-    </integer-array>
-    <integer-array name="widget_presets_values_title_text">
-        <item>0xFFFFFFFF</item>
-        <item>0xFFFFFFFF</item>
-        <item>0xFFFFFFFF</item>
-        <item>0xDE000000</item>
-        <item>0xFFFFFFFF</item>
-        <item>0xFFFFFFFF</item>
-        <item>0xFFFFFFFF</item>
-        <item>0xFFFFFFFF</item>
-        <item>0x00000000</item>
-    </integer-array>
 </resources>
