@@ -3,7 +3,6 @@ package me.calebjones.spacelaunchnow.common.ui.launchdetail.fragments.mission;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.material.card.MaterialCardView;
 
 import androidx.annotation.Nullable;
@@ -31,6 +26,7 @@ import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.RetroFitFragment;
+import me.calebjones.spacelaunchnow.common.ui.adapters.CrewAdapter;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
@@ -104,6 +100,8 @@ public class MissionDetailFragment extends RetroFitFragment {
     TextView description;
     @BindView(R2.id.spacecraft_card)
     MaterialCardView spacecraftCard;
+    @BindView(R2.id.crew_recycler_view)
+    RecyclerView crewReycler;
 
     private Context context;
     public Launch detailLaunch;
@@ -220,6 +218,12 @@ public class MissionDetailFragment extends RetroFitFragment {
                 serialNumberText.setText(stage.getSpacecraft().getSerialNumber());
                 statusText.setText(stage.getSpacecraft().getStatus().getName());
                 description.setText(stage.getSpacecraft().getDescription());
+                if (launch.getRocket().getSpacecraftStage().getLaunchCrew() != null
+                        && launch.getRocket().getSpacecraftStage().getLaunchCrew().size() > 0) {
+                    crewReycler.setLayoutManager(new LinearLayoutManager(context));
+                    crewReycler.setAdapter(new CrewAdapter(context,
+                            launch.getRocket().getSpacecraftStage().getLaunchCrew()));
+                }
             } else {
                 spacecraftCard.setVisibility(View.GONE);
             }
