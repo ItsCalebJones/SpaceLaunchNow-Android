@@ -15,7 +15,7 @@ import java.util.TimeZone;
 
 public class Event {
 
-    public Integer id;
+    public Long id;
     public Integer calendarId;
     public String organizer;
     public String title;
@@ -156,7 +156,7 @@ public class Event {
 
         while (cursor.moveToNext()) {
             final Event event = new Event();
-            event.id = cursor.getInt(0);
+            event.id = cursor.getLong(0);
             event.calendarId = cursor.getInt(1);
             event.organizer = cursor.getString(2);
             event.title = cursor.getString(3);
@@ -200,10 +200,10 @@ public class Event {
         return result;
     }
 
-    public int create(final ContentResolver contentResolver) {
+    public long create(final ContentResolver contentResolver) {
         final ContentValues contentValues = mapToContentValues();
         final Uri uri = contentResolver.insert(CalendarContract.Events.CONTENT_URI, contentValues);
-        return id = Integer.parseInt(uri.getLastPathSegment());
+        return id = Long.parseLong(uri.getLastPathSegment());
     }
 
     public int update(final ContentResolver contentResolver) {

@@ -80,7 +80,7 @@ public class Launch extends RealmObject {
     @Expose
     public Rocket rocket;
 
-    public Integer eventID;
+    public Long eventID;
     public Date lastUpdate;
 
     public String getSlug() {
@@ -107,11 +107,11 @@ public class Launch extends RealmObject {
         this.lastUpdate = lastUpdate;
     }
 
-    public Integer getEventID() {
+    public Long getEventID() {
         return eventID;
     }
 
-    public void setEventID(Integer eventID) {
+    public void setEventID(Long eventID) {
         this.eventID = eventID;
     }
 

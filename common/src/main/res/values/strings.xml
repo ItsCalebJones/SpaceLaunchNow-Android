@@ -496,4 +496,17 @@
     <string name="spacecraft_default_sub_title">Unknown Spacecraft</string>
     <string name="history">History</string>
     <string name="time_format_description">Select preferred time format.</string>
+    <string name="launch_service_providers">Launch Service Providers</string>
+    <string name="launch_locations">Launch Locations</string>
+    <string name="northrop_grumman">Northrop Grumman</string>
+    <string name="blue_origin">Blue Origin</string>
+    <string name="rocket_lab">Rocket Lab</string>
+    <string name="russia_and_kazakhstan">Russia and Kazakhstan</string>
+    <string name="china">China</string>
+    <string name="kennedy_space_center_cape_canaveral">Kennedy Space Center / Cape Canaveral</string>
+    <string name="wallops_island">Wallops Island</string>
+    <string name="new_zealand">New Zealand</string>
+    <string name="japan">Japan</string>
+    <string name="french_guiana">French Guiana</string>
+    <string name="follow_all_launches">Follow All Launches</string>
 </resources>

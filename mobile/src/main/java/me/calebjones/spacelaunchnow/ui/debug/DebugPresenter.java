@@ -18,6 +18,7 @@ import java.io.IOException;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.content.calendar.CalendarSyncManager;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.Products;
@@ -103,7 +104,8 @@ public class DebugPresenter implements DebugContract.Presenter {
 
     @Override
     public void syncBackgroundSyncClicked(Context context) {
-
+        CalendarSyncManager calendarSyncManager = new CalendarSyncManager(context);
+        calendarSyncManager.syncAllEevnts();
     }
 
 

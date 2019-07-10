@@ -16,7 +16,7 @@ import java.util.List;
 public class Reminder {
 
     public Integer id;
-    public Integer eventId;
+    public Long eventId;
     public Integer minutesBefore;
     public Integer method;
 
@@ -59,7 +59,7 @@ public class Reminder {
         while (cursor.moveToNext()) {
             final Reminder reminder = new Reminder();
             reminder.id = cursor.getInt(0);
-            reminder.eventId = cursor.getInt(1);
+            reminder.eventId = cursor.getLong(1);
             reminder.minutesBefore = cursor.getInt(2);
             reminder.method = cursor.getInt(3);
             reminders.add(reminder);
