@@ -98,7 +98,7 @@ public class LaunchDetail extends WearableActivity implements SwipeRefreshLayout
         context = this;
         realm = Realm.getDefaultInstance();
         retrofit = RetrofitBuilder.getSpaceLaunchNowRetrofit(this.getString(R.string.sln_token),
-                Constants.API_DEV_BASE_URL);
+                Constants.API_BASE_URL);
         swipeRefresh.setOnRefreshListener(this);
 
         // Get the Intent that started this activity and extract the string
