@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
+
 import androidx.core.app.ActivityCompat;
 
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import it.macisamuele.calendarprovider.EventInfo;
 import me.calebjones.spacelaunchnow.common.content.calendar.model.Calendar;
 import me.calebjones.spacelaunchnow.common.content.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.common.content.calendar.model.Event;
+import me.calebjones.spacelaunchnow.data.models.main.CalendarEvent;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import timber.log.Timber;
 
@@ -122,17 +124,14 @@ public class CalendarUtility {
             //Build Description String and assign it.
             String description = "";
             String urls = "";
-            if (launch.getVidURLs() != null && launch.getVidURLs().size() >= 1) {
-                urls = "\n\nWatch Live:";
-                for (int i = 0; i < launch.getVidURLs().size(); i++) {
-                    urls = urls + "\n" + launch.getVidURLs().get(i).getVal();
-                }
+            if (launch.getSlug() != null) {
+                urls = "\n\nWatch Live: " + launch.getSlug();
             }
             if (launch.getMission() != null && launch.getMission().getDescription() != null) {
                 description = launch.getMission().getDescription() + urls;
             }
 
-            description = description + "\n\n via Space Launch Now";
+            description = description + "\n\n===============\nSpace Launch Now\nID: " + launch.getId() + "\nPlease leave this for tracking\n===============";
 
             Date startDate = launch.getWindowStart();
             Date endDate = launch.getWindowEnd();
@@ -231,6 +230,21 @@ public class CalendarUtility {
                             if (launchRealm == null) {
                                 deleteEvent(context, eventInfo.getId());
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void deleteAll(Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
+            List<EventInfo> eventInfos = EventInfo.getAllEvents(context);
+            if (eventInfos != null) {
+                for (EventInfo eventInfo : eventInfos) {
+                    if (eventInfo != null & eventInfo.getDescription() != null && eventInfo.getDescription().contains("Space Launch Now")) {
+                        if (eventInfo.getId() != null) {
+                            deleteEvent(context, eventInfo.getId());
                         }
                     }
                 }
