@@ -524,7 +524,7 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="additional_landing_information">Dodatečné informace o přistání</string>
     <string name="launch_day_weather">Počasí v den startu</string>
     <string name="video_source_unavailable">Zdroj přenosu není dostupný.</string>
-    <string name="launch_date"><![CDATA[<b>Datum startu</b><br>]]></string>
+    <string name="launch_date"><![CDATA[<b>Datum startu</b><br>%1$s]]></string>
     <string name="instantaneous_launch_window"><![CDATA[<b>Okamžité startovací okno</b><br>%1$s]]></string>
     <string name="launch_window_extras"><![CDATA[<b>Startovací okno</b><br>%1$s - %2$s<br>%3$s]]></string>
     <string name="read_more">Zobrazit více</string>

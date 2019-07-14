@@ -522,7 +522,7 @@
     <string name="additional_landing_information">Dodatkowe informacje o lądowaniu</string>
     <string name="launch_day_weather">Pogoda w dniu startu</string>
     <string name="video_source_unavailable">Wideo jest niedostępne.</string>
-    <string name="launch_date"><![CDATA[<b>Data startu</b><br>]]></string>
+    <string name="launch_date"><![CDATA[<b>Data startu</b><br>%1$s]]></string>
     <string name="instantaneous_launch_window"><![CDATA[<b>Okno natychmiastowego startu</b><br>%1$s]]></string>
     <string name="launch_window_extras"><![CDATA[<b>Okno startowe</b><br>%1$s - %2$s<br>%3$s]]></string>
     <string name="read_more">Czytaj więcej</string>

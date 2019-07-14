@@ -380,7 +380,7 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="booster_information">%s Thông tin</string>
     <string name="first_stage_x">Giai đoạn đầu - %s</string>
     <string name="launch_day_weather">Thời tiết ngày phóng</string>
-    <string name="launch_date"><![CDATA[<b>Ngày phóng</b><br>]]></string>
+    <string name="launch_date"><![CDATA[<b>Ngày phóng</b><br>%1$s]]></string>
     <string name="read_more">Đọc thêm</string>
     <string name="serial_number">Số sê-ri:</string>
     <string name="status_booster">Trạng thái:</string>

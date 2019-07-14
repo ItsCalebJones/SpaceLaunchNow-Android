@@ -522,7 +522,7 @@
     <string name="additional_landing_information">Información de aterrizaje adicional</string>
     <string name="launch_day_weather">"Meteorología del día de lanzamiento "</string>
     <string name="video_source_unavailable">"Fuentes de vídeo no disponibles. "</string>
-    <string name="launch_date"><![CDATA[<b>Fecha de lanzamiento</b><br>]]></string>
+    <string name="launch_date"><![CDATA[<b>Fecha de lanzamiento</b><br>%1$s]]></string>
     <string name="instantaneous_launch_window"><![CDATA[<b>Ventana de lanzamiento instantánea</b><br>%1$s]]></string>
     <string name="launch_window_extras"><![CDATA[<b>Ventana de lanzamiento</b><br>%1$s - %2$s<br>%3$s]]></string>
     <string name="read_more">"Leer más "</string>
