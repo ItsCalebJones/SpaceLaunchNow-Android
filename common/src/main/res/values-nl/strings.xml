@@ -506,6 +506,6 @@
     <string name="additional_landing_information">Extra landings informatie</string>
     <string name="launch_day_weather">Weer tijdens lancering</string>
     <string name="video_source_unavailable">Geen video\'s beschikbaar</string>
-    <string name="launch_date"><![CDATA[<b>Lanceerdatum</b><br>]]></string>
+    <string name="launch_date"><![CDATA[<b>Lanceerdatum</b><br>%1$s]]></string>
     <string name="launch_window_extras"><![CDATA[<b>Lanceer Window</b><br>%1$s - %2$s<br>%3$s]]></string>
 </resources>

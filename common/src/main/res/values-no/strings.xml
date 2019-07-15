@@ -255,7 +255,7 @@
     <string name="additional_landing_information">Ekstra Landningsinformasjon</string>
     <string name="launch_day_weather">Oppskytningsdag Vær</string>
     <string name="video_source_unavailable">Videokilder utilgjengelige</string>
-    <string name="launch_date"><![CDATA[<b>Oppskytningsdato</b><br>]]></string>
+    <string name="launch_date"><![CDATA[<b>Oppskytningsdato</b><br>%1$s]]></string>
     <string name="launch_window_extras"><![CDATA[<b>Oppskytningsvindu</b><br>%1$s - %2$s<br>%3$s]]></string>
     <string name="read_more">Les mer</string>
     <string name="serial_number">Serienummer:</string>
