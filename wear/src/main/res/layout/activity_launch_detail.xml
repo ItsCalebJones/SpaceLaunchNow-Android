@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="@dimen/box_inset_layout_padding"
     tools:context=".ui.launchdetail.LaunchDetail"
     tools:deviceIds="wear">
@@ -17,14 +16,13 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/material_baseline_grid_2x"
-                android:orientation="vertical"
-                android:paddingBottom="@dimen/material_baseline_grid_2x">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/TitleCard"
@@ -38,108 +36,101 @@
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:layout_gravity="center"
+                        android:layout_marginTop="8dp"
                         android:background="@color/dark_grey"
                         android:src="@drawable/ic_satellite" />
 
                     <TextView
                         android:id="@+id/content_title"
                         style="@style/MaterialTypography.Locale.Title"
-                        android:background="@color/dark_grey"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textAlignment="center"
-                        android:layout_marginBottom="@dimen/material_baseline_grid_1x"/>
+                        android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                        android:background="@color/dark_grey"
+                        android:textAlignment="center" />
                 </LinearLayout>
 
-                <androidx.wear.widget.BoxInsetLayout
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/box_inset_layout_padding">
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:padding="@dimen/inner_frame_layout_padding"
+                    app:boxedEdges="right|left">
 
-                    <FrameLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="@dimen/inner_frame_layout_padding"
-                        app:boxedEdges="right|left">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/status"
+                            style="@style/MaterialTypography.Locale.Subheading"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                            android:textAlignment="center" />
 
                         <LinearLayout
+                            android:id="@+id/countdown_view"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/status"
-                                style="@style/MaterialTypography.Locale.Subheading"
-                                android:textAlignment="center"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/material_baseline_grid_1x"
-                                />
 
-                            <LinearLayout
-                                android:id="@+id/countdown_view"
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="2dp"
+                                android:background="@color/View_Separator" />
+
+                            <include
+                                layout="@layout/countdown_layout_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:orientation="vertical">
+                                android:layout_gravity="center" />
 
-
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:layout_marginBottom="2dp"
-                                    android:background="@color/View_Separator" />
-
-                                <include
-                                    layout="@layout/countdown_layout_view"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="center" />
-
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-                                    android:layout_marginBottom="2dp"
-                                    android:background="@color/View_Separator" />
-
-                            </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/content_mission"
+                            <View
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textAlignment="center"
-                                android:textAppearance="@style/Widget.WearDiag.TextView.Message"
-                                android:textColor="?android:textColorPrimary"
-                                android:textSize="14sp" />
+                                android:layout_height="1dp"
+                                android:layout_marginBottom="2dp"
+                                android:background="@color/View_Separator" />
 
-                            <TextView
-                                android:id="@+id/content_mission_description"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="@dimen/material_baseline_grid_0.5x"
-                                android:layout_marginStart="@dimen/material_baseline_grid_0.5x"
-                                android:paddingBottom="8dp"
-                                android:paddingTop="8dp"
-                                android:textAlignment="center"
-                                android:textAppearance="@style/Widget.WearDiag.TextView.Message"
-                                android:textColor="?android:textColorSecondary"
-                                android:textSize="10sp" />
-
-                            <androidx.appcompat.widget.AppCompatButton
-                                android:id="@+id/explore_button"
-                                android:theme="@style/AppTheme.Button"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center"
-                                android:text="Explore"/>
-
-                            <Space
-                                android:layout_width="match_parent"
-                                android:layout_height="50dp" />
                         </LinearLayout>
-                    </FrameLayout>
-                </androidx.wear.widget.BoxInsetLayout>
+
+                        <TextView
+                            android:id="@+id/content_mission"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/Widget.WearDiag.TextView.Message"
+                            android:textColor="?android:textColorPrimary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/content_mission_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/material_baseline_grid_0.5x"
+                            android:layout_marginEnd="@dimen/material_baseline_grid_0.5x"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:textAlignment="center"
+                            android:textAppearance="@style/Widget.WearDiag.TextView.Message"
+                            android:textColor="?android:textColorSecondary"
+                            android:textSize="10sp" />
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/explore_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:text="Explore"
+                            android:theme="@style/AppTheme.Button" />
+
+                    </LinearLayout>
+                </FrameLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
