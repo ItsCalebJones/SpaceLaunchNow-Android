@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -253,7 +254,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void setBackgroundColor() {
-        if (!Utils.getIconColor(Aesthetic.get().colorPrimary().blockingFirst())){
+        if (!Utils.getIconColor(Aesthetic.get().colorPrimary().blockingFirst())) {
             int color = Aesthetic.get().colorAccent().blockingFirst();
             colorReveal.setBackgroundColor(color);
         } else {
@@ -461,14 +462,22 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private void showLoading() {
         Timber.v("Show Loading...");
         if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED) && mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+            mSwipeRefreshLayout.post(() -> {
+                if (mSwipeRefreshLayout != null) {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                }
+            });
         }
     }
 
     private void hideLoading() {
         Timber.v("Hide Loading...");
         if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED) && mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
+            mSwipeRefreshLayout.post(() -> {
+                if (mSwipeRefreshLayout != null) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
         }
     }
 
