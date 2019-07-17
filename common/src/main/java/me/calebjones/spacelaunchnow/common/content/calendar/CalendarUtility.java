@@ -66,17 +66,14 @@ public class CalendarUtility {
         //Build Description String and assign it.
         String description = "";
         String urls = "";
-        if (launch.getVidURLs() != null && launch.getVidURLs().size() >= 1) {
-            urls = "\n\nWatch Live: \n";
-            for (int i = 0; i < launch.getVidURLs().size(); i++) {
-                urls = urls + "\n" + launch.getVidURLs().get(i).getVal();
-            }
+        if (launch.getSlug() != null) {
+            urls = "\n\nWatch Live: " + launch.getSlug();
         }
         if (launch.getMission() != null) {
             description = launch.getMission().getDescription() + urls;
         }
 
-        description = description + "\n\n via Space Launch Now";
+        description = description + "\n\n===============\nSpace Launch Now\nID: " + launch.getId() + "\nPlease leave this for tracking\n===============";
 
         Date startDate = launch.getWindowStart();
         Date endDate = launch.getWindowEnd();
