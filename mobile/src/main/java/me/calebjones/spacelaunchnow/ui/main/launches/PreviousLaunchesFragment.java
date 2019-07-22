@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.main.launches;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.crashlytics.android.Crashlytics;
@@ -285,6 +287,15 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         final MenuItem item = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
+        final ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_button);
+        searchIcon.setColorFilter(Color.WHITE);
+        final ImageView cancelButton
+                = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        cancelButton.setColorFilter(Color.WHITE);
+        final SearchView.SearchAutoComplete searchAutoComplete = searchView
+                .findViewById(androidx.appcompat.R.id.search_src_text);
+        searchAutoComplete.setHintTextColor(getResources().getColor(android.R.color.white));
+        searchAutoComplete.setTextColor(getResources().getColor(android.R.color.white));
     }
 
     @Override
