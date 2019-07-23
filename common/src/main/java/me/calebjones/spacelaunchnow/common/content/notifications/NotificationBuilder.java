@@ -186,6 +186,137 @@ public class NotificationBuilder {
         mNotifyManager.notify(notificationId, mBuilder.build());
     }
 
+    public static void buildNotification(Context context, String title, String expandedText, String channelId) {
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        NotificationCompat.Builder mBuilder;
+        NotificationManager mNotifyManager;
+
+        int notificationId;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationHelper notificationHelper = new NotificationHelper(context);
+            mBuilder = new NotificationCompat.Builder(context, CHANNEL_LAUNCH_REMINDER);
+            mNotifyManager = notificationHelper.getManager();
+        } else {
+            mBuilder = new NotificationCompat.Builder(context);
+            mNotifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+
+        boolean isDoNotDisturb = sharedPref.getBoolean("do_not_disturb_status", false);
+
+        if (isDoNotDisturb) {
+            try {
+                isDoNotDisturb = isTimeBetweenTwoTime(sharedPref.getString("do_not_disturb_start_time", "22:00"),
+                        sharedPref.getString("do_not_disturb_end_time", "08:00"),
+                        new SimpleDateFormat("HH:mm").format(new Date()));
+            } catch (ParseException e) {
+                Timber.e(e);
+                isDoNotDisturb = false;
+            }
+        }
+
+        Intent resultIntent = null;
+        try {
+            resultIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.WearableExtender wearableExtender =
+                new NotificationCompat.WearableExtender()
+                        .setHintHideIcon(true);
+
+        Once.markDone("SHOW_FILTER_SETTINGS");
+        if (Once.beenDone("SHOW_FILTER_SETTINGS", Amount.lessThan(10))) {
+            Intent intent;
+            try {
+                intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
+            } catch (ClassNotFoundException e) {
+                Timber.e(e);
+                return;
+            }
+            intent.setAction("SHOW_FILTERS");
+            PendingIntent archiveIntent = PendingIntent.getActivity(context,
+                    2,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+
+            NotificationCompat.Action filterSettings =
+                    new NotificationCompat.Action.Builder(R.drawable.ic_filter,
+                            "Filters", archiveIntent)
+                            .build();
+
+            mBuilder.addAction(filterSettings);
+
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Intent notificationSettings = new Intent();
+                notificationSettings.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+
+                //for Android 5-7
+                notificationSettings.putExtra("app_package", context.getPackageName());
+                notificationSettings.putExtra("app_uid", context.getApplicationInfo().uid);
+
+                // for Android O
+                notificationSettings.putExtra("android.provider.extra.APP_PACKAGE", context.getPackageName());
+
+                PendingIntent channelPendingIntent = PendingIntent.getActivity(context,
+                        3,
+                        notificationSettings,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+                NotificationCompat.Action channelSettings =
+                        new NotificationCompat.Action.Builder(R.drawable.ic_notifications_white,
+                                "Settings", channelPendingIntent)
+                                .build();
+
+                mBuilder.addAction(channelSettings);
+
+            }
+
+        }
+
+        notificationId = (int) (Calendar.getInstance().getTimeInMillis());
+
+        mBuilder.setContentTitle(title)
+                .setSmallIcon(R.drawable.ic_rocket)
+                .setAutoCancel(true)
+                .setContentText(expandedText)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(expandedText))
+                .extend(wearableExtender)
+                .setContentIntent(pending);
+
+        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
+                "default ringtone");
+        Uri alarmSound = Uri.parse(ringtoneBox);
+        if (isDoNotDisturb) {
+            mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
+        } else {
+            mBuilder.setChannelId(channelId).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+        }
+
+
+        if (isDoNotDisturb) {
+            mBuilder.setPriority(Notification.PRIORITY_LOW);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
+                mBuilder.setPriority(Notification.PRIORITY_HIGH);
+            }
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
+                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
+            mBuilder.setVibrate(new long[]{750, 750});
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
+                && sharedPref.getBoolean("notifications_new_message_led", true)) {
+            mBuilder.setLights(Color.GREEN, 3000, 3000);
+        }
+
+        mNotifyManager.notify(notificationId, mBuilder.build());
+    }
+
     private static boolean isTimeBetweenTwoTime(String argStartTime,
                                                String argEndTime,
                                                String argCurrentTime) throws ParseException {
@@ -438,7 +569,25 @@ public class NotificationBuilder {
     }
 
     public static void notifyUserNewsItem(Context context, Article article) {
-        buildNewsNotification(context, article, CHANNEL_NEWS);
+        String title = "New Featured Article via " + article.getNewsSite();
+        String message = article.getTitle();
+        buildNewsNotification(context, article, title, message, CHANNEL_NEWS);
+    }
+
+    public static void notifyCustomWithLaunch(Context context, Launch launch, String title, String message){
+        buildNotification(context, launch, title, message, CHANNEL_NEWS);
+    }
+
+    public static void notifyCustomWithEvent(Context context, Event event, String title, String message){
+        buildEventNotification(context, event, title, message, CHANNEL_NEWS);
+    }
+
+    public static void notifyCustomWithArticle(Context context, Article article, String title, String message){
+        buildNewsNotification(context, article, title, message, CHANNEL_NEWS);
+    }
+
+    public static void notifyCustom(Context context, String title, String message){
+        buildNotification(context, title, message, CHANNEL_LAUNCH_REMINDER);
     }
 
     private static void buildEventNotification(Context context, Event event, String title, String expandedText, String channelNewsName) {
@@ -546,7 +695,7 @@ public class NotificationBuilder {
         mNotifyManager.notify(notificationId, mBuilder.build());
     }
 
-    private static void buildNewsNotification(Context context, Article article, String channelNewsName) {
+    private static void buildNewsNotification(Context context, Article article, String title, String expandedText, String channelNewsName) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         NotificationCompat.Builder mBuilder;
         NotificationManager mNotifyManager;
@@ -587,7 +736,7 @@ public class NotificationBuilder {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder.setSubText(article.getNewsSite());
-        mBuilder.setContentText(article.getTitle());
+        mBuilder.setContentText(expandedText);
 
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
@@ -595,12 +744,12 @@ public class NotificationBuilder {
 
         notificationId = Utils.getUniqueId();
 
-        mBuilder.setContentTitle("New Featured Article via " + article.getNewsSite())
+        mBuilder.setContentTitle(title)
                 .setSmallIcon(R.drawable.ic_rocket)
                 .setAutoCancel(true)
                 .extend(wearableExtender)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(article.getTitle()))
+                        .bigText(title))
                 .setContentIntent(eventIntent);
 
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",

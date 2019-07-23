@@ -403,9 +403,11 @@ public class LaunchApplication extends Application {
         if (notificationEnabled) {
             firebaseMessaging.subscribeToTopic("notificationEnabled");
             firebaseMessaging.subscribeToTopic("webcastLive");
+            firebaseMessaging.subscribeToTopic("custom");
         } else {
             firebaseMessaging.unsubscribeFromTopic("notificationEnabled");
             firebaseMessaging.unsubscribeFromTopic("webcastLive");
+            firebaseMessaging.unsubscribeFromTopic("custom");
         }
 
         if (netstampChanged) {
