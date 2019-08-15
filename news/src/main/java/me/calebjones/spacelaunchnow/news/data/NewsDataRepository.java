@@ -17,6 +17,7 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
+import me.calebjones.spacelaunchnow.data.models.main.news.NewsItemResponse;
 import timber.log.Timber;
 
 /**
@@ -70,8 +71,8 @@ public class NewsDataRepository {
         callback.onNetworkStateChanged(true);
         dataLoader.getNewsList(limit, new Callbacks.NewsListNetworkCallback() {
             @Override
-            public void onSuccess(List<NewsItem> news) {
-                addNewsToRealm(news);
+            public void onSuccess(NewsItemResponse news) {
+                addNewsToRealm(news.getNewsItems());
                 callback.onNetworkStateChanged(false);
                 callback.onNewsLoaded(getNewsFromRealm());
             }

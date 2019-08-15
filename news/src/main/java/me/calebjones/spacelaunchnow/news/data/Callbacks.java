@@ -5,10 +5,11 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
+import me.calebjones.spacelaunchnow.data.models.main.news.NewsItemResponse;
 
 public class Callbacks {
     public interface NewsListNetworkCallback {
-        void onSuccess(List<NewsItem> news);
+        void onSuccess(NewsItemResponse news);
         void onNetworkFailure(int code);
         void onFailure(Throwable throwable);
     }

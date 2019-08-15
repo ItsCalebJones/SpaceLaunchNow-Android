@@ -8,6 +8,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +32,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -539,6 +542,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         if (SupporterHelper.isSupporter()) {
             mMenu.removeItem(R.id.action_supporter);
         }
+
+        int color = Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst());
+        final MenuItem item = menu.findItem(R.id.action_alert);
+        item.getIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override

@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
+import me.calebjones.spacelaunchnow.data.models.main.news.NewsItemResponse;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,8 +46,8 @@ public class NewsDataClient {
         return call;
     }
 
-    public Call<List<NewsItem>> getArticles(int limit, Callback<List<NewsItem>>  callback){
-        Call<List<NewsItem>>  call;
+    public Call<NewsItemResponse> getArticles(int limit, Callback<NewsItemResponse>  callback){
+        Call<NewsItemResponse>  call;
 
         call = newsInterface.getArticles(limit);
 
@@ -55,8 +56,8 @@ public class NewsDataClient {
         return call;
     }
 
-    public Call<List<NewsItem>> getArticlesByPage(int limit, String page, Callback<List<NewsItem>>  callback){
-        Call<List<NewsItem>>  call;
+    public Call<NewsItemResponse> getArticlesByPage(int limit, String page, Callback<NewsItemResponse>  callback){
+        Call<NewsItemResponse>  call;
 
         call = newsInterface.getArticlesByPage(limit, page);
 
