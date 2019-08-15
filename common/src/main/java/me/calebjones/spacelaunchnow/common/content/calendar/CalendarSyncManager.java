@@ -189,5 +189,6 @@ public class CalendarSyncManager extends BaseManager {
             calendarUtil.deleteEvent(context, calendarEvent.getId());
             mRealm.executeTransaction(realm -> calendarEvent.deleteFromRealm());
         }
+        calendarUtil.deleteAll(context);
     }
 }
