@@ -99,6 +99,7 @@
     <string name="family">Famiglia:</string>
     <string name="configuration">Configurazione:</string>
     <string name="vehicle_specifications">Specifiche del veicolo</string>
+    <string name="height">altezza</string>
     <string name="estimated_launch_date">Data stimata di lancio</string>
     <string name="supporter">Sostenitore</string>
     <string name="agency">Agenzia</string>
@@ -252,5 +253,35 @@
     <string name="wear_os">Wear OS</string>
     <string name="launchers">Razzi vettori</string>
     <string name="orbiters">Moduli orbitanti</string>
+    <string name="spacestations">stazioni spaziali</string>
+    <string name="astronauts">astronauti</string>
+    <string name="events">eventi</string>
+    <string name="favorites">preferiti</string>
+    <string name="show_me">Fammi vedere</string>
+    <string name="no_spacestations">Nessuna stazione spaziale trovata</string>
+    <string name="no_events">Nessun evento trovato</string>
+    <string name="founded_alt">Fondato</string>
+    <string name="status_alt">stato</string>
     <string name="mission_agency">Agenzia della missione</string>
+    
+    
+    ]
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
 </resources>

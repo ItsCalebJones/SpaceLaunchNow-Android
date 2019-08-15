@@ -61,8 +61,6 @@
     <string name="weather_description">Saa säätiedot laukaisualustalta tulevista ja menneistä laukaisuista</string>
     <string name="calendar_sync">kalenterin synkronointi</string>
     <string name="calendar_sync_description">Synkronoi tulevat laukaisut automaattisesti kalenteriisi.</string>
-    <string name="wear_complications">Dynaaminen rannekellon ulkonäkö</string>
-    <string name="wear_complications_description">Dynaamiset kuvat kantoraketeista rannekellon taustakuvana.</string>
     <string name="remove_ads">Poista Mainokset</string>
     <string name="remove_ads_description">Poista kaikki mainostus ikuisesti!</string>
     <string name="discord">Discord</string>
@@ -169,7 +167,7 @@
     <string name="diameter_full">halkaisija: %.1f metriä</string>
     <string name="stage_full">vaiheiden määrä: %d</string>
     <string name="mass_leo_full">massa maan matalalle kiertoradalle (LEO): %d kg</string>
-    <string name="mass_launch_full">Massa laukaisun aikana: %d T</string>
+    <string name="mass_launch_full">Massa laukaisun aikana: %d kg</string>
     <string name="thrust_full">Työntövoima laukaisun aikana: %d kN</string>
     <string name="upcoming">Tuleva</string>
     <string name="previous">Edellinen</string>
@@ -181,4 +179,6 @@
     <string name="select_launch_vehicle">Valitse kantoraketti</string>
     <string name="select_launch_agency">Valitse kantoraketin järjestö</string>
     <string name="mission_agency">avaruuslennon järjestö</string>
+    <string name="dynamic_watch_face">Dynaaminen rannekellon ulkonäkö</string>
+    <string name="dynamic_watch_face_description">Dynaamiset kuvat kantoraketeista rannekellon taustakuvana.</string>
 </resources>

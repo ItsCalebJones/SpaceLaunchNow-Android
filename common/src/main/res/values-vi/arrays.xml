@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="status">
+        <item>Trong quá trình đào tạo</item>
+        <item>Hoạt động</item>
+        <item>Nghỉ</item>
+        <item>Thất lạc trong chuyến bay</item>
+        <item>Thất lạc trong lúc đào tạo</item>
+        <item>Chết trong lúc hoạt động</item>
+        <item>Đã huỷ bỏ</item>
+        <item>Đã xin nghỉ trong lúc đào tạo</item>
+    </string-array>
+    <string-array name="widget_presets">
+        <item>Sáng</item>
+        <item>Tối</item>
+        <item>Sáng - Trong suốt</item>
+        <item>Tối - Trong suốt</item>
+        <item>Xanh da trời</item>
+        <item>Đỏ</item>
+        <item>Cam</item>
+        <item>Tùy chọn</item>
+    </string-array>
+    <string-array name="spinner_list_item_array">
+        <item>Tất cả</item>
+        <item>Sắp tới</item>
+        <item>Trước đó</item>
+    </string-array>
+</resources>

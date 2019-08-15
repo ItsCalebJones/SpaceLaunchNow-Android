@@ -21,13 +21,13 @@
     <string name="TsSKB_summary">Das Progess Rocket Space Center, ehemals TsSKB-Progress, ist ein russisches Staatsunternehmen unter der Leitung der staatlichen Raumfahrtbehörde Roskosmos. Es ist der Entwickler der berühmten Sojus-FG Rakete für bemannten Raumflug sowie der Sojus-U für unbemannte Sonden.</string>
     <string name="nasa_summary">Die National Aeronautics and Space Administration (Nasa) ist die zivile US-Bundesbehörde für Raumfahrt und Flugwissenschaft.</string>
     <string name="general_settings">Allgemeine Einstellungen für Startverfolgung und App-Verhalten.</string>
-    <string name="supporter_title">Werde Supporter</string>
+    <string name="supporter_title">Werde Unterstützer</string>
     <string name="supporter_description">Hilf dabei, andauernde Entwicklung, zeitnahe Bugfixes und neue Features zu ermöglichen.</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Bleibe auf dem Laufenden über Raketenstarts, Missionen und Trägerraketen.</string>
     <string name="slide_two_title">Benachrichtigungen für Raketenstarts</string>
     <string name="slide_two_description">Bekomme Benachrichtigungen für kommende Raketenstarts und entdecke die Geschichte der Raumfahrt</string>
-    <string name="slide_three_title">Finde Trägerraketen</string>
+    <string name="slide_three_title">Suche nach Trägerraketen</string>
     <string name="slide_three_description">Lerne die Raketen kennen, die Menschen in Orbit gebracht haben.</string>
     <string name="thank_you">Diese App, Space Launch Now, hat als einfaches Wochenendprojekt begonnen. Im Verlaufe eines Jahres hat die App knapp 10.000 aktive Nutzer erlangt. Ich bin unglaublich dankbar für jeden, der sich die Zeit genommen hat, Bugs zu berichten, Feedback zu geben, an BETA\'s teilgenommen hat und Supporter geworden ist.</string>
     <string name="player_error">Fehler beim Initialisieren des YouTube-Players aufgetreten: %s</string>
@@ -49,9 +49,9 @@
     <string name="ok">OK</string>
     <string name="issues_connecting_billing">Probleme beim Verbinden mit Google Play Billing</string>
     <string name="thanks_support_development">Danke für deine Hilfe, die Entwicklung zu unterstützen!</string>
-    <string name="billing_error_code">billing error code -</string>
+    <string name="billing_error_code">Transaktions Fehler -</string>
     <string name="purchase_history">Abrechnungsverlauf wiederhergestellt.</string>
-    <string name="unable_to_start_billing">Nicht in der Lage, Billing Processor zu initialisieren.</string>
+    <string name="unable_to_start_billing">Nicht in der Lage die Transaktion zu initialisieren.</string>
     <string name="no_purchase_history">Einkäufe wiederhergestellt - keine mit diesem Google Account gefunden.</string>
     <string name="billing_not_available">Google Play Billing Services nicht verfügbar.</string>
     <string name="whats_new">Was gibt\'s Neues?</string>
@@ -67,8 +67,8 @@
     <string name="weather_description">Sieh Wetterinformationen vom Launchpad für vergangene und kommende Starts.</string>
     <string name="calendar_sync">Kalender Sync</string>
     <string name="calendar_sync_description">Synchronisiere kommende Starts automatisch mit deinem Kalender.</string>
-    <string name="wear_complications">Dynamische Zifferblätter</string>
-    <string name="wear_complications_description">Dynamische Bilder von Trägerraketen als Zifferblatt-Hintergrund.</string>
+    <string name="wear_complications">Wear OS Zusatzfunktionen</string>
+    <string name="wear_complications_description">Hol dir Zusatzfunktion von Space Launch Now auf deiner Wear OS Uhr!</string>
     <string name="remove_ads">Entferne Werbung</string>
     <string name="remove_ads_description">Entferne Werbung für immer!</string>
     <string name="discord">Discord</string>
@@ -165,7 +165,7 @@
     <string name="title_activity_download">Download</string>
     <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">Bleibe auf dem Laufenden über Raketenstarts, Missionen und Trägerraketen.</string>
-    <string name="supporter_card_description">Exklusive Widgets, Wear Complications, entferne Werbung und mehr.</string>
+    <string name="supporter_card_description">Exklusive Widgets, Wear OS Zusatzfunktionen, entferne Werbung und mehr.</string>
     <string name="vehicle_card_title">Finde Trägerraketen</string>
     <string name="notification_card">Benachrichtigungen für Raketenstarts</string>
     <string name="vehicle_card_description">Lerne die Raketen kennen, die Menschen in Orbit gebracht haben.</string>
@@ -455,7 +455,7 @@
     <string name="flights">Flüge</string>
     <string name="single_use">Single Use</string>
     <string name="docked">Angedockt:</string>
-    <string name="human_rated">Human Rated:</string>
+    <string name="human_rated">Bemannt:</string>
     <string name="no_active_expeditions">Keine aktiven Expeditionen</string>
     <string name="past_expeditions">Vergangene Expeditionen</string>
     <string name="expeditions">Expeditionen</string>
@@ -488,6 +488,14 @@
     <string name="status_alt">Status:</string>
     <string name="de_orbited">Wiedereintritt:</string>
     <string name="mission_agency">Missions-Organisation</string>
+    <string name="no_expeditions">Keine Expeditionen gefunden</string>
+    <string name="no_docked">Keine angedockten Fahrzeuge</string>
+    ]
+    
+    <string name="spacecraft_default_title">Raumfahrzeug Einzelheiten</string>
+    <string name="spacecraft_default_sub_title">Unbekanntes Raumfahrzeug</string>
+    <string name="dynamic_watch_face">Dynamische Zifferblätter</string>
+    <string name="dynamic_watch_face_description">Dynamische Bilder von Trägerraketen als Zifferblatt-Hintergrund.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

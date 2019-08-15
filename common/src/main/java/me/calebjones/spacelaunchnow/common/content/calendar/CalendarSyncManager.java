@@ -141,7 +141,7 @@ public class CalendarSyncManager extends BaseManager {
                         }
                     }
                 } else {
-                    Timber.w("Reponse received: %s", response.errorBody());
+                    Timber.w("Response received: %s", response.errorBody());
                 }
             }
 
@@ -188,6 +188,6 @@ public class CalendarSyncManager extends BaseManager {
             calendarUtil.deleteEvent(context, calendarEvent.getId());
             mRealm.executeTransaction(realm -> calendarEvent.deleteFromRealm());
         }
-
+        calendarUtil.deleteAll(context);
     }
 }

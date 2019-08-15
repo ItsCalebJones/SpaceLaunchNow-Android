@@ -34,6 +34,11 @@
     <color name="darkAccent">#F44336</color>
     <!--<color name="darkIcons">#ffffff</color>-->
 
+    <color name="custom_background_material_light">#FFFAFAFA</color>
+    <color name="custom_background_material_dark">#FF303030</color>
+    <color name="custom_background_black">#FF000000</color>
+    <color name="custom_background_dark_green">#FF182628</color>
+    <color name="custom_background_dark_blue">#FF21263A</color>
 
     <color name="slide_one">#448AFF</color>
     <color name="slide_two">#4db6ac</color>

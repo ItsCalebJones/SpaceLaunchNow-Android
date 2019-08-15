@@ -8,6 +8,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,12 +32,14 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -253,7 +257,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     }
 
     private void setBackgroundColor() {
-        if (!Utils.getIconColor(Aesthetic.get().colorPrimary().blockingFirst())){
+        if (!Utils.getIconColor(Aesthetic.get().colorPrimary().blockingFirst())) {
             int color = Aesthetic.get().colorAccent().blockingFirst();
             colorReveal.setBackgroundColor(color);
         } else {
@@ -461,14 +465,22 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private void showLoading() {
         Timber.v("Show Loading...");
         if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED) && mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(true));
+            mSwipeRefreshLayout.post(() -> {
+                if (mSwipeRefreshLayout != null) {
+                    mSwipeRefreshLayout.setRefreshing(true);
+                }
+            });
         }
     }
 
     private void hideLoading() {
         Timber.v("Hide Loading...");
         if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED) && mSwipeRefreshLayout != null) {
-            mSwipeRefreshLayout.post(() -> mSwipeRefreshLayout.setRefreshing(false));
+            mSwipeRefreshLayout.post(() -> {
+                if (mSwipeRefreshLayout != null) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
+            });
         }
     }
 
@@ -530,6 +542,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         if (SupporterHelper.isSupporter()) {
             mMenu.removeItem(R.id.action_supporter);
         }
+
+        int color = Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst());
+        final MenuItem item = menu.findItem(R.id.action_alert);
+        item.getIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override
