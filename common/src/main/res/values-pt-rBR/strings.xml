@@ -6,7 +6,6 @@
     <string name="action_settings">Ajustes</string>
     <string name="status_go">"Prosseguir para lançamento"</string>
     <string name="status_nogo">Data de lançamento não confirmada</string>
-
     <string name="status_success">"Lançamento bem-sucedido"</string>
     <string name="status_failure">"Ocorreu falha no lançamento"</string>
     <string name="spacex_summary">A SpaceX projeta, fabrica e lança foguetes e espaçonaves avançadas. A empresa foi fundada em 2002 para revolucionar a tecnologia espacial, com o objetivo final de permitir que as pessoas vivam em outros planetas.</string>
@@ -68,8 +67,8 @@
     <string name="weather_description">Obtenha informações do tempo da plataforma de lançamento para os lançamentos históricos e futuros.</string>
     <string name="calendar_sync">Sincronizar Calendário</string>
     <string name="calendar_sync_description">Sincronizar automaticamente os lançamentos futuros com seu calendário.</string>
-    <string name="wear_complications">Dynamic Watch Face</string>
-    <string name="wear_complications_description">Imagens dinâmicas de veículos de lançamento como o fundo da face do relógio.</string>
+    <string name="wear_complications">Complicações do Wear OS</string>
+    <string name="wear_complications_description">Obtenha a complicação Space Launch Now no seu relógio Wear OS!</string>
     <string name="remove_ads">Remover Anúncios</string>
     <string name="remove_ads_description">Remover todos os anúncios para sempre!</string>
     <string name="discord">Discord</string>
@@ -398,7 +397,6 @@
     <string name="gdpr_type_cloud_database">banco de dados em nuvem</string>
     <string name="gdpr_type_crash">reportar travamento</string>
     <string name="gdpr_type_analytics">reportar análise</string>
-
     <string name="space_launch_news">Novidades de Lançamentos Espaciais</string>
     <string name="consent_body">Este aplicativo usa o Google Firebase para estatística e Google AdMod para exibição de anúncios. Seus dados anônimos podem ser usados para personalizar anúncios nesse aplicativos. Você pode retirar a permissão a qualquer tempo de dentro das configurações nesses aplicativos.</string>
     <string name="data_consent">Consentimento de Dados</string>
@@ -409,7 +407,6 @@
     <string name="unknown_mission_or_payload">Carga ou Missão Desconhecida</string>
     <string name="view_more_launches">Ver mais lançamentos</string>
     <string name="view_rocket_launches">Ver lançamentos da %s</string>
-
     <string name="refresh">Atualizar</string>
     <string name="search">Buscar</string>
     <string name="date">Data</string>
@@ -443,7 +440,6 @@
     <string name="settings_success">Sucesso</string>
     <string name="settings_success_summary">Receba notificações quando um lançamento for confirmado como bem-sucedido ou não.</string>
     <string name="settings_one_minute">Um Minuto</string>
-
     <string name="settings_one_minute_on">Receba notificações quando um Lançamento estiver aguardando um minuto.</string>
     <string name="settings_one_minute_off">Não notifique quando o Lançamento estiver aguardando um minuto.</string>
     <string name="no_live_stream_available">Nenhuma transmissão ao vivo disponível.</string>
@@ -481,6 +477,7 @@
     <string name="start_fill">Início: %s</string>
     <string name="end_fill">Fim: %s</string>
     <string name="spacestations">Estações Espaciais</string>
+    <string name="spacestation">Estação espacial</string>
     <string name="astronauts">Astronautas</string>
     <string name="events">Eventos</string>
     <string name="favorites">Favoritos</string>
@@ -492,6 +489,70 @@
     <string name="status_alt">Situação:</string>
     <string name="de_orbited">Desorbitada:</string>
     <string name="mission_agency">Agência da Missão</string>
+    <string name="no_expeditions">Nenhuma expedição encontrada</string>
+    <string name="no_docked">Nenhum veículo acoplado</string>
+    <string name="no_news">Nenhuma Notícia Carregada</string>]
+    
+    <string name="spacecraft_default_title">Detalhes da Espaçonave</string>
+    <string name="spacecraft_default_sub_title">Espaçonave desconhecida</string>
+    <string name="history">História</string>
+    <string name="time_format_description">Selecione o formato de hora preferido.</string>
+    <string name="launch_service_providers">Provedores de Serviço de Lançamento</string>
+    <string name="launch_locations">Localização do Lançamento</string>
+    <string name="northrop_grumman">Northrop Grumman</string>
+    <string name="blue_origin">Blue Origin</string>
+    <string name="rocket_lab">Rocket Lab</string>
+    <string name="russia_and_kazakhstan">Rússia e Cazaquistão</string>
+    <string name="china">China</string>
+    <string name="kennedy_space_center_cape_canaveral">Centro Espacial Kennedy / Cabo Canaveral</string>
+    <string name="wallops_island">Ilha Wallops</string>
+    <string name="new_zealand">Nova Zelândia</string>
+    <string name="japan">Japão</string>
+    <string name="french_guiana">Guiana Francesa</string>
+    <string name="follow_all_launches">Seguir todos os Lançamentos</string>
+    <string name="dynamic_watch_face">Dynamic Watch Face</string>
+    <string name="dynamic_watch_face_description">Imagens dinâmicas de veículos de lançamento como o fundo da face do relógio.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Olá fragmento em branco</string>
+    <string name="news_and_events">Novidades e Eventos</string>
+    <string name="view_x_launches">Ver lançamentos da %s</string>
+    <string name="booster_information">Informação do(a) %s</string>
+    <string name="first_stage_x">Primeiro Estágio - %s</string>
+    <string name="x_landing_information">%s Informação do Pouso</string>
+    <string name="additional_landing_information">Informação Adicional do Pouso</string>
+    <string name="launch_day_weather">Tempo no dia de Lançamento</string>
+    <string name="video_source_unavailable">Fonte de vídeo indisponível.</string>
+    <string name="launch_date"><![CDATA[<b> Data de Lançamento </b><br>%1$s]]></string>
+    <string name="instantaneous_launch_window"><![CDATA[<b>Janela de Lançamento Instantânea</b><br>%1$s]]></string>
+    <string name="launch_window_extras"><![CDATA[<b>Janela de Lançamento</b><br>%1$s - %2$s<br>%3$s]]></string>
+    <string name="read_more">Ler Mais</string>
+    <string name="serial_number">Número de Série:</string>
+    <string name="status_booster">Situação:</string>
+    <string name="flights_booster">Voos:</string>
+    <string name="flight_proven_booster">Voo de Provação:</string>
+    <string name="landing_attempt_booster">Tentativa de Pouso:</string>
+    <string name="landing_success_booster">Sucesso de Pouso:</string>
+    <string name="type_booster">Tipo:</string>
+    <string name="location_booster">Localização:</string>
+    <string name="first_flight_orbiter">Primeiro Voo:</string>
+    <string name="active_orbiter">Ativo:</string>
+    <string name="human_rated_orbiter">Testado para humanos:</string>
+    <string name="specifications_orbiter">Especificações</string>
+    <string name="diameter_unknown_m">Diâmetro: Desconhecido (m)</string>
+    <string name="height_unknown_m">Altura: Desconhecido (m)</string>
+    <string name="payload_unknown_kg">Carga: Desconhecido (kg)</string>
+    <string name="crew_capacity_unknown">Capacidade de Tripulação: Desconhecido</string>
+    <string name="use_system_language">Usar Linguagem do Sistema</string>
+    <string name="force_english">Forçar Língua Inglesa.</string>
+    <string name="force_english_off">Use a linguagem do seu dispositivo.</string>
+    <string name="dark_theme">Tema Escuro</string>
+    <string name="primary_color_title">Cor Primária</string>
+    <string name="primary_color_summary">Selecione uma cor primária personalizada.</string>
+    <string name="accent_color_title">Cor de Destaque</string>
+    <string name="accent_color_summary">Selecione uma cor de destaque personalizada.</string>
+    <string name="background_color_title">Cor de Plano de Fundo</string>
+    <string name="background_color_summary">Selecione uma cor de plano de fundo personalizada.</string>
+    <string name="born">Nascido(a): %1$s (%2$d)</string>
+    <string name="born_one_argument">Nascido(a): %1$s</string>
+    <string name="died_two_arguments">Morte: %1$s (%2$d)</string>
 </resources>

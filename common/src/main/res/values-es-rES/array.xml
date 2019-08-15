@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="agencies">
+        <item>NASA</item>
+        <item>SpaceX</item>
+        <item>ROSCOSMOS</item>
+        <item>Arianespace</item>
+        <item>ULA</item>
+        <item>CASC</item>
+        <item>ISRO</item>
+    </string-array>
+    <string-array name="country">
+        <item>E.E.U.U.</item>
+        <item>China</item>
+        <item>Rusia</item>
+        <item>India</item>
+        <item>Multi</item>
+    </string-array>
+    <string-array name="location">
+        <item>Cabo Cañaveral, FL, E.E.U.U.</item>
+        <item>Centro Espacial Kennedy, FL, E.E.U.U.</item>
+        <item>Isla Wallops, Virginia, E.E.U.U.</item>
+        <item>Vandenberg AFB, CA, E.E.U.U.</item>
+        <item>Jiuquan, China</item>
+        <item>Taiyuan, China</item>
+        <item>Centro de lanzamiento de satélites Xichang, China</item>
+        <item>Centro de lanzamiento de satélites Wechang, China</item>
+        <item>Kourou, Guayana Francesa</item>
+        <item>Sriharikota, India</item>
+        <item>Kagoshima / Tanegashima, Japón</item>
+        <item>Cosmódromo de Baikonur, Kazajstán, Rusia</item>
+        <item>Cosmódromo de Plesetsk, Rusia</item>
+        <item>Kapustin Yar, Rusia</item>
+        <item>Cosmódromo de Svobodny, Rusia</item>
+        <item>Dombarovsky, Rusia</item>
+        <item>Lanzamiento desde el mar</item>
+        <item>Woomera, Australia</item>
+        <item>Kaitorete Spit, Nueva Zelanda</item>
+        <item>Complejo de lanzamiento Kodiak, E.E.U.U.</item>
+        <item>Estación de lanzamiento de Sohae, Corea del Norte</item>
+    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Un minuto</item>
         <item>Cinco minutos</item>

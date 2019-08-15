@@ -24,6 +24,7 @@ import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Location;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.main.Rocket;
+import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.data.models.news.Article;
 import me.calebjones.spacelaunchnow.data.networking.RetrofitBuilder;
 import timber.log.Timber;
@@ -137,6 +138,10 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
                 if (checkWebcast(data, webcastOnly)) return;
                 NotificationBuilder.notifyUserEventWebcastLive(context, getEventFromJSON(data));
             }
+
+            if (notificationType.contains("custom")){
+                handleCustomNotification(context, data);
+            }
         }
     }
 
@@ -166,6 +171,34 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
 
     private Article getArticleFromJSON(JSONObject data) throws JSONException  {
         return RetrofitBuilder.getGson().fromJson(data.getString("item"), Article.class);
+    }
+
+
+    private void handleCustomNotification(Context context, JSONObject data) throws JSONException, ParseException {
+        Timber.v(data.toString());
+        if (data.has("launch")){
+            JSONObject launch_obj = new JSONObject(data.getString("launch"));
+            Launch launch = getLaunchFromJSON(launch_obj);
+            NotificationBuilder.notifyCustomWithLaunch(context,
+                    launch, data.getString("title"),
+                    data.getString("message"));
+        } else if (data.has("event")){
+            Event event = RetrofitBuilder.getGson().fromJson(data.getString("event"), Event.class);
+            NotificationBuilder.notifyCustomWithEvent(context,
+                    event,
+                    data.getString("title"),
+                    data.getString("message"));
+        } else if (data.has("news")){
+            Article article = RetrofitBuilder.getGson().fromJson(data.getString("news"), Article.class);
+            NotificationBuilder.notifyCustomWithArticle(context,
+                    article,
+                    data.getString("title"),
+                    data.getString("message"));
+        } else {
+            NotificationBuilder.notifyCustom(context,
+                    data.getString("title"),
+                    data.getString("message"));
+        }
     }
 
     private boolean checkWebcast(JSONObject data, boolean webcastOnly) throws JSONException {

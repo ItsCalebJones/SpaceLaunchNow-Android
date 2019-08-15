@@ -71,8 +71,6 @@ amelyet emberes repülésekhez használnak, és a Szojuz-U fejlesztője, melyet 
     <string name="weather_description">Szerezzen időjárás információkat az indítás helyszínéről történelmi indításokból, vagy közelgő indításokból.</string>
     <string name="calendar_sync">Naptár szinkronizálása</string>
     <string name="calendar_sync_description">Közelgő indítások automatikus szinkronizálása a naptáramba.</string>
-    <string name="wear_complications">Dinamikus Watch Face</string>
-    <string name="wear_complications_description">Az indított járművek dinamikus képeinek megtekintése.</string>
     <string name="remove_ads">Reklámok eltüntetése</string>
     <string name="remove_ads_description">Összes reklám eltüntesése örökre!</string>
     <string name="discord">Discord</string>
@@ -188,7 +186,7 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="stage_full">Fokozatok maximális száma: %d</string>
     <string name="mass_leo_full">Hasznos teher alacsony Föld körüli pályára: %d kg</string>
     <string name="mass_gto_full">Hasznos teher geostacionárius átviteli pályára: %d kg</string>
-    <string name="mass_launch_full">Tömeg indításkor: %d T</string>
+    <string name="mass_launch_full">Tömeg indításkor: %d kg</string>
     <string name="thrust_full">Tolóerő indításkor: %d kN</string>
     <string name="upcoming">Közelgő</string>
     <string name="previous">Előző</string>
@@ -345,7 +343,41 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="date_unconfirmed">A jelenlegi dátum egy \'nem hamarabb mint\' becslés.</string>
     <string name="source">Válasszon ki egy forrást</string>
     <string name="long_press_share">Hosszan nyomja hogy megossza</string>
+    <string name="spacestations">Űrállomások</string>
+    <string name="astronauts">Űrhajósok</string>
+    <string name="events">Események</string>
+    <string name="favorites">Kedvencek</string>
+    <string name="show_me">Mutassa</string>
+    <string name="docked_alt">Dokkolt</string>
+    <string name="no_spacestations">Űrállomások nem találhatóak</string>
+    <string name="no_events">Események nem találhatóak</string>
+    <string name="founded_alt">Alapítva:</string>
+    <string name="status_alt">Állapot:</string>
+    <string name="de_orbited">Pályáról lehozva:</string>
     <string name="mission_agency">Küldetés ügynökége</string>
+    
+    
+    ]
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <string name="dynamic_watch_face">Dinamikus Watch Face</string>
+    <string name="dynamic_watch_face_description">Az indított járművek dinamikus képeinek megtekintése.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

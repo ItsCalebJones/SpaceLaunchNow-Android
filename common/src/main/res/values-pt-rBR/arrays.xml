@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="status">
+        <item>Em Treinamento</item>
+        <item>Ativo</item>
+        <item>Retirado</item>
+        <item>Perdido em voo</item>
+        <item>Perdido em Treinamento</item>
+        <item>Morto durante serviço ativo</item>
+        <item>Demitido(a)</item>
+        <item>Renunciou durante treinamento</item>
+    </string-array>
     <string-array name="widget_presets">
         <item>Claro</item>
         <item>Escuro</item>

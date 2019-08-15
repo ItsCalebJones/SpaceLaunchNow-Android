@@ -141,7 +141,7 @@ public class CalendarSyncManager extends BaseManager {
                         }
                     }
                 } else {
-                    Timber.w("Reponse received: %s", response.errorBody());
+                    Timber.w("Response received: %s", response.errorBody());
                 }
             }
 
@@ -159,6 +159,7 @@ public class CalendarSyncManager extends BaseManager {
             for (CalendarEvent calendarEvent : calendarEvents){
                 calendarUtil.deleteEvent(context, calendarEvent.getId());
             }
+
             createEvent(launch);
         } else if (calendarEvents.size() == 1) {
             if (!calendarUtil.updateEvent(context, launch, calendarEvents.first().getId())){
@@ -188,6 +189,5 @@ public class CalendarSyncManager extends BaseManager {
             calendarUtil.deleteEvent(context, calendarEvent.getId());
             mRealm.executeTransaction(realm -> calendarEvent.deleteFromRealm());
         }
-
     }
 }

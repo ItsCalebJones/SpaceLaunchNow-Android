@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="agencies">
+        <item>NASA</item>
+        <item>SpaceX</item>
+        <item>ROSCOSMOS</item>
+        <item>Arianespace</item>
+        <item>ULA</item>
+        <item>CASC</item>
+        <item>ISRO</item>
+    </string-array>
+    <string-array name="country">
+        <item>USA</item>
+        <item>China</item>
+        <item>Russland</item>
+        <item>Indien</item>
+        <item>Multi</item>
+    </string-array>
+    <string-array name="location">
+        <item>Cape Canaveral, FL, USA</item>
+        <item>Kennedy Space Center, FL, USA</item>
+        <item>Wallops Island, Virginia, USA</item>
+        <item>Vandenberg AFB, CA, USA</item>
+        <item>Jiuquan, China</item>
+        <item>Taiyuan, China</item>
+        <item>Xichang Satellite Launching Center, China</item>
+        <item>Wechang Satellite Launching Center, China</item>
+        <item>Kourou, Französisch-Guayana</item>
+        <item>Sriharikota, Indien</item>
+        <item>Kagoshima / Tanegashima, Japan</item>
+        <item>Kosmodrom Baikonur, Kasachstan, Russland</item>
+        <item>Kosmodrom Plessezk, Russland</item>
+        <item>Kapustin Jar, Russland</item>
+        <item>Kosmodrom Swobodny, Russland</item>
+        <item>Dombarowski, Russland</item>
+        <item>Meeres-Start</item>
+        <item>Woomera, Australien</item>
+        <item>Kaitorete Spit, Neuseeland</item>
+        <item>Kodiak Launch Complex, US</item>
+        <item>Sohae Raketenstartgelände, Nordkorea</item>
+    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Eine Minute</item>
         <item>Fünf Minuten</item>
@@ -10,7 +49,7 @@
         <item>Ein Tag</item>
     </string-array>
     <string-array name="sync_timer">
-        <item>Ein Tag</item>
+        <item>Einen Tag</item>
         <item>Drei Tage</item>
         <item>Eine Woche</item>
     </string-array>

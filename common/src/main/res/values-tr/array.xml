@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="agencies">
+        <item>NASA</item>
+        <item>SpaceX</item>
+        <item>ROSCOSMOS</item>
+        <item>Arianespace</item>
+        <item>ULA</item>
+        <item>CASC</item>
+        <item>ISRO</item>
+    </string-array>
+    <string-array name="country">
+        <item>ABD</item>
+        <item>Çin</item>
+        <item>Rusya</item>
+        <item>Hindistan</item>
+        <item>Çoklu</item>
+    </string-array>
+    <string-array name="location">
+        <item>Cape Canaveral, FL, ABD</item>
+        <item>Kennedy Uzay Merkezi, FL, ABD</item>
+        <item>Wallops Adası, Virginia, ABD</item>
+        <item>Vandenberg AFB, CA, ABD</item>
+        <item>Jiuquan, Çin</item>
+        <item>Taiyuan, Çin</item>
+        <item>Xichang Uydu Fırlatma Merkezi, Çin</item>
+        <item>Wenchang Uydu Fırlatma Merkezi, Çin</item>
+        <item>Kourou, Fransız Guyanası</item>
+        <item>Sriharikota, Hindistan</item>
+        <item>Kagoshima / Tanegashima, Japonya</item>
+        <item>Baikonur Cosmodrome, Kazakistan, Rusya</item>
+        <item>Plesetsk Cosmodrome, Rusya</item>
+        <item>Kapustin Yar, Rusya</item>
+        <item>Svobodney Cosmodrome, Rusya</item>
+        <item>Dombarovskiy, Rusya</item>
+        <item>Denize İniş</item>
+        <item>Woomera, Avustralya</item>
+        <item>Kaitorete Spit, Yeni Zelanda</item>
+        <item>Kodiak Fırlatma Kompleksi, ABD</item>
+        <item>Sohae Fırlatma İstasyonu, Kuzey Kore</item>
+    </string-array>
+    <string-array name="multi_calendar_reminder">
+        <item>Bir Dakika</item>
+        <item>Beş Dakika</item>
+        <item>Yarım Saat</item>
+        <item>Bir Saat</item>
+        <item>İki Saat</item>
+        <item>Dört Saat</item>
+        <item>Bir Gün</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>Bir Gün</item>
+        <item>Üç Gün</item>
+        <item>Bir Hafta</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>İki</item>
+        <item>Bir</item>
+        <item>Beş</item>
+        <item>Yirmi</item>
+        <item>On</item>
+        <item>Tümü (Tavsiye edilmez)</item>
+    </string-array>
+</resources>

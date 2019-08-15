@@ -9,17 +9,6 @@
         <item>CASC</item>
         <item>ISRO</item>
     </string-array>
-    <string-array name="vehicles">
-        <item>Falcon</item>
-        <item>Proton</item>
-        <item>Soyouz</item>
-        <item>Atlas</item>
-        <item>Delta</item>
-        <item>PSLV/GSLV</item>
-        <item>Longue Marche</item>
-        <item>Ariane</item>
-        <item>Rokot</item>
-    </string-array>
     <string-array name="country">
         <item>USA</item>
         <item>Chine</item>
@@ -30,10 +19,25 @@
     <string-array name="location">
         <item>Cap Canaveral, Floride, USA</item>
         <item>Centre Spatial Kennedy, Floride, USA</item>
+        <item>Île de Wallops, Virginie, USA</item>
+        <item>Vandenberg Air Force Base, Californie, USA</item>
+        <item>Jiuquan, Chine</item>
+        <item>Taiyuan, Chine</item>
+        <item>Base de lancement de Xichang, Chine</item>
+        <item>Base de lancement de Wenchang, Chine</item>
         <item>Kourou, Guyane Française</item>
+        <item>Sriharikota, Inde</item>
+        <item>Kagoshima / Tanega-shima, Japon</item>
         <item>Cosmodrome de Baïkonour, Kazakhstan, Russie</item>
         <item>Cosmodrome de Plesetsk, Russie</item>
+        <item>Cosmodrome de Kapoustine Iar, Russie</item>
+        <item>Base de lancement de Svobodny, Russie</item>
+        <item>Base de lancement de Dombarovski, Russie</item>
         <item>Lancement en mer</item>
+        <item>Woomera, Australie</item>
+        <item>Kiatorete Spit, Nouvelle-Zélande</item>
+        <item>Pacific Spaceport Complex – Alaska, USA</item>
+        <item>Base de lancement de Sohae, Corée du Nord</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Une Minute</item>

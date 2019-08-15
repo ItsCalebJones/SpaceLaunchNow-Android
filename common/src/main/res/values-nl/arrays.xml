@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="status">
+        <item>In-training</item>
+        <item>Actief</item>
+        <item>Op pensioen</item>
+        <item>Verloren bij vlucht</item>
+        <item>Verloren bij training</item>
+        <item>Gestorven tijdens actieve dienst</item>
+        <item>Ontslagen</item>
+        <item>Ontslag genomen tijdens training</item>
+    </string-array>
     <string-array name="widget_presets">
         <item>Licht</item>
         <item>Donker</item>

@@ -3,10 +3,17 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 5-20-2019
+#### Updated 7-11-2019
 ---
 
-### Version 3.1.0 (Latest)
+### Version 3.1.1 (Latest)
+#### Changelog
+* Updates to translations.
+* Improvements to Calendar sync - should no longer see duplicates.
+* Add on-board crew information to Launch details. Check out the Saturn V launch for details.
+
+---
+### Version 3.1.0
 #### Changelog
 * Re-engineered the theme engine to support more varied styles. Unfortunately this means previous theme settings will be reset.
 * Added Dark Mode for all users!

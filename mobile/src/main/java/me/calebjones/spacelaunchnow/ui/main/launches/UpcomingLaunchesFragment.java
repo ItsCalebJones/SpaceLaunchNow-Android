@@ -41,6 +41,7 @@ import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 
 import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
 import me.calebjones.spacelaunchnow.common.content.data.upcoming.UpcomingDataRepository;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.filter.LaunchFilterDialog;
@@ -293,18 +294,19 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             menu.removeItem(R.id.action_supporter);
         }
 
+        int color = Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst());
         final MenuItem item = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
         final ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_button);
-        searchIcon.setColorFilter(Color.WHITE);
+        searchIcon.setColorFilter(color);
         final ImageView cancelButton
                 = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
-        cancelButton.setColorFilter(Color.WHITE);
+        cancelButton.setColorFilter(color);
         final SearchView.SearchAutoComplete searchAutoComplete = searchView
                 .findViewById(androidx.appcompat.R.id.search_src_text);
-        searchAutoComplete.setHintTextColor(getResources().getColor(android.R.color.white));
-        searchAutoComplete.setTextColor(getResources().getColor(android.R.color.white));
+        searchAutoComplete.setHintTextColor(color);
+        searchAutoComplete.setTextColor(color);
     }
 
     @Override
