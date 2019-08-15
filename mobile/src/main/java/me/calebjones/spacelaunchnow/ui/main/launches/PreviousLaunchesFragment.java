@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.main.launches;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.afollestad.aesthetic.Aesthetic;
 import com.crashlytics.android.Crashlytics;
@@ -34,6 +36,7 @@ import me.calebjones.spacelaunchnow.common.utils.EndlessRecyclerViewScrollListen
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
 import me.calebjones.spacelaunchnow.common.content.data.previous.PreviousDataRepository;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.filter.LaunchFilterDialog;
@@ -282,9 +285,19 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             menu.removeItem(R.id.action_supporter);
         }
 
+        int color = Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst());
         final MenuItem item = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
+        final ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_button);
+        searchIcon.setColorFilter(color);
+        final ImageView cancelButton
+                = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        cancelButton.setColorFilter(color);
+        final SearchView.SearchAutoComplete searchAutoComplete = searchView
+                .findViewById(androidx.appcompat.R.id.search_src_text);
+        searchAutoComplete.setHintTextColor(color);
+        searchAutoComplete.setTextColor(color);
     }
 
     @Override

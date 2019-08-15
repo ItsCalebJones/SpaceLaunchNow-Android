@@ -6,6 +6,7 @@ import android.content.Context;
 import java.util.List;
 
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
+import me.calebjones.spacelaunchnow.data.models.main.news.NewsItemResponse;
 import me.calebjones.spacelaunchnow.news.api.NewsDataClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,11 +26,11 @@ public class NewsDataLoader {
     public void getNewsList(int limit, final Callbacks.NewsListNetworkCallback networkCallback) {
         Timber.i("Running getUpcomingLaunchesList");
 
-        newsDataClient.getArticles(limit, new Callback<List<NewsItem>>() {
+        newsDataClient.getArticles(limit, new Callback<NewsItemResponse>() {
             @Override
-            public void onResponse(Call<List<NewsItem>> call, Response<List<NewsItem>> response) {
+            public void onResponse(Call<NewsItemResponse> call, Response<NewsItemResponse> response) {
                 if (response.isSuccessful()) {
-                    List<NewsItem> responseBody = response.body();
+                    NewsItemResponse responseBody = response.body();
                     networkCallback.onSuccess(responseBody);
                 } else {
                     networkCallback.onNetworkFailure(response.code());
@@ -37,7 +38,7 @@ public class NewsDataLoader {
             }
 
             @Override
-            public void onFailure(Call<List<NewsItem>> call, Throwable t) {
+            public void onFailure(Call<NewsItemResponse> call, Throwable t) {
                 networkCallback.onFailure(t);
             }
         });
