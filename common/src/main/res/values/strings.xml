@@ -418,7 +418,6 @@
     <string name="improve_our_data">Help Improve our Data</string>
     <string name="improve_our_data_content">Interested in helping improve the accuracy of our spaceflight data? Join us on the Space Launch Now Discord server and ask about becoming a librarian.</string>
     <string name="no_launches_found">No launches found.</string>
-    <string name="landing_information">Landing Information</string>
     <string name="payload">Payload: %d (kg)</string>
     <string name="spacecraft_format">%s Spacecraft</string>
     <string name="crew_capacity">Crew Capacity: %s</string>
@@ -497,6 +496,7 @@
     <string name="spacecraft_default_sub_title">Unknown Spacecraft</string>
     <string name="history">History</string>
     <string name="time_format_description">Select preferred time format.</string>
+    <string name="landing_information">Landing Information</string>
     <string name="launch_service_providers">Launch Service Providers</string>
     <string name="launch_locations">Launch Locations</string>
     <string name="northrop_grumman">Northrop Grumman</string>
