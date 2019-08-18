@@ -1,40 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies">
-        <item>NASA</item>
-        <item>SpaceX</item>
-        <item>Roszkozmosz</item>
-        <item>Arianespace</item>
-        <item>ULA</item>
-        <item>CASC</item>
-        <item>ISRO</item>
-    </string-array>
-    <string-array name="country">
-        <item>USA</item>
-        <item>Oroszország</item>
-        <item>India</item>
-        <item>Multi</item>
-    </string-array>
-    <string-array name="location">
-        <item>Cape Canaveral, FL, USA</item>
-        <item>Kennyedy Űrközpont, FL, USA</item>
-        <item>Wallops Island, Virginia, USA</item>
-        <item>Vandenberg Légitámaszpont, CA, USA</item>
-        <item>Csiücsuan, Kína</item>
-        <item>Taijüan, Kína</item>
-        <item>Hszicsang Műholdindító Központ, Kína</item>
-        <item>Vencsang Műholdindító Központ, Kína</item>
-        <item>Kourou, Francia Guyana</item>
-        <item>Sriharikota, India</item>
-        <item>Kagosima / Tanegasima, Japán</item>
-        <item>Bajkonuri űrrepülőtér</item>
-        <item>Pleszeck Űrrepülőtér, Oroszország</item>
-        <item>Kapusztyin Jar, Oroszország</item>
-        <item>Szvobodnij Űrrepülőtér, Oroszország</item>
-        <item>Dombarovszkij, Oroszország</item>
-        <item>Tengeri indítás</item>
-        <item>Woomera, Ausztrália</item>
-    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Egy perc</item>
         <item>Öt perc</item>
@@ -48,13 +13,5 @@
         <item>Egy nap</item>
         <item>Három nap</item>
         <item>Egy hét</item>
-    </string-array>
-    <string-array name="upcoming_array">
-        <item>Kettő</item>
-        <item>Egy</item>
-        <item>Öt</item>
-        <item>Húsz</item>
-        <item>Tíz</item>
-        <item>Összes (Nem ajánlott)</item>
     </string-array>
 </resources>

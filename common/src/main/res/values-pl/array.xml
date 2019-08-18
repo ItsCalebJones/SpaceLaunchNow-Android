@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies">
+    <string-array name="agencies_array">
         <item>NASA</item>
         <item>SpaceX</item>
         <item>ROSCOSMOS</item>
@@ -9,14 +9,14 @@
         <item>CASC</item>
         <item>ISRO</item>
     </string-array>
-    <string-array name="country">
+    <string-array name="country_array">
         <item>USA</item>
         <item>Chiny</item>
         <item>Rosja</item>
         <item>Indie</item>
         <item>Multi</item>
     </string-array>
-    <string-array name="location">
+    <string-array name="location_array">
         <item>Przylądek Canaveral, Floryda, USA</item>
         <item>Centrum Kosmiczne im. Kennedy\'ego, Floryda, USA</item>
         <item>Wallops Island, Wirginia, USA</item>

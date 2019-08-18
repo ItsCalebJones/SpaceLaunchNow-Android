@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="status">
+    <string-array name="status_array">
         <item>En Trejnado</item>
         <item>Aktiva</item>
         <item>Malaktiva</item>

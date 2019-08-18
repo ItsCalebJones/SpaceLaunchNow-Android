@@ -1,11 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="status">
-        <item>In allenamento</item>
-        <item>attivo</item>
-        <item>Ritirato</item>
-        <item>Perso in volo</item>
-        <item>Morto mentre in servizio attivo</item>
-        <item>Dismesso</item>
-    </string-array>
 </resources>
