@@ -74,6 +74,7 @@ public class NotificationBuilder {
         Intent resultIntent = new Intent(context, LaunchDetailActivity.class);
         resultIntent.putExtra("TYPE", "launch");
         resultIntent.putExtra("launchID", launch.getId());
+        resultIntent.putExtra("notification", true);
 
         PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
