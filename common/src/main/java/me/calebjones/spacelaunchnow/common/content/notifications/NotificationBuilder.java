@@ -750,7 +750,7 @@ public class NotificationBuilder {
                 .setAutoCancel(true)
                 .extend(wearableExtender)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(title))
+                        .bigText(expandedText))
                 .setContentIntent(eventIntent);
 
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
