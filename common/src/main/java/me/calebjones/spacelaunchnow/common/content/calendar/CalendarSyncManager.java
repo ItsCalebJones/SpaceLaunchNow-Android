@@ -159,6 +159,7 @@ public class CalendarSyncManager extends BaseManager {
             for (CalendarEvent calendarEvent : calendarEvents){
                 calendarUtil.deleteEvent(context, calendarEvent.getId());
             }
+
             createEvent(launch);
         } else if (calendarEvents.size() == 1) {
             if (!calendarUtil.updateEvent(context, launch, calendarEvents.first().getId())){

@@ -420,7 +420,6 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="improve_our_data">Pomozte zlepšit naše údaje</string>
     <string name="improve_our_data_content">Pokud máte zájem o pomoc při zlepšování přesnosti našich údajů o vzdušném prostoru, připojte se k nám na serveru Space Launch Now Discord a požádejte o to, abyste se stal knihovníkem</string>
     <string name="no_launches_found">Žádné starty nenalezeny</string>
-    <string name="landing_information">Infomace o přistání</string>
     <string name="payload">Náklad: %d (kg)</string>
     <string name="spacecraft_format">%s Kosmická loď</string>
     <string name="crew_capacity">Počet míst pro posádku: %s</string>
@@ -495,10 +494,12 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="no_docked">Žádné lodě nejsou nepřipojeny</string>
     <string name="no_news">Žádné načtené novinky</string>]
     
+    
     <string name="spacecraft_default_title">Detaily kosmické lodi</string>
     <string name="spacecraft_default_sub_title">Neznámá kosmická loď</string>
     <string name="history">Historie</string>
     <string name="time_format_description">Vyberte preferovaný časový formát</string>
+    <string name="landing_information">Infomace o přistání</string>
     <string name="launch_service_providers">Společnost zajištující startovní služby</string>
     <string name="launch_locations">Mista startů</string>
     <string name="northrop_grumman">Northrop Grumman</string>

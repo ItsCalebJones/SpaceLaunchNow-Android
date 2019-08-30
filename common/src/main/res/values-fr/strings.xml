@@ -418,7 +418,6 @@
     <string name="improve_our_data">Aider à améliorer les données</string>
     <string name="improve_our_data_content">Motivé pour aider à améliorer la précision des données ? Rejoignez-nous sur le serveur Discord et demandez à devenir un Librarian.</string>
     <string name="no_launches_found">Aucun lancement trouvé.</string>
-    <string name="landing_information">Détails de l\'atterrissage</string>
     <string name="payload">Charge Utile: %d (kg)</string>
     <string name="spacecraft_format">%s Astronefs</string>
     <string name="crew_capacity">Nombre de Places: %s</string>
@@ -491,12 +490,12 @@
     <string name="mission_agency">Agence de la Mission</string>
     <string name="no_expeditions">Aucune Expéditions Trouvées</string>
     <string name="no_docked">Aucun Astronef Amarré</string>
-    <string name="no_news">Aucune News Chargée</string>]
-    
+    <string name="no_news">Aucune News Chargée</string>
     <string name="spacecraft_default_title">Détails de l\'Astronef</string>
     <string name="spacecraft_default_sub_title">Astronef Inconnu</string>
     <string name="history">Historique</string>
     <string name="time_format_description">Format d\'heure préféré</string>
+    <string name="landing_information">Détails de l\'atterrissage</string>
     <string name="launch_service_providers">Fournisseurs de Lancement</string>
     <string name="launch_locations">Bases de Lancement</string>
     <string name="northrop_grumman">Northrop Grumman</string>
@@ -522,7 +521,7 @@
     <string name="additional_landing_information">Informations Supplémentaires sur l\'Atterrissage</string>
     <string name="launch_day_weather">Météo du Jour de Lancement</string>
     <string name="video_source_unavailable">Aucune Source Vidéo Disponible</string>
-    <string name="launch_date"><![CDATA[<b> Date de Lancement </b><br>%1$s]]></string>
+    <string name="launch_date"><![CDATA[<b>Date de Lancement</b><br>%1$s]]></string>
     <string name="instantaneous_launch_window"><![CDATA[<b>Fenêtre de Lancement Instantanée</b><br>%1$s]]></string>
     <string name="launch_window_extras"><![CDATA[<b>Fenêtre de Lancement</b><br>%1$s - %2$s<br>%3$s]]></string>
     <string name="read_more">En Savoir Plus</string>

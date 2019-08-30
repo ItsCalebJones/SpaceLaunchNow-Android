@@ -123,7 +123,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             if (launchVehicle.getToThrust() != null) {
                 holder.vehicleSpecsThrust.setText(String.format(mContext.getString(R.string.thrust_full), launchVehicle.getToThrust()));
             } else {
-                holder.vehicleSpecsThrust.setText(mContext.getString(R.string.height));
+                holder.vehicleSpecsThrust.setText(mContext.getString(R.string.thrust));
             }
 
 

@@ -291,7 +291,7 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
     void filterClicked(){
         new MaterialDialog.Builder(getContext())
                 .title("Astronaut Status")
-                .items(R.array.status)
+                .items(R.array.status_array)
                 .itemsCallbackMultiChoice(statusIDsSelection, new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {

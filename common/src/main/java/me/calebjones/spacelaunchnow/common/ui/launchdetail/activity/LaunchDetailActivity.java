@@ -113,6 +113,7 @@ public class LaunchDetailActivity extends BaseActivity
     private Rate rate;
     private DetailsDataRepository detailsDataRepository;
     private DetailsViewModel model;
+    private Boolean fromNotification;
 
 
     @Override
@@ -212,6 +213,9 @@ public class LaunchDetailActivity extends BaseActivity
             fetchDataFromDatabaseForTitle(launchId);
             fetchDataFromNetwork(launchId);
         }
+
+        fromNotification = mIntent.hasExtra("notification")
+                && mIntent.getBooleanExtra("notification", false);
 
 
         if (toolbar != null) {
@@ -562,7 +566,20 @@ public class LaunchDetailActivity extends BaseActivity
             return true;
         }
         if (id == android.R.id.home) {
-            onBackPressed();
+            // IF activity is opened from notification - go to home screen directly.
+            if (fromNotification != null && fromNotification){
+                Intent mainIntent;
+                try {
+                    mainIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(mainIntent);
+                    fromNotification = false;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                onBackPressed();
+            }
             return true;
         }
 

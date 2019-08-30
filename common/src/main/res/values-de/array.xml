@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies">
-        <item>NASA</item>
-        <item>SpaceX</item>
-        <item>ROSCOSMOS</item>
-        <item>Arianespace</item>
-        <item>ULA</item>
-        <item>CASC</item>
+    <string-array name="agencies_array">
         <item>ISRO</item>
+        <item>CASC</item>
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>ROSCOSMOS</item>
+        <item>SpaceX</item>
+        <item>NASA</item>
     </string-array>
-    <string-array name="country">
-        <item>USA</item>
-        <item>China</item>
-        <item>Russland</item>
-        <item>Indien</item>
+    <string-array name="country_array">
         <item>Multi</item>
+        <item>Indien</item>
+        <item>Russland</item>
+        <item>China</item>
+        <item>USA</item>
     </string-array>
-    <string-array name="location">
-        <item>Cape Canaveral, FL, USA</item>
-        <item>Kennedy Space Center, FL, USA</item>
+    <string-array name="location_array">
+        <item>Sohae Raketenstartgelände, Nordkorea</item>
         <item>Wallops Island, Virginia, USA</item>
+        <item>Kennedy Space Center, FL, USA</item>
+        <item>Cape Canaveral, FL, USA</item>
         <item>Vandenberg AFB, CA, USA</item>
         <item>Jiuquan, China</item>
         <item>Taiyuan, China</item>
-        <item>Xichang Satellite Launching Center, China</item>
-        <item>Wechang Satellite Launching Center, China</item>
-        <item>Kourou, Französisch-Guayana</item>
-        <item>Sriharikota, Indien</item>
-        <item>Kagoshima / Tanegashima, Japan</item>
-        <item>Kosmodrom Baikonur, Kasachstan, Russland</item>
-        <item>Kosmodrom Plessezk, Russland</item>
-        <item>Kapustin Jar, Russland</item>
-        <item>Kosmodrom Swobodny, Russland</item>
-        <item>Dombarowski, Russland</item>
-        <item>Meeres-Start</item>
-        <item>Woomera, Australien</item>
-        <item>Kaitorete Spit, Neuseeland</item>
         <item>Kodiak Launch Complex, US</item>
-        <item>Sohae Raketenstartgelände, Nordkorea</item>
+        <item>Kaitorete Spit, Neuseeland</item>
+        <item>Woomera, Australien</item>
+        <item>Meeres-Start</item>
+        <item>Dombarowski, Russland</item>
+        <item>Kosmodrom Swobodny, Russland</item>
+        <item>Kapustin Jar, Russland</item>
+        <item>Kosmodrom Plessezk, Russland</item>
+        <item>Kosmodrom Baikonur, Kasachstan, Russland</item>
+        <item>Kagoshima / Tanegashima, Japan</item>
+        <item>Sriharikota, Indien</item>
+        <item>Kourou, Französisch-Guayana</item>
+        <item>Wechang Satellite Launching Center, China</item>
+        <item>Xichang Satellite Launching Center, China</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Eine Minute</item>
@@ -48,17 +48,43 @@
         <item>Vier Stunden</item>
         <item>Ein Tag</item>
     </string-array>
+    <string-array name="multi_calendar_reminder_values">
+        <item>1</item>
+        <item>5</item>
+        <item>30</item>
+        <item>60</item>
+        <item>240</item>
+        <item>480</item>
+        <item>1440</item>
+    </string-array>
+    <string-array name="multi_calendar_reminder_default">
+        <item>5</item>
+        <item>1440</item>
+    </string-array>
     <string-array name="sync_timer">
-        <item>Einen Tag</item>
+        <item>Ein Tag</item>
         <item>Drei Tage</item>
         <item>Eine Woche</item>
     </string-array>
+    <string-array name="sync_timer_values">
+        <item>24</item>
+        <item>72</item>
+        <item>168</item>
+    </string-array>
     <string-array name="upcoming_array">
-        <item>Zwei</item>
         <item>Eins</item>
+        <item>Zwei</item>
         <item>Fünf</item>
-        <item>Zwanzig</item>
         <item>Zehn</item>
+        <item>Zwanzig</item>
         <item>Alle (Nicht empfohlen)</item>
+    </string-array>
+    <string-array name="upcoming_array_values">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>1000</item>
     </string-array>
 </resources>

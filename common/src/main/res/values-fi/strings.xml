@@ -181,4 +181,5 @@
     <string name="mission_agency">avaruuslennon järjestö</string>
     <string name="dynamic_watch_face">Dynaaminen rannekellon ulkonäkö</string>
     <string name="dynamic_watch_face_description">Dynaamiset kuvat kantoraketeista rannekellon taustakuvana.</string>
+    <!-- TODO: Remove or change this placeholder text -->
 </resources>

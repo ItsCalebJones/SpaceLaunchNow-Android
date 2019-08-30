@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="multi_calendar_reminder">
+        <item>Um Minuto</item>
+        <item>Cinco Minutos</item>
+        <item>Trinta Minutos</item>
+        <item>Uma Hora</item>
+        <item>Duas Horas</item>
+        <item>Quatro Horas</item>
+        <item>Um Dia</item>
+    </string-array>
+</resources>

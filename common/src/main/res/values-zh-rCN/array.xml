@@ -15,11 +15,11 @@
         <item>一周</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>二</item>
         <item>一</item>
+        <item>二</item>
         <item>五</item>
-        <item>二十</item>
         <item>十</item>
+        <item>二十</item>
         <item>所有（不推荐）</item>
     </string-array>
 </resources>

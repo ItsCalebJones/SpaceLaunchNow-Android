@@ -261,10 +261,9 @@ Bunun yerine bu uygulamadan nefret ederseniz, görüşlerinizi bilmek isteriz, b
     <string name="mission_agency">Görev Ajansı</string>
     <string name="no_expeditions">Keşif Bulunamadı</string>
     <string name="no_docked">Bağlanmış Araç Yok</string>
-    ]
-    
     <string name="spacecraft_default_title">Uzay Aracı Detayları</string>
     <string name="spacecraft_default_sub_title">Bilinmeyen Uzay Aracı</string>
     <string name="dynamic_watch_face">Dinamik Saat Yüzü</string>
     <string name="dynamic_watch_face_description">Fırlatma araçlarının saat yüzü arka planı olarak dinamik resimleri.</string>
+    <!-- TODO: Remove or change this placeholder text -->
 </resources>

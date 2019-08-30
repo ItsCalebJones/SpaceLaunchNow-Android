@@ -418,7 +418,6 @@
     <string name="improve_our_data">Pomóż ulepszać nasze dane</string>
     <string name="improve_our_data_content">Jesteś zainteresowany ulepszaniem naszych danych dotyczących lotów? Dołącz do kanału Space Launch Now w Discord i dowiedz się się, jak to zrobić.</string>
     <string name="no_launches_found">Nie znaleziono lotów.</string>
-    <string name="landing_information">Informacje o lądowaniu</string>
     <string name="payload">Ładowność: %d (kg)</string>
     <string name="spacecraft_format">Statek kosmiczny %s</string>
     <string name="crew_capacity">Liczba członków załogi: %s</string>
@@ -493,10 +492,12 @@
     <string name="no_docked">Brak zadokowanych pojazdów</string>
     <string name="no_news">Nie załadowano wiadomości</string>]
     
+    
     <string name="spacecraft_default_title">Szczegóły statku kosmicznego</string>
     <string name="spacecraft_default_sub_title">Nieznany statek kosmiczny</string>
     <string name="history">Historia</string>
     <string name="time_format_description">Wybierz preferowany format czasu.</string>
+    <string name="landing_information">Informacje o lądowaniu</string>
     <string name="launch_service_providers">Dostawcy usług startowych (LSP)</string>
     <string name="launch_locations">Miejsca startów</string>
     <string name="northrop_grumman">Northrop Grumman</string>

@@ -418,7 +418,6 @@
     <string name="improve_our_data">Ajude a aprimorar nossos dados</string>
     <string name="improve_our_data_content">Interessado em ajudar a aprimorar a precisão dos nossos dados de voos espaciais? Junte-se a nós no servidor Discord Space Launch Now e pergunte sobre como tornar-se um bibliotecário.</string>
     <string name="no_launches_found">Nenhum lançamento encontrado.</string>
-    <string name="landing_information">Informação do pouso</string>
     <string name="payload">Carga: %d (kg)</string>
     <string name="spacecraft_format">Espaçonave %s</string>
     <string name="crew_capacity">Capacidade de tripulação: %s</string>
@@ -493,10 +492,12 @@
     <string name="no_docked">Nenhum veículo acoplado</string>
     <string name="no_news">Nenhuma Notícia Carregada</string>]
     
+    
     <string name="spacecraft_default_title">Detalhes da Espaçonave</string>
     <string name="spacecraft_default_sub_title">Espaçonave desconhecida</string>
     <string name="history">História</string>
     <string name="time_format_description">Selecione o formato de hora preferido.</string>
+    <string name="landing_information">Informação do pouso</string>
     <string name="launch_service_providers">Provedores de Serviço de Lançamento</string>
     <string name="launch_locations">Localização do Lançamento</string>
     <string name="northrop_grumman">Northrop Grumman</string>
@@ -522,7 +523,7 @@
     <string name="additional_landing_information">Informação Adicional do Pouso</string>
     <string name="launch_day_weather">Tempo no dia de Lançamento</string>
     <string name="video_source_unavailable">Fonte de vídeo indisponível.</string>
-    <string name="launch_date"><![CDATA[<b> Data de Lançamento </b><br>%1$s]]></string>
+    <string name="launch_date"><![CDATA[<b>Data de Lançamento</b><br>%1$s]]></string>
     <string name="instantaneous_launch_window"><![CDATA[<b>Janela de Lançamento Instantânea</b><br>%1$s]]></string>
     <string name="launch_window_extras"><![CDATA[<b>Janela de Lançamento</b><br>%1$s - %2$s<br>%3$s]]></string>
     <string name="read_more">Ler Mais</string>

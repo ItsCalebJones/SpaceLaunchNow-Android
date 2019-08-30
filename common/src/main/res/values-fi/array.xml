@@ -15,11 +15,11 @@
         <item>Yksi Viikko</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>Kaksi</item>
         <item>Yksi</item>
+        <item>Kaksi</item>
         <item>Viisi</item>
-        <item>Kaksikymmentä</item>
         <item>Kymmenen</item>
+        <item>Kaksikymmentä</item>
         <item>Kaikki (Ei Suositeltu)</item>
     </string-array>
 </resources>

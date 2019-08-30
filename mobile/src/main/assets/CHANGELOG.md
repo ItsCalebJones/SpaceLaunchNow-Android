@@ -6,6 +6,12 @@ A space launch tracker for Android using data from the Launch Library API.
 #### Updated 7-11-2019
 ---
 
+### Version 3.1.5 (Latest)
+#### Changelog
+* Updates to backend networking services.
+* Translation improvements.
+* Improvements to some UI elements.
+
 ### Version 3.1.1 (Latest)
 #### Changelog
 * Updates to translations.

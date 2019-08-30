@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="status">
+    <string-array name="status_array">
         <item>w trakcie testów</item>
         <item>Aktywny</item>
         <item>Emerytowany</item>
@@ -37,4 +37,10 @@
         <item>Nadchodzące</item>
         <item>Poprzednie</item>
     </string-array>
+    <string-array name="time_format_array">
+        <item>Domyślny</item>
+        <item>Dwunastogodzinny format czasu (AM/PM)</item>
+        <item>Dwudziestoczterogodzinny format czasu</item>
+    </string-array>
+
 </resources>
