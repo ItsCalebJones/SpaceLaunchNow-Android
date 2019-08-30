@@ -1,20 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="agencies_array">
-        <item>NASA</item>
-        <item>SpaceX</item>
-        <item>Роскосмос</item>
-        <item>Arianespace</item>
-        <item>ULA</item>
-        <item>CASC</item>
         <item>ISRO</item>
+        <item>CASC</item>
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>Роскосмос</item>
+        <item>SpaceX</item>
+        <item>NASA</item>
     </string-array>
     <string-array name="country_array">
-        <item>USA</item>
-        <item>Китай</item>
-        <item>Россия</item>
-        <item>Индия</item>
         <item>Много</item>
+        <item>Индия</item>
+        <item>Россия</item>
+        <item>Китай</item>
+        <item>США</item>
+    </string-array>
+    <string-array name="location_array">
+        <item>Стартовая станция Сохэ, Северная Корея</item>
+        <item>Остров Уоллопс, Вирджиния, США</item>
+        <item>Космический Центр Кеннеди, Флорида, США</item>
+        <item>Мыс Канаверал, Флорида, США</item>
+        <item>База ВВС Ванденберг, Калифорния, США</item>
+        <item>Цзюцюань, Китай</item>
+        <item>Тайюань, Китай</item>
+        <item>Kodiak Launch Complex, США</item>
+        <item>Kiatorete Spit, Новая Зеландия</item>
+        <item>Вумера, Австралия</item>
+        <item>Домбаровский, Россия</item>
+        <item>Космодром Свободней, Россия</item>
+        <item>Капустин Яр, Россия</item>
+        <item>Космодром Плесецк, Россия</item>
+        <item>Космодром Байконур, Казахстан</item>
+        <item>Кагосима / Танегасима, Япония</item>
+        <item>Срихарикота, Индия</item>
+        <item>Куру, Французская Гвиана</item>
+        <item>Центр запуска спутника Вэньчан, Китай</item>
+        <item>Центр запуска спутника Сичан, Китай</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Одна минута</item>
@@ -31,11 +53,11 @@
         <item>Одна неделя</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>Два</item>
         <item>Один</item>
+        <item>Два</item>
         <item>Пять</item>
-        <item>Двадцать</item>
         <item>Десять</item>
+        <item>Двадцать</item>
         <item>Все (Не Рекомендовано)</item>
     </string-array>
 </resources>

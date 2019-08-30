@@ -6,9 +6,9 @@
         <item>Retirado</item>
         <item>Perdido durante el vuelo</item>
         <item>Perdido durante el entrenamiento</item>
-        <item>Muerto durante el servicio activo</item>
+        <item>Muerto en servicio activo</item>
         <item>Despedido</item>
-        <item>Dimitido durante el entrenamiento</item>
+        <item>Renunció durante el entrenamiento</item>
     </string-array>
     <string-array name="widget_presets">
         <item>Luminoso</item>
@@ -36,5 +36,10 @@
         <item>9</item>
         <item>Próximo</item>
         <item>Anteriores</item>
+    </string-array>
+    <string-array name="time_format_array">
+        <item>Por defecto</item>
+        <item>Formato 12 horas AM/PM</item>
+        <item>Formato 24 h</item>
     </string-array>
 </resources>

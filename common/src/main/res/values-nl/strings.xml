@@ -418,7 +418,6 @@
     <string name="improve_our_data">Help onze data te verbeteren</string>
     <string name="improve_our_data_content">Geïnteresseerd om te helpen om de data te verbeteren? Word lid van de Space Launch Now Discord server en vraag hoe je een Librarian kunt worden!</string>
     <string name="no_launches_found">Geen lanceringen gevonden</string>
-    <string name="landing_information">Landingsinformatie</string>
     <string name="payload">Lading: %d (kg)</string>
     <string name="spacecraft_format">%s Ruimtevaartuig</string>
     <string name="crew_capacity">Bemanningscapaciteit %s</string>
@@ -490,10 +489,9 @@
     <string name="mission_agency">Agentschap missies</string>
     <string name="no_expeditions">Geen Expedities Gevonden</string>
     <string name="no_docked">Geen Aangekoppelde Ruimtevaartuigen</string>
-    ]
-    
     <string name="spacecraft_default_title">Ruimtevaartuig Details</string>
     <string name="spacecraft_default_sub_title">Onbekend Ruimtevaartuig</string>
+    <string name="landing_information">Landingsinformatie</string>
     <string name="dynamic_watch_face">Dynamisch Watch Face</string>
     <string name="dynamic_watch_face_description">Dynamische foto\'s van raketten als watch face achtergrond.</string>
     <!-- TODO: Remove or change this placeholder text -->

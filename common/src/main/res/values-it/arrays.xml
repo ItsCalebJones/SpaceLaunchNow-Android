@@ -1,3 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="widget_presets">
+        <item>Luce</item>
+        <item>Scuro</item>
+        <item>Luce- Transparente</item>
+        <item>Scuro - transparente</item>
+        <item>Blu materiale</item>
+        <item>Rosso Materiale</item>
+        <item>materiale verde acqua</item>
+        <item>Arancione materiale</item>
+        <item>"Personalizzato "</item>
+    </string-array>
+    <string-array name="spinner_list_item_array">
+        <item>Tutto</item>
+        <item>In arrivo</item>
+        <item>Precedente</item>
+    </string-array>
+    <string-array name="status_array">
+        <item>Riassegnato durante l\'addestramento</item>
+        <item>In allenamento</item>
+        <item>attivo</item>
+        <item>Ritirato</item>
+        <item>Perso in volo</item>
+        <item>Morto durante in addestramento</item>
+        <item>Morto mentre in servizio attivo</item>
+        <item>Dismesso</item>
+    </string-array>
 </resources>

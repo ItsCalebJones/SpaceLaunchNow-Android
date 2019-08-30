@@ -4,11 +4,11 @@
         <item>En Formation</item>
         <item>Actif</item>
         <item>Retraité</item>
-        <item>Perdu en Vol</item>
+        <item>Perdu en Mission</item>
         <item>Perdu en Formation</item>
-        <item>Mort en Service Actif</item>
+        <item>Décédé en Service</item>
         <item>Renvoyé</item>
-        <item>Démission durant la Formation</item>
+        <item>Démission pendant la Formation</item>
     </string-array>
     <string-array name="widget_presets">
         <item>Clair</item>
@@ -36,5 +36,10 @@
         <item>Tous</item>
         <item>À venir</item>
         <item>Passés</item>
+    </string-array>
+    <string-array name="time_format_array">
+        <item>Par Défaut</item>
+        <item>Format AM/PM</item>
+        <item>Format 24 Heures</item>
     </string-array>
 </resources>

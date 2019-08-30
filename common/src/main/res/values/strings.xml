@@ -490,8 +490,7 @@
     <string name="mission_agency">Mission Agency</string>
     <string name="no_expeditions">No Expeditions Found</string>
     <string name="no_docked">No Docked Vehicles</string>
-    <string name="no_news">No News Loaded</string>]
-    
+    <string name="no_news">No News Loaded</string>
     <string name="spacecraft_default_title">Spacecraft Details</string>
     <string name="spacecraft_default_sub_title">Unknown Spacecraft</string>
     <string name="history">History</string>

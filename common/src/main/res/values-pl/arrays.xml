@@ -37,4 +37,10 @@
         <item>Nadchodzące</item>
         <item>Poprzednie</item>
     </string-array>
+    <string-array name="time_format_array">
+        <item>Domyślny</item>
+        <item>Dwunastogodzinny format czasu (AM/PM)</item>
+        <item>Dwudziestoczterogodzinny format czasu</item>
+    </string-array>
+
 </resources>

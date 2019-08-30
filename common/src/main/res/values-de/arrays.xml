@@ -37,4 +37,9 @@
         <item>Kommende</item>
         <item>Vergangene</item>
     </string-array>
+    <string-array name="time_format_array">
+        <item>Standard</item>
+        <item>12-Stunden AM/PM Format</item>
+        <item>24-Stunden Format</item>
+    </string-array>
 </resources>

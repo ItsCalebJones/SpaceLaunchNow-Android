@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="agencies_array">
-        <item>NASA</item>
-        <item>SpaceX</item>
-        <item>ROSCOSMOS</item>
-        <item>Arianespace</item>
-        <item>ULA</item>
-        <item>CASC</item>
         <item>ISRO</item>
+        <item>CASC</item>
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>ROSCOSMOS</item>
+        <item>SpaceX</item>
+        <item>NASA</item>
     </string-array>
     <string-array name="country_array">
-        <item>Usonaj-Ŝtatoj</item>
-        <item>Ĉinio</item>
-        <item>Rusio</item>
-        <item>India</item>
         <item>Multi</item>
+        <item>India</item>
+        <item>Rusio</item>
+        <item>Ĉinio</item>
+        <item>Usonaj-Ŝtatoj</item>
     </string-array>
     <string-array name="location_array">
-        <item>Cape Canaveral, FL, E-S</item>
-        <item>Kennedy Space Center, FL, E-S</item>
+        <item>Sohae Lanĉbazo, Norda Koreio</item>
         <item>Wallops Island, Virginia, E-S</item>
+        <item>Kennedy Space Center, FL, E-S</item>
+        <item>Cape Canaveral, FL, E-S</item>
         <item>Vandenberg AFB, CA, E-S</item>
         <item>Jiuqan, Ĉinio</item>
         <item>Taiyuqan, Ĉinio</item>
-        <item>Xichang Lanĉbazo, Ĉinio</item>
-        <item>Wechang Lanĉbazo, Ĉinio</item>
-        <item>Kourou, Franca Guyano</item>
-        <item>Sriharikota, India</item>
-        <item>Kagoshima / Tanegashima, Japanio</item>
-        <item>Baikonur Lanĉbazo, Kazaĥio, Rusio</item>
-        <item>Plesetsk Lanĉbazo, Rusio</item>
-        <item>Kapustin Yar, Rusio</item>
-        <item>Svobodney Lanĉbazo, Rusio</item>
-        <item>Dombarovskiy, Rusio</item>
-        <item>Marlanĉo</item>
-        <item>Woomera, Aŭstralio</item>
-        <item>Kiatorete Spit, Nov-Zelando</item>
         <item>Kodiak Lanĉbazo, E-S</item>
-        <item>Sohae Lanĉbazo, Norda Koreio</item>
+        <item>Kiatorete Spit, Nov-Zelando</item>
+        <item>Woomera, Aŭstralio</item>
+        <item>Marlanĉo</item>
+        <item>Dombarovskiy, Rusio</item>
+        <item>Svobodney Lanĉbazo, Rusio</item>
+        <item>Kapustin Yar, Rusio</item>
+        <item>Plesetsk Lanĉbazo, Rusio</item>
+        <item>Baikonur Lanĉbazo, Kazaĥio, Rusio</item>
+        <item>Kagoshima / Tanegashima, Japanio</item>
+        <item>Sriharikota, India</item>
+        <item>Kourou, Franca Guyano</item>
+        <item>Wechang Lanĉbazo, Ĉinio</item>
+        <item>Xichang Lanĉbazo, Ĉinio</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Unu Minuto</item>
@@ -54,11 +54,11 @@
         <item>Unu Semajno</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>Du</item>
         <item>Unu</item>
+        <item>Du</item>
         <item>Kvin</item>
-        <item>Dudek</item>
         <item>Dek</item>
+        <item>Dudek</item>
         <item>Ĉiuij (Ne Rekomendita)</item>
     </string-array>
 </resources>

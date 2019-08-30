@@ -418,7 +418,6 @@
     <string name="improve_our_data">Ayúdanos a mejorar nuestros datos</string>
     <string name="improve_our_data_content">¿Está interesado en ayudar a mejorar la precisión de nuestros datos de vuelos espaciales? Únase a nosotros en el discord de Space Launch Now y pregunte cómo convertirse en bibliotecario.</string>
     <string name="no_launches_found">No se han encontrado lanzamientos.</string>
-    <string name="landing_information">Información de aterrizaje</string>
     <string name="payload">Carga útil: %d (kg)</string>
     <string name="spacecraft_format">%s astronaves</string>
     <string name="crew_capacity">Capacidad de la tripulación: %s</string>
@@ -493,10 +492,12 @@
     <string name="no_docked">No hay vehículos acoplados</string>
     <string name="no_news">No se han cargado noticias</string>]
     
+    
     <string name="spacecraft_default_title">Detalles de naves espaciales</string>
     <string name="spacecraft_default_sub_title">Nave espacial desconocida</string>
     <string name="history">"Historia "</string>
     <string name="time_format_description">"Seleccione formato de tiempo preferido. "</string>
+    <string name="landing_information">Información de aterrizaje</string>
     <string name="launch_service_providers">Proveedor de servicio de lanzamiento</string>
     <string name="launch_locations">Ubicación de lanzamientos</string>
     <string name="northrop_grumman">Northrop Grumman</string>

@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="agencies_array">
-        <item>NASA</item>
-        <item>SpaceX</item>
-        <item>ROSCOSMOS</item>
-        <item>Arianespace</item>
-        <item>ULA</item>
-        <item>CASC</item>
         <item>ISRO</item>
+        <item>CASC</item>
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>ROSCOSMOS</item>
+        <item>SpaceX</item>
+        <item>NASA</item>
     </string-array>
     <string-array name="country_array">
-        <item>ABD</item>
-        <item>Çin</item>
-        <item>Rusya</item>
-        <item>Hindistan</item>
         <item>Çoklu</item>
+        <item>Hindistan</item>
+        <item>Rusya</item>
+        <item>Çin</item>
+        <item>ABD</item>
     </string-array>
     <string-array name="location_array">
-        <item>Cape Canaveral, FL, ABD</item>
-        <item>Kennedy Uzay Merkezi, FL, ABD</item>
+        <item>Sohae Fırlatma İstasyonu, Kuzey Kore</item>
         <item>Wallops Adası, Virginia, ABD</item>
+        <item>Kennedy Uzay Merkezi, FL, ABD</item>
+        <item>Cape Canaveral, FL, ABD</item>
         <item>Vandenberg AFB, CA, ABD</item>
         <item>Jiuquan, Çin</item>
         <item>Taiyuan, Çin</item>
-        <item>Xichang Uydu Fırlatma Merkezi, Çin</item>
-        <item>Wenchang Uydu Fırlatma Merkezi, Çin</item>
-        <item>Kourou, Fransız Guyanası</item>
-        <item>Sriharikota, Hindistan</item>
-        <item>Kagoshima / Tanegashima, Japonya</item>
-        <item>Baikonur Cosmodrome, Kazakistan, Rusya</item>
-        <item>Plesetsk Cosmodrome, Rusya</item>
-        <item>Kapustin Yar, Rusya</item>
-        <item>Svobodney Cosmodrome, Rusya</item>
-        <item>Dombarovskiy, Rusya</item>
-        <item>Denize İniş</item>
-        <item>Woomera, Avustralya</item>
-        <item>Kaitorete Spit, Yeni Zelanda</item>
         <item>Kodiak Fırlatma Kompleksi, ABD</item>
-        <item>Sohae Fırlatma İstasyonu, Kuzey Kore</item>
+        <item>Kaitorete Spit, Yeni Zelanda</item>
+        <item>Woomera, Avustralya</item>
+        <item>Denize İniş</item>
+        <item>Dombarovskiy, Rusya</item>
+        <item>Svobodney Cosmodrome, Rusya</item>
+        <item>Kapustin Yar, Rusya</item>
+        <item>Plesetsk Cosmodrome, Rusya</item>
+        <item>Baikonur Cosmodrome, Kazakistan, Rusya</item>
+        <item>Kagoshima / Tanegashima, Japonya</item>
+        <item>Sriharikota, Hindistan</item>
+        <item>Kourou, Fransız Guyanası</item>
+        <item>Wenchang Uydu Fırlatma Merkezi, Çin</item>
+        <item>Xichang Uydu Fırlatma Merkezi, Çin</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Bir Dakika</item>
@@ -54,11 +54,11 @@
         <item>Bir Hafta</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>İki</item>
         <item>Bir</item>
+        <item>İki</item>
         <item>Beş</item>
-        <item>Yirmi</item>
         <item>On</item>
+        <item>Yirmi</item>
         <item>Tümü (Tavsiye edilmez)</item>
     </string-array>
 </resources>

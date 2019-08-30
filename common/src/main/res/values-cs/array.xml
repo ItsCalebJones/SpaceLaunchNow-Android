@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="agencies_array">
-        <item>NASA</item>
-        <item>SpaceX</item>
-        <item>ROSCOSMOS</item>
-        <item>Arianespace</item>
-        <item>ULA</item>
-        <item>CASC</item>
         <item>ISRO</item>
+        <item>CASC</item>
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>ROSCOSMOS</item>
+        <item>SpaceX</item>
+        <item>NASA</item>
     </string-array>
     <string-array name="country_array">
-        <item>USA</item>
-        <item>Čína</item>
-        <item>Rusko</item>
-        <item>Indie</item>
         <item>Multinárodní</item>
+        <item>Indie</item>
+        <item>Rusko</item>
+        <item>Čína</item>
+        <item>USA</item>
     </string-array>
     <string-array name="location_array">
-        <item>Mys Canaveral, Florida, USA</item>
-        <item>Kennedyho vesmírné středisko, Florida, USA</item>
+        <item>Kosmodrom Sohae, Severní Korea</item>
         <item>Ostrov Wallops, Virginie, USA</item>
+        <item>Kennedyho vesmírné středisko, Florida, USA</item>
+        <item>Mys Canaveral, Florida, USA</item>
         <item>Vandenbergova letecká základna, Kalifornie, USA</item>
         <item>Kosmodrom Ťiou-čchüan, Čína</item>
         <item>Kosmodrom Tchaj-jüan, Čína</item>
-        <item>Kosmodrom Si-čchang, Čína</item>
-        <item>Kosmodrom Wechang, Čína</item>
-        <item>Kourou, Francouzská Guyana</item>
-        <item>Kosmodrom Šríharikota, Indie</item>
-        <item>Kosmické centrum Tanegašima, Japonsko</item>
-        <item>Kosmodrom Bajkonur, Kazachstán</item>
-        <item>Kosmodrom Pleseck, Rusko</item>
-        <item>Kosmodrom Kapustin Jar, Rusko</item>
-        <item>Kosmodrom Svobodnyj, Rusko</item>
-        <item>Vojenská základna Dombarovskij, Rusko</item>
-        <item>Start z moře</item>
-        <item>Raketová základna a kosmodrom Woomera, Austrálie</item>
-        <item>Kiatorete Spit, Nový Zéland</item>
         <item>Kosmodrom Kodiak, Aljaška, USA</item>
-        <item>Kosmodrom Sohae, Severní Korea</item>
+        <item>Kiatorete Spit, Nový Zéland</item>
+        <item>Raketová základna a kosmodrom Woomera, Austrálie</item>
+        <item>Start z moře</item>
+        <item>Vojenská základna Dombarovskij, Rusko</item>
+        <item>Kosmodrom Svobodnyj, Rusko</item>
+        <item>Kosmodrom Kapustin Jar, Rusko</item>
+        <item>Kosmodrom Pleseck, Rusko</item>
+        <item>Kosmodrom Bajkonur, Kazachstán</item>
+        <item>Kosmické centrum Tanegašima, Japonsko</item>
+        <item>Kosmodrom Šríharikota, Indie</item>
+        <item>Kourou, Francouzská Guyana</item>
+        <item>Kosmodrom Wechang, Čína</item>
+        <item>Kosmodrom Si-čchang, Čína</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Jedna minuta</item>
@@ -54,11 +54,11 @@
         <item>Jeden týden</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>Dva</item>
         <item>Jedna</item>
+        <item>Dva</item>
         <item>Pět</item>
-        <item>Dvacet</item>
         <item>Deset</item>
+        <item>Dvacet</item>
         <item>Všechny (není doporučeno)</item>
     </string-array>
 </resources>
