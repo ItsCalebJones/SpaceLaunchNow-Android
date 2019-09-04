@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.news.api;
+package me.calebjones.spacelaunchnow.data.networking.news.api;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -8,18 +8,24 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItemResponse;
+import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,6 +72,16 @@ public class NewsDataClient {
         return call;
     }
 
+    public Call<NewsItemResponse> getArticlesByLaunch(int limit, String launchId, Callback<NewsItemResponse>  callback){
+        Call<NewsItemResponse>  call;
+
+        call = newsInterface.getArticlesByLaunch(limit, launchId);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
     private static Retrofit newsRetrofit() {
 
         String BASE_URL = "https://spaceflightnewsapi.net";
@@ -101,7 +117,30 @@ public class NewsDataClient {
                     }
                 })
                 .registerTypeAdapter(Date.class, new DateDeserializer())
+                .registerTypeAdapter(getToken(), new TypeAdapter<RealmList<RealmStr>>() {
+
+                    @Override
+                    public void write(JsonWriter out, RealmList<RealmStr> value) throws io.realm.internal.IOException {
+                        // Ignore
+                    }
+
+                    @Override
+                    public RealmList<RealmStr> read(JsonReader in) throws io.realm.internal.IOException, java.io.IOException {
+                        RealmList<RealmStr> list = new RealmList<RealmStr>();
+                        in.beginArray();
+                        while (in.hasNext()) {
+                            list.add(new RealmStr(in.nextString()));
+                        }
+                        in.endArray();
+                        return list;
+                    }
+                })
                 .create();
+    }
+
+    private static Type getToken() {
+        return new TypeToken<RealmList<RealmStr>>() {
+        }.getType();
     }
 
     private static class DateDeserializer implements JsonDeserializer<Date> {

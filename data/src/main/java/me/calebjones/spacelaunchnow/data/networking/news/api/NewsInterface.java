@@ -1,4 +1,4 @@
-package me.calebjones.spacelaunchnow.news.api;
+package me.calebjones.spacelaunchnow.data.networking.news.api;
 
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItemResponse;
@@ -16,9 +16,13 @@ public interface NewsInterface {
     @GET(version + "/articles")
     Call<NewsItemResponse> getArticles(@Query("limit") int amount);
 
+    @GET(version + "/articles")
+    Call<NewsItemResponse> getArticlesByLaunch(@Query("limit") int amount,
+                                               @Query("launches") String launchId);
+
 
     @GET(version + "/articles")
     Call<NewsItemResponse> getArticlesByPage(@Query("limit") int amount,
-                                           @Query("page") String page);
+                                             @Query("page") String page);
 
 }

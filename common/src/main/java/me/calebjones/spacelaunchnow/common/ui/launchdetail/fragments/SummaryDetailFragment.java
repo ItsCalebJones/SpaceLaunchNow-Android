@@ -16,6 +16,7 @@ import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.models.Forecast;
 import android.zetterstrom.com.forecast.models.Unit;
 
+import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants;
@@ -38,21 +39,29 @@ import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.WindowDecorActionBar;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.disposables.Disposable;
+import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
+import me.calebjones.spacelaunchnow.common.ui.adapters.NewsListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.common.ui.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.common.ui.views.DialogAdapter;
+import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.common.youtube.YouTubeAPIHelper;
 import me.calebjones.spacelaunchnow.common.youtube.models.Video;
@@ -60,10 +69,13 @@ import me.calebjones.spacelaunchnow.common.youtube.models.VideoListItem;
 import me.calebjones.spacelaunchnow.common.youtube.models.VideoResponse;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
+import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 
 import me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.WeatherCard;
+import me.calebjones.spacelaunchnow.data.networking.news.data.Callbacks;
+import me.calebjones.spacelaunchnow.data.networking.news.data.NewsDataRepository;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -90,8 +102,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     WeatherCard weatherCard;
     @BindView(R2.id.videos_empty)
     TextView videosEmpty;
+    @BindView(R2.id.news_recycler_view)
+    RecyclerView recyclerView;
     @BindView(R2.id.youtube_view)
     YouTubePlayerView youTubePlayerView;
+    @BindView(R2.id.related_card)
+    View relatedCard;
 
     private SharedPreferences sharedPref;
     private ListPreferences sharedPreference;
@@ -108,6 +124,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private Unbinder unbinder;
     private DetailsViewModel model;
     private YouTubePlayer youTubePlayer;
+    private NewsDataRepository dataRepository;
+    private NewsListAdapter listAdapter;
     boolean isYouTubePlaying = false;
 
     @Override
@@ -133,6 +151,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         View view = inflater.inflate(R.layout.detail_launch_summary, container, false);
 
         unbinder = ButterKnife.bind(this, view);
+        dataRepository = new NewsDataRepository(getContext(), getRealm());
 
         if (savedInstanceState != null) {
             youTubePlaying = savedInstanceState.getBoolean("youTubePlaying", false);
@@ -276,6 +295,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                     fetchPastWeather();
                 }
             }
+
+            fetchRelatedNews(launch.getId());
 
             setupCountdownTimer(launch);
 
@@ -446,6 +467,43 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         } catch (NullPointerException e) {
             Timber.e(e);
         }
+    }
+
+    private void fetchRelatedNews(String id) {
+        dataRepository.getNewsByLaunch(id, new Callbacks.NewsListCallback() {
+            @Override
+            public void onNewsLoaded(RealmResults<NewsItem> news) {
+                if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.CREATED)) {
+                    Timber.v(news.toString());
+                    if (news.size() > 0) {
+                        listAdapter = new NewsListAdapter(context);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                        recyclerView.setAdapter(listAdapter);
+                        listAdapter.addItems(news);
+                        relatedCard.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onNetworkStateChanged(boolean refreshing) {
+                if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+
+                }
+            }
+
+            @Override
+            public void onError(String message, @Nullable Throwable throwable) {
+                if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+
+                    if (throwable != null) {
+                        Timber.e(throwable);
+                    } else {
+                        Timber.e(message);
+                    }
+                }
+            }
+        });
     }
 
 
