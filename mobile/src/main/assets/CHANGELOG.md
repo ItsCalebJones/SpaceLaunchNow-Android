@@ -6,27 +6,33 @@ A space launch tracker for Android using data from the Launch Library API.
 #### Updated 7-11-2019
 ---
 
-### Version 3.1.5 (Latest)
+### Version 3.2.0 (Latest)
+#### Changelog
+* Add 'Related News' to launches via the Spaceflight News API.
+* Update in-app translations.
+
+---
+### Version 3.1.5 
 #### Changelog
 * Updates to backend networking services.
 * Translation improvements.
 * Improvements to some UI elements.
 
-### Version 3.1.1 (Latest)
+### Version 3.1.1 (
 #### Changelog
 * Updates to translations.
 * Improvements to Calendar sync - should no longer see duplicates.
 * Add on-board crew information to Launch details. Check out the Saturn V launch for details.
 
----
+
 ### Version 3.1.0
 #### Changelog
 * Re-engineered the theme engine to support more varied styles. Unfortunately this means previous theme settings will be reset.
 * Added Dark Mode for all users!
 * Fix an issue where launch data for SpaceX cores wasn't loading for some users.
 
----
-### Version 3.0.4 (Latest)
+
+### Version 3.0.4 
 #### Changelog
 * Fixed an issue where the Japanese switch wasn't working properly.
 * Fixed an issue with background workers not respecting schedules.
@@ -40,7 +46,6 @@ A space launch tracker for Android using data from the Launch Library API.
 * Improved Badge icon for number of launches counter.
 * Changed Navigation drawer image.
 
-
 ### Version 3.0.2
 #### Changelog
 * Added News notifications for featured articles.
@@ -50,7 +55,6 @@ A space launch tracker for Android using data from the Launch Library API.
 * Added Day to date string formats.
 * Improvements to Event notifications.
 * Fix a bunch of new crashes.
-
 
 ### Version 3.0.0
 #### Overview
