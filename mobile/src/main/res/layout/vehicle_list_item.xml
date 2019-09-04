@@ -243,14 +243,12 @@
                 style="@style/Base.Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/material_baseline_grid_7x"
                 android:layout_marginStart="@dimen/material_baseline_grid_1x"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="@string/info"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/vehicle_wikiButton"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
@@ -261,19 +259,17 @@
                 style="@style/Base.Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/material_baseline_grid_7x"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="@dimen/material_baseline_grid_1x"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:gravity="center"
                 android:text="@string/wiki"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/vehicle_infoButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/vehicle_infoButton"
-                app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
+                app:layout_constraintTop_toTopOf="@+id/vehicle_infoButton" />
 
 
             <androidx.constraintlayout.widget.Group
@@ -289,16 +285,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/material_card_edge_margin"
+                android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:padding="@dimen/material_card_edge_margin"
                 android:text="@string/view_more_launches"
+                android:textColor="?colorPrimary"
                 android:textSize="12sp"
                 android:theme="@style/PrimaryButtonTheme"
-                android:textColor="?colorPrimary"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="parent" />
+                app:layout_constraintStart_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/vehicle_infoButton" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

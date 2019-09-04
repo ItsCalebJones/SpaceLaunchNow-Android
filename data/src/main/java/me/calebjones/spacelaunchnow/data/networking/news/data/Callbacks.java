@@ -1,6 +1,4 @@
-package me.calebjones.spacelaunchnow.news.data;
-
-import java.util.List;
+package me.calebjones.spacelaunchnow.data.networking.news.data;
 
 import androidx.annotation.Nullable;
 import io.realm.RealmResults;

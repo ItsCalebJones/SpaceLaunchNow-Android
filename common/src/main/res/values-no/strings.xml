@@ -183,7 +183,6 @@
     <string name="improve_our_data">Hjelp oss med å forbedre Dataen vår</string>
     <string name="improve_our_data_content">Interessert i å forbedre nøyaktigheten i våre romfartsdata? Bli med i Space Launch Now Discord serverern og spørr etter å bli bibliotekar!</string>
     <string name="no_launches_found">Ingen oppskytninger funnet</string>
-    <string name="landing_information">Landningsinformasjon</string>
     <string name="payload">Nyttelast: %d (kg)</string>
     <string name="spacecraft_format">%s Romfartøy</string>
     <string name="crew_capacity">Mannskapkapasitet: %s</string>
@@ -243,10 +242,10 @@
     <string name="de_orbited">De-orbited</string>
     <string name="no_expeditions">Ingen ekspedisjoner funnet</string>
     <string name="no_docked">Ingen dokkede fartøy</string>
-    <string name="no_news">Ingen nyheter lastet</string>]
-    
+    <string name="no_news">Ingen nyheter lastet</string>
     <string name="spacecraft_default_title">Romfartøy detaljer</string>
     <string name="spacecraft_default_sub_title">Ukjent romfartøy</string>
+    <string name="landing_information">Landningsinformasjon</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hallo svart fragment</string>
     <string name="view_x_launches">Vis %s Oppskytninger</string>

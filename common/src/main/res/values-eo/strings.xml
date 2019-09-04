@@ -67,6 +67,8 @@
     <string name="no_docked">Neniu Veturiloj Albordiĝitaj</string>
     ]
     
+    
     <string name="spacecraft_default_title">Kosmoŝipo Detaloj</string>
     <string name="spacecraft_default_sub_title">Kosmoŝipo Nekonata</string>
+    <!-- TODO: Remove or change this placeholder text -->
 </resources>

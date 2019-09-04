@@ -74,6 +74,7 @@ public class NotificationBuilder {
         Intent resultIntent = new Intent(context, LaunchDetailActivity.class);
         resultIntent.putExtra("TYPE", "launch");
         resultIntent.putExtra("launchID", launch.getId());
+        resultIntent.putExtra("notification", true);
 
         PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -749,7 +750,7 @@ public class NotificationBuilder {
                 .setAutoCancel(true)
                 .extend(wearableExtender)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(title))
+                        .bigText(expandedText))
                 .setContentIntent(eventIntent);
 
         String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",

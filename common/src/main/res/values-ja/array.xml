@@ -15,11 +15,11 @@
         <item>1週間</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>２</item>
         <item>１</item>
+        <item>２</item>
         <item>５</item>
-        <item>２０</item>
         <item>１０</item>
+        <item>２０</item>
         <item>全部(おすすめではありません)</item>
     </string-array>
 </resources>

@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.RealmList;
+import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
+
 public class Article {
 
     @SerializedName("tags")
@@ -26,6 +29,9 @@ public class Article {
     @SerializedName("id")
     @Expose
     public String id;
+    @SerializedName("launches")
+    @Expose
+    public RealmList<RealmStr> launches = null;
     @SerializedName("date_published")
     @Expose
     public Date datePublished;
@@ -106,5 +112,13 @@ public class Article {
 
     public void setFeaturedImage(String featuredImage) {
         this.featuredImage = featuredImage;
+    }
+
+    public RealmList<RealmStr> getLaunches() {
+        return launches;
+    }
+
+    public void setLaunches(RealmList<RealmStr> launches) {
+        this.launches = launches;
     }
 }

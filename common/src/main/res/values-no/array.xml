@@ -1,46 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies">
-        <item>NASA</item>
-        <item>SpaceX</item>
-        <item>ROSCOSMOS</item>
-        <item>Arianespace</item>
-        <item>ULA</item>
-        <item>CASC</item>
+    <string-array name="agencies_array">
         <item>ISRO</item>
+        <item>CASC</item>
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>ROSCOSMOS</item>
+        <item>SpaceX</item>
+        <item>NASA</item>
     </string-array>
-    <string-array name="country">
-        <item>USA</item>
-        <item>Kina</item>
-        <item>Russland</item>
-        <item>India</item>
+    <string-array name="country_array">
         <item>Multi</item>
-    </string-array>
-    <string-array name="location">
-        <item>Cape Canaveral, FL, USA</item>
-        <item>Kennedy Space Center, FL, USA</item>
-        <item>Wallops Island, Virginia, USA</item>
-        <item>Vandenberg AFB, CA, USA</item>
-        <item>Jiuquan, Kina</item>
-        <item>Taiyuan, Kina</item>
-        <item>Xichang Satellitt Opptreningssenter, Kina</item>
-        <item>Wechang Satelitt Opptreningssenter, Kina</item>
-        <item>Kourou, fransk Guyana</item>
-        <item>Sriharikota, India</item>
-        <item>"Kagoshima / Tanegashima, Japan
-"</item>
-        <item>Baikonur Cosmodrome, Kasakhsta, Russland</item>
-        <item>Plesetsk Cosmodrome, Russland</item>
-        <item>Kapustin Yar, Russland</item>
-        <item>Svobodney Cosmodrome, Russland</item>
-        <item>Dombarovskiy, Russland</item>
-        <item>Woomera, Australia</item>
-        <item>"Kiatorete Spit, New Zealand
-"</item>
-        <item>"Kodiak Launch Complex, USA
-"</item>
-        <item>"Sohae Launch Station, Nord Korea
-"</item>
+        <item>India</item>
+        <item>Russland</item>
+        <item>Kina</item>
+        <item>USA</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Ett Minutt</item>
@@ -57,11 +31,11 @@
         <item>En Uke</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>To</item>
         <item>En</item>
+        <item>To</item>
         <item>Fem</item>
-        <item>Tjue</item>
         <item>Ti</item>
+        <item>Tjue</item>
         <item>Alle (Ikke anbefalt)</item>
     </string-array>
 </resources>

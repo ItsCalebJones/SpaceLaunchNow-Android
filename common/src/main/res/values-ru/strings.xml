@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <resources>
+    <string name="app_name">Space Launch Now</string>
     <string name="news">Новости</string>
     <string name="twitter">Twitter</string>
     <string name="action_settings">Настройки</string>
     <string name="status_go">"Готово к Пуску"</string>
-    <string name="status_nogo">НЕ готово к пуску</string>
+    <string name="status_nogo">Дата Пуску не подтверждена</string>
     <string name="status_success">"Пуск был успешным"</string>
     <string name="status_failure">"Произошел сбой в полете"</string>
     <string name="spacex_summary">SpaceX — американская компания, производитель космической техники. Основана в 2002 году прежним акционером PayPal и CEO «Tesla Motors» Илоном Маском, с целью сократить расходы на полёты в космос, открывая путь к колонизации Марса.</string>
@@ -132,27 +133,7 @@
     <string name="improve_our_data_content">Заинтересованы в улучшении точности представленных данных? Заходите на Discord сервер Space Launch Now и попросите стать помощником.</string>
     <string name="biography">биография</string>
     <string name="mission_agency">Агентство миссии</string>
-    
-    
-    ]
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
     <string name="dynamic_watch_face">Динамический циферблат для смарт-часов</string>
     <string name="dynamic_watch_face_description">Сменяющиеся фотографии ракет как фон на циферблате.</string>
+    <!-- TODO: Remove or change this placeholder text -->
 </resources>

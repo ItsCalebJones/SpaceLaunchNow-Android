@@ -314,7 +314,6 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="unknown_year">Alapítási év - ismeretlen.</string>
     <string name="improve_our_data">Segíts az adataink fejlesztésében</string>
     <string name="no_launches_found">Nem találtunk indításokat.</string>
-    <string name="landing_information">Leszállási információ</string>
     <string name="payload">Rakomány: %d (kg)</string>
     <string name="spacecraft_format">%s Űrhajó</string>
     <string name="crew_capacity">Legénység maximális létszáma: %s</string>
@@ -355,27 +354,7 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="status_alt">Állapot:</string>
     <string name="de_orbited">Pályáról lehozva:</string>
     <string name="mission_agency">Küldetés ügynökége</string>
-    
-    
-    ]
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
+    <string name="landing_information">Leszállási információ</string>
     <string name="dynamic_watch_face">Dinamikus Watch Face</string>
     <string name="dynamic_watch_face_description">Az indított járművek dinamikus képeinek megtekintése.</string>
     <!-- TODO: Remove or change this placeholder text -->

@@ -13,7 +13,6 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -24,8 +23,8 @@ import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.news.R;
-import me.calebjones.spacelaunchnow.news.data.Callbacks;
-import me.calebjones.spacelaunchnow.news.data.NewsDataRepository;
+import me.calebjones.spacelaunchnow.data.networking.news.data.Callbacks;
+import me.calebjones.spacelaunchnow.data.networking.news.data.NewsDataRepository;
 import timber.log.Timber;
 
 /**

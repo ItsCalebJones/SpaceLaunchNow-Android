@@ -1,15 +1,11 @@
-package me.calebjones.spacelaunchnow.news.data;
+package me.calebjones.spacelaunchnow.data.networking.news.data;
 
 import android.content.Context;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.UiThread;
-
-import com.pixplicity.easyprefs.library.Prefs;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
@@ -37,7 +33,7 @@ public class NewsDataRepository {
         this.realm = realm;
     }
 
-    @UiThread
+
     public void getNews(int limit, boolean forceUpdate, Callbacks.NewsListCallback callback) {
 
         final RealmResults<NewsItem> newsList = getNewsFromRealm();
@@ -58,6 +54,11 @@ public class NewsDataRepository {
     //TODO fix query
     public RealmResults<NewsItem> getNewsFromRealm() {
         RealmQuery<NewsItem> query = realm.where(NewsItem.class).isNotNull("id");
+        return query.sort("datePublished", Sort.DESCENDING).findAll();
+    }
+
+    public RealmResults<NewsItem> getRelatedNewsFromRealm(String launchId) {
+        RealmQuery<NewsItem> query = realm.where(NewsItem.class).isNotNull("id").and().contains("launches.val", launchId);
         return query.sort("datePublished", Sort.DESCENDING).findAll();
     }
 
@@ -91,10 +92,14 @@ public class NewsDataRepository {
         });
     }
 
-    @UiThread
     public void getNewsById(String id, Callbacks.NewsCallback callback) {
         callback.onNewsLoaded(getNewsByIdFromRealm(id));
         getNewsByIdFromNetwork(id, callback);
+    }
+
+    public void getNewsByLaunch(String id, Callbacks.NewsListCallback callback) {
+        callback.onNewsLoaded(getRelatedNewsFromRealm(id));
+        getNewsByLaunchFromNetwork(5, id, callback);
     }
 
     private void getNewsByIdFromNetwork(String id, final Callbacks.NewsCallback callback) {
@@ -106,6 +111,31 @@ public class NewsDataRepository {
 
                 callback.onNetworkStateChanged(false);
                 callback.onNewsLoaded(event);
+            }
+
+            @Override
+            public void onNetworkFailure(int code) {
+                callback.onNetworkStateChanged(false);
+                callback.onError("Unable to load launch data.", null);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                callback.onNetworkStateChanged(false);
+                callback.onError("An error has occurred! Uh oh.", throwable);
+            }
+        });
+    }
+
+    private void getNewsByLaunchFromNetwork(int limit, String launchId, final Callbacks.NewsListCallback callback) {
+
+        callback.onNetworkStateChanged(true);
+        dataLoader.getNewsByLaunch(limit, launchId, new Callbacks.NewsListNetworkCallback() {
+            @Override
+            public void onSuccess(NewsItemResponse news) {
+                addNewsToRealm(news.getNewsItems());
+                callback.onNetworkStateChanged(false);
+                callback.onNewsLoaded(getRelatedNewsFromRealm(launchId));
             }
 
             @Override

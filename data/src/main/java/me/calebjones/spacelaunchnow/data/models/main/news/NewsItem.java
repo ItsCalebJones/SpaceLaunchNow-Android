@@ -1,11 +1,14 @@
 package me.calebjones.spacelaunchnow.data.models.main.news;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 
 public class NewsItem extends RealmObject {
 
@@ -22,6 +25,9 @@ public class NewsItem extends RealmObject {
     private String featured_image;
     @SerializedName("url")
     private String url;
+    @SerializedName("launches")
+    @Expose
+    public RealmList<RealmStr> launches = null;
     @SerializedName("date_published")
     private int datePublished;
     private Date lastUpdate;
@@ -58,11 +64,11 @@ public class NewsItem extends RealmObject {
         this.newsSite = newsSite;
     }
 
-    public String getFeatured_image() {
+    public String getFeaturedImage() {
         return featured_image;
     }
 
-    public void setFeatured_image(String featured_image) {
+    public void setFeaturedImage(String featured_image) {
         this.featured_image = featured_image;
     }
 
@@ -88,5 +94,14 @@ public class NewsItem extends RealmObject {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+
+    public RealmList<RealmStr> getLaunches() {
+        return launches;
+    }
+
+    public void setLaunches(RealmList<RealmStr> launches) {
+        this.launches = launches;
     }
 }

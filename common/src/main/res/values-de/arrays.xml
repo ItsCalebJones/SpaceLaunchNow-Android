@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="status">
+    <string-array name="status_array">
         <item>In-Training</item>
         <item>Aktiv</item>
         <item>außer Dienst</item>
@@ -36,5 +36,10 @@
         <item>Alle</item>
         <item>Kommende</item>
         <item>Vergangene</item>
+    </string-array>
+    <string-array name="time_format_array">
+        <item>Standard</item>
+        <item>12-Stunden AM/PM Format</item>
+        <item>24-Stunden Format</item>
     </string-array>
 </resources>

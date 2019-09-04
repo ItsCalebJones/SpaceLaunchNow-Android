@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies">
-        <item>NASA</item>
-        <item>SpaceX</item>
-        <item>ROSCOSMOS</item>
-        <item>Arianespace</item>
-        <item>ULA</item>
+    <string-array name="agencies_array">
         <item>ISRO</item>
+        <item>CASC</item>
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>ROSCOSMOS</item>
+        <item>SpaceX</item>
+        <item>NASA</item>
     </string-array>
-    <string-array name="country">
-        <item>USA</item>
-        <item>Cina</item>
-        <item>Russia</item>
-        <item>India</item>
+    <string-array name="country_array">
         <item>Multi</item>
+        <item>India</item>
+        <item>Russia</item>
+        <item>Cina</item>
+        <item>USA</item>
     </string-array>
-    <string-array name="location">
-        <item>Cape Canaveral, FL, USA</item>
-        <item>Kennedy Space Center, FL, USA</item>
+    <string-array name="location_array">
+        <item>Stazione di lancio Sohae, Korea Del Nord</item>
         <item>Wallops Island, Virginia, USA</item>
+        <item>Kennedy Space Center, FL, USA</item>
+        <item>Cape Canaveral, FL, USA</item>
         <item>Vandenberg AFB, CA, USA</item>
         <item>Jiuquan, Cina</item>
         <item>Taiyuan, Cina</item>
-        <item>Xichang Satellite Launching Center, Cina</item>
-        <item>Wechang Satellite Launching Center, Cina</item>
-        <item>Kourou, Guiana Francese</item>
-        <item>Sriharikota, India</item>
-        <item>Kagoshima / Tanegashima, Giappone</item>
-        <item>Baikonur Cosmodrome, Kazakhstan, Russia</item>
-        <item>Plesetsk Cosmodrome, Russia</item>
-        <item>Kapustin Yar, Russia</item>
-        <item>Svobodney Cosmodrome, Russia</item>
-        <item>Dombarovskiy, Russia</item>
-        <item>Lancio dal mare</item>
+        <item>Complesso di lancio Kodiak, Stati Uniti</item>
+        <item>Kiatorete Spit, Nuova Zelanda</item>
         <item>Woomera, Australia</item>
+        <item>Lancio dal mare</item>
+        <item>Dombarovskiy, Russia</item>
+        <item>Svobodney Cosmodrome, Russia</item>
+        <item>Kapustin Yar, Russia</item>
+        <item>Plesetsk Cosmodrome, Russia</item>
+        <item>Baikonur Cosmodrome, Kazakhstan, Russia</item>
+        <item>Kagoshima / Tanegashima, Giappone</item>
+        <item>Sriharikota, India</item>
+        <item>Kourou, Guiana Francese</item>
+        <item>Wechang Satellite Launching Center, Cina</item>
+        <item>Xichang Satellite Launching Center, Cina</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Un minuto</item>
@@ -50,11 +54,11 @@
         <item>Una Settimana</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>Due</item>
         <item>Uno</item>
+        <item>Due</item>
         <item>Cinque</item>
-        <item>Venti</item>
         <item>Dieci</item>
+        <item>Venti</item>
         <item>Tutto (Non Consigliato)</item>
     </string-array>
 </resources>

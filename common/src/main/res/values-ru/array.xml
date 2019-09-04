@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies">
-        <item>NASA</item>
-        <item>SpaceX</item>
-        <item>Роскосмос</item>
-        <item>Arianespace</item>
-        <item>ULA</item>
-        <item>CASC</item>
+    <string-array name="agencies_array">
         <item>ISRO</item>
+        <item>CASC</item>
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>Роскосмос</item>
+        <item>SpaceX</item>
+        <item>NASA</item>
     </string-array>
-    <string-array name="country">
-        <item>USA</item>
-        <item>Китай</item>
-        <item>Россия</item>
-        <item>Индия</item>
+    <string-array name="country_array">
         <item>Много</item>
+        <item>Индия</item>
+        <item>Россия</item>
+        <item>Китай</item>
+        <item>США</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Одна минута</item>
@@ -31,11 +31,11 @@
         <item>Одна неделя</item>
     </string-array>
     <string-array name="upcoming_array">
-        <item>Два</item>
         <item>Один</item>
+        <item>Два</item>
         <item>Пять</item>
-        <item>Двадцать</item>
         <item>Десять</item>
+        <item>Двадцать</item>
         <item>Все (Не Рекомендовано)</item>
     </string-array>
 </resources>

@@ -1,8 +1,6 @@
 package me.calebjones.spacelaunchnow.news.ui.news;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +12,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
@@ -59,9 +55,9 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         holder.articleSite.setText(news.getNewsSiteLong());
         Date published = new Date(news.getDatePublished() * 1000);
         holder.articlePublicationDate.setText(DateFormat.getDateInstance(DateFormat.LONG).format(((long) news.getDatePublished() * 1000)));
-        if (news.getFeatured_image() != null) {
+        if (news.getFeaturedImage() != null) {
             GlideApp.with(context)
-                    .load(news.getFeatured_image())
+                    .load(news.getFeaturedImage())
                     .centerCrop()
                     .placeholder(R.drawable.placeholder)
                     .into(holder.articleImage);

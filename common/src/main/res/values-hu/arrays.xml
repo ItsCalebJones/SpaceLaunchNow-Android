@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="status">
-        <item>Kiképzés alatt</item>
-        <item>Aktív</item>
-        <item>Visszavonult</item>
-        <item>Repülés közben elhunyt</item>
-        <item>Kiképzés közben elhunyt</item>
-        <item>Elhunyt aktív szolgálat közben</item>
-        <item>Elbocsájtott</item>
-        <item>Felmondott kiképzés alatt</item>
-    </string-array>
     <string-array name="widget_presets">
         <item>Világos</item>
         <item>Sötét</item>
@@ -36,5 +26,15 @@
         <item>Összes</item>
         <item>Elkövetkező</item>
         <item>Előző</item>
+    </string-array>
+    <string-array name="status_array">
+        <item>Felmondott kiképzés alatt</item>
+        <item>Kiképzés alatt</item>
+        <item>Aktív</item>
+        <item>Visszavonult</item>
+        <item>Repülés közben elhunyt</item>
+        <item>Kiképzés közben elhunyt</item>
+        <item>Elhunyt aktív szolgálat közben</item>
+        <item>Elbocsájtott</item>
     </string-array>
 </resources>
