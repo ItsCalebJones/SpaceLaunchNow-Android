@@ -263,8 +263,7 @@ public class QueryBuilder {
         Calendar calendar = Calendar.getInstance();
 
         Date date = calendar.getTime();
-        RealmQuery<Launch> query = realm.where(Launch.class)
-                .greaterThanOrEqualTo("net", date);
+        RealmQuery<Launch> query = realm.where(Launch.class).greaterThanOrEqualTo("net", date);
         query.findAll();
 
         if (switchPreferences.getTBDSwitch()) {
