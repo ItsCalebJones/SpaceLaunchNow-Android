@@ -27,14 +27,4 @@
         <item>Elkövetkező</item>
         <item>Előző</item>
     </string-array>
-    <string-array name="status_array">
-        <item>Felmondott kiképzés alatt</item>
-        <item>Kiképzés alatt</item>
-        <item>Aktív</item>
-        <item>Visszavonult</item>
-        <item>Repülés közben elhunyt</item>
-        <item>Kiképzés közben elhunyt</item>
-        <item>Elhunyt aktív szolgálat közben</item>
-        <item>Elbocsájtott</item>
-    </string-array>
 </resources>

@@ -490,9 +490,7 @@
     <string name="mission_agency">Agencia de la misión</string>
     <string name="no_expeditions">No se han encontrado expediciones</string>
     <string name="no_docked">No hay vehículos acoplados</string>
-    <string name="no_news">No se han cargado noticias</string>]
-    
-    
+    <string name="no_news">No se han cargado noticias</string>
     <string name="spacecraft_default_title">Detalles de naves espaciales</string>
     <string name="spacecraft_default_sub_title">Nave espacial desconocida</string>
     <string name="history">"Historia "</string>

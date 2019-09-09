@@ -492,9 +492,7 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="mission_agency">Pořádající agentura mise</string>
     <string name="no_expeditions">Nebyly nalezeny žádné expedice</string>
     <string name="no_docked">Žádné lodě nejsou nepřipojeny</string>
-    <string name="no_news">Žádné načtené novinky</string>]
-    
-    
+    <string name="no_news">Žádné načtené novinky</string>
     <string name="spacecraft_default_title">Detaily kosmické lodi</string>
     <string name="spacecraft_default_sub_title">Neznámá kosmická loď</string>
     <string name="history">Historie</string>

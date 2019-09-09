@@ -9,36 +9,7 @@
         <item>SpaceX</item>
         <item>NASA</item>
     </string-array>
-    <string-array name="country_array">
-        <item>Multinacional</item>
-        <item>Índia</item>
-        <item>Rússia</item>
-        <item>China</item>
-        <item>EUA</item>
-    </string-array>
-    <string-array name="location_array">
-        <item>Estação de Lançamento de Sohae, Coreia do Norte</item>
-        <item>Wallops Island, Virgínia, EUA</item>
-        <item>Centro Espacial Kennedy, FL, EUA</item>
-        <item>Cabo Canaveral, FL, EUA</item>
-        <item>BFA de Vandenberg, CA, EUA</item>
-        <item>Jiuquan, China</item>
-        <item>Taiyuan, China</item>
-        <item>Complexo de Lançamento de Kodiak, EUA</item>
-        <item>Kiatorete Spit, Nova Zelândia</item>
-        <item>Woomera, Austrália</item>
-        <item>Sea Launch</item>
-        <item>Dombarovskiy, Rússia</item>
-        <item>Cosmódromo de Svobodney, Rússia</item>
-        <item>Kapustin Yar, Rússia</item>
-        <item>Cosmódromo de Plesetsk, Rússia</item>
-        <item>Cosmódromo de Baikonur, Cazaquistão, Rússia</item>
-        <item>Kagoshima / Tanegashima, Japão</item>
-        <item>Sriharikota, Índia</item>
-        <item>Kourou, Guiana Francesa</item>
-        <item>Centro de Lançamento de Satélites de Wechang, China</item>
-        <item>Centro de Lançamento de Satélites de Xichang, China</item>
-    </string-array>
+
     <string-array name="multi_calendar_reminder">
         <item>Um Minuto</item>
         <item>Cinco Minutos</item>
@@ -71,14 +42,7 @@
         <item>72</item>
         <item>168</item>
     </string-array>
-    <string-array name="upcoming_array">
-        <item>Um</item>
-        <item>Dois</item>
-        <item>Cinco</item>
-        <item>Dez</item>
-        <item>Vinte</item>
-        <item>Todos (não recomendado)</item>
-    </string-array>
+
     <string-array name="upcoming_array_values">
         <item>1</item>
         <item>2</item>

@@ -490,9 +490,7 @@
     <string name="mission_agency">Agencja odpowiedzialna za misję</string>
     <string name="no_expeditions">Nie znaleziono ekspedycji</string>
     <string name="no_docked">Brak zadokowanych pojazdów</string>
-    <string name="no_news">Nie załadowano wiadomości</string>]
-    
-    
+    <string name="no_news">Nie załadowano wiadomości</string>
     <string name="spacecraft_default_title">Szczegóły statku kosmicznego</string>
     <string name="spacecraft_default_sub_title">Nieznany statek kosmiczny</string>
     <string name="history">Historia</string>

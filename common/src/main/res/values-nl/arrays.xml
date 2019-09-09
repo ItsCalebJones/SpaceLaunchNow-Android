@@ -27,14 +27,4 @@
         <item>Aankomend</item>
         <item>Vorige</item>
     </string-array>
-    <string-array name="status_array">
-        <item>Ontslag genomen tijdens training</item>
-        <item>In-training</item>
-        <item>Actief</item>
-        <item>Op pensioen</item>
-        <item>Verloren bij vlucht</item>
-        <item>Verloren bij training</item>
-        <item>Gestorven tijdens actieve dienst</item>
-        <item>Ontslagen</item>
-    </string-array>
 </resources>
