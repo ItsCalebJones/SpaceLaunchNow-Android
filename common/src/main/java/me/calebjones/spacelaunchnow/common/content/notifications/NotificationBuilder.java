@@ -144,13 +144,11 @@ public class NotificationBuilder {
                 .extend(wearableExtender)
                 .setContentIntent(pending);
 
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
-                "default ringtone");
-        Uri alarmSound = Uri.parse(ringtoneBox);
+
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else {
-            mBuilder.setChannelId(channelId).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+            mBuilder.setChannelId(channelId).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
         }
 
         if (launch.getRocket().getConfiguration().getImageUrl() != null
@@ -174,14 +172,6 @@ public class NotificationBuilder {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
                 mBuilder.setPriority(Notification.PRIORITY_HIGH);
             }
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setVibrate(new long[]{750, 750});
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
-                && sharedPref.getBoolean("notifications_new_message_led", true)) {
-            mBuilder.setLights(Color.GREEN, 3000, 3000);
         }
 
         mNotifyManager.notify(notificationId, mBuilder.build());
@@ -289,13 +279,10 @@ public class NotificationBuilder {
                 .extend(wearableExtender)
                 .setContentIntent(pending);
 
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
-                "default ringtone");
-        Uri alarmSound = Uri.parse(ringtoneBox);
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else {
-            mBuilder.setChannelId(channelId).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+            mBuilder.setChannelId(channelId).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
         }
 
 
@@ -305,14 +292,6 @@ public class NotificationBuilder {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
                 mBuilder.setPriority(Notification.PRIORITY_HIGH);
             }
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setVibrate(new long[]{750, 750});
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
-                && sharedPref.getBoolean("notifications_new_message_led", true)) {
-            mBuilder.setLights(Color.GREEN, 3000, 3000);
         }
 
         mNotifyManager.notify(notificationId, mBuilder.build());
@@ -652,9 +631,6 @@ public class NotificationBuilder {
                 .extend(wearableExtender)
                 .setContentIntent(eventIntent);
 
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
-                "default ringtone");
-        Uri alarmSound = Uri.parse(ringtoneBox);
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else {
@@ -683,14 +659,6 @@ public class NotificationBuilder {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
                 mBuilder.setPriority(Notification.PRIORITY_HIGH);
             }
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setVibrate(new long[]{750, 750});
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
-                && sharedPref.getBoolean("notifications_new_message_led", true)) {
-            mBuilder.setLights(Color.GREEN, 3000, 3000);
         }
 
         mNotifyManager.notify(notificationId, mBuilder.build());
@@ -753,8 +721,6 @@ public class NotificationBuilder {
                         .bigText(expandedText))
                 .setContentIntent(eventIntent);
 
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
-                "default ringtone");
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else {
@@ -781,14 +747,6 @@ public class NotificationBuilder {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && sharedPref.getBoolean("notifications_new_message_heads_up", true)) {
                 mBuilder.setPriority(Notification.PRIORITY_HIGH);
             }
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN &&
-                sharedPref.getBoolean("notifications_new_message_vibrate", true)) {
-            mBuilder.setVibrate(new long[]{750, 750});
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN
-                && sharedPref.getBoolean("notifications_new_message_led", true)) {
-            mBuilder.setLights(Color.GREEN, 3000, 3000);
         }
 
         mNotifyManager.notify(notificationId, mBuilder.build());
