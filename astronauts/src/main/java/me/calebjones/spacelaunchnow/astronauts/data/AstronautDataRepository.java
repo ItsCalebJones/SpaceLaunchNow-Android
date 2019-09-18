@@ -170,12 +170,7 @@ public class AstronautDataRepository {
             }
         }
 
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealmOrUpdate(astronauts);
-            }
-        });
+        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(astronauts));
     }
 }
 

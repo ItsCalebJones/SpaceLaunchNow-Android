@@ -132,8 +132,8 @@ public class SpacestationDataRepository {
         });
     }
 
-    public void addSpacestationsToRealm(final List<Spacestation> astronauts) {
-        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(astronauts));
+    public void addSpacestationsToRealm(final List<Spacestation> spacestations) {
+        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(spacestations));
     }
 }
 
