@@ -27,14 +27,4 @@
         <item>Nadcházející</item>
         <item>Předchozí</item>
     </string-array>
-    <string-array name="status_array">
-        <item>V průběhu tréninku rezignoval</item>
-        <item>V tréningu</item>
-        <item>Aktivní</item>
-        <item>Ve výslužbě</item>
-        <item>Ztracen za letu</item>
-        <item>Ztraceno v tréninku</item>
-        <item>Zemřel v aktivní službě</item>
-        <item>Zamítnuto</item>
-    </string-array>
 </resources>

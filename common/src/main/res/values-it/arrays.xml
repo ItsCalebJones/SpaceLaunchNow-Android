@@ -16,14 +16,5 @@
         <item>In arrivo</item>
         <item>Precedente</item>
     </string-array>
-    <string-array name="status_array">
-        <item>Riassegnato durante l\'addestramento</item>
-        <item>In allenamento</item>
-        <item>attivo</item>
-        <item>Ritirato</item>
-        <item>Perso in volo</item>
-        <item>Morto durante in addestramento</item>
-        <item>Morto mentre in servizio attivo</item>
-        <item>Dismesso</item>
-    </string-array>
+
 </resources>
