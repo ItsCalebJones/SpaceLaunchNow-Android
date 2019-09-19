@@ -1,16 +1,21 @@
 <?xml version="1.0"?>
 <resources>
     <string name="app_name">Space Launch Now</string>
+    <string name="news">Nyheter</string>
+    <string name="twitter">Twitter</string>
     <string name="action_settings">Innstillinger</string>
+    <string name="status_go">"Klar for oppskytning"</string>
     <string name="status_nogo">Oppskytningsdato ubekreftet</string>
     <string name="status_success">"Vellykket oppskytning"</string>
     <string name="status_failure">"Oppskytningsfeil oppstod"</string>
     <string name="spacex_summary">SpaceX designer, produserer, og skyter opp avanserte raketter og romfartøy. Selskapet ble grunnlagt i 2002 for å revolusjonere rom-teknologi, med et mål om å la folk bo på andre planeter.</string>
     <string name="usaf_summary">The United States Air Force er luftvåpenet til The United States Armed Forces og er en av syv amerikanske tjenester.</string>
+    <string name="nasa_summary">The National Aeronautics and Space Administration (NASA) er regjeringsbyrået ansvarlig for det sivile romprogrammet samt luftfarts- og romfartsforskning i USA.</string>
     <string name="general_settings">Generelle innstillinger for sporing av oppskytninger, og oppførselen til applikasjonen</string>
     <string name="supporter_title">Bli en Supporter</string>
     <string name="supporter_description">Hjelp til å sikre fortsatt støtte, feilrettinger, og nye funksjoner.</string>
     <string name="slide_one_title">Space Launch Now</string>
+    <string name="slide_one_description">Hold deg oppdatert om alle dine favoritt oppskytninger, oppdrag, og oppskytningsfartøy.</string>
     <string name="slide_two_title">"Notifikasjoner for oppskytninger "</string>
     <string name="slide_two_description">Få notifikasjoner om fremtidige oppskytninger og utforsk historien til romfart</string>
     <string name="slide_three_title">Finn Oppskytningsfartøy</string>
@@ -30,9 +35,13 @@
     <string name="about_settings">Applikasjons informasjon om lisens, biblioteker, endringslog, osv</string>
     <string name="support_settings">Få tilgang til pro funksjoner og delta i fremtidig utvikling.</string>
     <string name="wear_settings">Endre Android Wear klokke instillinger</string>
+    <string name="supporter_unlock_text">Jeg setter pris på at du vurderer å støtte Space Launch Now.\n\nAlle typer støtte er et engangskjøp som låser opp alle pro-egenskapene for alltid. Betal hva du vil som støtte til fortsatt utvikling og oppdateringer!</string>
+    <string name="thank_you_support">Takk for støtten!</string>
     <string name="ok">Ok</string>
     <string name="issues_connecting_billing">Problemer med å koble til Google Play betaling</string>
     <string name="thanks_support_development">Takk for at du hjelper med å støtte utviklingen!</string>
+    <string name="billing_error_code">Faktureringsfeil kode -</string>
+    <string name="purchase_history">Kjøpshistorikk</string>
     <string name="whats_new">Hva er nytt?</string>
     <string name="unknown_rocket">Ukjent rakett</string>
     <string name="unknown_mission_location">Ukjent oppdrag og plassering</string>
@@ -131,6 +140,9 @@
     <string name="details">Detaljer</string>
     <string name="mission">Oppdrag</string>
     <string name="agencies">Byrå</string>
+    <string name="error_launch_details">Error - Kan ikke laste inn fartøyets detaljer</string>
+    <string name="height_full">Høyde: %.1f Meter</string>
+    <string name="diameter_full">Diameter: %.1f Meter</string>
     <string name="close">Lukk</string>
     <string name="utc_time">Vis UTC tid</string>
     <string name="dynamic_background">Dynamisk bakgrunn</string>

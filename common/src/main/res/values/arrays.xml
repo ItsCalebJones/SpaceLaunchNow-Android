@@ -11,7 +11,7 @@
         <item>Material Orange</item>
         <item>Custom</item>
     </string-array>
-    <string-array name="widget_presets_values">
+    <string-array name="widget_presets_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -28,7 +28,7 @@
         <item>Previous</item>
     </string-array>
 
-    <integer-array name="status_value">
+    <integer-array name="status_value" translatable="false">
         <item>1</item>
         <item>2</item>
         <item>11</item>
@@ -58,14 +58,14 @@
         <item>24-Hour Format</item>
     </string-array>
 
-    <integer-array name="background_color_presets">
+    <integer-array name="background_color_presets" translatable="false">
         <item>@color/custom_background_material_light</item>
         <item>@color/custom_background_material_dark</item>
         <item>@color/custom_background_black</item>
         <item>@color/custom_background_dark_green</item>
         <item>@color/custom_background_dark_blue</item>
     </integer-array>
-    <integer-array name="widget_presets_values_text_primary">
+    <integer-array name="widget_presets_values_text_primary" translatable="false">
         <item>0xDE000000</item>
         <item>0xFFFFFFFF</item>
         <item>0xFFFFFFFF</item>
@@ -77,7 +77,7 @@
         <item>0x00000000</item>
     </integer-array>
 
-    <integer-array name="widget_presets_values_text_secondary">
+    <integer-array name="widget_presets_values_text_secondary" translatable="false">
         <item>0x8A000000</item>
         <item>0xB3FFFFFF</item>
         <item>0xB3FFFFFF</item>
@@ -88,7 +88,7 @@
         <item>0xB3FFFFFF</item>
         <item>0x00000000</item>
     </integer-array>
-    <integer-array name="widget_presets_values_background">
+    <integer-array name="widget_presets_values_background" translatable="false">
         <item>0xFFFAFAFA</item>
         <item>0xFF303030</item>
         <item>0x40FAFAFA</item>
@@ -99,7 +99,7 @@
         <item>0xFFFF9800</item>
         <item>0x00000000</item>
     </integer-array>
-    <integer-array name="widget_presets_values_accent">
+    <integer-array name="widget_presets_values_accent" translatable="false">
         <item>0xFF42a5f5</item>
         <item>0xFF455a64</item>
         <item>0x4042a5f5</item>
@@ -110,7 +110,7 @@
         <item>0xFFFF9800</item>
         <item>0x00000000</item>
     </integer-array>
-    <integer-array name="widget_presets_values_title_text">
+    <integer-array name="widget_presets_values_title_text" translatable="false">
         <item>0xFFFFFFFF</item>
         <item>0xFFFFFFFF</item>
         <item>0xFFFFFFFF</item>

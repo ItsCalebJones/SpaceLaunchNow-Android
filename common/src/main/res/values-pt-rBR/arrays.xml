@@ -27,6 +27,17 @@
         <item>Próximos</item>
         <item>Anteriores</item>
     </string-array>
+    <string-array name="status_array">
+        <item>Ativo</item>
+        <item>Aposentado(a)</item>
+        <item>Falecido(a)</item>
+        <item>Em Treinamento</item>
+        <item>Perdido(a) em Voo</item>
+        <item>Perdido(a) em Treinamento</item>
+        <item>Morto(a) Durante Serviço Ativo</item>
+        <item>Demitido(a)</item>
+        <item>Renunciou durante treinamento</item>
+    </string-array>
     <string-array name="time_format_array">
         <item>Padrão</item>
         <item>Formato 12-Horas AM/PM</item>

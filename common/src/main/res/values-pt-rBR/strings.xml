@@ -490,9 +490,7 @@
     <string name="mission_agency">Agência da Missão</string>
     <string name="no_expeditions">Nenhuma expedição encontrada</string>
     <string name="no_docked">Nenhum veículo acoplado</string>
-    <string name="no_news">Nenhuma Notícia Carregada</string>]
-    
-    
+    <string name="no_news">Nenhuma Notícia Carregada</string>
     <string name="spacecraft_default_title">Detalhes da Espaçonave</string>
     <string name="spacecraft_default_sub_title">Espaçonave desconhecida</string>
     <string name="history">História</string>
@@ -556,4 +554,5 @@
     <string name="born">Nascido(a): %1$s (%2$d)</string>
     <string name="born_one_argument">Nascido(a): %1$s</string>
     <string name="died_two_arguments">Morte: %1$s (%2$d)</string>
+    <string name="related_news">Novidades Relacionadas</string>
 </resources>

@@ -27,6 +27,17 @@
         <item>À venir</item>
         <item>Passés</item>
     </string-array>
+    <string-array name="status_array">
+        <item>Actif</item>
+        <item>Retraité</item>
+        <item>Décédé</item>
+        <item>En Formation</item>
+        <item>Perdu en Vol</item>
+        <item>Perdu en Formation</item>
+        <item>Décédé en Service Actif</item>
+        <item>Renvoyé</item>
+        <item>Démission pendant la Formation</item>
+    </string-array>
     <string-array name="time_format_array">
         <item>Par Défaut</item>
         <item>Format AM/PM</item>
