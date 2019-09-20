@@ -74,7 +74,7 @@ public class DataSaver {
                                 if (previous.getAbbrev() != null) {
                                     launch.getRocket().getSpacecraftStage().getSpacecraft().getConfiguration().setAgency(previous);
                                 } else {
-                                    launch.getRocket().getSpacecraftStage().getSpacecraft().getConfiguration().setAgency(null);
+                                    launch.getRocket().getSpacecraftStage().getSpacecraft().getConfiguration().setAgency(spacecraftAgency);
                                 }
                             }
                         }

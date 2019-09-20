@@ -160,7 +160,9 @@ public class AstronautDataRepository {
             if (astronaut.getAgency() != null) {
                 Agency previous = realm.where(Agency.class).equalTo("id", astronaut.getAgency().getId()).findFirst();
                 if (previous != null) {
-                    astronaut.setAgency(previous);
+                    if (previous.getAbbrev() != null) {
+                        astronaut.setAgency(previous);
+                    }
                 }
             }
 
