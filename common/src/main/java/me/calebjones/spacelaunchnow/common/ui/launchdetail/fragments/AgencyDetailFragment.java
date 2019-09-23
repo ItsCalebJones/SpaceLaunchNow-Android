@@ -112,34 +112,34 @@ public class AgencyDetailFragment extends BaseFragment {
             Timber.v("Setting up views...");
             lspCard.setVisibility(View.VISIBLE);
 
-            lspAgency.setText(String.format(this.getString(R.string.view_rocket_launches), launch.getRocket().getConfiguration().getLaunchServiceProvider().getName()));
-            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl() != null) {
+            lspAgency.setText(String.format(this.getString(R.string.view_rocket_launches), launch.getRocket().getConfiguration().getManufacturer().getName()));
+            if (detailLaunch.getRocket().getConfiguration().getManufacturer().getLogoUrl() != null) {
                 lspLogo.setVisibility(View.VISIBLE);
                 GlideApp.with(context)
-                        .load(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getLogoUrl())
+                        .load(detailLaunch.getRocket().getConfiguration().getManufacturer().getLogoUrl())
                         .centerInside()
                         .into(lspLogo);
             } else {
                 lspLogo.setVisibility(View.GONE);
             }
-            lspName.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getName());
-            lspType.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getType());
-            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getAdministrator() != null) {
-                lspAdministrator.setText(String.format("%s", detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getAdministrator()));
+            lspName.setText(detailLaunch.getRocket().getConfiguration().getManufacturer().getName());
+            lspType.setText(detailLaunch.getRocket().getConfiguration().getManufacturer().getType());
+            if (detailLaunch.getRocket().getConfiguration().getManufacturer().getAdministrator() != null) {
+                lspAdministrator.setText(String.format("%s", detailLaunch.getRocket().getConfiguration().getManufacturer().getAdministrator()));
             } else {
                 lspAdministrator.setText(R.string.unknown_administrator);
             }
-            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getFoundingYear() != null) {
-                lspFoundedYear.setText(String.format(getString(R.string.founded_in), detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getFoundingYear()));
+            if (detailLaunch.getRocket().getConfiguration().getManufacturer().getFoundingYear() != null) {
+                lspFoundedYear.setText(String.format(getString(R.string.founded_in), detailLaunch.getRocket().getConfiguration().getManufacturer().getFoundingYear()));
             } else {
                 lspFoundedYear.setText(R.string.unknown_year);
             }
-            lspSummary.setText(detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getDescription());
-            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getInfoUrl() == null) {
+            lspSummary.setText(detailLaunch.getRocket().getConfiguration().getManufacturer().getDescription());
+            if (detailLaunch.getRocket().getConfiguration().getManufacturer().getInfoUrl() == null) {
                 lspInfoButtonOne.setVisibility(View.GONE);
             }
 
-            if (detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getWikiUrl() == null) {
+            if (detailLaunch.getRocket().getConfiguration().getManufacturer().getWikiUrl() == null) {
                 lspWikiButtonOne.setVisibility(View.GONE);
             }
             lspAgency.setVisibility(View.VISIBLE);
@@ -165,19 +165,19 @@ public class AgencyDetailFragment extends BaseFragment {
     @OnClick(R2.id.lsp_infoButton_one)
     public void onLspInfoButtonOneClicked() {
         Activity activity = (Activity) context;
-        Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getInfoUrl());
+        Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getManufacturer().getInfoUrl());
     }
 
     @OnClick(R2.id.lsp_wikiButton_one)
     public void onLspWikiButtonOneClicked() {
         Activity activity = (Activity) context;
-        Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getWikiUrl());
+        Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getManufacturer().getWikiUrl());
     }
 
     @OnClick(R2.id.lsp_agency)
     public void onViewClicked() {
         Intent intent = new Intent(context, AgencyLaunchActivity.class);
-        intent.putExtra("lspName", detailLaunch.getRocket().getConfiguration().getLaunchServiceProvider().getName());
+        intent.putExtra("lspName", detailLaunch.getRocket().getConfiguration().getManufacturer().getName());
         startActivity(intent);
     }
 

@@ -68,6 +68,10 @@ public class Spacestation extends RealmObject {
     @SerializedName("active_expeditions")
     @Expose
     public RealmList<Expedition> activeExpeditions = null;
+    @SerializedName("docking_location")
+    @Expose
+    public RealmList<DockingLocation> dockingLocations = null;
+
 
     private Date lastUpdate;
 
@@ -221,5 +225,13 @@ public class Spacestation extends RealmObject {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public RealmList<DockingLocation> getDockingLocations() {
+        return dockingLocations;
+    }
+
+    public void setDockingLocations(RealmList<DockingLocation> dockingLocations) {
+        this.dockingLocations = dockingLocations;
     }
 }

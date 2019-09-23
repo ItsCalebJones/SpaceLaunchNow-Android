@@ -79,6 +79,9 @@ public class Launch extends RealmObject {
     @SerializedName("rocket")
     @Expose
     public Rocket rocket;
+    @SerializedName("launch_service_provider")
+    @Expose
+    public Agency launchServiceProvider;
 
     public Long eventID;
     public Date lastUpdate;
@@ -265,5 +268,13 @@ public class Launch extends RealmObject {
 
     public void setVidURLs(RealmList<RealmStr> vidURLs) {
         this.vidURLs = vidURLs;
+    }
+
+    public Agency getLaunchServiceProvider() {
+        return launchServiceProvider;
+    }
+
+    public void setLaunchServiceProvider(Agency launchServiceProvider) {
+        this.launchServiceProvider = launchServiceProvider;
     }
 }

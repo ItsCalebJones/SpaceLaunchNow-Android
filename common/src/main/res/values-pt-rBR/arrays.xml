@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="status_array">
-        <item>Em treinamento</item>
-        <item>Ativo</item>
-        <item>Retirado</item>
-        <item>Perdido em voo</item>
-        <item>Perdido no Treinamento</item>
-        <item>Morto Durante Serviço Ativo</item>
-        <item>Desaparecido</item>
-        <item>Resignou-se durante o Treinamento</item>
-    </string-array>
     <string-array name="widget_presets">
         <item>Claro</item>
         <item>Escuro</item>
@@ -36,6 +26,17 @@
         <item>Todos</item>
         <item>Próximos</item>
         <item>Anteriores</item>
+    </string-array>
+    <string-array name="status_array">
+        <item>Ativo</item>
+        <item>Aposentado(a)</item>
+        <item>Falecido(a)</item>
+        <item>Em Treinamento</item>
+        <item>Perdido(a) em Voo</item>
+        <item>Perdido(a) em Treinamento</item>
+        <item>Morto(a) Durante Serviço Ativo</item>
+        <item>Demitido(a)</item>
+        <item>Renunciou durante treinamento</item>
     </string-array>
     <string-array name="time_format_array">
         <item>Padrão</item>

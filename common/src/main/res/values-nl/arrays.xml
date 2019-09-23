@@ -27,4 +27,20 @@
         <item>Aankomend</item>
         <item>Vorige</item>
     </string-array>
+    <string-array name="status_array">
+        <item>Actief</item>
+        <item>Met pensioen</item>
+        <item>Overleden</item>
+        <item>In training</item>
+        <item>Overleden tijdens een vlucht</item>
+        <item>Overleden tijdens training</item>
+        <item>Overleden in diensttijd</item>
+        <item>Ontslagen</item>
+        <item>Ontslag genomen tijdens training</item>
+    </string-array>
+    <string-array name="time_format_array">
+        <item>Standaard</item>
+        <item>12-uurs AM/PM formaat</item>
+        <item>24-uurs formaat</item>
+    </string-array>
 </resources>

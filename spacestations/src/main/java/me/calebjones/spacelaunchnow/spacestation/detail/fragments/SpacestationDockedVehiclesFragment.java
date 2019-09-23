@@ -19,13 +19,13 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftStage;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.DockingLocation;
 import me.calebjones.spacelaunchnow.spacestation.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
-import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.spacestation.R;
 import me.calebjones.spacelaunchnow.spacestation.detail.SpacestationDetailViewModel;
-import me.calebjones.spacelaunchnow.spacestation.detail.adapter.DockedVehicleItem;
+import me.calebjones.spacelaunchnow.spacestation.detail.adapter.DockingLocationItem;
 import me.calebjones.spacelaunchnow.spacestation.detail.adapter.ListItem;
 import me.calebjones.spacelaunchnow.spacestation.detail.adapter.SpacestationAdapter;
 
@@ -74,11 +74,13 @@ public class SpacestationDockedVehiclesFragment extends BaseFragment {
     }
 
     private void setSpacestation(Spacestation spacestation) {
-        if (spacestation != null && spacestation.getDockedVehicles() != null) {
+        if (spacestation != null && spacestation.getDockingLocations() != null) {
             List<ListItem> items = new ArrayList<>();
-            for (SpacecraftStage spacecraftStage : spacestation.getDockedVehicles()) {
-                DockedVehicleItem item = new DockedVehicleItem(spacecraftStage);
-                items.add(item);
+            for (DockingLocation dockingLocation : spacestation.getDockingLocations()) {
+                if (dockingLocation.getDocked() != null) {
+                    DockingLocationItem item = new DockingLocationItem(dockingLocation);
+                    items.add(item);
+                }
             }
             adapter.clear();
             adapter.addItems(items);

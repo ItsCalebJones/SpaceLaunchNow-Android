@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import me.calebjones.spacelaunchnow.common.GlideApp;
-import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftStage;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.DockingEvent;
+import me.calebjones.spacelaunchnow.data.models.main.spacestation.DockingLocation;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.spacestation.R;
@@ -125,33 +125,30 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
         }
 
         public void bindType(ListItem item) {
-            DockedVehicleItem dockedVehicleItem = (DockedVehicleItem) item;
-            SpacecraftStage spacecraft = dockedVehicleItem.getDockedVehicle();
-            List<DockingEvent> dockingEvents = spacecraft.getDockingEvents();
-            for (DockingEvent dockingEvent : dockingEvents) {
-                if (dockingEvent.getDeparture() == null) {
-                    dockedLocation.setText(dockingEvent.getDockingLocation());
-                }
-            }
-            GlideApp.with(context)
-                    .load(spacecraft.getSpacecraft().getConfiguration().getImageUrl())
-                    .placeholder(R.drawable.placeholder)
-                    .into(image);
+            DockingLocationItem dockedVehicleItem = (DockingLocationItem) item;
+            DockingLocation dockingLocation = dockedVehicleItem.getDockingLocation();
+            dockedLocation.setText(dockingLocation.getName());
+            if (dockingLocation.getDocked() != null) {
+                GlideApp.with(context)
+                        .load(dockingLocation.getDocked().getFlightVehicle().getSpacecraft().getConfiguration().getImageUrl())
+                        .placeholder(R.drawable.placeholder)
+                        .into(image);
 
-            title.setText(spacecraft.getSpacecraft().getName());
-            subtitle.setText(spacecraft.getSpacecraft().getSerialNumber());
-            if (spacecraft.getSpacecraft().getConfiguration().getHumanRated() == null) {
-                GlideApp.with(context)
-                        .load(R.drawable.ic_question_mark)
-                        .into(humanRated);
-            } else if (spacecraft.getSpacecraft().getConfiguration().getHumanRated()) {
-                GlideApp.with(context)
-                        .load(R.drawable.ic_checkmark)
-                        .into(humanRated);
-            } else {
-                GlideApp.with(context)
-                        .load(R.drawable.ic_failed)
-                        .into(humanRated);
+                title.setText(dockingLocation.getDocked().getFlightVehicle().getSpacecraft().getName());
+                subtitle.setText(dockingLocation.getDocked().getFlightVehicle().getSpacecraft().getSerialNumber());
+                if (dockingLocation.getDocked().getFlightVehicle().getSpacecraft().getConfiguration().getHumanRated() == null) {
+                    GlideApp.with(context)
+                            .load(R.drawable.ic_question_mark)
+                            .into(humanRated);
+                } else if (dockingLocation.getDocked().getFlightVehicle().getSpacecraft().getConfiguration().getHumanRated()) {
+                    GlideApp.with(context)
+                            .load(R.drawable.ic_checkmark)
+                            .into(humanRated);
+                } else {
+                    GlideApp.with(context)
+                            .load(R.drawable.ic_failed)
+                            .into(humanRated);
+                }
             }
         }
     }

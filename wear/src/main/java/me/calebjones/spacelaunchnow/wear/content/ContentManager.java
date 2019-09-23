@@ -118,7 +118,7 @@ public class ContentManager {
         Date date = calendar.getTime();
 
         if (category > 0) {
-            return realm.where(Launch.class).equalTo("rocket.configuration.launchServiceProvider.id", category).greaterThanOrEqualTo("net", date).sort("net").findAll();
+            return realm.where(Launch.class).equalTo("rocket.configuration.manufacturer.id", category).greaterThanOrEqualTo("net", date).sort("net").findAll();
         } else {
             return realm.where(Launch.class).greaterThanOrEqualTo("net", date).sort("net").findAll();
         }
