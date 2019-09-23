@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="status_array">
-        <item>In Addestramento</item>
-        <item>Attivo</item>
-        <item>Ritirato</item>
-        <item>Deceduto in volo</item>
-        <item>Deceduto Durante l\'addestramento</item>
-        <item>Deceduto in servizio</item>
-        <item>Destituito</item>
-        <item>Riassegnato durante l\'addestramento</item>
-    </string-array>
     <string-array name="widget_presets">
         <item>Luce</item>
         <item>Scuro</item>
