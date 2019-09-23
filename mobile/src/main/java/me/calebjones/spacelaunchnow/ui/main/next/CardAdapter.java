@@ -397,26 +397,33 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                     if (uri.getHost().contains("youtube")) {
                                         name = "YouTube";
                                         String youTubeURL = getYouTubeID(s.getVal());
-                                        if (youTubeURL.contains("spacex/live")) {
-                                            adapter.add(new VideoListItem.Builder(context)
-                                                    .content("YouTube - SpaceX Livestream")
-                                                    .videoURL(s.getVal())
-                                                    .build());
-                                        } else {
-                                            youTubeAPIHelper.getVideoById(youTubeURL,
-                                                    new Callback<VideoResponse>() {
-                                                        @Override
-                                                        public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                                                            if (response.isSuccessful()) {
-                                                                if (response.body() != null) {
-                                                                    List<Video> videos = response.body().getVideos();
-                                                                    if (videos.size() > 0) {
-                                                                        try {
-                                                                            adapter.add(new VideoListItem.Builder(context)
-                                                                                    .content(videos.get(0).getSnippet().getTitle())
-                                                                                    .videoURL(s.getVal())
-                                                                                    .build());
-                                                                        } catch (Exception e) {
+                                        if (youTubeURL != null) {
+                                            if (youTubeURL.contains("spacex/live")) {
+                                                adapter.add(new VideoListItem.Builder(context)
+                                                        .content("YouTube - SpaceX Livestream")
+                                                        .videoURL(s.getVal())
+                                                        .build());
+                                            } else {
+                                                youTubeAPIHelper.getVideoById(youTubeURL,
+                                                        new Callback<VideoResponse>() {
+                                                            @Override
+                                                            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                                                                if (response.isSuccessful()) {
+                                                                    if (response.body() != null) {
+                                                                        List<Video> videos = response.body().getVideos();
+                                                                        if (videos.size() > 0) {
+                                                                            try {
+                                                                                adapter.add(new VideoListItem.Builder(context)
+                                                                                        .content(videos.get(0).getSnippet().getTitle())
+                                                                                        .videoURL(s.getVal())
+                                                                                        .build());
+                                                                            } catch (Exception e) {
+                                                                                adapter.add(new VideoListItem.Builder(context)
+                                                                                        .content(name)
+                                                                                        .videoURL(s.getVal())
+                                                                                        .build());
+                                                                            }
+                                                                        } else {
                                                                             adapter.add(new VideoListItem.Builder(context)
                                                                                     .content(name)
                                                                                     .videoURL(s.getVal())
@@ -434,22 +441,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                                                             .videoURL(s.getVal())
                                                                             .build());
                                                                 }
-                                                            } else {
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<VideoResponse> call, Throwable t) {
                                                                 adapter.add(new VideoListItem.Builder(context)
                                                                         .content(name)
                                                                         .videoURL(s.getVal())
                                                                         .build());
                                                             }
-                                                        }
-
-                                                        @Override
-                                                        public void onFailure(Call<VideoResponse> call, Throwable t) {
-                                                            adapter.add(new VideoListItem.Builder(context)
-                                                                    .content(name)
-                                                                    .videoURL(s.getVal())
-                                                                    .build());
-                                                        }
-                                                    });
+                                                        });
+                                            }
                                         }
                                     } else {
                                         name = uri.getHost();
