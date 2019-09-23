@@ -253,11 +253,11 @@ public class NextLaunchComplicationProvider extends ComplicationProviderService 
             switch (dataType) {
                 case ComplicationData.TYPE_SHORT_TEXT:
                     String agency = "Unk";
-                    if (launch.getRocket().getConfiguration().getLaunchServiceProvider() != null && launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev() != null) {
-                        agency = launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev();
+                    if (launch.getRocket().getConfiguration().getManufacturer() != null && launch.getRocket().getConfiguration().getManufacturer().getAbbrev() != null) {
+                        agency = launch.getRocket().getConfiguration().getManufacturer().getAbbrev();
                     } else if (launch.getMission() != null) {
-                        if (launch.getRocket().getConfiguration().getLaunchServiceProvider() != null ){
-                            Agency launchAgency = launch.getRocket().getConfiguration().getLaunchServiceProvider();
+                        if (launch.getRocket().getConfiguration().getManufacturer() != null ){
+                            Agency launchAgency = launch.getRocket().getConfiguration().getManufacturer();
                             if (launchAgency != null){
                                 agency = launchAgency.getAbbrev();
                             }

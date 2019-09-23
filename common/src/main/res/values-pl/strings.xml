@@ -554,4 +554,5 @@
     <string name="born">Urodzony: %1$s (%2$d)</string>
     <string name="born_one_argument">Urodzony: %1$s</string>
     <string name="died_two_arguments">Zmarł: %1$s (%2$d)</string>
+    <string name="related_news">Powiązane wiadomości</string>
 </resources>

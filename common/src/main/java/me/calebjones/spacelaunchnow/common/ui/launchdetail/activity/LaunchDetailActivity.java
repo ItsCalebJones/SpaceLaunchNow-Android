@@ -44,7 +44,6 @@ import io.realm.Realm;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
-import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.common.ui.generate.Rate;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.data.Callbacks;
@@ -387,20 +386,20 @@ public class LaunchDetailActivity extends BaseActivity
     private void findProfileLogo(Launch launch) {
         String locationCountryCode;
         try {
-            if (launch.getRocket().getConfiguration().getLaunchServiceProvider() != null) {
-                if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getNationUrl() != null) {
-                    applyProfileLogo(launch.getRocket().getConfiguration().getLaunchServiceProvider().getNationUrl());
-                } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev() != null
-                        && launch.getRocket().getConfiguration().getLaunchServiceProvider().getCountryCode() != null) {
-                    locationCountryCode = launch.getRocket().getConfiguration().getLaunchServiceProvider().getCountryCode();
+            if (launch.getRocket().getConfiguration().getManufacturer() != null) {
+                if (launch.getRocket().getConfiguration().getManufacturer().getNationUrl() != null) {
+                    applyProfileLogo(launch.getRocket().getConfiguration().getManufacturer().getNationUrl());
+                } else if (launch.getRocket().getConfiguration().getManufacturer().getAbbrev() != null
+                        && launch.getRocket().getConfiguration().getManufacturer().getCountryCode() != null) {
+                    locationCountryCode = launch.getRocket().getConfiguration().getManufacturer().getCountryCode();
                     //Go through various CountryCodes and assign flag.
-                    if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ASA")) {
+                    if (launch.getRocket().getConfiguration().getManufacturer().getAbbrev().contains("ASA")) {
                         applyProfileLogo(getString(R.string.ariane_logo));
-                    } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("SpX")) {
+                    } else if (launch.getRocket().getConfiguration().getManufacturer().getAbbrev().contains("SpX")) {
                         applyProfileLogo(getString(R.string.spacex_logo));
-                    } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("BA")) {
+                    } else if (launch.getRocket().getConfiguration().getManufacturer().getAbbrev().contains("BA")) {
                         applyProfileLogo(getString(R.string.Yuzhnoye_logo));
-                    } else if (launch.getRocket().getConfiguration().getLaunchServiceProvider().getAbbrev().contains("ULA")) {
+                    } else if (launch.getRocket().getConfiguration().getManufacturer().getAbbrev().contains("ULA")) {
                         applyProfileLogo(getString(R.string.ula_logo));
                     } else if (locationCountryCode.length() == 3) {
                         if (locationCountryCode.contains("USA")) {

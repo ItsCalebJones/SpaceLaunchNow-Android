@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="status_array">
-        <item>w trakcie testów</item>
-        <item>Aktywny</item>
-        <item>Emerytowany</item>
-        <item>Stracony podczas lotu</item>
-        <item>Stracony podczas testów</item>
-        <item>Zginął w aktywnej służbie</item>
-        <item>Odroczono</item>
-        <item>Zrezygnował podczas treningu</item>
-    </string-array>
     <string-array name="widget_presets">
         <item>Jasny</item>
         <item>Ciemny</item>
@@ -36,6 +26,17 @@
         <item>Wszystkie</item>
         <item>Nadchodzące</item>
         <item>Poprzednie</item>
+    </string-array>
+    <string-array name="status_array">
+        <item>Aktywny</item>
+        <item>Emerytowany</item>
+        <item>Zmarły</item>
+        <item>w trakcie testów</item>
+        <item>Stracony podczas lotu</item>
+        <item>Stracony podczas testów</item>
+        <item>Zginął w aktywnej służbie</item>
+        <item>Odroczono</item>
+        <item>Zrezygnował podczas treningu</item>
     </string-array>
     <string-array name="time_format_array">
         <item>Domyślny</item>

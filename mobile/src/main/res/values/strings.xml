@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="flight_life">Flight Life: %s</string>
-    <string name="thrust">Thrust at Launch:</string>
+
 </resources>

@@ -37,6 +37,18 @@
         <item>Nadcházející</item>
         <item>Předchozí</item>
     </string-array>
+    <string-array name="status_array">
+        <item>Aktivní</item>
+        <item>V důchodu</item>
+        <item>Zemřel</item>
+        <item>V tréninku</item>
+        <item>Ztracen za letu</item>
+        <item>Zemřel v tréninku</item>
+        <item>Zemřel v aktivní službě</item>
+        <item>Zamítnuto</item>
+        <item>Rezignoval v průběhu tréninku</item>
+    </string-array>
+
     <string-array name="time_format_array">
         <item>Výchozí</item>
         <item>12 hodinový AM/PM formát</item>

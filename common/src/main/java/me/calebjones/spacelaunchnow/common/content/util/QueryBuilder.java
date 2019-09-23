@@ -89,7 +89,7 @@ public class QueryBuilder {
 
         if (switchPreferences.getSwitchNasa()) {
             first = false;
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 44);
+            query.equalTo("rocket.configuration.manufacturer.id", 44);
         }
 
         if (switchPreferences.getSwitchArianespace()) {
@@ -98,7 +98,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 115);
+            query.equalTo("rocket.configuration.manufacturer.id", 115);
         }
 
         if (switchPreferences.getSwitchSpaceX()) {
@@ -107,7 +107,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 121);
+            query.equalTo("rocket.configuration.manufacturer.id", 121);
         }
 
         if (switchPreferences.getSwitchULA()) {
@@ -116,7 +116,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 124);
+            query.equalTo("rocket.configuration.manufacturer.id", 124);
         }
 
         if (switchPreferences.getSwitchRoscosmos()) {
@@ -125,11 +125,11 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 111)
+            query.equalTo("rocket.configuration.manufacturer.id", 111)
                     .or()
-                    .equalTo("rocket.configuration.launchServiceProvider.id", 163)
+                    .equalTo("rocket.configuration.manufacturer.id", 163)
                     .or()
-                    .equalTo("rocket.configuration.launchServiceProvider.id", 63);
+                    .equalTo("rocket.configuration.manufacturer.id", 63);
         }
         if (switchPreferences.getSwitchCASC()) {
             if (!first) {
@@ -152,7 +152,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 31);
+            query.equalTo("rocket.configuration.manufacturer.id", 31);
             query.or();
             query.equalTo("pad.location.id", 14);
         }
@@ -163,7 +163,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 141);
+            query.equalTo("rocket.configuration.manufacturer.id", 141);
         }
 
         if (switchPreferences.getSwitchRL()) {
@@ -172,7 +172,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 147);
+            query.equalTo("rocket.configuration.manufacturer.id", 147);
         }
 
         if (switchPreferences.getSwitchNorthrop()) {
@@ -181,7 +181,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 257);
+            query.equalTo("rocket.configuration.manufacturer.id", 257);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -273,7 +273,7 @@ public class QueryBuilder {
 
         if (switchPreferences.getSwitchNasa()) {
             first = false;
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 44);
+            query.equalTo("rocket.configuration.manufacturer.id", 44);
         }
 
         if (switchPreferences.getSwitchArianespace()) {
@@ -282,7 +282,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 115);
+            query.equalTo("rocket.configuration.manufacturer.id", 115);
         }
 
         if (switchPreferences.getSwitchSpaceX()) {
@@ -291,7 +291,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 121);
+            query.equalTo("rocket.configuration.manufacturer.id", 121);
         }
 
         if (switchPreferences.getSwitchULA()) {
@@ -300,7 +300,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 124);
+            query.equalTo("rocket.configuration.manufacturer.id", 124);
         }
 
         if (switchPreferences.getSwitchRoscosmos()) {
@@ -309,11 +309,11 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 111)
+            query.equalTo("rocket.configuration.manufacturer.id", 111)
                     .or()
-                    .equalTo("rocket.configuration.launchServiceProvider.id", 163)
+                    .equalTo("rocket.configuration.manufacturer.id", 163)
                     .or()
-                    .equalTo("rocket.configuration.launchServiceProvider.id", 63);
+                    .equalTo("rocket.configuration.manufacturer.id", 63);
         }
         if (switchPreferences.getSwitchCASC()) {
             if (!first) {
@@ -336,7 +336,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 31);
+            query.equalTo("rocket.configuration.manufacturer.id", 31);
             query.or();
             query.equalTo("pad.location.id", 14);
         }
@@ -347,7 +347,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 141);
+            query.equalTo("rocket.configuration.manufacturer.id", 141);
         }
 
         if (switchPreferences.getSwitchRL()) {
@@ -356,7 +356,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 147);
+            query.equalTo("rocket.configuration.manufacturer.id", 147);
         }
 
         if (switchPreferences.getSwitchNorthrop()) {
@@ -365,7 +365,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 257);
+            query.equalTo("rocket.configuration.manufacturer.id", 257);
         }
 
         if (switchPreferences.getSwitchKSC()) {
@@ -459,7 +459,7 @@ public class QueryBuilder {
 
         if (switchPreferences.getSwitchNasa()) {
             first = false;
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 44);
+            query.equalTo("rocket.configuration.manufacturer.id", 44);
         }
 
         if (switchPreferences.getSwitchArianespace()) {
@@ -468,7 +468,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 115);
+            query.equalTo("rocket.configuration.manufacturer.id", 115);
         }
 
         if (switchPreferences.getSwitchSpaceX()) {
@@ -477,7 +477,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 121);
+            query.equalTo("rocket.configuration.manufacturer.id", 121);
         }
 
         if (switchPreferences.getSwitchULA()) {
@@ -486,7 +486,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 124);
+            query.equalTo("rocket.configuration.manufacturer.id", 124);
         }
 
         if (switchPreferences.getSwitchRoscosmos()) {
@@ -495,11 +495,11 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 111)
+            query.equalTo("rocket.configuration.manufacturer.id", 111)
                     .or()
-                    .equalTo("rocket.configuration.launchServiceProvider.id", 163)
+                    .equalTo("rocket.configuration.manufacturer.id", 163)
                     .or()
-                    .equalTo("rocket.configuration.launchServiceProvider.id", 63);
+                    .equalTo("rocket.configuration.manufacturer.id", 63);
         }
         if (switchPreferences.getSwitchCASC()) {
             if (!first) {
@@ -522,7 +522,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 31);
+            query.equalTo("rocket.configuration.manufacturer.id", 31);
             query.or();
             query.equalTo("pad.location.id", 14);
         }
@@ -533,7 +533,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 141);
+            query.equalTo("rocket.configuration.manufacturer.id", 141);
         }
 
         if (switchPreferences.getSwitchRL()) {
@@ -542,7 +542,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 147);
+            query.equalTo("rocket.configuration.manufacturer.id", 147);
         }
 
         if (switchPreferences.getSwitchNorthrop()) {
@@ -551,7 +551,7 @@ public class QueryBuilder {
             } else {
                 first = false;
             }
-            query.equalTo("rocket.configuration.launchServiceProvider.id", 257);
+            query.equalTo("rocket.configuration.manufacturer.id", 257);
         }
 
         if (switchPreferences.getSwitchKSC()) {

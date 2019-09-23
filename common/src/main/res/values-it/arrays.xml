@@ -37,6 +37,17 @@
         <item>In arrivo</item>
         <item>Precedente</item>
     </string-array>
+    <string-array name="status_array">
+        <item>Attivo</item>
+        <item>Ritirato</item>
+        <item>Deceduto</item>
+        <item>In addestramento</item>
+        <item>Deceduto in volo</item>
+        <item>Deceduto durante l\'addestramento</item>
+        <item>Deceduto in servizio</item>
+        <item>Destituito</item>
+        <item>Riassegnato durante l\'addestramento</item>
+    </string-array>
     <string-array name="time_format_array">
         <item>Default</item>
         <item>Formato a 12 ore AM/PM</item>

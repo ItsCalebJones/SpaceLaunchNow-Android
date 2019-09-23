@@ -12,10 +12,13 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.LaunchNotification;
 import me.calebjones.spacelaunchnow.data.models.Result;
 import me.calebjones.spacelaunchnow.data.models.UpdateRecord;
+import me.calebjones.spacelaunchnow.data.models.main.astronaut.AstronautFlight;
+import me.calebjones.spacelaunchnow.data.models.main.spacecraft.SpacecraftStage;
 import timber.log.Timber;
 
 /**
@@ -46,12 +49,61 @@ public class DataSaver {
     public void saveLaunchesToRealm(final List<Launch> launches, final boolean mini) {
         isSaving = true;
         Timber.v("Saving %d launches to Realm.", launches.size());
-        if (launches != null) {
-            Realm mRealm = Realm.getDefaultInstance();
-            mRealm.executeTransaction((Realm mRealm1) -> mRealm1.copyToRealmOrUpdate(launches));
-            mRealm.close();
+        Realm mRealm = Realm.getDefaultInstance();
+        for (Launch launch : launches) {
+            removeAgencyFields(launch, mRealm);
         }
+
+        mRealm.executeTransaction((Realm mRealm1) -> mRealm1.copyToRealmOrUpdate(launches));
+        mRealm.close();
         isSaving = false;
+    }
+
+    private Launch removeAgencyFields(Launch launch, Realm mRealm) {
+        if (launch.getRocket() != null) {
+            if (launch.getRocket().getSpacecraftStage() != null) {
+                SpacecraftStage spacecraftStage = launch.getRocket().getSpacecraftStage();
+                if (spacecraftStage.getSpacecraft() != null
+                        && spacecraftStage.getSpacecraft().getConfiguration() != null
+                        && spacecraftStage.getSpacecraft().getConfiguration().getAgency() != null) {
+                    Agency spacecraftAgency = launch.getRocket().getSpacecraftStage().getSpacecraft().getConfiguration().getAgency();
+                    if (spacecraftAgency != null) {
+                        if (spacecraftAgency.getAbbrev() == null) {
+                            Agency previous = mRealm.where(Agency.class).equalTo("id", spacecraftAgency.getId()).findFirst();
+                            if (previous != null) {
+                                if (previous.getAbbrev() != null) {
+                                    launch.getRocket().getSpacecraftStage().getSpacecraft().getConfiguration().setAgency(previous);
+                                } else {
+                                    launch.getRocket().getSpacecraftStage().getSpacecraft().getConfiguration().setAgency(spacecraftAgency);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (spacecraftStage.getLandingCrew() != null) {
+                    for (AstronautFlight astronautFlight : spacecraftStage.getLandingCrew()) {
+                        if (astronautFlight.getAstronaut().getAgency() != null) {
+                            astronautFlight.getAstronaut().setAgency(null);
+                        }
+                    }
+                }
+                if (spacecraftStage.getLaunchCrew() != null) {
+                    for (AstronautFlight astronautFlight : spacecraftStage.getLaunchCrew()) {
+                        if (astronautFlight.getAstronaut().getAgency() != null) {
+                            astronautFlight.getAstronaut().setAgency(null);
+                        }
+                    }
+                }
+                if (spacecraftStage.getOnboardCrew() != null) {
+                    for (AstronautFlight astronautFlight : spacecraftStage.getOnboardCrew()) {
+                        if (astronautFlight.getAstronaut().getAgency() != null) {
+                            astronautFlight.getAstronaut().setAgency(null);
+                        }
+                    }
+                }
+            }
+        }
+        return launch;
     }
 
     private static boolean isLaunchTimeChanged(Launch previous, Launch item) {
@@ -144,7 +196,6 @@ public class DataSaver {
                                 realm.copyToRealmOrUpdate(notification);
                             }
                         }
-
                         item.setEventID(previous.getEventID());
                     }
                     item.setLastUpdate(now);
@@ -169,26 +220,24 @@ public class DataSaver {
 
     public void saveLaunchToRealm(Launch launch) {
         Realm mRealm = Realm.getDefaultInstance();
-        mRealm.executeTransaction(mRealm1 -> {
-            Date now = Calendar.getInstance().getTime();
-            final Launch previous = mRealm1.where(Launch.class)
-                    .equalTo("id", launch.getId())
-                    .findFirst();
-            if (previous != null) {
-                if (isLaunchTimeChanged(previous, launch)) {
-                    final LaunchNotification notification = mRealm1.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
-                    if (notification != null) {
+        Date now = Calendar.getInstance().getTime();
+        final Launch previous = mRealm.where(Launch.class)
+                .equalTo("id", launch.getId())
+                .findFirst();
+        if (previous != null) {
+            if (isLaunchTimeChanged(previous, launch)) {
+                final LaunchNotification notification = mRealm.where(LaunchNotification.class).equalTo("id", launch.getId()).findFirst();
+                if (notification != null) {
 
-                        notification.resetNotifiers();
-                        mRealm1.copyToRealmOrUpdate(notification);
-                    }
+                    notification.resetNotifiers();
+                    mRealm.copyToRealmOrUpdate(notification);
                 }
-                launch.setLastUpdate(now);
-                launch.setEventID(previous.getEventID());
             }
-            Timber.v("Saving item: %s", launch.getName());
-            mRealm1.copyToRealmOrUpdate(launch);
-        });
+            launch.setLastUpdate(now);
+            launch.setEventID(previous.getEventID());
+        }
+        Launch finalLaunch = removeAgencyFields(launch, mRealm);
+        mRealm.executeTransaction(mRealm1 -> mRealm1.copyToRealmOrUpdate(finalLaunch));
         mRealm.close();
     }
 }
