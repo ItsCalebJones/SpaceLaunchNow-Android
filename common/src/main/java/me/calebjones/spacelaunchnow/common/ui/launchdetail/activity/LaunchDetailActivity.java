@@ -529,11 +529,11 @@ public class LaunchDetailActivity extends BaseActivity
         } catch (NullPointerException e) {
             Timber.e(e);
         }
-        if (launch.getName() != null && launch.getUrl() != null) {
+        if (launch.getName() != null && launch.getSlug() != null) {
             ShareCompat.IntentBuilder.from(this)
                     .setType("text/plain")
                     .setChooserTitle("Share: " + launch.getName())
-                    .setText(String.format("%s\n\nWatch Live: %s", message, launch.getUrl()))
+                    .setText(String.format("%s\n\nWatch Live: %s", message, launch.getSlug()))
                     .startChooser();
         } else {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Error - unable to share this launch.");
