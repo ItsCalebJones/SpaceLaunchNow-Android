@@ -28,14 +28,14 @@
         <item>Trước đó</item>
     </string-array>
     <string-array name="status_array">
-        <item>Trong quá trình đào tạo</item>
         <item>Hoạt động</item>
-        <item>Đã nghỉ hưu</item>
-        <item>Thất lạc trong chuyến bay</item>
-        <item>Thất lạc trong lúc đào tạo</item>
-        <item>Chết trong lúc hoạt động</item>
+        <item>Nghỉ</item>
+        <item>"Đã qua đời "</item>
+        <item>Trong quá trình đào tạo</item>
+        <item>Qua đời trong chuyến bay</item>
+        <item>Qua đời trong lúc đào tạo</item>
+        <item>Qua đời trong lúc hoạt động</item>
         <item>Đã huỷ bỏ</item>
-        <item>Đã xin nghỉ trong quá trình tập huấn</item>
         <item>Đã thôi việc trong lúc tập huấn</item>
     </string-array>
     <string-array name="time_format_array">

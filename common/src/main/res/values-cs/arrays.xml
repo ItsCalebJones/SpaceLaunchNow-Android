@@ -38,7 +38,6 @@
         <item>Zamítnuto</item>
         <item>Rezignoval v průběhu tréninku</item>
     </string-array>
-
     <string-array name="time_format_array">
         <item>Výchozí</item>
         <item>12 hodinový AM/PM formát</item>

@@ -5,7 +5,7 @@
     <string name="twitter">Twitter</string>
     <string name="action_settings">Impostazioni</string>
     <string name="status_go">"Pronto al lancio"</string>
-    <string name="status_nogo">Il lancio è NO GO</string>
+    <string name="status_nogo">La data di lancio non è confermata</string>
     <string name="status_success">"Il lancio ha avuto successo"</string>
     <string name="status_failure">"Lancio fallito"</string>
     <string name="spacex_summary">SpaceX progetta, produce e lancia razzi e veicoli spaziali. La società è stata fondata nel 2002 per rivoluzionare la tecnologia spaziale, con l\'obiettivo ultimo di consentire alle persone di vivere su altri pianeti.</string>

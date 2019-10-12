@@ -128,7 +128,7 @@
     <string name="country">Country</string>
     <string name="location">Location</string>
     <string name="vehicle">Vehicle</string>
-    <string name="no_launches">Uh oh…no launches!</string>
+    <string name="no_launches">Uh oh...no launches!</string>
     <string name="select_launches">Select Launches to Follow</string>
     <string name="selection_description">Your selections will be visible on the Home page and send notifications before launch.</string>
     <string name="nasa">NASA</string>
@@ -207,9 +207,9 @@
     <string name="select_launch_agency">Select a Launcher Agency</string>
     <string name="select_launch_agency_description">Check an agency below, to remove all filters use reset icon in the toolbar.</string>
     <string name="launch_history_data">Launch History Data</string>
-    <string name="launch_history_data_description">Retrieve historical launch data? Typically around 2–3mb of data usage.</string>
+    <string name="launch_history_data_description">Retrieve historical launch data? Typically around 2-3mb of data usage.</string>
     <string name="error_loading_mission">Unable to load missions.</string>
-    <string name="updating_mission_data">Updating mission data… this may take a few seconds.</string>
+    <string name="updating_mission_data">Updating mission data... this may take a few seconds.</string>
     <string name="error_unknown_launch">Error - Unknown Launch</string>
     <string name="weather_favorable">Weather Favorable: %d%%</string>
     <string name="watch_webcast">Watch Live webcast for up to date status.</string>
@@ -551,7 +551,7 @@
     <string name="primary_color_summary">Set a custom primary color.</string>
     <string name="accent_color_title">Accent Color</string>
     <string name="accent_color_summary">Set a custom accent color.</string>
-    <string name="background_color_title" >Background Color</string>
+    <string name="background_color_title">Background Color</string>
     <string name="background_color_summary">Set a custom background color.</string>
     <string name="born">Born: %1$s (%2$d)</string>
     <string name="born_one_argument">Born: %1$s</string>

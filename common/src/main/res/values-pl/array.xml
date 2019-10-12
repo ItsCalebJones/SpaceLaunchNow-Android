@@ -9,6 +9,36 @@
         <item>SpaceX</item>
         <item>NASA</item>
     </string-array>
+    <string-array name="country_array">
+        <item>Multi</item>
+        <item>Indie</item>
+        <item>Rosja</item>
+        <item>Chiny</item>
+        <item>USA</item>
+    </string-array>
+    <string-array name="location_array">
+        <item>Sohae Launch Station, Korea Północna</item>
+        <item>Wallops Island, Wirginia, USA</item>
+        <item>Centrum Kosmiczne im. Kennedy\'ego, Floryda, USA</item>
+        <item>Przylądek Canaveral, Floryda, USA</item>
+        <item>Vandenberg Air Force Base, CA, USA</item>
+        <item>Jiuquan, Chiny</item>
+        <item>Taiyuan, Chiny</item>
+        <item>Pacific Spaceport Complex, Alaska, US</item>
+        <item>Kiatorete Spit, New Zealand</item>
+        <item>Woomera, Australia</item>
+        <item>Start morski</item>
+        <item>Dombarovskiy, Rosja</item>
+        <item>Kosmodrom Swobodny, Rosja</item>
+        <item>Kapustin Jar, Rosja</item>
+        <item>Kosmodrom Plesieck, Rosja</item>
+        <item>Kosmodrom Bajkonur, Kazachstan</item>
+        <item>Kagoshima / Tanegashima, Japonia</item>
+        <item>Sriharikota, Indie</item>
+        <item>Kourou, Gujana Francuska</item>
+        <item>Centrum Startowe Satelitów Wenchang, Chiny</item>
+        <item>Centrum Startowe Satelitów Xichang, Chiny</item>
+    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Jedna minuta</item>
         <item>Pięć minut</item>
@@ -40,6 +70,14 @@
         <item>24</item>
         <item>72</item>
         <item>168</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>Jeden</item>
+        <item>Dwa</item>
+        <item>Pięć</item>
+        <item>Dziesięć</item>
+        <item>Dwadzieścia</item>
+        <item>Wszystkie (niezalecane)</item>
     </string-array>
     <string-array name="upcoming_array_values">
         <item>1</item>
