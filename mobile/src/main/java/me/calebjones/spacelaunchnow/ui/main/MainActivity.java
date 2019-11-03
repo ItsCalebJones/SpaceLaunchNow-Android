@@ -248,26 +248,20 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withSelectable(true),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem()
-                                .withIcon(CommunityMaterial.Icon.cmd_clipboard_outline)
-                                .withName(R.string.whats_new)
-                                .withIdentifier(R.id.menu_new)
-                                .withSelectable(false),
-                        new PrimaryDrawerItem()
                                 .withName(R.string.about)
                                 .withIcon(GoogleMaterial.Icon.gmd_info)
                                 .withIdentifier(R.id.about)
+                                .withSelectable(false),
+                        new PrimaryDrawerItem()
+                                .withIcon(FontAwesome.Icon.faw_patreon)
+                                .withName("Patreon")
+                                .withIdentifier(R.id.menu_patreon)
                                 .withSelectable(false),
                         new PrimaryDrawerItem()
                                 .withIcon(CommunityMaterial.Icon.cmd_discord)
                                 .withName(R.string.discord)
                                 .withIdentifier(R.id.menu_discord)
                                 .withSelectable(false),
-                        new PrimaryDrawerItem()
-                                .withIcon(GoogleMaterial.Icon.gmd_feedback)
-                                .withName(R.string.feedback)
-                                .withIdentifier(R.id.menu_feedback)
-                                .withSelectable(false)
-                        ,
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.settings)
                                 .withIcon(GoogleMaterial.Icon.gmd_settings)
@@ -722,6 +716,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 break;
             case R.id.menu_launch:
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
+                break;
+            case R.id.menu_patreon:
+                Utils.openCustomTab(this, getApplicationContext(), "https://www.patreon.com/spacelaunchnow");
                 break;
             case R.id.menu_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
