@@ -160,7 +160,9 @@ public class AstronautDataRepository {
             if (astronaut.getAgency() != null) {
                 Agency previous = realm.where(Agency.class).equalTo("id", astronaut.getAgency().getId()).findFirst();
                 if (previous != null) {
-                    astronaut.setAgency(previous);
+                    if (previous.getAbbrev() != null) {
+                        astronaut.setAgency(previous);
+                    }
                 }
             }
 
@@ -170,12 +172,7 @@ public class AstronautDataRepository {
             }
         }
 
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.copyToRealmOrUpdate(astronauts);
-            }
-        });
+        realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(astronauts));
     }
 }
 

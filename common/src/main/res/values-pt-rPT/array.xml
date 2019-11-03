@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="agencies_array">
+        <item>ULA</item>
+        <item>Arianespace</item>
+        <item>SpaceX</item>
+        <item>NASA</item>
+    </string-array>
+    <string-array name="country_array">
+        <item>Multi</item>
+        <item>Índia</item>
+        <item>Rússia</item>
+        <item>China</item>
+    </string-array>
+    <string-array name="location_array">
+        <item>Ilha Wallops, Virgínia, EUA</item>
+        <item>Centro Espacial Kennedy, FL, EUA</item>
+        <item>Cabo Canaveral, FL, EUA</item>
+        <item>BFA de Vandenberg, CA, EUA</item>
+        <item>Jiuquan, China</item>
+        <item>Taiyuan, China</item>
+        <item>Cosmódromo de Baikonur, Cazaquistão, Rússia</item>
+        <item>Kagoshima / Tanegashima, Japão</item>
+        <item>Sriharikota, Índia</item>
+        <item>Kourou, Guiana Francesa</item>
+        <item>Centro de Lançamento de Satélites Wechang, China</item>
+        <item>Centro de Lançamento de Satélites Xichang, China</item>
+    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Um Minuto</item>
         <item>Cinco Minutos</item>
@@ -8,5 +34,15 @@
         <item>Duas Horas</item>
         <item>Quatro Horas</item>
         <item>Um Dia</item>
+    </string-array>
+    <string-array name="sync_timer">
+        <item>Um Dia</item>
+        <item>Três Dias</item>
+    </string-array>
+    <string-array name="upcoming_array">
+        <item>Um</item>
+        <item>Dois</item>
+        <item>Cinco</item>
+        <item>Todos (Não Recomendado)</item>
     </string-array>
 </resources>

@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">News</string>
     <string name="twitter">Twitter</string>
@@ -555,4 +557,6 @@
     <string name="born_one_argument">Born: %1$s</string>
     <string name="died_two_arguments">Died: %1$s (%2$d)</string>
     <string name="related_news">Related News</string>
+    <string name="flight_life">Flight Life: %s</string>
+    <string name="thrust">Thrust at Launch:</string>
 </resources>

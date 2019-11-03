@@ -28,13 +28,19 @@
         <item>Vorige</item>
     </string-array>
     <string-array name="status_array">
-        <item>Ontslag genomen tijdens training</item>
-        <item>In-training</item>
         <item>Actief</item>
-        <item>Op pensioen</item>
-        <item>Verloren bij vlucht</item>
-        <item>Verloren bij training</item>
-        <item>Gestorven tijdens actieve dienst</item>
+        <item>Met pensioen</item>
+        <item>Overleden</item>
+        <item>In training</item>
+        <item>Overleden tijdens een vlucht</item>
+        <item>Overleden tijdens training</item>
+        <item>Overleden in diensttijd</item>
         <item>Ontslagen</item>
+        <item>Ontslag genomen tijdens training</item>
+    </string-array>
+    <string-array name="time_format_array">
+        <item>Standaard</item>
+        <item>12-uurs AM/PM formaat</item>
+        <item>24-uurs formaat</item>
     </string-array>
 </resources>

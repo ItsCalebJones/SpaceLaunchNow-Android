@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="status_array">
-        <item>En entrenamiento</item>
-        <item>Activo</item>
-        <item>Retirado</item>
-        <item>Perdido durante el vuelo</item>
-        <item>Perdido durante el entrenamiento</item>
-        <item>Muerto en servicio activo</item>
-        <item>Despedido</item>
-        <item>Renunció durante el entrenamiento</item>
-    </string-array>
     <string-array name="widget_presets">
         <item>Luminoso</item>
         <item>Oscuro</item>
@@ -36,6 +26,17 @@
         <item>9</item>
         <item>Próximo</item>
         <item>Anteriores</item>
+    </string-array>
+    <string-array name="status_array">
+        <item>Activo</item>
+        <item>Retirado</item>
+        <item>Fallecido</item>
+        <item>En entrenamiento</item>
+        <item>Perdido durante el vuelo</item>
+        <item>Perdido durante el entrenamiento</item>
+        <item>Muerto durante el servicio activo</item>
+        <item>Despedido</item>
+        <item>Dimitido durante el entrenamiento</item>
     </string-array>
     <string-array name="time_format_array">
         <item>Por defecto</item>

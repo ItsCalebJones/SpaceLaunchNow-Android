@@ -48,10 +48,28 @@
         <item>Čtyři hodiny</item>
         <item>Jeden den</item>
     </string-array>
+    <string-array name="multi_calendar_reminder_values">
+        <item>1</item>
+        <item>5</item>
+        <item>30</item>
+        <item>60</item>
+        <item>240</item>
+        <item>480</item>
+        <item>1440</item>
+    </string-array>
+    <string-array name="multi_calendar_reminder_default">
+        <item>5</item>
+        <item>1440</item>
+    </string-array>
     <string-array name="sync_timer">
         <item>Jeden den</item>
         <item>Tři dny</item>
         <item>Jeden týden</item>
+    </string-array>
+    <string-array name="sync_timer_values">
+        <item>24</item>
+        <item>72</item>
+        <item>168</item>
     </string-array>
     <string-array name="upcoming_array">
         <item>Jedna</item>
@@ -60,5 +78,13 @@
         <item>Deset</item>
         <item>Dvacet</item>
         <item>Všechny (není doporučeno)</item>
+    </string-array>
+    <string-array name="upcoming_array_values">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>20</item>
+        <item>1000</item>
     </string-array>
 </resources>

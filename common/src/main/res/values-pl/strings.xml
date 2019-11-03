@@ -490,9 +490,7 @@
     <string name="mission_agency">Agencja odpowiedzialna za misję</string>
     <string name="no_expeditions">Nie znaleziono ekspedycji</string>
     <string name="no_docked">Brak zadokowanych pojazdów</string>
-    <string name="no_news">Nie załadowano wiadomości</string>]
-    
-    
+    <string name="no_news">Nie załadowano wiadomości</string>
     <string name="spacecraft_default_title">Szczegóły statku kosmicznego</string>
     <string name="spacecraft_default_sub_title">Nieznany statek kosmiczny</string>
     <string name="history">Historia</string>
@@ -556,4 +554,5 @@
     <string name="born">Urodzony: %1$s (%2$d)</string>
     <string name="born_one_argument">Urodzony: %1$s</string>
     <string name="died_two_arguments">Zmarł: %1$s (%2$d)</string>
+    <string name="related_news">Powiązane wiadomości</string>
 </resources>

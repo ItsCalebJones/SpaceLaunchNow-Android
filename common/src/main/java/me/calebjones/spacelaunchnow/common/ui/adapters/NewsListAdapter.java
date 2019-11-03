@@ -17,6 +17,7 @@ import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import timber.log.Timber;
 
@@ -84,22 +85,24 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
         TextView title;
         @BindView(R2.id.news_icon)
         ImageView newsIcon;
+        @BindView(R2.id.rootView)
+        View rootView;
 
 
         //Add content to the card
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-
-            newsIcon.setOnClickListener(this);
-            title.setOnClickListener(this);
-            subtitle.setOnClickListener(this);
+            rootView.setOnClickListener(this);
         }
 
         //React to click events.
         @Override
         public void onClick(View v) {
-
+            final NewsItem item = newsList.get(getAdapterPosition());
+            if (item != null) {
+                Utils.openCustomTab(mContext, item.getUrl());
+            }
         }
     }
 

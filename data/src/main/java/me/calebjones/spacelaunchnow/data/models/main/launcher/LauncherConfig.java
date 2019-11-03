@@ -19,9 +19,9 @@ public class LauncherConfig extends RealmObject {
     @SerializedName("name")
     @Expose
     public String name;
-    @SerializedName("launch_service_provider")
+    @SerializedName("manufacturer")
     @Expose
-    public Agency launchServiceProvider;
+    public Agency manufacturer;
     @SerializedName("description")
     @Expose
     public String description;
@@ -77,12 +77,12 @@ public class LauncherConfig extends RealmObject {
     @Expose
     public String wikiUrl;
 
-    public Agency getLaunchServiceProvider() {
-        return launchServiceProvider;
+    public Agency getManufacturer() {
+        return manufacturer;
     }
 
-    public void setLaunchServiceProvider(Agency launchServiceProvider) {
-        this.launchServiceProvider = launchServiceProvider;
+    public void setManufacturer(Agency manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     public Integer getId() {

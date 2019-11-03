@@ -5,7 +5,7 @@
     <string name="twitter">Twitter</string>
     <string name="action_settings">Impostazioni</string>
     <string name="status_go">"Pronto al lancio"</string>
-    <string name="status_nogo">Il lancio è NO GO</string>
+    <string name="status_nogo">La data di lancio non è confermata</string>
     <string name="status_success">"Il lancio ha avuto successo"</string>
     <string name="status_failure">"Lancio fallito"</string>
     <string name="spacex_summary">SpaceX progetta, produce e lancia razzi e veicoli spaziali. La società è stata fondata nel 2002 per rivoluzionare la tecnologia spaziale, con l\'obiettivo ultimo di consentire alle persone di vivere su altri pianeti.</string>
@@ -42,7 +42,7 @@
     <string name="notifications_settings">Configura le notifiche dei lanci e la pianificazione.</string>
     <string name="appearance_settings">Personalizza il tema dell\'app, i widget e i colori.</string>
     <string name="about_settings">Informazioni sull\'applicazione riguardo la licenza, le librerie, il registro delle modifiche, ecc</string>
-    <string name="support_settings">Segui i miei progetti e contribuisci allo sviluppo futuro.</string>
+    <string name="support_settings">Acquista la versione pro per contribuire a sviluppi futuri</string>
     <string name="wear_settings">Modifica le impostazioni del quadrante di Android Wear.</string>
     <string name="supporter_unlock_text">Grazie per aver pensato di supportare Space Launch Now. Ogni livello di supporto è un acquisto una tantum che sblocca tutte le funzionalità PRO per sempre! Paga quello che desideri per sbloccare ogni funzionalità PRO!</string>
     <string name="thank_you_support">Grazie per il continuo supporto!</string>
@@ -183,14 +183,14 @@
     <string name="unknown_location">Luogo sconosciuto</string>
     <string name="details">Dettagli</string>
     <string name="mission">Missione</string>
-    <string name="agencies">Agenzie</string>
+    <string name="agencies">Agenzia</string>
     <string name="error_launch_details">Errore - Non è stato possibile caricare i dettagli sul razzo vettore.</string>
     <string name="height_full">Altezza: %.1f metri</string>
     <string name="diameter_full">Diametro: %.1f metri</string>
     <string name="stage_full">Stadi massimi: %d</string>
     <string name="mass_leo_full">Massa in LEO: %d kg</string>
     <string name="mass_gto_full">Massa in GTO: %d kg</string>
-    <string name="mass_launch_full">Massa al lancio: %d tonnellate</string>
+    <string name="mass_launch_full">Massa al lancio: %d T</string>
     <string name="thrust_full">Spinta al lancio: %d kN</string>
     <string name="upcoming">Prossimo</string>
     <string name="previous">Precedente</string>
@@ -351,8 +351,8 @@
     <string name="blur_settings">opzioni di sfocatura</string>
     <string name="blur_settings_summary">Configura la resistenza e le caratteristiche della sfocatura</string>
     <string name="mission_agencies">Agenzie della missione</string>
-    <string name="status_hold">In attesa</string>
-    <string name="status_in_flight">In volo</string>
+    <string name="status_hold">Lancio in attesa</string>
+    <string name="status_in_flight">Lancio in volo</string>
     <string name="status_partial_failure">Fallimento parziale</string>
     <string name="do_not_disturb">Non disturbare</string>
     <string name="notification_preferences">Preferenze delle notifiche</string>
@@ -386,7 +386,7 @@
     <string name="wear_os">Wear OS</string>
     <string name="misc">Mischia</string>
     <string name="launchers">Razzi vettori</string>
-    <string name="orbiters">Moduli orbitanti</string>
+    <string name="orbiters">Navicella spaziale</string>
     <string name="translate_settings">Contribuisci a tradurre space launch now!</string>
     <string name="translate">Traduci</string>
     <string name="get_help">Aiuto</string>
@@ -554,4 +554,5 @@
     <string name="born">Nato: %1$s (%2$d)</string>
     <string name="born_one_argument">Nato: %1$s</string>
     <string name="died_two_arguments">Morto: %1$s (%2$d)</string>
+    <string name="related_news">Notizie correlate</string>
 </resources>

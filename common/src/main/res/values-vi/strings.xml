@@ -492,9 +492,7 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="mission_agency">Công ty đưa mục tiêu</string>
     <string name="no_expeditions">Không tìm thấy lần thám hiểm nào</string>
     <string name="no_docked">Không tìm thấy phương tiện có đế nào</string>
-    <string name="no_news">Không tải được tin tức nào</string>]
-    
-    
+    <string name="no_news">Không tải được tin tức nào</string>
     <string name="spacecraft_default_title">Thông tin về tàu vũ trụ</string>
     <string name="spacecraft_default_sub_title">Chưa biết tàu vũ trụ</string>
     <string name="history">Lịch sử</string>
@@ -558,4 +556,5 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="born">Sinh ra vào %1$s (%2$d)</string>
     <string name="born_one_argument">Sinh ra vào %1$s</string>
     <string name="died_two_arguments">Chết lúc %1$s (%2$d)</string>
+    <string name="related_news">Tin có liên quan</string>
 </resources>
