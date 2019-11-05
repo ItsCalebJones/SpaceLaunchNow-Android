@@ -22,8 +22,7 @@ pipeline {
       steps {
         script {
           archiveArtifacts allowEmptyArchive: true,
-              artifacts: '**/*.apk, **/*.aab, **/build/**/mapping/**/*.txt,
-               **/build/**/logs/**/*.txt'
+              artifacts: '**/*.apk, **/*.aab, **/build/**/mapping/**/*.txt, **/build/**/logs/**/*.txt'
           cleanWs()
         }
       }
