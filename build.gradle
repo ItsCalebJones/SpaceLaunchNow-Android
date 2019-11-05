@@ -7,13 +7,13 @@ buildscript {
         google()
         jcenter()
         maven { url 'https://github.com/leonardocardoso/mvn-repo/raw/master/maven-deploy' }
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         mavenCentral()
         maven { url "https://jitpack.io" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots"}
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
-        classpath plugs.playPublisher
+        classpath 'com.android.tools.build:gradle:3.5.2'
+        classpath("com.github.triplet.gradle:play-publisher:2.5.0-SNAPSHOT")
         classpath plugs.realm
         classpath plugs.butterknife
         classpath plugs.advancedBuildVersion

@@ -22,39 +22,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply plugin: 'com.getkeepsafe.dexcount'
-
-
-//ext.abiCodes = ['armeabi-v7a':1, mips:2, x86:3, x86_64:4, armeabi:5]
-//
-//// For each APK output variant, override versionCode with a combination of
-//// ext.abiCodes * 1000 + variant.versionCode. In this example, variant.versionCode
-//// is equal to defaultConfig.versionCode. If you configure product flavors that
-//// define their own versionCode, variant.versionCode uses that value instead.
-//android.applicationVariants.all { variant ->
-//
-//    // Assigns a different version code for each output APK
-//    // other than the universal APK.
-//    variant.outputs.each { output ->
-//
-//        // Stores the value of ext.abiCodes that is associated with the ABI for this variant.
-//        def baseAbiVersionCode =
-//                // Determines the ABI for this variant and returns the mapped value.
-//                project.ext.abiCodes.get(output.getFilter(OutputFile.ABI))
-//
-//        // Because abiCodes.get() returns null for ABIs that are not mapped by ext.abiCodes,
-//        // the following code does not override the version code for universal APKs.
-//        // However, because we want universal APKs to have the lowest version code,
-//        // this outcome is desirable.
-//        if (baseAbiVersionCode != null) {
-//
-//            // Assigns the new version code to versionCodeOverride, which changes the version code
-//            // for only the output APK, not for the variant itself. Skipping this step simply
-//            // causes Gradle to use the value of variant.versionCode for the APK.
-//            output.versionCodeOverride =
-//                    baseAbiVersionCode * 1000 + variant.versionCode
-//        }
-//    }
-//}
+apply plugin: 'com.github.triplet.play'
 
 
 repositories {
@@ -118,14 +86,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
         }
         release {
-//        splits {
-//            abi {
-//                enable true
-//                reset()
-//                include 'x86_64', 'x86', 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'mips'
-//                universalApk true
-//            }
-//        }
             zipAlignEnabled true
             minifyEnabled true
             shrinkResources true
@@ -150,28 +110,15 @@ def computeVersionName() {
 }
 
 def computeVersionCode() {
-    return 1000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + Integer.valueOf(System.env.BUILD_NUMBER ?: 0)
+    return 1000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + app.versionCode
 }
 
-//play {
-//    serviceAccountCredentials = rootProject.file("publisher-key.json")
-//    track = "internal"
-//    releaseStatus = "draft"
-//}
-
-//// map for the version code that gives each ABI a value. make sure to list all ABIs mentioned in splits block, an keep the order.
-//ext.versionCodes = ['armeabi': 3, 'armeabi-v7a': 4, 'arm64-v8a': 5, mips: 6, 'x86': 7, 'x86_64': 8]
-//import com.android.build.OutputFile
-//
-//// For each APK output variant, override versionCode with a combination of
-//// ABI APK value * 1000 + defaultConfig.versionCode
-//android.applicationVariants.all { variant ->
-//    // assign different version code for each output
-//    variant.outputs.each { output ->
-//        output.versionCodeOverride =
-//                project.ext.versionCodes.get(output.getFilter(OutputFile.ABI)) * 1000 + android.defaultConfig.versionCode
-//    }
-//}
+play {
+    serviceAccountCredentials = rootProject.file("publisher-key.json")
+    track = "internal"
+    releaseStatus = "completed"
+    commit = true
+}
 
 dependencies {
     implementation project(':data')

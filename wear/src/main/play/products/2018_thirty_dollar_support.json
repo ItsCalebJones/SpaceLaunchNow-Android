@@ -2,7 +2,7 @@
   "defaultLanguage" : "en-US",
   "defaultPrice" : {
     "currency" : "USD",
-    "priceMicros" : "30490000"
+    "priceMicros" : "32000000"
   },
   "listings" : {
     "en-US" : {
@@ -14,327 +14,351 @@
   "prices" : {
     "DZ" : {
       "currency" : "DZD",
-      "priceMicros" : "3525000000"
+      "priceMicros" : "3825000000"
     },
     "AU" : {
       "currency" : "AUD",
-      "priceMicros" : "43990000"
+      "priceMicros" : "50990000"
     },
     "AT" : {
       "currency" : "EUR",
-      "priceMicros" : "30990000"
+      "priceMicros" : "33990000"
     },
     "BH" : {
       "currency" : "USD",
-      "priceMicros" : "29990000"
+      "priceMicros" : "31990000"
     },
     "BD" : {
       "currency" : "BDT",
-      "priceMicros" : "2500000000"
+      "priceMicros" : "2700000000"
     },
     "BE" : {
       "currency" : "EUR",
-      "priceMicros" : "30990000"
+      "priceMicros" : "34990000"
+    },
+    "BM" : {
+      "currency" : "USD",
+      "priceMicros" : "31990000"
     },
     "BO" : {
       "currency" : "BOB",
-      "priceMicros" : "209990000"
+      "priceMicros" : "219990000"
     },
     "BR" : {
       "currency" : "BRL",
-      "priceMicros" : "109990000"
+      "priceMicros" : "129990000"
+    },
+    "VG" : {
+      "currency" : "USD",
+      "priceMicros" : "31990000"
     },
     "BG" : {
       "currency" : "BGN",
-      "priceMicros" : "59990000"
+      "priceMicros" : "66990000"
     },
     "KH" : {
       "currency" : "USD",
-      "priceMicros" : "29990000"
+      "priceMicros" : "31990000"
     },
     "CA" : {
       "currency" : "CAD",
-      "priceMicros" : "38990000"
+      "priceMicros" : "42990000"
+    },
+    "KY" : {
+      "currency" : "USD",
+      "priceMicros" : "31990000"
     },
     "CL" : {
       "currency" : "CLP",
-      "priceMicros" : "18900000000"
+      "priceMicros" : "22300000000"
     },
     "CO" : {
       "currency" : "COP",
-      "priceMicros" : "86000000000"
+      "priceMicros" : "106000000000"
     },
     "CR" : {
       "currency" : "CRC",
-      "priceMicros" : "17300000000"
+      "priceMicros" : "18800000000"
     },
     "HR" : {
       "currency" : "HRK",
-      "priceMicros" : "235000000"
+      "priceMicros" : "265000000"
     },
     "CY" : {
       "currency" : "EUR",
-      "priceMicros" : "29990000"
+      "priceMicros" : "33990000"
     },
     "CZ" : {
       "currency" : "CZK",
-      "priceMicros" : "799990000"
+      "priceMicros" : "899990000"
     },
     "DK" : {
       "currency" : "DKK",
-      "priceMicros" : "239000000"
+      "priceMicros" : "269000000"
     },
     "EG" : {
       "currency" : "EGP",
-      "priceMicros" : "539990000"
+      "priceMicros" : "549990000"
     },
     "EE" : {
       "currency" : "EUR",
-      "priceMicros" : "30990000"
+      "priceMicros" : "33990000"
     },
     "FI" : {
       "currency" : "EUR",
-      "priceMicros" : "31990000"
+      "priceMicros" : "35990000"
     },
     "FR" : {
       "currency" : "EUR",
-      "priceMicros" : "30990000"
-    },
-    "DE" : {
-      "currency" : "EUR",
-      "priceMicros" : "29990000"
-    },
-    "GH" : {
-      "currency" : "GHS",
-      "priceMicros" : "140000000"
-    },
-    "GR" : {
-      "currency" : "EUR",
-      "priceMicros" : "31990000"
-    },
-    "HK" : {
-      "currency" : "HKD",
-      "priceMicros" : "239000000"
-    },
-    "HU" : {
-      "currency" : "HUF",
-      "priceMicros" : "9999000000"
-    },
-    "IN" : {
-      "currency" : "INR",
-      "priceMicros" : "2050000000"
-    },
-    "ID" : {
-      "currency" : "IDR",
-      "priceMicros" : "429000000000"
-    },
-    "IE" : {
-      "currency" : "EUR",
-      "priceMicros" : "30990000"
-    },
-    "IL" : {
-      "currency" : "ILS",
-      "priceMicros" : "99900000"
-    },
-    "IT" : {
-      "currency" : "EUR",
-      "priceMicros" : "30990000"
-    },
-    "JP" : {
-      "currency" : "JPY",
-      "priceMicros" : "3340000000"
-    },
-    "KZ" : {
-      "currency" : "KZT",
-      "priceMicros" : "9990000000"
-    },
-    "KE" : {
-      "currency" : "KES",
-      "priceMicros" : "3100000000"
-    },
-    "KW" : {
-      "currency" : "USD",
-      "priceMicros" : "29990000"
-    },
-    "LV" : {
-      "currency" : "EUR",
-      "priceMicros" : "30990000"
-    },
-    "LB" : {
-      "currency" : "LBP",
-      "priceMicros" : "46250000000"
-    },
-    "LI" : {
-      "currency" : "CHF",
-      "priceMicros" : "33000000"
-    },
-    "LT" : {
-      "currency" : "EUR",
-      "priceMicros" : "30990000"
-    },
-    "LU" : {
-      "currency" : "EUR",
-      "priceMicros" : "29990000"
-    },
-    "MO" : {
-      "currency" : "MOP",
-      "priceMicros" : "248000000"
-    },
-    "MY" : {
-      "currency" : "MYR",
-      "priceMicros" : "119990000"
-    },
-    "MX" : {
-      "currency" : "MXN",
-      "priceMicros" : "589000000"
-    },
-    "MA" : {
-      "currency" : "MAD",
-      "priceMicros" : "284990000"
-    },
-    "NL" : {
-      "currency" : "EUR",
-      "priceMicros" : "30990000"
-    },
-    "NZ" : {
-      "currency" : "NZD",
-      "priceMicros" : "49990000"
-    },
-    "NG" : {
-      "currency" : "NGN",
-      "priceMicros" : "11000000000"
-    },
-    "NO" : {
-      "currency" : "NOK",
-      "priceMicros" : "305000000"
-    },
-    "OM" : {
-      "currency" : "USD",
-      "priceMicros" : "29990000"
-    },
-    "PK" : {
-      "currency" : "PKR",
-      "priceMicros" : "3500000000"
-    },
-    "PE" : {
-      "currency" : "PEN",
-      "priceMicros" : "98990000"
-    },
-    "PH" : {
-      "currency" : "PHP",
-      "priceMicros" : "1600000000"
-    },
-    "PL" : {
-      "currency" : "PLN",
-      "priceMicros" : "134990000"
-    },
-    "PT" : {
-      "currency" : "EUR",
-      "priceMicros" : "30990000"
-    },
-    "QA" : {
-      "currency" : "QAR",
-      "priceMicros" : "110000000"
-    },
-    "RO" : {
-      "currency" : "RON",
-      "priceMicros" : "139990000"
-    },
-    "RU" : {
-      "currency" : "RUB",
-      "priceMicros" : "2199000000"
-    },
-    "SA" : {
-      "currency" : "SAR",
-      "priceMicros" : "119990000"
-    },
-    "SG" : {
-      "currency" : "SGD",
-      "priceMicros" : "40980000"
-    },
-    "SK" : {
-      "currency" : "EUR",
-      "priceMicros" : "30990000"
-    },
-    "SI" : {
-      "currency" : "EUR",
-      "priceMicros" : "30990000"
-    },
-    "ZA" : {
-      "currency" : "ZAR",
-      "priceMicros" : "374990000"
-    },
-    "KR" : {
-      "currency" : "KRW",
-      "priceMicros" : "36000000000"
-    },
-    "ES" : {
-      "currency" : "EUR",
-      "priceMicros" : "30990000"
-    },
-    "LK" : {
-      "currency" : "LKR",
-      "priceMicros" : "4800000000"
-    },
-    "SE" : {
-      "currency" : "SEK",
-      "priceMicros" : "329000000"
-    },
-    "CH" : {
-      "currency" : "CHF",
-      "priceMicros" : "30000000"
-    },
-    "TW" : {
-      "currency" : "TWD",
-      "priceMicros" : "950000000"
-    },
-    "TZ" : {
-      "currency" : "TZS",
-      "priceMicros" : "69000000000"
-    },
-    "TH" : {
-      "currency" : "THB",
-      "priceMicros" : "975000000"
-    },
-    "TR" : {
-      "currency" : "TRY",
-      "priceMicros" : "129990000"
-    },
-    "UA" : {
-      "currency" : "UAH",
-      "priceMicros" : "799990000"
-    },
-    "AE" : {
-      "currency" : "AED",
-      "priceMicros" : "119990000"
-    },
-    "GB" : {
-      "currency" : "GBP",
-      "priceMicros" : "26990000"
-    },
-    "US" : {
-      "currency" : "USD",
-      "priceMicros" : "29990000"
-    },
-    "VN" : {
-      "currency" : "VND",
-      "priceMicros" : "694000000000"
+      "priceMicros" : "33990000"
     },
     "GE" : {
       "currency" : "GEL",
-      "priceMicros" : "79000000"
+      "priceMicros" : "89000000"
+    },
+    "DE" : {
+      "currency" : "EUR",
+      "priceMicros" : "33990000"
+    },
+    "GH" : {
+      "currency" : "GHS",
+      "priceMicros" : "170000000"
+    },
+    "GR" : {
+      "currency" : "EUR",
+      "priceMicros" : "35990000"
+    },
+    "HK" : {
+      "currency" : "HKD",
+      "priceMicros" : "249000000"
+    },
+    "HU" : {
+      "currency" : "HUF",
+      "priceMicros" : "11999000000"
+    },
+    "IN" : {
+      "currency" : "INR",
+      "priceMicros" : "2650000000"
+    },
+    "ID" : {
+      "currency" : "IDR",
+      "priceMicros" : "459000000000"
+    },
+    "IQ" : {
+      "currency" : "IQD",
+      "priceMicros" : "38200000000"
+    },
+    "IE" : {
+      "currency" : "EUR",
+      "priceMicros" : "34990000"
+    },
+    "IL" : {
+      "currency" : "ILS",
+      "priceMicros" : "125000000"
+    },
+    "IT" : {
+      "currency" : "EUR",
+      "priceMicros" : "34990000"
+    },
+    "JP" : {
+      "currency" : "JPY",
+      "priceMicros" : "3520000000"
+    },
+    "JO" : {
+      "currency" : "JOD",
+      "priceMicros" : "22650000"
+    },
+    "KZ" : {
+      "currency" : "KZT",
+      "priceMicros" : "11990000000"
+    },
+    "KE" : {
+      "currency" : "KES",
+      "priceMicros" : "3200000000"
+    },
+    "KW" : {
+      "currency" : "USD",
+      "priceMicros" : "31990000"
+    },
+    "LV" : {
+      "currency" : "EUR",
+      "priceMicros" : "34990000"
+    },
+    "LB" : {
+      "currency" : "LBP",
+      "priceMicros" : "48250000000"
+    },
+    "LI" : {
+      "currency" : "CHF",
+      "priceMicros" : "32000000"
+    },
+    "LT" : {
+      "currency" : "EUR",
+      "priceMicros" : "34990000"
+    },
+    "LU" : {
+      "currency" : "EUR",
+      "priceMicros" : "33990000"
+    },
+    "MO" : {
+      "currency" : "MOP",
+      "priceMicros" : "259000000"
+    },
+    "MY" : {
+      "currency" : "MYR",
+      "priceMicros" : "134990000"
+    },
+    "MX" : {
+      "currency" : "MXN",
+      "priceMicros" : "609000000"
+    },
+    "MA" : {
+      "currency" : "MAD",
+      "priceMicros" : "309990000"
     },
     "MM" : {
       "currency" : "MMK",
-      "priceMicros" : "48000000000"
+      "priceMicros" : "49000000000"
+    },
+    "NL" : {
+      "currency" : "EUR",
+      "priceMicros" : "34990000"
+    },
+    "NZ" : {
+      "currency" : "NZD",
+      "priceMicros" : "54990000"
+    },
+    "NG" : {
+      "currency" : "NGN",
+      "priceMicros" : "11500000000"
+    },
+    "NO" : {
+      "currency" : "NOK",
+      "priceMicros" : "349000000"
+    },
+    "OM" : {
+      "currency" : "USD",
+      "priceMicros" : "31990000"
+    },
+    "PK" : {
+      "currency" : "PKR",
+      "priceMicros" : "4750000000"
     },
     "PY" : {
       "currency" : "PYG",
-      "priceMicros" : "175000000000"
+      "priceMicros" : "200000000000"
+    },
+    "PE" : {
+      "currency" : "PEN",
+      "priceMicros" : "104990000"
+    },
+    "PH" : {
+      "currency" : "PHP",
+      "priceMicros" : "1700000000"
+    },
+    "PL" : {
+      "currency" : "PLN",
+      "priceMicros" : "149990000"
+    },
+    "PT" : {
+      "currency" : "EUR",
+      "priceMicros" : "34990000"
+    },
+    "QA" : {
+      "currency" : "QAR",
+      "priceMicros" : "115000000"
+    },
+    "RO" : {
+      "currency" : "RON",
+      "priceMicros" : "164990000"
+    },
+    "RU" : {
+      "currency" : "RUB",
+      "priceMicros" : "2490000000"
+    },
+    "SA" : {
+      "currency" : "SAR",
+      "priceMicros" : "124990000"
     },
     "RS" : {
       "currency" : "RSD",
-      "priceMicros" : "3799000000"
+      "priceMicros" : "4099000000"
+    },
+    "SG" : {
+      "currency" : "SGD",
+      "priceMicros" : "43990000"
+    },
+    "SK" : {
+      "currency" : "EUR",
+      "priceMicros" : "33990000"
+    },
+    "SI" : {
+      "currency" : "EUR",
+      "priceMicros" : "34990000"
+    },
+    "ZA" : {
+      "currency" : "ZAR",
+      "priceMicros" : "459990000"
+    },
+    "KR" : {
+      "currency" : "KRW",
+      "priceMicros" : "42000000000"
+    },
+    "ES" : {
+      "currency" : "EUR",
+      "priceMicros" : "34990000"
+    },
+    "LK" : {
+      "currency" : "LKR",
+      "priceMicros" : "5625000000"
+    },
+    "SE" : {
+      "currency" : "SEK",
+      "priceMicros" : "385000000"
+    },
+    "CH" : {
+      "currency" : "CHF",
+      "priceMicros" : "32000000"
+    },
+    "TW" : {
+      "currency" : "TWD",
+      "priceMicros" : "1050000000"
+    },
+    "TZ" : {
+      "currency" : "TZS",
+      "priceMicros" : "74000000000"
+    },
+    "TH" : {
+      "currency" : "THB",
+      "priceMicros" : "1025000000"
+    },
+    "TR" : {
+      "currency" : "TRY",
+      "priceMicros" : "229990000"
+    },
+    "TC" : {
+      "currency" : "USD",
+      "priceMicros" : "31990000"
+    },
+    "UA" : {
+      "currency" : "UAH",
+      "priceMicros" : "849990000"
+    },
+    "AE" : {
+      "currency" : "AED",
+      "priceMicros" : "124990000"
+    },
+    "GB" : {
+      "currency" : "GBP",
+      "priceMicros" : "29990000"
+    },
+    "US" : {
+      "currency" : "USD",
+      "priceMicros" : "31990000"
+    },
+    "VN" : {
+      "currency" : "VND",
+      "priceMicros" : "747000000000"
     }
   },
   "purchaseType" : "managedUser",

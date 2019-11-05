@@ -9,6 +9,8 @@ pipeline {
     stages{
         stage('Setup'){
             steps {
+                def now = new Date()
+                def date = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
                 withCredentials([file(credentialsId: 'keystore.properties', variable: 'keystoreProp')]) {
                     sh 'cp $keystoreProp keystore.properties'
                 }
@@ -40,23 +42,14 @@ pipeline {
                 }
             }
         }
-        stage('Build Release') {
+        stage('Build Release and Publish') {
             when {
                 // Only execute this stage when building from the `beta` branch
                 branch 'master'
             }
             steps {
                 // Build the app in release mode, and sign the APK using the environment variables
-                sh './gradlew assembleRelease'
-
-                // Upload the APK to Google Play
-                // androidApkUpload googleCredentialsId: 'Google Play', apkFilesPattern: '**/*-release.apk', trackName: 'beta'
-            }
-            post {
-                success {
-                  // Notify if the upload succeeded
-                  mail to: 'beta-testers@example.com', subject: 'New build available!', body: 'Check it out!'
-                }
+                sh './gradlew :wear:publishBundle :mobile:publishBundle --track=internal'
             }
         }
         stage("Archive Artifacts") {
@@ -71,6 +64,7 @@ pipeline {
     }
     post {
         always {
+            discordSend description: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\nMore info at: ${env.BUILD_URL}", footer: "${date}", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "https://discordapp.com/api/webhooks/641377665743323136/S0XgFaLhuNIgJFfllPxODbdWOyUD4mkSNEnFBSQZJEifdc-ClathwnpnV6uRBxJkQ71Z"
             cleanWs()
         }
     }

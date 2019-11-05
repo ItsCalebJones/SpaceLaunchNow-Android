@@ -3,10 +3,10 @@ ext {
     app = [
             versionMajor: 3,
             versionMinor: 3,
-            versionPatch: 0
-
-
+            versionPatch: 0,
+            versionCode: 3
     ]
+
     // Sdk and tools
     minSdkVersion = 21
     wearMinSdkVersion = 23
@@ -35,7 +35,7 @@ ext.plugs = [
         gradle              : "com.android.tools.build:gradle:3.2.1",
         realm               : "io.realm:realm-gradle-plugin:5.8.0",
         advancedBuildVersion: "org.moallemi.gradle.advanced-build-version:gradle-plugin:1.6.0",
-        playPublisher       : 'com.github.Triple-T:gradle-play-publisher:65964bc711',
+        playPublisher       : 'com.github.triplet.gradle:play-publisher:2.6.0',
         butterknife         : "com.jakewharton:butterknife-gradle-plugin:10.0.0",
         gradleBintrayPlugin : "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3",
         androidMavenGradle  : "com.github.dcendents:android-maven-gradle-plugin:2.0",
