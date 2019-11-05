@@ -1,6 +1,3 @@
-import org.moallemi.gradle.internal.VersionCodeType
-
-
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -17,26 +14,8 @@ buildscript {
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'org.moallemi.advanced-build-version'
 apply plugin: 'com.getkeepsafe.dexcount'
 
-advancedVersioning {
-    nameOptions {
-        versionMajor app.versionMajor
-        versionMinor app.versionMinor
-        versionPatch app.versionPatch
-        versionBuild versionCode
-    }
-    codeOptions {
-        versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
-        dependsOnTasks 'release', 'publishReleaseApk'
-
-    }
-    outputOptions {
-        renameOutput true
-        nameFormat '${projectName}-${appName}-${buildType}-${versionName}'
-    }
-}
 
 repositories {
     jcenter()
@@ -72,34 +51,24 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
 
-    def appVersionCode = 2000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
-
     defaultConfig {
         flavorDimensions "release"
         manifestPlaceholders = [applicationLabel: "@string/app_name"]
         applicationId "me.calebjones.spacelaunchnow"
-        minSdkVersion 23
-        targetSdkVersion 28
-        versionCode appVersionCode
-        versionName advancedVersioning.versionName
+        minSdkVersion rootProject.wearMinSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionName computeVersionName()
+        versionCode computeVersionCode()
     }
     buildTypes {
         release {
-//            splits {
-//                abi {
-//                    enable true
-//                    reset()
-//                    include 'x86_64', 'x86', 'armeabi-v7a', 'arm64-v8a', 'mips'
-//                    universalApk true
-//                }
-//            }
-            signingConfig signingConfigs.releaseConfig
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.releaseConfig
         }
         debug {
             applicationIdSuffix '.debug'
-            versionNameSuffix "-debug-b${appVersionCode}"
+            versionNameSuffix "-debug-b${defaultConfig.versionCode}"
             manifestPlaceholders = [applicationLabel: "SLN - Debug"]
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
         }
@@ -108,6 +77,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+def computeVersionName() {
+    return String.format('%d.%d.%d', app.versionMajor, app.versionMinor, app.versionPatch)
+}
+
+// Will return 120042 for Jenkins build #42
+def computeVersionCode() {
+    // Major + minor + Jenkins build number (where available)
+    return 2000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + Integer.valueOf(System.env.BUILD_NUMBER ?: 0)
 }
 
 //play {

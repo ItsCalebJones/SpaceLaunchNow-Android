@@ -12,7 +12,7 @@ buildscript {
         maven { url "https://jitpack.io" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:3.4.2'
         classpath plugs.playPublisher
         classpath plugs.realm
         classpath plugs.butterknife

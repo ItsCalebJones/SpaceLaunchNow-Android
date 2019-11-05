@@ -1,5 +1,3 @@
-import org.moallemi.gradle.internal.VersionCodeType
-import com.android.build.OutputFile
 
 buildscript {
     repositories {
@@ -20,30 +18,11 @@ buildscript {
     }
 }
 
-apply plugin: 'org.moallemi.advanced-build-version'
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'realm-android'
 apply plugin: 'com.getkeepsafe.dexcount'
 
-advancedVersioning {
-    nameOptions {
-        versionMajor rootProject.ext.app.versionMajor
-        versionMinor app.versionMinor
-        versionPatch app.versionPatch
-        versionBuild versionCode
-    }
-    codeOptions {
-        versionCodeType VersionCodeType.AUTO_INCREMENT_ONE_STEP
-        dependsOnTasks 'release', 'publishReleaseApk'
-
-    }
-
-    outputOptions {
-        renameOutput true
-        nameFormat '${projectName}-${appName}-${buildType}-${versionName}'
-    }
-}
 
 //ext.abiCodes = ['armeabi-v7a':1, mips:2, x86:3, x86_64:4, armeabi:5]
 //
@@ -109,7 +88,6 @@ android {
         }
     }
 
-    def appVersionCode = 1000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + advancedVersioning.versionCode
     flavorDimensions "release"
     compileSdkVersion rootProject.compileSdkVersion
     buildToolsVersion '28.0.3'
@@ -121,8 +99,8 @@ android {
 
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode appVersionCode
-        versionName advancedVersioning.versionName
+        versionName computeVersionName()
+        versionCode computeVersionCode()
         multiDexEnabled true
         wearAppUnbundled true
 
@@ -135,7 +113,7 @@ android {
                                     manifestApplicationId: "me.calebjones.spacelaunchnow.ui.debug"]
             debuggable true
             renderscriptOptimLevel 3
-            versionNameSuffix "-debug-b${appVersionCode}"
+            versionNameSuffix "-debug-b${defaultConfig.versionCode}"
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules-debug.pro'
         }
@@ -165,6 +143,14 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+def computeVersionName() {
+    return String.format('%d.%d.%d', app.versionMajor, app.versionMinor, app.versionPatch)
+}
+
+def computeVersionCode() {
+    return 1000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + Integer.valueOf(System.env.BUILD_NUMBER ?: 0)
 }
 
 //play {
