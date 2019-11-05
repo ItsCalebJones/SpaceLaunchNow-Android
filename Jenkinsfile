@@ -1,14 +1,14 @@
 pipeline {
     agent any
-    
+
     stages{
         stage('Setup'){
             steps {
-                withCredentials([file(credentialsId: 'keystore.properties', variable: 'keystore.properties')]) {
-                    sh 'cp $configFile ~/keystore.properties'
+                withCredentials([file(credentialsId: 'keystore.properties', variable: '$keystoreProp')]) {
+                    sh 'cp $keystoreProp ~/keystore.properties'
                 }
-                withCredentials([file(credentialsId: 'Keystore', variable: 'spacelaunchnow.keystore')]) {
-                    sh 'cp $spacelaunchnow.keystore ~/spacelaunchnow.keystore'
+                withCredentials([file(credentialsId: 'Keystore', variable: 'keystoreFile')]) {
+                    sh 'cp $keystoreFile ~/spacelaunchnow.keystore'
                 }
             }
         }
