@@ -5,10 +5,10 @@ pipeline {
         stage('Setup'){
             steps {
                 withCredentials([file(credentialsId: 'keystore.properties', variable: 'keystoreProp')]) {
-                    sh 'cp $configFile ~/keystore.properties'
+                    sh 'cp $configFile keystore.properties'
                 }
                 withCredentials([file(credentialsId: 'Keystore', variable: 'keystoreFile')]) {
-                    sh 'cp keystoreFile ~/spacelaunchnow.keystore'
+                    sh 'cp keystoreFile spacelaunchnow.keystore'
                 }
             }
         }
