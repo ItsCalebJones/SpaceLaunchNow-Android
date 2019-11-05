@@ -62,10 +62,13 @@ pipeline {
     }
     post {
         always {
-            steps{
-                discordSend description: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\nMore info at: ${env.BUILD_URL}", footer: "", link: env.BUILD_URL, result: currentBuild.currentResult, title: JOB_NAME, webhookURL: "https://discordapp.com/api/webhooks/641377665743323136/S0XgFaLhuNIgJFfllPxODbdWOyUD4mkSNEnFBSQZJEifdc-ClathwnpnV6uRBxJkQ71Z"
-                cleanWs()
-            }
+            discordSend description: "${currentBuild.currentResult}: Job ${env.JOB_NAME} build ${env.BUILD_NUMBER}\n\nMore info at: ${env.BUILD_URL}",
+                        footer: "",
+                        link: env.BUILD_URL,
+                        result: currentBuild.currentResult,
+                        title: JOB_NAME,
+                        webhookURL: "https://discordapp.com/api/webhooks/641377665743323136/S0XgFaLhuNIgJFfllPxODbdWOyUD4mkSNEnFBSQZJEifdc-ClathwnpnV6uRBxJkQ71Z"
+            cleanWs()
         }
     }
 }
