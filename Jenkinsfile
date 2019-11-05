@@ -4,18 +4,14 @@ pipeline {
     stages{
         stage('Setup'){
             steps {
-                withCredentials([file(credentialsId: 'keystore.properties', variable: '$keystoreProp')]) {
-                    sh 'cp $keystoreProp ~/keystore.properties'
-                }
-                withCredentials([file(credentialsId: 'Keystore', variable: 'keystoreFile')]) {
-                    sh 'cp $keystoreFile ~/spacelaunchnow.keystore'
-                }
+                withCredentials([file(credentialsId: 'keystore.properties', variable: '$keystoreProp')]) {}
+                withCredentials([file(credentialsId: 'Keystore', variable: 'keystoreFile')]) {}
             }
         }
         stage("Build") {
           steps {
             script {
-              sh(script: "./gradlew clean :mobile:bundleRelease :app:assembleRelease",
+              sh(script: "./gradlew clean :mobile:bundleRelease :mobile:assembleRelease",
                   returnStdout: true)
             }
           }
