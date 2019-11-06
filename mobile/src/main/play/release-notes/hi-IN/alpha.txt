@@ -1,1 +1,0 @@
-Fix a bunch of bugs, work on replacing the 'Official' YouTube embedded player that crashes all the time and get the latest translations.
