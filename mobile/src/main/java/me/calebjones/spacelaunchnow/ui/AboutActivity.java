@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.vansuita.materialabout.builder.AboutBuilder;
 import com.vansuita.materialabout.views.AboutView;
@@ -57,7 +58,11 @@ public class AboutActivity extends BaseActivityOld {
                 .setLinksColumnsCount(3)
                 .setBrief("Gamer, Nerd, Developer, Tester.")
                 .addGooglePlayStoreLink("7111684947714289915")
-                .addGitHubLink("itscalebjones")
+                .addLink(new IconicsDrawable(this)
+                                .icon(FontAwesome.Icon.faw_patreon)
+                                .sizeDp(24).toBitmap(),
+                        "Patreon",
+                        "https://www.patreon.com/spacelaunchnow")
                 .addTwitterLink("spacelaunchnow")
                 .addFacebookLink("spacelaunchnow")
                 .addWebsiteLink("https://spacelaunchnow.me")

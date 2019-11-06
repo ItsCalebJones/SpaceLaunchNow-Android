@@ -168,7 +168,7 @@
 
                         <TextView
                             android:id="@+id/txtTitle"
-                            style="@style/MaterialTypography.Regular"
+                            android:textAppearance="@style/MaterialTypography.Regular.Title"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
@@ -179,12 +179,13 @@
                             android:textSize="@dimen/material_typography_regular_title_text_size" />
 
                         <TextView
+                            android:textAppearance="@style/MaterialTypography.Regular.Body1"
                             android:id="@+id/subString"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:lines="2"
                             android:text="@string/supporter_description"
-                            android:textColor="?android:textColorPrimary" />
+                            android:textColor="?android:textColorSecondary" />
 
                     </LinearLayout>
 
@@ -224,7 +225,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            style="@style/MaterialTypography.Regular"
+                            android:textAppearance="@style/MaterialTypography.Regular.Title"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
@@ -235,11 +236,12 @@
                             android:textSize="20sp" />
 
                         <TextView
+                            android:textAppearance="@style/MaterialTypography.Regular.Body1"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:lines="2"
                             android:text="@string/remove_ads_description"
-                            android:textColor="?android:textColorPrimary" />
+                            android:textColor="?android:textColorSecondary" />
 
                     </LinearLayout>
 
@@ -279,7 +281,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            style="@style/MaterialTypography.Regular"
+                            android:textAppearance="@style/MaterialTypography.Regular.Title"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
@@ -290,11 +292,12 @@
                             android:textSize="20sp" />
 
                         <TextView
+                            android:textAppearance="@style/MaterialTypography.Regular.Body1"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:lines="2"
                             android:text="@string/exclusive_widgets_description"
-                            android:textColor="?android:textColorPrimary" />
+                            android:textColor="?android:textColorSecondary" />
 
                     </LinearLayout>
 
@@ -334,7 +337,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            style="@style/MaterialTypography.Regular"
+                            android:textAppearance="@style/MaterialTypography.Regular.Title"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
@@ -345,11 +348,12 @@
                             android:textSize="20sp" />
 
                         <TextView
+                            android:textAppearance="@style/MaterialTypography.Regular.Body1"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:lines="2"
                             android:text="@string/weather_description"
-                            android:textColor="?android:textColorPrimary" />
+                            android:textColor="?android:textColorSecondary" />
 
                     </LinearLayout>
 
@@ -389,7 +393,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            style="@style/MaterialTypography.Regular"
+                            android:textAppearance="@style/MaterialTypography.Regular.Title"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
@@ -400,11 +404,12 @@
                             android:textSize="20sp" />
 
                         <TextView
+                            android:textAppearance="@style/MaterialTypography.Regular.Body1"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:lines="2"
                             android:text="@string/calendar_sync_description"
-                            android:textColor="?android:textColorPrimary" />
+                            android:textColor="?android:textColorSecondary" />
 
                     </LinearLayout>
 
