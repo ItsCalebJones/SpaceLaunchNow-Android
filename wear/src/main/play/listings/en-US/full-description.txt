@@ -3,13 +3,15 @@ Meet <b>Space Launch Now</b> the <i>best</i> app for keeping track of the next s
 Countdown to launch with us... 3... 2... 1... liftoff!
 
 <b><u>Features:</u></b>
+• An accurate reliable launch schedule tracker.
 • Track launch and landing information for SpaceX launches!
-•  Notifications for upcoming rocket launches.
-•  History of space flight back to the first manned space flight.
-•  Vehicle details on commonly used launch vehicles by SpaceX, NASA, ULA and others..
-•  Advanced search and filters for finding specific space launches.
-•  Optional Day/Night theme.
-•  Wear OS companion app and watch face with countdown.
+• Notifications for upcoming rocket launches.
+• History of space flight back to the first manned space flight.
+• Vehicle details on commonly used launch vehicles by SpaceX, NASA, ULA and others..
+• Advanced search and filters for finding specific space launches.
+• Wear OS companion app and watch face complications.
+• Astronaut profiles and flight history.
+• International Space Station (ISS) tracking and additional space station information.
 
 <b>Launch Tracking</b>
 Track rocket launches from SpaceX, ULA, and Orbital/ATK as well as international launches from NASA, ROSCOSMOS, ISRO, JAXA and ESA.

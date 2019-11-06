@@ -1,1 +1,3 @@
-Fix a bunch of bugs, work on replacing the 'Official' YouTube embedded player that crashes all the time and get the latest translations.
+Changelog
+* Add 'Related News' to launches via the Spaceflight News API.
+* Update in-app translations.
