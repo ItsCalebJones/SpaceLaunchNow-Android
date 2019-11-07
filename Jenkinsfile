@@ -28,6 +28,9 @@ pipeline {
                 withCredentials([file(credentialsId: 'keystore.properties', variable: 'keystoreProp')]) {
                     sh 'cp $keystoreProp keystore.properties'
                 }
+                withCredentials([file(credentialsId: 'PlaystoreKey', variable: 'playstoreKey')]) {
+                    sh 'cp $playstoreKey publisher-key.json'
+                }
                 withCredentials([file(credentialsId: 'Keystore', variable: 'keystoreFile')]) {
                     sh 'cp $keystoreFile spacelaunchnow.keystore'
                 }
@@ -93,6 +96,7 @@ pipeline {
                rm gradle.properties
                rm spacelaunchnow.keystore
                rm keystore.properties
+               rm publisher-key.json
                '''
         }
     }
