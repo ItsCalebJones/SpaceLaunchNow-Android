@@ -18,7 +18,8 @@ A space launch tracker for Android using data from the Launch Library API.
 * Translation improvements.
 * Improvements to some UI elements.
 
-### Version 3.1.1 (
+
+### Version 3.1.1
 #### Changelog
 * Updates to translations.
 * Improvements to Calendar sync - should no longer see duplicates.

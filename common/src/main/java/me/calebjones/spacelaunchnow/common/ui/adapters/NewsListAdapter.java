@@ -93,7 +93,6 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-
             rootView.setOnClickListener(this);
         }
 

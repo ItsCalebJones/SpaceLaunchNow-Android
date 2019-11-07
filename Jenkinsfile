@@ -28,6 +28,9 @@ pipeline {
                 withCredentials([file(credentialsId: 'keystore.properties', variable: 'keystoreProp')]) {
                     sh 'cp $keystoreProp keystore.properties'
                 }
+                withCredentials([file(credentialsId: 'PlaystoreKey', variable: 'playstoreKey')]) {
+                    sh 'cp $playstoreKey publisher-key.json'
+                }
                 withCredentials([file(credentialsId: 'Keystore', variable: 'keystoreFile')]) {
                     sh 'cp $keystoreFile spacelaunchnow.keystore'
                 }
@@ -42,19 +45,29 @@ pipeline {
                 }
             }
         }
-        stage('Compile') {
+        stage('Compile Sources') {
+           when {
+               not {
+                   branch 'master'
+               }
+           }
             steps {
                 // Compile the app and its dependencies
                 sh './gradlew compileDebugSources'
             }
         }
         stage("Assemble Debug") {
-            steps {
+           when {
+               not {
+                   branch 'master'
+               }
+           }
+           steps {
                 script {
                     sh(script: "./gradlew assembleDebug",
                        returnStdout: true)
                 }
-            }
+           }
         }
         stage('Build Release and Publish') {
             when {
@@ -93,6 +106,7 @@ pipeline {
                rm gradle.properties
                rm spacelaunchnow.keystore
                rm keystore.properties
+               rm publisher-key.json
                '''
         }
     }
