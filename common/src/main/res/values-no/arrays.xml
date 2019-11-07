@@ -16,14 +16,4 @@
         <item>Kommende</item>
         <item>Tidligere</item>
     </string-array>
-    <string-array name="status_array">
-        <item>Gikk av under trening</item>
-        <item>I trening</item>
-        <item>Aktiv</item>
-        <item>Pensjonert</item>
-        <item>tapt under flyving</item>
-        <item>Tapt under opptrening</item>
-        <item>Døde under aktiv tjeneste</item>
-        <item>Avvist</item>
-    </string-array>
 </resources>
