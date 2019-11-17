@@ -1,4 +1,4 @@
 INTERNAL BUILD
-* Nothing really - just building up automation infrastructure.
-
-Hey this was published automatically!
+* Add 'Related News' to launches via the Spaceflight News API.
+* Update in-app translations.
+* Fix bug with notification sounds on Android versions prior to 8.0
