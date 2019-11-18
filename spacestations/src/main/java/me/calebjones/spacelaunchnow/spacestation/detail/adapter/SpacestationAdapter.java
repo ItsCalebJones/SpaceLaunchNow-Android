@@ -164,7 +164,7 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
 
         public void bindType(ListItem item) {
             DockingEventItem dockingEventItem = (DockingEventItem) item;
-            mTextView.setText(((DockingEventItem) item).getDockingEvent().getDockingLocation());
+            mTextView.setText(((DockingEventItem) item).getDockingEvent().getDockingLocation().getName());
         }
     }
 

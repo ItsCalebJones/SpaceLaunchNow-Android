@@ -98,7 +98,6 @@ pipeline {
                         webhookURL: DISCORD_URL,
                         thumbnail: "https://i.imgur.com/UZTtsSR.png",
                         notes: "Hey <@&641718676046872588>, new build completed for ${PROJECT_NAME}!"
-
             sh '''
                rm wear/src/main/res/values/api_keys.xml
                rm common/src/main/res/values/api_keys.xml
