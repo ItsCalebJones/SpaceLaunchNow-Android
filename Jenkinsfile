@@ -75,7 +75,7 @@ pipeline {
             }
             steps {
                 // Build the app in release mode, and sign the APK using the environment variables
-                sh './gradlew :wear:publishBundle :mobile:publishBundle --track=internal'
+                sh './gradlew publishBundle --track=internal'
             }
         }
         stage("Archive Artifacts") {
@@ -98,7 +98,7 @@ pipeline {
                         webhookURL: DISCORD_URL,
                         thumbnail: "https://i.imgur.com/UZTtsSR.png",
                         notes: "Hey <@&641718676046872588>, new build completed for ${PROJECT_NAME}!"
-            // This needs to be removed in favor or removing credential files instead.
+
             sh '''
                rm wear/src/main/res/values/api_keys.xml
                rm common/src/main/res/values/api_keys.xml

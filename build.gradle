@@ -39,6 +39,12 @@ allprojects {
     }
 }
 
+gradle.projectsEvaluated {
+    project(":mobile").tasks.matching { it.name.startsWith("publish") }.configureEach {
+        mustRunAfter(project(":wear").tasks.matching { it.name.startsWith("publish") })
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
