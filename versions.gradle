@@ -5,6 +5,7 @@ ext {
             versionMinor: 3,
             versionPatch: 0,
             versionCode: 7
+
     ]
 
     // Sdk and tools
