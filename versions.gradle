@@ -93,10 +93,9 @@ ext.deps = [
         retrofit                       : "com.squareup.retrofit2:retrofit:2.4.0",
         okhttp                         : "com.squareup.okhttp3:okhttp:3.10.0",
         okhttpLogging                  : "com.squareup.okhttp3:logging-interceptor:3.9.0",
-        converter_simplexml            : "com.squareup.retrofit2:converter-simplexml:2.4.0",
-        converter_gson                 : "com.squareup.retrofit2:converter-gson:2.3.0",
+        converter_gson                 : "com.squareup.retrofit2:converter-gson:2.6.2",
         adapter_rxjava                 : "com.squareup.retrofit2:adapter-rxjava2:2.4.0",
-        gson                           : "com.google.code.gson:gson:2.8.4",
+        gson                           : "com.google.code.gson:gson:2.8.6",
         aesthetic                      : "com.afollestad:aesthetic:1.0.0-beta05",
 
         //Views

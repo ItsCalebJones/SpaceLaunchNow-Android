@@ -40,7 +40,6 @@ dependencies {
     implementation deps.rxandroid
     implementation deps.retrofit
     implementation deps.okhttp
-    implementation deps.converter_simplexml
     implementation deps.converter_gson
     implementation deps.adapter_rxjava
     implementation deps.gson
