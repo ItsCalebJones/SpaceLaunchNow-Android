@@ -27,7 +27,7 @@ public class DockingEvent extends RealmObject {
     public SpacecraftStage flightVehicle;
     @SerializedName("docking_location")
     @Expose
-    public String dockingLocation;
+    public DockingLocation dockingLocation;
 
     public Integer getId() {
         return id;
@@ -69,11 +69,11 @@ public class DockingEvent extends RealmObject {
         this.flightVehicle = flightVehicle;
     }
 
-    public String getDockingLocation() {
+    public DockingLocation getDockingLocation() {
         return dockingLocation;
     }
 
-    public void setDockingLocation(String dockingLocation) {
+    public void setDockingLocation(DockingLocation dockingLocation) {
         this.dockingLocation = dockingLocation;
     }
 }
