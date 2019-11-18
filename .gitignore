@@ -17,3 +17,4 @@ wear/src/main/res/values/api_keys.xml
 *.aab
 common/src/main/res/values/api_keys.xml
 publisher-key.json
+spacelaunchnow.keystore
