@@ -222,16 +222,16 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         String sku = null;
         switch (product) {
             case 0:
-                sku = SupporterHelper.SKU_2018_TWO_DOLLAR;
+                sku = SupporterHelper.SKU_2020_TWO_DOLLAR;
                 break;
             case 1:
-                sku = SupporterHelper.SKU_2018_SIX_DOLLAR;
+                sku = SupporterHelper.SKU_2020_SIX_DOLLAR;
                 break;
             case 2:
-                sku = SupporterHelper.SKU_2018_TWELVE_DOLLAR;
+                sku = SupporterHelper.SKU_2020_TWELVE_DOLLAR;
                 break;
             case 3:
-                sku = SupporterHelper.SKU_2018_THIRTY_DOLLAR;
+                sku = SupporterHelper.SKU_2020_THIRTY_DOLLAR;
                 break;
         }
 

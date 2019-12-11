@@ -15,6 +15,10 @@ public class SupporterHelper {
     public static final String SKU_2018_SIX_DOLLAR = "2018_six_dollar_support";
     public static final String SKU_2018_TWELVE_DOLLAR = "2018_twelve_dollar_support";
     public static final String SKU_2018_THIRTY_DOLLAR = "2018_thirty_dollar_support";
+    public static final String SKU_2020_TWO_DOLLAR = "2020_two_dollar_support";
+    public static final String SKU_2020_SIX_DOLLAR = "2020_six_dollar_support";
+    public static final String SKU_2020_TWELVE_DOLLAR = "2020_twelve_dollar_support";
+    public static final String SKU_2020_THIRTY_DOLLAR = "2020_thirty_dollar_support";
     public static final String SKU_OTHER = "beta_supporter";
 
     public static Products getProduct(String productID){
@@ -56,6 +60,26 @@ public class SupporterHelper {
             product.setPrice(30);
         } else if (productID.equals(SKU_2018_TWO_DOLLAR)){
             product.setName("Supporter 2018 - Bronze");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(30);
+        }else if (productID.equals(SKU_2020_THIRTY_DOLLAR)) {
+            product.setName("Supporter 2020 - Platinum");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(30);
+        }  else if (productID.equals(SKU_2020_TWELVE_DOLLAR)){
+            product.setName("Supporter 2020 - Gold");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(30);
+        } else if (productID.equals(SKU_2020_SIX_DOLLAR)){
+            product.setName("Supporter 2020 - Silver");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(30);
+        } else if (productID.equals(SKU_2020_TWO_DOLLAR)){
+            product.setName("Supporter 2020 - Bronze");
             product.setDescription("This ensures you will always have access to every supporter features.");
             product.setType("Supporter");
             product.setPrice(30);
