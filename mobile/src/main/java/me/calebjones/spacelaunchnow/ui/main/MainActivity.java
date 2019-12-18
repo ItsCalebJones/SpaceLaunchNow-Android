@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.ui.main;
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,8 @@ import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.afollestad.aesthetic.Aesthetic;
@@ -35,6 +38,8 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -66,16 +71,11 @@ import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
-import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.events.list.EventListFragment;
 import me.calebjones.spacelaunchnow.spacestation.SpacestationListFragment;
@@ -418,6 +418,15 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 final Handler handler = new Handler();
                 handler.postDelayed(() -> showChangelogSnackbar(), 1000);
 
+            } else if (!Once.beenDone("show2020")&& Once.beenDone("appOpen", Amount.moreThan(10))) {
+                Once.markDone("show2020");
+                if (SupporterHelper.isSupporter()) {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(() -> show2020Dialog(true), 250);
+                } else {
+                    final Handler handler = new Handler();
+                    handler.postDelayed(() -> show2020Dialog(false), 250);
+                }
             }
             if (!SupporterHelper.isSupporter()) {
                 if (!Once.beenDone("userCheckedSupporter")) {
@@ -504,6 +513,46 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .setAction("Changelog", view -> showWhatsNew());
         snackbar.show();
 
+    }
+
+    private void show2020Dialog(boolean supporter) {
+        int layoutId = 0;
+        if (supporter){
+            layoutId = R.layout.supporter_year_overview;
+        } else {
+            layoutId = R.layout.year_overview;
+        }
+        View view = getLayoutInflater().inflate(layoutId, null);
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        dialog.setContentView(view);
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                BottomSheetBehavior mBehavior = BottomSheetBehavior.from((View) view.getParent());
+                mBehavior.setPeekHeight(view.findViewById(R.id.titleView).getBottom());
+            }
+        });
+
+        Button supportButton = view.findViewById(R.id.support_button);
+        Button closeButton = view.findViewById(R.id.patreon_button);
+        Intent intent = new Intent(this, SupporterActivity.class);
+        Activity activity = this;
+
+        supportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+                dialog.dismiss();
+            }
+        });
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.openCustomTab(activity, getApplicationContext(), "https://www.patreon.com/spacelaunchnow");
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     @SuppressLint("ShowToast")
