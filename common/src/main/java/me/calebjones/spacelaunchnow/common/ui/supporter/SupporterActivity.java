@@ -30,6 +30,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
@@ -41,7 +42,6 @@ import butterknife.OnClick;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
-import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import timber.log.Timber;
@@ -222,16 +222,19 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         String sku = null;
         switch (product) {
             case 0:
-                sku = SupporterHelper.SKU_2020_TWO_DOLLAR;
+                sku = SupporterHelper.SKU_2020_BRONZE;
                 break;
             case 1:
-                sku = SupporterHelper.SKU_2020_SIX_DOLLAR;
+                sku = SupporterHelper.SKU_2020_METAL;
                 break;
             case 2:
-                sku = SupporterHelper.SKU_2020_TWELVE_DOLLAR;
+                sku = SupporterHelper.SKU_2020_SILVER;
                 break;
             case 3:
-                sku = SupporterHelper.SKU_2020_THIRTY_DOLLAR;
+                sku = SupporterHelper.SKU_2020_GOLD;
+                break;
+            case 4:
+                sku = SupporterHelper.SKU_2020_PLATINUM;
                 break;
         }
 
@@ -356,18 +359,18 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         String price = "(Unable to get price)";
         switch (iconPosition) {
             case 0:
-                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_TWO_DOLLAR);
+                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_BRONZE);
                 if (details != null){
                     price = String.format("(%s)", details.priceText);
                 }
                 productPrice.setText(price);
                 icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(GoogleMaterial.Icon.gmd_local_drink)
+                        .icon(FontAwesome.Icon.faw_thumbs_up)
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
             case 1:
-                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_SIX_DOLLAR);
+                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_METAL);
                 if (details != null){
                     price = String.format("(%s)", details.priceText);
                 }
@@ -378,7 +381,18 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                         .sizeDp(96));
                 break;
             case 2:
-                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_TWELVE_DOLLAR);
+                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_SILVER);
+                if (details != null){
+                    price = String.format("(%s)", details.priceText);
+                }
+                productPrice.setText(price);
+                icon.setImageDrawable(new IconicsDrawable(this)
+                        .icon(GoogleMaterial.Icon.gmd_local_cafe)
+                        .color(Color.BLACK)
+                        .sizeDp(96));
+                break;
+            case 3:
+                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_GOLD);
                 if (details != null){
                     price = String.format("(%s)", details.priceText);
                 }
@@ -388,8 +402,8 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                         .color(Color.BLACK)
                         .sizeDp(96));
                 break;
-            case 3:
-                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2018_THIRTY_DOLLAR);
+            case 4:
+                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_PLATINUM);
                 if (details != null){
                     price = String.format("(%s)", details.priceText);
                 }
