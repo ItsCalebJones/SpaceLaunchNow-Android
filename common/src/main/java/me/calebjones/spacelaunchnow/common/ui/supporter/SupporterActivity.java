@@ -12,14 +12,11 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -35,6 +32,9 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.transitionseverywhere.TransitionManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,13 +67,10 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     NestedScrollView nestedScrollView;
 
     private BillingProcessor bp;
-    private ImageView icon;
-    private AppCompatSeekBar seekbar;
-    private TextView productPrice;
-    private Button okButton;
     private boolean isAvailable;
     private boolean isRefreshable = true;
     private BottomSheetDialog dialog;
+    private List<String> ownedProducts;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -87,6 +84,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
         setContentView(R.layout.activity_support);
         ButterKnife.bind(this);
+        ownedProducts = new ArrayList<>();
 
         if (SupporterHelper.isSupporter()) {
             purchaseButton.setText(R.string.you_again);
@@ -98,7 +96,8 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("");
 
-        isAvailable = BillingProcessor.isIabServiceAvailable(context);
+        isAvailable = (BillingProcessor.isIabServiceAvailable(context) && bp.isOneTimePurchaseSupported());
+
         if (isAvailable) {
             // continue
             bp = new BillingProcessor(this, getResources().getString(R.string.rsa_key), this);
@@ -110,7 +109,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
             if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
                 fabSupporter.hide();
             } else {
-                if (!fabSupporter.isShown()){
+                if (!fabSupporter.isShown()) {
                     fabSupporter.show();
                 }
             }
@@ -182,62 +181,135 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     @OnClick({R2.id.purchase, R2.id.fab_supporter})
     public void checkClick() {
         firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, null);
-        View view = getLayoutInflater().inflate(R.layout.seekbar_dialog_supporter, null);
+        View view = getLayoutInflater().inflate(R.layout.supporter_dialog, null);
         dialog = new BottomSheetDialog(this);
         dialog.setContentView(view);
 
-        seekbar = view.findViewById(R.id.dialog_seekbar);
-        icon = view.findViewById(R.id.dialog_icon);
-        productPrice = view.findViewById(R.id.product_price);
-        okButton = view.findViewById(R.id.ok_button);
+        View bronzeView = view.findViewById(R.id.bronze_group);
+        AppCompatButton bronzeButton = view.findViewById(R.id.bronze_button);
+        TextView bronzeTitle = view.findViewById(R.id.bronze_title);
+        TextView bronzeDescription = view.findViewById(R.id.bronze_description);
 
-        setIconPosition(1);
-        seekbar.setProgress(1);
+        View metalView = view.findViewById(R.id.metal_group);
+        AppCompatButton metalButton = view.findViewById(R.id.metal_button);
+        TextView metalTitle = view.findViewById(R.id.metal_title);
+        TextView metalDescription = view.findViewById(R.id.metal_description);
 
-        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int position, boolean b) {
-                setIconPosition(position);
-            }
+        View silverView = view.findViewById(R.id.silver_group);
+        AppCompatButton silverButton = view.findViewById(R.id.silver_button);
+        TextView silverTitle = view.findViewById(R.id.silver_title);
+        TextView silverDescription = view.findViewById(R.id.silver_description);
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+        View goldView = view.findViewById(R.id.gold_group);
+        AppCompatButton goldButton = view.findViewById(R.id.gold_button);
+        TextView goldTitle = view.findViewById(R.id.gold_title);
+        TextView goldDescription = view.findViewById(R.id.gold_description);
 
-            }
+        View platinumView = view.findViewById(R.id.platinum_group);
+        AppCompatButton platinumButton = view.findViewById(R.id.platinum_button);
+        TextView platinumTitle = view.findViewById(R.id.platinum_title);
+        TextView platinumDescription = view.findViewById(R.id.platinum_description);
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+        TextView bottomMessage = view.findViewById(R.id.bottom_message);
 
-            }
-        });
+        if (isAvailable){
+            bronzeView.setVisibility(View.VISIBLE);
+            metalView.setVisibility(View.VISIBLE);
+            silverView.setVisibility(View.VISIBLE);
+            goldView.setVisibility(View.VISIBLE);
+            platinumView.setVisibility(View.VISIBLE);
 
-        okButton.setOnClickListener(view1 -> {
-            dialog.dismiss();
-            makePurchase(seekbar.getProgress());
-        });
+            bottomMessage.setText("Pay what you want - get the same features!");
+        } else {
+            bronzeView.setVisibility(View.GONE);
+            metalView.setVisibility(View.GONE);
+            silverView.setVisibility(View.GONE);
+            goldView.setVisibility(View.GONE);
+            platinumView.setVisibility(View.GONE);
+
+            bottomMessage.setText("Unable to load in-app-products.");
+        }
+
+        configureProductItem(bronzeButton, bronzeTitle, bronzeDescription,
+                SupporterHelper.SKU_2020_BRONZE,
+                new IconicsDrawable(this)
+                        .icon(FontAwesome.Icon.faw_thumbs_up)
+                        .color(Color.WHITE)
+                        .sizeDp(24));
+
+        configureProductItem(metalButton, metalTitle, metalDescription,
+                SupporterHelper.SKU_2020_METAL,
+                new IconicsDrawable(this)
+                        .icon(GoogleMaterial.Icon.gmd_local_cafe)
+                        .color(Color.WHITE)
+                        .sizeDp(24));
+
+        configureProductItem(silverButton, silverTitle, silverDescription,
+                SupporterHelper.SKU_2020_SILVER,
+                new IconicsDrawable(this)
+                        .icon(FontAwesome.Icon.faw_store)
+                        .color(Color.WHITE)
+                        .sizeDp(24));
+
+        configureProductItem(goldButton, goldTitle, goldDescription,
+                SupporterHelper.SKU_2020_GOLD,
+                new IconicsDrawable(this)
+                        .icon(GoogleMaterial.Icon.gmd_local_dining)
+                        .color(Color.WHITE)
+                        .sizeDp(24));
+
+        configureProductItem(platinumButton, platinumTitle, platinumDescription,
+                SupporterHelper.SKU_2020_PLATINUM,
+                new IconicsDrawable(this)
+                        .icon(FontAwesome.Icon.faw_money_bill_wave)
+                        .color(Color.WHITE)
+                        .sizeDp(24));
         dialog.show();
     }
 
-    private void makePurchase(int product) {
-        String sku = null;
-        switch (product) {
-            case 0:
-                sku = SupporterHelper.SKU_2020_BRONZE;
-                break;
-            case 1:
-                sku = SupporterHelper.SKU_2020_METAL;
-                break;
-            case 2:
-                sku = SupporterHelper.SKU_2020_SILVER;
-                break;
-            case 3:
-                sku = SupporterHelper.SKU_2020_GOLD;
-                break;
-            case 4:
-                sku = SupporterHelper.SKU_2020_PLATINUM;
-                break;
+    private void configureProductItem(AppCompatButton button, TextView titleView, TextView descriptionView,
+                                      String sku, IconicsDrawable drawable) {
+        String price = "(Unable to get price)";
+        String title = "Supporter Product";
+        String description = "Unable to get product description.";
+        SkuDetails details = getProductInfo(sku);
+        if (details != null) {
+            price = String.format("(%s)", details.priceText);
+            title = details.title;
+            description = details.description;
+        }
+        button.setText(price);
+        titleView.setText(title);
+        descriptionView.setText(description);
+
+        if (isOwned(SupporterHelper.SKU_2020_BRONZE)) {
+            button.setCompoundDrawablesRelative(
+                    new IconicsDrawable(this)
+                            .icon(FontAwesome.Icon.faw_check)
+                            .color(Color.WHITE)
+                            .sizeDp(24),
+                    null, null, null);
+        } else {
+            button.setCompoundDrawablesRelative(drawable, null, null, null);
         }
 
+        button.setOnClickListener(view1 -> {
+            dialog.dismiss();
+            makePurchase(sku);
+        });
+
+    }
+
+    private boolean isOwned(String currentSku) {
+        for (String ownedSku : ownedProducts) {
+            if (currentSku.equals(ownedSku)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void makePurchase(String sku) {
         //Get Product from SKU
         Products products = SupporterHelper.getProduct(sku);
 
@@ -302,6 +374,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                 if (bp != null && bp.listOwnedProducts().size() > 0) {
                     animatePurchase();
                     Timber.d("Purchase History - Number of items purchased: %s", bp.listOwnedProducts().size());
+                    ownedProducts = bp.listOwnedProducts();
                     for (final String sku : bp.listOwnedProducts()) {
                         Timber.v("Purchase History - SKU: %s", sku);
                         Products product = SupporterHelper.getProduct(sku);
@@ -312,9 +385,9 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
                     SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, getString(R.string.purchase_history));
                 } else {
                     if (userRequested) {
-                        if (bp == null){
+                        if (bp == null) {
                             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.unable_to_start_billing));
-                        } else if (bp !=null && bp.listOwnedProducts().size() == 0){
+                        } else if (bp != null && bp.listOwnedProducts().size() == 0) {
                             SnackbarHandler.showInfoSnackbar(this, coordinatorLayout, getString(R.string.no_purchase_history));
                         }
                     }
@@ -354,62 +427,38 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     }
 
 
-    public void setIconPosition(int iconPosition) {
-        SkuDetails details;
-        String price = "(Unable to get price)";
-        switch (iconPosition) {
-            case 0:
-                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_BRONZE);
-                if (details != null){
-                    price = String.format("(%s)", details.priceText);
+    public SkuDetails getProductInfo(String sku) {
+        SkuDetails details = null;
+
+        switch (sku) {
+            case SupporterHelper.SKU_2020_BRONZE:
+                if (bp != null) {
+                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_BRONZE);
                 }
-                productPrice.setText(price);
-                icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(FontAwesome.Icon.faw_thumbs_up)
-                        .color(Color.BLACK)
-                        .sizeDp(96));
-                break;
-            case 1:
-                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_METAL);
-                if (details != null){
-                    price = String.format("(%s)", details.priceText);
+                return details;
+
+            case SupporterHelper.SKU_2020_METAL:
+                if (bp != null) {
+                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_METAL);
                 }
-                productPrice.setText(price);
-                icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(GoogleMaterial.Icon.gmd_local_cafe)
-                        .color(Color.BLACK)
-                        .sizeDp(96));
-                break;
-            case 2:
-                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_SILVER);
-                if (details != null){
-                    price = String.format("(%s)", details.priceText);
+                return details;
+            case SupporterHelper.SKU_2020_SILVER:
+                if (bp != null) {
+                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_SILVER);
                 }
-                productPrice.setText(price);
-                icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(GoogleMaterial.Icon.gmd_local_cafe)
-                        .color(Color.BLACK)
-                        .sizeDp(96));
-                break;
-            case 3:
-                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_GOLD);
-                if (details != null){
-                    price = String.format("(%s)", details.priceText);
+                return details;
+            case SupporterHelper.SKU_2020_GOLD:
+                if (bp != null) {
+                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_GOLD);
                 }
-                productPrice.setText(price);
-                icon.setImageDrawable(new IconicsDrawable(this)
-                        .icon(GoogleMaterial.Icon.gmd_local_dining)
-                        .color(Color.BLACK)
-                        .sizeDp(96));
-                break;
-            case 4:
-                details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_PLATINUM);
-                if (details != null){
-                    price = String.format("(%s)", details.priceText);
+                return details;
+            case SupporterHelper.SKU_2020_PLATINUM:
+                if (bp != null) {
+                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_PLATINUM);
                 }
-                productPrice.setText(price);
-                icon.setImageResource(R.drawable.take_my_money);
-                break;
+                return details;
+            default:
+                return null;
         }
     }
 }

@@ -545,13 +545,16 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 dialog.dismiss();
             }
         });
+
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Utils.openCustomTab(activity, getApplicationContext(), "https://www.patreon.com/spacelaunchnow");
+                Utils.openCustomTab(activity, getApplicationContext(),
+                        "https://www.patreon.com/spacelaunchnow");
                 dialog.dismiss();
             }
         });
+
         dialog.show();
     }
 
