@@ -275,7 +275,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         SkuDetails details = getProductInfo(sku);
         if (details != null) {
             price = String.format("(%s)", details.priceText);
-            title = details.title;
+            title = details.title.replaceAll("\\(.*\\)", "");
             description = details.description;
         }
         button.setText(price);
