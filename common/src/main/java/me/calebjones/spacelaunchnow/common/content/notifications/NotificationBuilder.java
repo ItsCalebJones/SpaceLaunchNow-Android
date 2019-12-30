@@ -285,7 +285,8 @@ public class NotificationBuilder {
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(expandedText))
                 .extend(wearableExtender)
-                .setContentIntent(pending);
+                .setContentIntent(pending)
+                .setVibrate(new long[]{0L});
 
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);

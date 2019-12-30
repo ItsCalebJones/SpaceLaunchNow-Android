@@ -6,16 +6,22 @@ A space launch tracker for Android using data from the Launch Library API.
 #### Updated 11-16-2019
 ---
 
-### Version 3.3.0 (Latest)
+
+### Version 3.3.2 (Latest)
+#### Changelog
+* Small patch for bug fixes and 2020 new year changes.
+
+---
+
+
+### Version 3.3.0
 #### Changelog
 * Add 'Related News' to launches via the Spaceflight News API.
 * Update in-app translations.
 * Fix bug with notification sounds on Android versions prior to 8.0
 
 
----
-
-### Version 3.2.0 (Latest)
+### Version 3.2.0
 #### Changelog
 * Add 'Related News' to launches via the Spaceflight News API.
 * Update in-app translations.

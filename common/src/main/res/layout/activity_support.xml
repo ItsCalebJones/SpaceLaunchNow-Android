@@ -93,28 +93,19 @@
             android:id="@+id/support_thank_you"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="?attr/colorAccent"
+            android:background="?attr/colorPrimary"
             android:orientation="vertical"
-            android:padding="10dp"
             android:visibility="invisible">
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
                 android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
                 android:gravity="center"
+                style="@style/TextAppearance.AppCompat.Subhead"
                 android:text="@string/thank_you_support"
                 android:textColor="@color/material_typography_primary_text_color_light"
                 android:textSize="@dimen/material_typography_regular_title_text_size" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/material_baseline_grid_1.5x"
-                android:layout_marginRight="@dimen/material_baseline_grid_1.5x"
-                android:text="@string/thank_you"
-                android:textColor="@color/material_typography_secondary_text_color_light" />
 
         </LinearLayout>
 
