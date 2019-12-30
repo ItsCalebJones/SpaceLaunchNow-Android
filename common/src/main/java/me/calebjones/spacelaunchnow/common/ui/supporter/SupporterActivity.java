@@ -101,7 +101,6 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         if (isAvailable) {
             // continue
             bp = new BillingProcessor(this, getResources().getString(R.string.rsa_key), this);
-            isAvailable = (BillingProcessor.isIabServiceAvailable(context) && bp.isOneTimePurchaseSupported());
         } else {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, getString(R.string.billing_not_available));
         }
