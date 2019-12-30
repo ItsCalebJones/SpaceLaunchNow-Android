@@ -262,7 +262,7 @@
     <string name="no_calendars_available">No Calendars available to sync launch events with.</string>
     <string name="calendar_permission_required">Calendar Permission Needed</string>
     <string name="calendar_permission_required_description">This permission is needed to sync launches with your calendar.</string>
-    <string name="you_again">You again? Sure!</string>
+    <string name="support_again">Support us again!</string>
     <string name="local_timezone">Local Timezone</string>
     <string name="local_timezone_on">Launch times locally translated times to fit your current timezone.</string>
     <string name="local_timezone_off">Launch times to be represented in UTC.</string>

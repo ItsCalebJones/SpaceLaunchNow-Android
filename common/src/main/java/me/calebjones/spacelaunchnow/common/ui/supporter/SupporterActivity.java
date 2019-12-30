@@ -87,7 +87,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         ownedProducts = new ArrayList<>();
 
         if (SupporterHelper.isSupporter()) {
-            purchaseButton.setText(R.string.you_again);
+            purchaseButton.setText(R.string.support_again);
             enterReveal(supportThankYou);
         } else {
             purchaseButton.setText(R.string.supporter_title);
@@ -221,11 +221,11 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
             bottomMessage.setText("Pay what you want - get the same features!");
         } else {
-//            bronzeView.setVisibility(View.GONE);
-//            metalView.setVisibility(View.GONE);
-//            silverView.setVisibility(View.GONE);
-//            goldView.setVisibility(View.GONE);
-//            platinumView.setVisibility(View.GONE);
+            bronzeView.setVisibility(View.GONE);
+            metalView.setVisibility(View.GONE);
+            silverView.setVisibility(View.GONE);
+            goldView.setVisibility(View.GONE);
+            platinumView.setVisibility(View.GONE);
 
             bottomMessage.setText("Unable to load in-app-products.");
         }
