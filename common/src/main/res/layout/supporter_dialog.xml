@@ -60,7 +60,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/material_baseline_grid_0.5x"
                     android:layout_weight=".6"
                     android:orientation="vertical">
@@ -71,14 +71,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:textStyle="bold" />
+                        android:maxLines="1"
+                        android:textStyle="bold"
+                        tools:text="This is a Product" />
 
                     <TextView
                         android:id="@+id/bronze_description"
                         style="@style/TextAppearance.AppCompat.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:maxLines="2"
+                        tools:text="Unable to get product description. Unable to get product description. Unable to get product description." />
                 </LinearLayout>
 
             </LinearLayout>
@@ -105,7 +109,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/material_baseline_grid_0.5x"
                     android:layout_weight=".6"
                     android:orientation="vertical">
@@ -116,6 +120,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:maxLines="1"
                         android:textStyle="bold" />
 
                     <TextView
@@ -123,7 +128,8 @@
                         style="@style/TextAppearance.AppCompat.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:maxLines="2" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -150,7 +156,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/material_baseline_grid_0.5x"
                     android:layout_weight=".6"
                     android:orientation="vertical">
@@ -161,6 +167,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:maxLines="1"
                         android:textStyle="bold" />
 
                     <TextView
@@ -168,7 +175,8 @@
                         style="@style/TextAppearance.AppCompat.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:maxLines="2" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -195,7 +203,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/material_baseline_grid_0.5x"
                     android:layout_weight=".6"
                     android:orientation="vertical">
@@ -206,6 +214,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:maxLines="1"
                         android:textStyle="bold" />
 
                     <TextView
@@ -213,7 +222,8 @@
                         style="@style/TextAppearance.AppCompat.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:maxLines="2" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -240,7 +250,7 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/material_baseline_grid_0.5x"
                     android:layout_weight=".6"
                     android:orientation="vertical">
@@ -251,6 +261,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:maxLines="1"
                         android:textStyle="bold" />
 
                     <TextView
@@ -258,7 +269,8 @@
                         style="@style/TextAppearance.AppCompat.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:maxLines="2" />
                 </LinearLayout>
 
             </LinearLayout>
