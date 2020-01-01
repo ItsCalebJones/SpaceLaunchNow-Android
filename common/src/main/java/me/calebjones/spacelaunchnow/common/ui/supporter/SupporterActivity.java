@@ -274,7 +274,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         String description = "Unable to get product description.";
         SkuDetails details = getProductInfo(sku);
         if (details != null) {
-            price = String.format("(%s)", details.priceText);
+            price = String.format("%s", details.priceText);
             title = details.title.replaceAll("\\(.*\\)", "");
             description = details.description;
         }
@@ -282,7 +282,7 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         titleView.setText(title);
         descriptionView.setText(description);
 
-        if (isOwned(SupporterHelper.SKU_2020_BRONZE)) {
+        if (isOwned(sku)) {
             button.setCompoundDrawablesRelative(
                     new IconicsDrawable(this)
                             .icon(FontAwesome.Icon.faw_check)

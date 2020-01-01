@@ -106,7 +106,7 @@ android {
 }
 
 def computeVersionName() {
-    return String.format('%d.%d.%d', app.versionMajor, app.versionMinor, app.versionPatch)
+    return String.format('%d.%d.%d-b%d', app.versionMajor, app.versionMinor, app.versionPatch, app.versionCode)
 }
 
 def computeVersionCode() {
