@@ -142,7 +142,7 @@
     <string name="plesetsk_cosmodrome">Cosmodromo di Plesetsk</string>
     <string name="all">Tutti</string>
     <string name="edit_notification_settings">Modifica le impostazioni delle notifiche</string>
-    <string name="additional_filters">Filtri aggiuntivi per i lancj</string>
+    <string name="additional_filters">Filtri aggiuntivi per i lanci</string>
     <string name="these_do_not_affect_launch_notifications">Questi non condizionano le notifiche dei lanci</string>
     <string name="hide_no_go_launches">Nascondi i lanci NO-GO</string>
     <string name="hide_tbd_launches">Nascondi i lanci TBD</string>

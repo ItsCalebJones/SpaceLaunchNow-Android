@@ -27,6 +27,17 @@
         <item>Kommende</item>
         <item>Vergangene</item>
     </string-array>
+    <string-array name="status_array">
+        <item>Aktiv</item>
+        <item>im Ruhestand</item>
+        <item>Verstorben</item>
+        <item>Im Training</item>
+        <item>Im Flug verloren</item>
+        <item>Im Training verloren</item>
+        <item>Gestorben im aktiven Dienst</item>
+        <item>Abgewiesen</item>
+        <item>Zurückgetreten während des Trainings</item>
+    </string-array>
     <string-array name="time_format_array">
         <item>Standard</item>
         <item>12-Stunden AM/PM Format</item>

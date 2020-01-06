@@ -112,10 +112,10 @@
     <string name="height">Hauteur :</string>
     <string name="diameter">Diamètre :</string>
     <string name="stages">Étages :</string>
-    <string name="mass_to_leo">Masse en OTB :</string>
+    <string name="mass_to_leo">Masse en LEO :</string>
     <string name="mass_to_gto">Masse en GTO :</string>
-    <string name="mass_at_launch">Masse Initiale :</string>
-    <string name="thrust_at_launch">Poussée :</string>
+    <string name="mass_at_launch">Masse au Lancement :</string>
+    <string name="thrust_at_launch">Poussée au Lancement :</string>
     <string name="watch_launch">Regarder le Lancement</string>
     <string name="estimated_launch_date">Date de Lancement Estimée</string>
     <string name="nothing_here">Rien à voir ici, rafraîchissez depuis le menu ?</string>
@@ -190,8 +190,8 @@
     <string name="stage_full">Nombre max d\'étages : %d</string>
     <string name="mass_leo_full">Masse en LEO : %d kg</string>
     <string name="mass_gto_full">Masse en GTO : %d kg</string>
-    <string name="mass_launch_full">Masse Initiale : %d T</string>
-    <string name="thrust_full">Poussée : %d kN</string>
+    <string name="mass_launch_full">Masse au lancement : %d Tonnes</string>
+    <string name="thrust_full">Poussée au lancement : %d kN</string>
     <string name="upcoming">À venir</string>
     <string name="previous">Précédents</string>
     <string name="select_country">Sélectionner un pays</string>
