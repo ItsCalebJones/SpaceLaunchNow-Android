@@ -26,9 +26,6 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.afollestad.aesthetic.Aesthetic;
-import com.afollestad.aesthetic.BottomNavBgMode;
-import com.afollestad.aesthetic.BottomNavIconTextMode;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
@@ -297,10 +294,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                             .withIdentifier(R.id.menu_support)
                             .withSelectable(false));
         }
-        Aesthetic.get()
-                .bottomNavigationBackgroundMode(BottomNavBgMode.BLACK_WHITE_AUTO)
-                .bottomNavigationIconTextMode(BottomNavIconTextMode.BLACK_WHITE_AUTO)
-                .apply();
 
         bottomNavigationView
                 .addItem(new BottomNavigationItem(R.drawable.ic_favorite, getString(R.string.favorites))
@@ -311,7 +304,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                         .setActiveColorResource(R.color.material_color_deep_orange_500))
                 .addItem(new BottomNavigationItem(R.drawable.ic_rocket, getString(R.string.vehicles))
                         .setActiveColorResource(R.color.material_color_blue_grey_500))
-                .setBarBackgroundColor(String.format("#%06X", 0xFFFFFF & Aesthetic.get().colorWindowBackground().blockingFirst()))
                 .setFirstSelectedPosition(0)
                 .initialise();
 
@@ -905,12 +897,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        int m_theme;
-        if (Aesthetic.get().isDark().blockingFirst(false)) {
-            m_theme = R.style.BaseAppTheme_DarkBackground;
-        } else {
-            m_theme = R.style.BaseAppTheme_LightBackground;
-        }
+        super.onActivityResult(requestCode, resultCode, data);
+        int m_theme = R.style.BaseAppTheme;
+
         setTheme(m_theme);
         // Check which request we're responding to
         if (requestCode == SHOW_INTRO) {
@@ -1054,6 +1043,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     @Override
     public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         Bundle extras = intent.getExtras();
         if (extras != null) {
             if (extras.containsKey("newsUrl")) {

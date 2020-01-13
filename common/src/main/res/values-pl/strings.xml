@@ -260,7 +260,6 @@
     <string name="no_calendars_available">Brak dostępnych kalendarzów do synchronizacji startów.</string>
     <string name="calendar_permission_required">Wymagana zgoda dostępu do kalendarza</string>
     <string name="calendar_permission_required_description">Zgoda jest wymagana do synchronizacji startów z Twoim kalendarzem.</string>
-    <string name="you_again">Jeszcze raz? Pewnie!</string>
     <string name="local_timezone">Lokalna strefa czasowa</string>
     <string name="local_timezone_on">Czas startu rakiety przekonwertowany dla Twojej strefy czasowej.</string>
     <string name="local_timezone_off">Czas startów podany wg strefy czasowej UTC.</string>

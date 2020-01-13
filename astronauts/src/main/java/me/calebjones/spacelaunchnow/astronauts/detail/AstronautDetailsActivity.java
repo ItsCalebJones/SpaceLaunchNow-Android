@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -215,10 +214,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         this.astronaut = astronaut;
         try {
             astronautTitle.setText(astronaut.getName());
-            astronautTitle.setTextColor(Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
-
             astronautSubtitle.setText(astronaut.getNationality());
-            astronautSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
 
             GlideApp.with(this)
                     .load(astronaut.getProfileImage())

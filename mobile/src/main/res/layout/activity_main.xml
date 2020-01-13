@@ -22,18 +22,18 @@
                 android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?colorPrimary"
+                android:background="@color/colorPrimary"
                 android:elevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.Toolbar
+                    app:theme="@style/BaseAppTheme.AppBarOverlay"
+                    app:popupTheme="@style/BaseAppTheme.PopupOverlay"
                     android:id="@+id/main_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:theme="?actionBarTheme"
-                    app:popupTheme="?popupTheme"
                     android:elevation="0dp"/>
 
             </com.google.android.material.appbar.AppBarLayout>
@@ -45,7 +45,6 @@
                 android:elevation="8dp"
                 android:layout_marginTop="2dp"
                 android:clipToPadding="false"
-                android:tag=":aesthetic_ignore"
                 android:visibility="gone"
                 app:bnbElevation="6dp"
                 app:bnbAutoHideEnabled="true"

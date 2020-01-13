@@ -260,7 +260,6 @@
     <string name="no_calendars_available">Pas de calendrier où synchroniser les lancements disponible.</string>
     <string name="calendar_permission_required">Permission d\'accès au calendrier nécessaire</string>
     <string name="calendar_permission_required_description">Cette permission est nécessaire afin de synchroniser les lancements dans votre calendrier.</string>
-    <string name="you_again">Vous encore ? Avec plaisir !</string>
     <string name="local_timezone">Fuseau horaire local</string>
     <string name="local_timezone_on">Heures de lancement converties pour correspondre à votre fuseau horaire actuel.</string>
     <string name="local_timezone_off">Heures de lancement seront affichées au fuseau horaire UTC.</string>

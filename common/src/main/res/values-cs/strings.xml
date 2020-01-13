@@ -260,7 +260,6 @@
     <string name="no_calendars_available">Žádné kalendáře dostupné k synchronizaci událostí startů.</string>
     <string name="calendar_permission_required">Je nutné povolení k přístupu ke kalendáři</string>
     <string name="calendar_permission_required_description">Toto oprávnění je zapotřebí k synchronizaci startů s kalendářem.</string>
-    <string name="you_again">Zase ty? Tak určitě!</string>
     <string name="local_timezone">Místní časové pásmo</string>
     <string name="local_timezone_on">Doby startů odpovídající aktuálnímu časovému pásmu.</string>
     <string name="local_timezone_off">Doby startů odpovídající koordinovanému světovému času.</string>

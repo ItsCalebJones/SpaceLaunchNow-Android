@@ -260,7 +260,6 @@
     <string name="no_calendars_available">Non ci sono calendari disponibili su cui sincronizzare gli eventi</string>
     <string name="calendar_permission_required">È necessario il permesso per i calendari</string>
     <string name="calendar_permission_required_description">Questo permesso è richiesto per sincronizzare i lanci con il tuo calendario.</string>
-    <string name="you_again">Di nuovo tu? Sicuro!</string>
     <string name="local_timezone">Fuso orario locale</string>
     <string name="local_timezone_on">gli orari dei lanci sono trasferiti nel fuso orario in cui sei al momento</string>
     <string name="local_timezone_off">Orari di lancio rappresentati in UTC.</string>

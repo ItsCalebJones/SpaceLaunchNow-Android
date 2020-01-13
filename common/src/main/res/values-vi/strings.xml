@@ -262,7 +262,6 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="no_calendars_available">Không có lịch nào để đồng bộ các sự kiện phóng.</string>
     <string name="calendar_permission_required">Cần quyền truy cập lịch.</string>
     <string name="calendar_permission_required_description">Cần quyền này để đồng bộ các lần phóng vào lịch.</string>
-    <string name="you_again">Lại là bạn à? Được thôi!</string>
     <string name="local_timezone">Giờ địa phương</string>
     <string name="local_timezone_on">Thời gian phóng được điều chỉnh để khớp với thời gian nơi bạn.</string>
     <string name="local_timezone_off">Thời gian phóng ở giờ UTC</string>

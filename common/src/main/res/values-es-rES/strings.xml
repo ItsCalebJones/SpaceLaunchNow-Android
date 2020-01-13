@@ -260,7 +260,6 @@
     <string name="no_calendars_available">No hay calendarios disponibles para sincronizar eventos de lanzamiento.</string>
     <string name="calendar_permission_required">Permiso de calendario necesario</string>
     <string name="calendar_permission_required_description">Este permiso es necesario para sincronizar lanzamientos con su calendario.</string>
-    <string name="you_again">¿Tu otra vez? ¡Por supuesto!</string>
     <string name="local_timezone">Hora local</string>
     <string name="local_timezone_on">Tiempos de lanzamiento traducidos localmente para adaptarse a su zona horaria actual.</string>
     <string name="local_timezone_off">Tiempos de lanzamiento representados en UTC.</string>

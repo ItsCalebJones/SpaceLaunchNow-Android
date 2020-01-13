@@ -3,7 +3,7 @@
     android:id="@+id/material_drawer_account_header"
     android:layout_width="match_parent"
     android:layout_height="@dimen/material_drawer_account_header_height"
-    android:background="?colorPrimary"
+    android:background="@color/colorPrimary"
     android:clickable="true">
 
     <androidx.appcompat.widget.AppCompatImageView

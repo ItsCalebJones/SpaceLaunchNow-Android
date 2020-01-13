@@ -9,9 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.jaredrummler.android.colorpicker.ColorPreference;
 import com.jaredrummler.android.colorpicker.ColorPreferenceCompat;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -71,9 +69,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private ColorPreferenceCompat widgetIconColor;
     private ColorPreferenceCompat widgetAccentColor;
     private ColorPreferenceCompat widgetTitleColor;
-    private ColorPreferenceCompat themePrimary;
-    private ColorPreferenceCompat themeSecondary;
-    private ColorPreferenceCompat themeBackground;
     private SwitchPreference widgetRoundCorners;
     private SwitchPreference widgetHideSettings;
     private FirebaseMessaging firebaseMessaging;
@@ -159,43 +154,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     switchPreferences.setCalendarStatus(false);
                 }
                 break;
-            case "theme": {
-                SharedPreferences.Editor themeEditor = getActivity().getSharedPreferences("theme_changed", 0).edit();
-                themeEditor.putBoolean("recreate", true);
-                themeEditor.apply();
-
-                if (switchPreferences.getNightMode()) {
-                    if (switchPreferences.getDayNightAutoMode()) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-                        checkLocationPermission();
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        Toast.makeText(context, R.string.night_mode_restart, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(context, R.string.day_mode_restart, Toast.LENGTH_SHORT).show();
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                }
-                break;
-            }
-            case "theme_auto": {
-                SharedPreferences.Editor themeEditor = getActivity().getSharedPreferences("theme_changed", 0).edit();
-                themeEditor.putBoolean("recreate", true);
-                themeEditor.apply();
-
-                if (switchPreferences.getNightMode()) {
-                    if (switchPreferences.getDayNightAutoMode()) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
-                        checkLocationPermission();
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                        Toast.makeText(context, R.string.auto_daynight_restart, Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                }
-                break;
-            }
             case "widget_background_color":
             case "widget_text_color":
             case "widget_secondary_text_color":
@@ -310,55 +268,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     firebaseMessaging.unsubscribeFromTopic("success");
                 }
                 break;
-            case "custom_themes_is_dark":
-                if (Prefs.getBoolean(key, false)) {
-                    themeBackground.saveValue(getResources().getColor(R.color.custom_background_material_dark));
-                    themePrimary.saveValue(getResources().getColor(R.color.darkPrimary));
-                    themeSecondary.saveValue(getResources().getColor(R.color.darkAccent));
-                    Aesthetic.get()
-                            .isDark(true)
-                            .colorNavigationBarRes(R.color.custom_background_material_dark)
-                            .colorWindowBackground(Prefs.getInt("custom_themes_background",
-                                    R.color.custom_background_material_dark),
-                                    null)
-                            .colorCardViewBackground(Prefs.getInt("custom_themes_background",
-                                    R.color.custom_background_material_dark),
-                                    null)
-                            .colorPrimary(Prefs.getInt("custom_themes_primary",
-                                    R.color.darkPrimary),
-                                    null)
-                            .colorAccent(Prefs.getInt("custom_themes_accent",
-                                    R.color.darkAccent),
-                                    null)
-                            .attribute(R.attr.colorTextPrimaryInverse, getResources().getColor(R.color.material_drawer_background), null, true)
-                            .attribute(R.attr.fabAccent, getResources().getColor(R.color.darkAccent), null, true)
-                            .activityTheme(R.style.BaseAppTheme_DarkBackground)
-                            .apply();
-                } else {
-                    themeBackground.saveValue(getResources().getColor(R.color.custom_background_material_light));
-                    themePrimary.saveValue(getResources().getColor(R.color.colorPrimary));
-                    themeSecondary.saveValue(getResources().getColor(R.color.colorAccent));
-                    Aesthetic.get()
-                            .isDark(false)
-                            .colorNavigationBarRes(R.color.custom_background_material_light)
-                            .colorWindowBackground(Prefs.getInt("custom_themes_background",
-                                    R.color.custom_background_material_light),
-                                    null)
-                            .colorCardViewBackground(Prefs.getInt("custom_themes_background",
-                                    R.color.custom_background_material_light),
-                                    null)
-                            .colorPrimary(Prefs.getInt("custom_themes_primary",
-                                    R.color.colorPrimary),
-                                    null)
-                            .colorAccent(Prefs.getInt("custom_themes_accent",
-                                    R.color.colorAccent),
-                                    null)
-                            .attribute(R.attr.colorTextPrimaryInverse, getResources().getColor(R.color.material_drawer_background), null, true)
-                            .attribute(R.attr.fabAccent, getResources().getColor(R.color.colorAccent), null, true)
-                            .activityTheme(R.style.BaseAppTheme_LightBackground)
-                            .apply();
-                }
-                break;
             case "locale_changer":
                 ActivityCompat.finishAffinity(getActivity());
                 Intent mainIntent = null;
@@ -450,34 +359,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         }
 
-        themePrimary = findPreference("custom_themes_primary");
-        themePrimary.setOnPreferenceChangeListener((preference, newValue) -> {
-
-            Aesthetic.get()
-                    .colorPrimary( (int) newValue, null)
-                    .attribute(R.attr.colorTextPrimaryInverse, Utils.getTitleTextColor((int) newValue), null, true)
-                    .apply();
-            return true;
-        });
-        themeSecondary = findPreference("custom_themes_accent");
-        themeSecondary.setOnPreferenceChangeListener((preference, newValue) -> {
-            Aesthetic.get()
-                    .attribute(R.attr.fabAccent, (int) newValue, null, true)
-                    .colorAccent( (int) newValue, null)
-                    .apply();
-            return true;
-        });
-        themeBackground = findPreference("custom_themes_background");
-        themeBackground.setOnPreferenceChangeListener((preference, newValue) -> {
-            Aesthetic.get()
-                    .attribute(R.attr.cardBackground, (int) newValue, null, true)
-                    .colorNavigationBar((int) newValue, null)
-                    .colorCardViewBackground( (int) newValue, null)
-                    .colorWindowBackground( (int) newValue, null)
-                    .apply();
-            return true;
-        });
-
         widgetPresets = findPreference("widget_presets");
         widgetBackgroundColor = findPreference("widget_background_color");
         widgetTextColor = findPreference("widget_text_color");
@@ -488,20 +369,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         widgetTitleColor = findPreference("widget_title_text_color");
         widgetHideSettings = findPreference("widget_refresh_enabled");
         if (!SupporterHelper.isSupporter()) {
-            PreferenceCategory themes = findPreference("appearance_category");
-            themes.setSummary("Become a supporter to fully customize!" );
-            themePrimary.setEnabled(false);
-            themePrimary.setSelectable(false);
-            themePrimary.setSummary(themePrimary.getSummary() + " " + getString(R.string.supporter_feature));
-
-            themeSecondary.setEnabled(false);
-            themeSecondary.setSelectable(false);
-            themeSecondary.setSummary(themeSecondary.getSummary() + " " + getString(R.string.supporter_feature));
-
-            themeBackground.setEnabled(false);
-            themeBackground.setSelectable(false);
-            themeBackground.setSummary(themeBackground.getSummary() + " " + getString(R.string.supporter_feature));
-
             Preference weather = findPreference("weather");
             weather.setEnabled(false);
             weather.setSelectable(false);

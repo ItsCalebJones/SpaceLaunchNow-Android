@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.button.MaterialButton;
 
@@ -195,7 +194,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         filterViewShowing = false;
 
         if (adapter == null) {
-            adapter = new CardAdapter(context, Aesthetic.get().colorPrimary().blockingFirst());
+            adapter = new CardAdapter(context);
         }
 
         super.onCreateView(inflater, container, savedInstanceState);
@@ -219,9 +218,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             mainActivity.checkHideAd();
             mSwipeRefreshLayout.setEnabled(false);
         }
-        fab.setTag(":aesthetic_ignore");
         fab.setOnClickListener(v -> checkFilter());
-        fab.setBackgroundTintList(ColorStateList.valueOf(Aesthetic.get().colorAccent().blockingFirst()));
         fab.setVisibility(View.GONE);
         if (switchPreferences.getNextFABHidden()) {
             fab.setVisibility(View.GONE);
@@ -254,16 +251,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         no_data.setVisibility(View.VISIBLE);
         viewMoreLaunches.setVisibility(View.GONE);
         return view;
-    }
-
-    private void setBackgroundColor() {
-        if (!Utils.getIconColor(Aesthetic.get().colorPrimary().blockingFirst())) {
-            int color = Aesthetic.get().colorAccent().blockingFirst();
-            colorReveal.setBackgroundColor(color);
-        } else {
-            int color = Aesthetic.get().colorPrimary().blockingFirst();
-            colorReveal.setBackgroundColor(Aesthetic.get().colorPrimary().blockingFirst());
-        }
     }
 
     private void setFabExtended(boolean extended) {
@@ -321,7 +308,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void hideView() {
-        setBackgroundColor();
         try {
             // get the center for the clipping circle
             int x = (int) (fab.getX() + fab.getWidth() / 2);
@@ -358,7 +344,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void showView() {
-        setBackgroundColor();
         try {
             // get the center for the clipping circle
             int x = (int) (fab.getX() + fab.getWidth() / 2);
@@ -543,9 +528,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
             mMenu.removeItem(R.id.action_supporter);
         }
 
-        int color = Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst());
-        final MenuItem item = menu.findItem(R.id.action_alert);
-        item.getIcon().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override

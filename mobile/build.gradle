@@ -138,11 +138,11 @@ dependencies {
     implementation deps.vectordrawable
     implementation deps.percentlayout
     implementation deps.legacySupportv4
-    implementation deps.firebaseCore
     implementation deps.playWearable
     implementation deps.playAds
     implementation deps.constraintLayout
     implementation deps.easyprefs
+    implementation deps.firebaseAnalytics
     // Architecture and Tools
     implementation deps.once
     implementation deps.crashlytics
@@ -160,7 +160,6 @@ dependencies {
     implementation deps.materialAbout
     implementation deps.markdownView
     implementation deps.colorPicker
-    implementation deps.aesthetic
     implementation deps.glide
     annotationProcessor deps.glideCompiler
     implementation deps.glidepalette

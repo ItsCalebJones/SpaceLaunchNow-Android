@@ -11,15 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="8dp"
-        android:background="?colorPrimary"
+        android:background="@color/colorPrimary"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/spacestation_collapsing"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="?colorPrimary"
-            app:contentScrim="?colorPrimary"
+            android:background="@color/colorPrimary"
+            app:contentScrim="@color/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll">
@@ -54,13 +54,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="-48dp"
             android:minHeight="?attr/actionBarSize"
-            android:background="?colorPrimary"
+            android:background="@color/colorPrimary"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?colorPrimary"
+            android:background="@color/colorPrimary"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="8dp">
@@ -94,7 +94,8 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/spacestation_detail_tabs"
             style="@style/BaseAppTheme.TabBarOverlay"
-            android:background="?colorPrimary"
+            android:background="@color/colorPrimary"
+            app:tabTextColor="@color/white"
             android:layout_width="fill_parent"
             android:layout_height="?attr/actionBarSize" />
 

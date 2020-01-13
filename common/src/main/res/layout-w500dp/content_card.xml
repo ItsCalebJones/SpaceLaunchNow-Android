@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:paddingBottom="4dp"
-                android:background="?colorPrimary"
+                android:background="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="@+id/launch_date_compact"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

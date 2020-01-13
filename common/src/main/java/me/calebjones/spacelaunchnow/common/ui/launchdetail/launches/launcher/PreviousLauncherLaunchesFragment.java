@@ -13,8 +13,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.aesthetic.Aesthetic;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -30,14 +28,7 @@ import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import timber.log.Timber;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PreviousLauncherLaunchesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class PreviousLauncherLaunchesFragment extends BaseFragment {
 
     private static final String SEARCH_TERM = "searchTerm";
@@ -114,7 +105,7 @@ public class PreviousLauncherLaunchesFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_launch_list, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        adapter = new ListAdapter(context, Aesthetic.get().isDark().blockingFirst(false));
+        adapter = new ListAdapter(context, false);
         linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));

@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -109,9 +108,6 @@ public class AgencyLaunchActivity extends BaseActivityOld implements UpcomingAge
             }
         } );
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTag(":aesthetic_ignore");
-        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()),
-                Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
         swipeRefresh.setOnRefreshListener(this);
         getFeaturedAgencies();
     }

@@ -13,7 +13,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.afollestad.aesthetic.Aesthetic;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -96,7 +95,7 @@ public class PreviousAgencyLaunchesFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_launch_list, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        adapter = new ListAdapter(context, Aesthetic.get().isDark().blockingFirst());
+        adapter = new ListAdapter(context, false);
         linearLayoutManager = new LinearLayoutManager(context, RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));

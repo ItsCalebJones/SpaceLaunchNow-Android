@@ -289,7 +289,7 @@
                 android:gravity="center"
                 android:padding="@dimen/material_card_edge_margin"
                 android:text="@string/view_more_launches"
-                android:textColor="?colorPrimary"
+                android:textColor="@color/colorPrimary"
                 android:textSize="12sp"
                 android:theme="@style/PrimaryButtonTheme"
                 android:visibility="visible"

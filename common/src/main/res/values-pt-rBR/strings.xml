@@ -260,7 +260,6 @@
     <string name="no_calendars_available">Nenhum calendário disponível para sincronizar os eventos de lançamento com o mesmo.</string>
     <string name="calendar_permission_required">Permissão ao calendário necessária</string>
     <string name="calendar_permission_required_description">Esta permissão é necessária para sincronizar os lançamentos com o seu calendário.</string>
-    <string name="you_again">Você de novo? Certo!</string>
     <string name="local_timezone">Fuso Horário Local</string>
     <string name="local_timezone_on">As horas dos lançamentos são traduzidas localmente com o seu fuso horário atual.</string>
     <string name="local_timezone_off">O horário de lançamento pode ser representado em UTC (TUC).</string>

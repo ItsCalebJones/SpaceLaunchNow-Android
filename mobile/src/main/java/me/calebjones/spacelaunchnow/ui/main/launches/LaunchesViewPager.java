@@ -65,7 +65,7 @@ public class LaunchesViewPager extends BaseFragment {
         viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.setOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -81,7 +81,6 @@ public class LaunchesViewPager extends BaseFragment {
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
-
         });
         return inflatedView;
     }

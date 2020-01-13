@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -215,8 +214,6 @@ public class SpacestationDetailsActivity extends BaseActivityOld implements AppB
         try {
             spacestationTitle.setText(spacestation.getName());
             spacestationSubtitle.setText(spacestation.getType().getName());
-            spacestationSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
-            spacestationTitle.setTextColor(Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
             GlideApp.with(this)
                     .load(spacestation.getImageUrl())
                     .placeholder(R.drawable.placeholder)
