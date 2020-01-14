@@ -68,6 +68,7 @@ public class VehiclesViewPager extends BaseFragment {
         tabLayout.setOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
                 current_tab = tab.getPosition();
             }
 

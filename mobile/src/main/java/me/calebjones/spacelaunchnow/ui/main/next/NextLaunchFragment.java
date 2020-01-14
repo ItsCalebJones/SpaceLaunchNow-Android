@@ -7,9 +7,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -204,16 +201,18 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         unbinder = ButterKnife.bind(this, view);
 
         setUpSwitches();
-        //TODO
-        setBackgroundColor();
 
         fabExtensionAnimator = new FabExtensionAnimator(fab);
-        fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters", ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)), true);
+        fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Filters",
+                ContextCompat.getDrawable(context, R.drawable.ic_notifications_white)),
+                true);
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showFilters")) {
             Once.markDone("showFilters");
             colorReveal.setVisibility(View.VISIBLE);
             filterViewShowing = true;
-            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Close", ContextCompat.getDrawable(context, R.drawable.ic_close)), true);
+            fabExtensionAnimator.updateGlyphs(FabExtensionAnimator.newState("Close",
+                    ContextCompat.getDrawable(context, R.drawable.ic_close)),
+                    true);
 
             mainActivity.checkHideAd();
             mSwipeRefreshLayout.setEnabled(false);
