@@ -7,7 +7,7 @@
     android:layout_gravity="center_horizontal"
     tools:context="me.calebjones.spacelaunchnow.astronauts.detail.AstronautProfileFragment">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:layout_width="@dimen/max_width"
         android:layout_height="match_parent"
         android:layout_gravity="center"
@@ -19,5 +19,5 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

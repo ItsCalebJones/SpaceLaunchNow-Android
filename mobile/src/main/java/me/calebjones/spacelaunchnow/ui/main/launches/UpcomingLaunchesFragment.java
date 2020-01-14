@@ -34,6 +34,7 @@ import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
+import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.utils.EndlessRecyclerViewScrollListener;
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
@@ -95,7 +96,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
         if (adapter == null) {
             Timber.v("Creating new ListAdapter");
-            adapter = new ListAdapter(getContext(), false);
+            adapter = new ListAdapter(getContext(), ThemeHelper.isDarkMode(getActivity()));
         }
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);

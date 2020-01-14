@@ -18,7 +18,7 @@
         android:orientation="vertical">
 
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -26,7 +26,6 @@
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
             android:visibility="visible"
-            android:background="?cardBackground"
             app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
@@ -158,15 +157,14 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/related_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
-            android:background="?cardBackground"
             android:padding="@dimen/material_card_edge_margin"
             android:visibility="gone"
             app:cardCornerRadius="4dp"
@@ -212,7 +210,7 @@
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
 
         <me.calebjones.spacelaunchnow.common.ui.views.custom.WeatherCard
             android:id="@+id/weather_card"

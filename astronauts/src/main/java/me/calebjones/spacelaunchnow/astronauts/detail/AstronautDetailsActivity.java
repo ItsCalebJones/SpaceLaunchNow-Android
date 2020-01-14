@@ -124,13 +124,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         tabs.addTab(tabs.newTab().setText(getString(R.string.profile)));
         tabs.addTab(tabs.newTab().setText(getString(R.string.flights)));
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-//        tabs.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),
-//                Utils.getSecondaryTitleTextColor(getCyanea().getPrimary()));
-//        tabs.setBackgroundColor(getCyanea().getPrimary());
         astronautDataRepository = new AstronautDataRepository(this, getRealm());
-
-//        appbar.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(getCyanea().getPrimaryDark(), getWindow()));
-//        appbar.addOnOffsetChangedListener(this);
 
         //Grab information from Intent
         Intent mIntent = getIntent();

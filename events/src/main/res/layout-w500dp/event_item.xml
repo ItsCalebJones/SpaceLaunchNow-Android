@@ -7,7 +7,7 @@
     android:elevation="0dp"
     android:paddingTop="@dimen/material_baseline_grid_1x">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:layout_width="@dimen/max_width"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -16,7 +16,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
         android:maxWidth="400dp"
-        android:background="?cardBackground"
         app:cardCornerRadius="8dp"
         app:cardElevation="2dp"
         app:cardUseCompatPadding="true">
@@ -156,5 +155,5 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/details" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

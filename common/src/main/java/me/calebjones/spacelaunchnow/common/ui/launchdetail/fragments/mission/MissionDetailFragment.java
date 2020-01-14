@@ -7,13 +7,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.card.MaterialCardView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.Group;
 import androidx.constraintlayout.widget.Guideline;
 import androidx.lifecycle.ViewModelProviders;
@@ -77,11 +78,11 @@ public class MissionDetailFragment extends RetroFitFragment {
     @BindView(R2.id.launch_vehicle_description)
     TextView launchVehicleDescription;
     @BindView(R2.id.vehicle_infoButton)
-    AppCompatButton vehicleInfoButton;
+    Button vehicleInfoButton;
     @BindView(R2.id.vehicle_wikiButton)
-    AppCompatButton vehicleWikiButton;
+    Button vehicleWikiButton;
     @BindView(R2.id.launcher_launches)
-    AppCompatButton launchesButton;
+    Button launchesButton;
     @BindView(R2.id.spacecraft_image)
     ImageView spacecraftImage;
     @BindView(R2.id.spacecraft_title)
@@ -99,7 +100,7 @@ public class MissionDetailFragment extends RetroFitFragment {
     @BindView(R2.id.description)
     TextView description;
     @BindView(R2.id.spacecraft_card)
-    MaterialCardView spacecraftCard;
+    CardView spacecraftCard;
     @BindView(R2.id.crew_recycler_view)
     RecyclerView crewReycler;
 

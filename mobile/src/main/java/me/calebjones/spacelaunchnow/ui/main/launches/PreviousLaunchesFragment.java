@@ -30,6 +30,7 @@ import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
+import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.utils.EndlessRecyclerViewScrollListener;
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
@@ -84,7 +85,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         setHasOptionsMenu(true);
 
         if (adapter == null) {
-            adapter = new ListAdapter(getContext(), false);
+            adapter = new ListAdapter(getContext(), ThemeHelper.isDarkMode(getActivity()));
         }
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);

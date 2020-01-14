@@ -180,6 +180,10 @@
             android:name=".ui.changelog.ChangelogActivity"
             android:theme="@style/BaseAppTheme" />
 
+        <activity
+            android:name=".ui.supporter.BecomeSupporterActivity"
+            android:theme="@style/BaseAppTheme" />
+
         <service android:name=".content.services.AppFireBaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
