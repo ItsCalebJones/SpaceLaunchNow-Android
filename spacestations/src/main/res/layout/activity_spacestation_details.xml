@@ -95,6 +95,7 @@
             android:id="@+id/spacestation_detail_tabs"
             style="@style/BaseAppTheme.TabBarOverlay"
             android:background="?colorPrimary"
+            app:tabTextColor="@color/white"
             android:layout_width="fill_parent"
             android:layout_height="?attr/actionBarSize" />
 

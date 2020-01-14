@@ -11,13 +11,11 @@
         android:id="@+id/action_supporter"
         android:orderInCategory="95"
         android:title="@string/remove_ads"
-        android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_FAB"
         android:orderInCategory="96"
         android:title="@string/hide_fab"
-        android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
@@ -29,11 +27,9 @@
         android:id="@+id/action_consent"
         android:orderInCategory="105"
         android:title="@string/data_consent"
-        android:textColor="?android:textColorPrimary"
         app:showAsAction="never" />
     <item
         android:id="@+id/debug_menu"
-        android:textColor="?android:textColorPrimary"
         android:title="Debug"
         />
 

@@ -101,7 +101,7 @@
                     android:checked="false"
                     android:text="@string/nasa"
                     android:textColor="?colorTextPrimaryInverse"
-                    android:tag=":aesthetic_ignore"
+
                     app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintEnd_toStartOf="@+id/rl_switch"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -117,7 +117,6 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/spacex"
-                    android:tag=":aesthetic_ignore"
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/bo_switch"
@@ -132,7 +131,7 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/roscosmos"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/arianespace_switch"
@@ -147,7 +146,7 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/ula"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/isro_switch"
@@ -163,7 +162,7 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/blue_origin"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/spacex_switch"
@@ -180,7 +179,7 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/arianespace"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/roscosmos_switch"
@@ -197,7 +196,7 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/isro"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/ula_switch"
@@ -213,7 +212,7 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/northrop_grumman"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/isro_switch"
@@ -228,7 +227,7 @@
                     android:layout_marginEnd="16dp"
                     android:checked="false"
                     android:text="@string/rocket_lab"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/nasa_switch"
@@ -245,7 +244,7 @@
                     android:layout_marginTop="8dp"
                     android:checked="false"
                     android:text="@string/russia_and_kazakhstan"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/casc_switch"
@@ -261,7 +260,7 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/china"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/ples_switch"
@@ -278,7 +277,7 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/kennedy_space_center_cape_canaveral"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/van_switch"
@@ -293,7 +292,7 @@
                     android:layout_marginTop="8dp"
                     android:checked="false"
                     android:text="@string/vandenberg_afb"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/KSC_switch"
@@ -307,7 +306,7 @@
                     android:layout_marginTop="8dp"
                     android:checked="false"
                     android:text="@string/wallops_island"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/japan_switch"
@@ -321,7 +320,7 @@
                     android:layout_marginTop="8dp"
                     android:checked="false"
                     android:text="@string/new_zealand"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/french_guiana_switch"
@@ -336,7 +335,7 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/japan"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/wallops_switch"
@@ -352,7 +351,7 @@
                     android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/french_guiana"
-                    android:tag=":aesthetic_ignore"
+
                     android:textColor="@color/white"
                     app:buttonTint="@color/white"
                     app:layout_constraintBottom_toBottomOf="@+id/new_zealand_switch"

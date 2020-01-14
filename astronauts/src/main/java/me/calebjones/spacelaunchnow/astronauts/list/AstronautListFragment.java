@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -205,20 +204,20 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
         menu.clear();
         inflater.inflate(R.menu.astronaut_menu, menu);
 
-        int color = Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst());
-        final MenuItem item = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(this);
-        searchView.setOnCloseListener(this);
-        final ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_button);
-        searchIcon.setColorFilter(color);
-        final ImageView cancelButton
-                = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
-        cancelButton.setColorFilter(color);
-        final SearchView.SearchAutoComplete searchAutoComplete = searchView
-                .findViewById(androidx.appcompat.R.id.search_src_text);
-        searchAutoComplete.setHintTextColor(color);
-        searchAutoComplete.setTextColor(color);
+//        int color = Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst());
+//        final MenuItem item = menu.findItem(R.id.action_search);
+//        searchView = (SearchView) MenuItemCompat.getActionView(item);
+//        searchView.setOnQueryTextListener(this);
+//        searchView.setOnCloseListener(this);
+//        final ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_button);
+//        searchIcon.setColorFilter(color);
+//        final ImageView cancelButton
+//                = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+//        cancelButton.setColorFilter(color);
+//        final SearchView.SearchAutoComplete searchAutoComplete = searchView
+//                .findViewById(androidx.appcompat.R.id.search_src_text);
+//        searchAutoComplete.setHintTextColor(color);
+//        searchAutoComplete.setTextColor(color);
     }
 
     @Override

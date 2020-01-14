@@ -256,7 +256,6 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="no_calendars_available">Nincsenek elérhető naptárak, melyekkkel szinkronizálni lehetne az indításokat.</string>
     <string name="calendar_permission_required">Naptár engedély szükséges</string>
     <string name="calendar_permission_required_description">Ez az engedély szükséges hogy szinkronizálni lehessen az indításokat a naptáraddal.</string>
-    <string name="you_again">Megint te? Hát persze!</string>
     <string name="local_timezone">Helyi időzóna</string>
     <string name="local_timezone_on">Az indítási időpontok át lettek véve a te helyi időzónádra.</string>
     <string name="local_timezone_off">Az indítási időpontok UTC időzónában lesznek feltüntetve.</string>

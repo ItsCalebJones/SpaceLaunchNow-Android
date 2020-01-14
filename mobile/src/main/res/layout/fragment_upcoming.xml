@@ -145,7 +145,10 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     android:elevation="@dimen/material_baseline_grid_1.5x"
+                    app:iconTint="@color/white"
                     app:backgroundTint="?fabAccent"
+                    app:rippleColor="@color/material_color_white_70_percent"
+                    android:textColor="@color/white"
                     app:layout_behavior="me.calebjones.spacelaunchnow.utils.views.animator.BottomTransientBarBehavior" />
 
             </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -56,5 +56,4 @@ dependencies {
     implementation deps.playAds
     implementation deps.material
     implementation deps.circleImageView
-    implementation deps.aesthetic
 }

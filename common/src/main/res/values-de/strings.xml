@@ -260,7 +260,6 @@
     <string name="no_calendars_available">Kein Kalender zum synchronisieren der Raketenstart-Events vorhanden.</string>
     <string name="calendar_permission_required">Kalender Erlaubnis notwendig</string>
     <string name="calendar_permission_required_description">Diese Erlaubnis ist notwendig, um Raketenstarts mit deinem Kalender zu synchronisieren.</string>
-    <string name="you_again">Du schon wieder? Sicher!</string>
     <string name="local_timezone">Lokale Zeitzone</string>
     <string name="local_timezone_on">Startzeiten sind in meiner lokalen Zeitzone.</string>
     <string name="local_timezone_off">Startzeiten sind in UTC.</string>

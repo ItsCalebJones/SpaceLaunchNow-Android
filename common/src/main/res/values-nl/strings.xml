@@ -260,7 +260,6 @@
     <string name="no_calendars_available">Geen kalenders beschikbaar om lanceringen te synchroniseren.</string>
     <string name="calendar_permission_required">Toestemming kalender nodig</string>
     <string name="calendar_permission_required_description">Deze toestemming is nodig om lanceringen te synchroniseren met je kalender.</string>
-    <string name="you_again">Jij weer? Natuurlijk!</string>
     <string name="local_timezone">Locale tijdszone</string>
     <string name="local_timezone_on">Lanceringstijden vertalen naar lokale tijd om je huidige tijdszone te matchen.</string>
     <string name="local_timezone_off">Lanceringstijden in UTC voorstellen.</string>

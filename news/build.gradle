@@ -43,7 +43,6 @@ dependencies {
     implementation deps.appcompat
     implementation deps.lifecycleExtensions
     implementation deps.browser
-    implementation deps.aesthetic
 
     implementation deps.kotlin_stdlib_jdk7
 

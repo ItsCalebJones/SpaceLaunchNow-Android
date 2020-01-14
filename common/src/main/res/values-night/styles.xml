@@ -1,0 +1,149 @@
+<resources>
+
+    <attr name="cardStyle" format="reference" />
+
+    <style name="MySpinner" parent="Base.Widget.AppCompat.Spinner">
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <style name="BaseAppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/launcher_drawable</item>
+        <item name="spinnerStyle">@style/MySpinner</item>
+    </style>
+
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents">
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/darkPrimary</item>
+        <item name="colorPrimaryDark">@color/darkPrimary</item>
+        <item name="colorAccent">@color/darkAccent</item>
+        <item name="cardTitleBarColor">@color/darkPrimary</item>
+        <item name="shareIconColor">@color/md_grey_700</item>
+        <item name="android:windowBackground">@color/custom_background_material_dark</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <!--Custom Attributes-->
+        <item name="colorTextPrimaryInverse">@color/white</item>
+        <item name="colorCardHeaderBackground">@color/custom_background_material_dark</item>
+        <item name="cardBackground">@color/material_drawer_dark_background</item>
+        <item name="fabAccent">@color/darkPrimary</item>
+        <item name="colorSecondary">@color/darkPrimary</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <item name="material_drawer_background">@color/material_drawer_dark_background</item>
+        <item name="material_drawer_primary_text">@color/material_drawer_dark_primary_text</item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
+        <item name="material_drawer_secondary_text">@color/material_drawer_dark_secondary_text
+        </item>
+        <item name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</item>
+        <item name="material_drawer_divider">@color/material_drawer_dark_divider</item>
+        <item name="material_drawer_selected">@color/material_drawer_dark_selected</item>
+        <item name="material_drawer_selected_text">@color/md_grey_300</item>
+        <item name="material_drawer_header_selection_text">
+            @color/material_drawer_dark_header_selection_text
+        </item>
+        <item name="colorNavBackground">@color/material_drawer_dark_background</item>
+        <item name="snackbarStyle">@style/BaseAppTheme.SnackBar</item>
+        <item name="snackbarTextViewStyle">@style/BaseAppTheme.SnackBar.Text</item>
+
+    </style>
+
+    <style name="BaseAppTheme.ColorReveal" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/white</item>
+        <item name="buttonTint">@color/white</item>
+    </style>
+
+    <style name="BaseAppTheme.NormalNavigation" parent="BaseAppTheme" />
+
+
+    <style name="BaseAppTheme.AppBarOverlay" parent="BaseAppTheme">
+        <!-- android:textColorPrimary is the  color of the title text in the Toolbar, in the Theme.AppCompat theme:  -->
+        <item name="android:textColorPrimary">@color/material_color_white</item>
+
+        <!-- android:textColorPrimaryInverse is the  color of the title
+             text in the Toolbar, in the Theme.AppCompat.Light theme:  -->
+        <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
+
+        <item name="android:actionMenuTextColor">@color/black</item>
+        <!-- android:textColorSecondary is the color of the menu
+             overflow icon (three vertical dots) -->
+        <item name="android:textColorSecondary">@color/material_color_white</item>
+
+    </style>
+
+    <style name="BaseAppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Dark" >
+
+    </style>
+
+    <style name="BaseAppTheme.TabBarOverlay" parent="BaseAppTheme">
+        <item name="enforceMaterialTheme">true</item>
+        <item name="enforceTextAppearance">true</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="tabIconTint">@color/dark_primary_text_color_selector</item>
+        <item name="tabIndicatorAnimationDuration">250</item>
+        <item name="tabIndicatorColor">@color/colorAccent</item>
+        <item name="tabTextAppearance">?attr/textAppearanceButton</item>
+        <item name="tabTextColor">@color/dark_primary_text_color_selector</item>
+        <item name="tabRippleColor">@color/colorPrimaryDark</item>
+        <item name="tabUnboundedRipple">true</item>
+    </style>
+
+    <style name="PrimaryButtonTheme" parent="BaseAppTheme">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <style name="ExploreButtonTheme" parent="BaseAppTheme">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+
+    <style name="ToolBarWithNavigationBack" parent="BaseAppTheme">
+        <item name="navigationIcon">@drawable/ic_arrow_back</item>
+    </style>
+
+    <style name="BaseAppTheme.Transparent" parent="BaseAppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
+    <style name="FullscreenTheme" parent="BaseAppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+
+    <style name="CircularProgress" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_dialog</item>
+    </style>
+
+    <!-- snackbar style -->
+    <style name="BaseAppTheme.SnackBar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="android:backgroundTint">@color/darkPrimary</item>
+    </style>
+
+    <style name="BaseAppTheme.SnackBar.Text" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@color/md_white_1000</item>
+    </style>
+
+</resources>

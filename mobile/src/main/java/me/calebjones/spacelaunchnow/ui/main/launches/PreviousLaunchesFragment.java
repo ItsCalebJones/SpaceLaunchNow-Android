@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.crashlytics.android.Crashlytics;
 
 import java.util.List;
@@ -85,7 +84,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         setHasOptionsMenu(true);
 
         if (adapter == null) {
-            adapter = new ListAdapter(getContext(), Aesthetic.get().isDark().blockingFirst());
+            adapter = new ListAdapter(getContext(), false);
         }
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);
@@ -284,20 +283,6 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         if (SupporterHelper.isSupporter()) {
             menu.removeItem(R.id.action_supporter);
         }
-
-        int color = Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst());
-        final MenuItem item = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(this);
-        final ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_button);
-        searchIcon.setColorFilter(color);
-        final ImageView cancelButton
-                = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
-        cancelButton.setColorFilter(color);
-        final SearchView.SearchAutoComplete searchAutoComplete = searchView
-                .findViewById(androidx.appcompat.R.id.search_src_text);
-        searchAutoComplete.setHintTextColor(color);
-        searchAutoComplete.setTextColor(color);
     }
 
     @Override

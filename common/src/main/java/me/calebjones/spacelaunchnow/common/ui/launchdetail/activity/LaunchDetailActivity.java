@@ -19,7 +19,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -200,8 +199,6 @@ public class LaunchDetailActivity extends BaseActivity
         } );
 
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()),
-                Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
 
         //Grab information from Intent
         Intent mIntent = getIntent();
@@ -362,9 +359,7 @@ public class LaunchDetailActivity extends BaseActivity
             findProfileLogo(launch);
             findRocketImage(launch);
             detail_mission_location.setText(launch.getPad().getName());
-            detail_mission_location.setTextColor(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
             detail_rocket.setText(launch.getName());
-            detail_rocket.setTextColor(Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
         } else if (this.isDestroyed()) {
             Timber.v("DetailLaunch is destroyed, stopping loading data.");
         }
