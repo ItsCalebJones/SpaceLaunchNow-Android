@@ -410,8 +410,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 final Handler handler = new Handler();
                 handler.postDelayed(() -> showChangelogSnackbar(), 1000);
 
-            } else if (!Once.beenDone("show2020")&& Once.beenDone("appOpen", Amount.moreThan(10))) {
-                Once.markDone("show2020");
+            } else if (!Once.beenDone("show2020dialog")&& Once.beenDone("appOpen", Amount.moreThan(10))) {
+                Once.markDone("show2020dialog");
                 if (SupporterHelper.isSupporter()) {
                     final Handler handler = new Handler();
                     handler.postDelayed(() -> show2020Dialog(true), 250);
