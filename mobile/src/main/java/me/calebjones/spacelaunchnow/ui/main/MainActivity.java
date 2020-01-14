@@ -410,8 +410,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 final Handler handler = new Handler();
                 handler.postDelayed(() -> showChangelogSnackbar(), 1000);
 
-            } else if (Once.beenDone("appOpen", Amount.moreThan(1))) {
-
+            } else if (!Once.beenDone("show2020")&& Once.beenDone("appOpen", Amount.moreThan(10))) {
+                Once.markDone("show2020");
                 if (SupporterHelper.isSupporter()) {
                     final Handler handler = new Handler();
                     handler.postDelayed(() -> show2020Dialog(true), 250);
@@ -508,7 +508,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     }
 
     private void show2020Dialog(boolean supporter) {
-        int layoutId;
+        int layoutId = 0;
         if (supporter){
             layoutId = R.layout.supporter_year_overview;
         } else {
@@ -517,9 +517,12 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         View view = getLayoutInflater().inflate(layoutId, null);
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         dialog.setContentView(view);
-        view.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            BottomSheetBehavior mBehavior = BottomSheetBehavior.from((View) view.getParent());
-            mBehavior.setPeekHeight(view.findViewById(R.id.titleView).getBottom());
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                BottomSheetBehavior mBehavior = BottomSheetBehavior.from((View) view.getParent());
+                mBehavior.setPeekHeight(view.findViewById(R.id.titleView).getBottom());
+            }
         });
 
         Button supportButton = view.findViewById(R.id.support_button);
@@ -527,15 +530,21 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         Intent intent = new Intent(this, SupporterActivity.class);
         Activity activity = this;
 
-        supportButton.setOnClickListener(v -> {
-            startActivity(intent);
-            dialog.dismiss();
+        supportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+                dialog.dismiss();
+            }
         });
 
-        closeButton.setOnClickListener(v -> {
-            Utils.openCustomTab(activity, getApplicationContext(),
-                    "https://www.patreon.com/spacelaunchnow");
-            dialog.dismiss();
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.openCustomTab(activity, getApplicationContext(),
+                        "https://www.patreon.com/spacelaunchnow");
+                dialog.dismiss();
+            }
         });
 
         dialog.show();
