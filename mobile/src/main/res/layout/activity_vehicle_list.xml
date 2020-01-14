@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="@color/colorPrimary"
+        android:background="?colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         ​
 
@@ -24,8 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="224dp"
             android:fitsSystemWindows="true"
-            android:background="@color/colorPrimary"
-            app:contentScrim="@color/colorPrimary"
+            android:background="?colorPrimary"
+            app:contentScrim="?colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll">
@@ -67,7 +67,7 @@
             android:layout_marginTop="-48dp"
             android:fitsSystemWindows="true"
             android:minHeight="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="?colorPrimary"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
         ​
 
@@ -76,7 +76,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
-            android:background="@color/colorPrimary"
+            android:background="?colorPrimary"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="8dp">

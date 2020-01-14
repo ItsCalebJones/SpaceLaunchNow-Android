@@ -45,6 +45,7 @@ import me.calebjones.spacelaunchnow.common.content.calendar.model.CalendarItem;
 import me.calebjones.spacelaunchnow.common.content.notifications.NotificationBuilder;
 import me.calebjones.spacelaunchnow.common.content.worker.CalendarSyncWorker;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
+import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.settings.util.CalendarPermissionListener;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
@@ -93,6 +94,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         accentArray = getResources().getIntArray(R.array.widget_presets_values_accent);
         titleTextArray = getResources().getIntArray(R.array.widget_presets_values_title_text);
         firebaseMessaging = FirebaseMessaging.getInstance();
+
+        Preference themePreference = findPreference(getString(R.string.theme_pref_key));
+            themePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                ThemeHelper.applyTheme((String) newValue);
+                return true;
+            });
 
         createPermissionListeners();
         setupPreference();

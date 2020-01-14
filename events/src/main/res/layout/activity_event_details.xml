@@ -11,15 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="8dp"
-        android:background="@color/colorPrimary"
+        android:background="?colorPrimary"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/event_collapsing"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:background="@color/colorPrimary"
-            app:contentScrim="@color/colorPrimary"
+            android:background="?colorPrimary"
+            app:contentScrim="?colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll">
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="-48dp"
-            android:background="@color/colorPrimary"
+            android:background="?colorPrimary"
             android:minHeight="?attr/actionBarSize"
             app:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
@@ -72,7 +72,7 @@
                 android:layout_marginRight="32dp"
                 android:maxLines="1"
                 android:text=""
-                android:background="@color/colorPrimary"
+                android:background="?colorPrimary"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                 android:textColor="@android:color/white" />

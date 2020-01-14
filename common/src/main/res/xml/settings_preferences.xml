@@ -42,6 +42,20 @@
 
     </PreferenceCategory>
     <PreferenceCategory
+        android:key="appearance_category"
+        android:summary="@string/appearance_description"
+        android:title="@string/appearance"
+        app:iconSpaceReserved="false">
+        <ListPreference
+            app:key="@string/theme_pref_key"
+            app:title="Choose theme"
+            app:defaultValue="default"
+            app:dialogTitle="Choose theme"
+            app:entries="@array/theme_list_array"
+            app:entryValues="@array/theme_entry_array"
+            app:useSimpleSummaryProvider="true"/>
+    </PreferenceCategory>
+    <PreferenceCategory
         android:key="calendar_category"
         android:title="@string/calendar_settings"
         app:iconSpaceReserved="false">

@@ -19,6 +19,7 @@
         android:maxWidth="400dp"
         android:layout_gravity="center"
         android:background="?cardBackground"
+        app:cardBackgroundColor="?cardBackground"
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="8dp"
         app:cardElevation="2dp">
@@ -40,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:paddingBottom="4dp"
-                android:background="@color/colorPrimary"
+                android:background="?colorPrimary"
                 app:layout_constraintBottom_toBottomOf="@+id/launch_date_compact"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

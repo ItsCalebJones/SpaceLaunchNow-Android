@@ -37,6 +37,19 @@
         <item name="colorTextPrimaryInverse">@color/white</item>
         <item name="cardBackground">@color/material_drawer_background</item>
         <item name="fabAccent">@color/colorAccent</item>
+
+        <item name="material_drawer_background">@color/material_drawer_background</item>
+        <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
+        <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
+        <item name="material_drawer_divider">@color/material_drawer_divider</item>
+        <item name="material_drawer_selected">@color/material_drawer_selected</item>
+        <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
+        <item name="material_drawer_header_selection_text">
+            @color/material_drawer_header_selection_text
+        </item>
+        <item name="colorNavBackground">@color/material_drawer_background</item>
     </style>
 
     <style name="BaseAppTheme.Dark" parent="Theme.MaterialComponents">
@@ -76,37 +89,6 @@
     <style name="BaseAppTheme.ColorReveal" parent="Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:textColor">@color/white</item>
         <item name="buttonTint">@color/white</item>
-    </style>
-
-    <style name="BaseAppTheme.LightBackground" parent="BaseAppTheme">
-        <item name="material_drawer_background">@color/material_drawer_background</item>
-        <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
-        <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
-        <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>
-        <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
-        <item name="material_drawer_divider">@color/material_drawer_divider</item>
-        <item name="material_drawer_selected">@color/material_drawer_selected</item>
-        <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
-        <item name="material_drawer_header_selection_text">
-            @color/material_drawer_header_selection_text
-        </item>
-        <item name="colorNavBackground">@color/material_drawer_background</item>
-    </style>
-
-    <style name="BaseAppTheme.DarkBackground" parent="BaseAppTheme.Dark">
-        <item name="material_drawer_background">@color/material_drawer_dark_background</item>
-        <item name="material_drawer_primary_text">@color/material_drawer_dark_primary_text</item>
-        <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
-        <item name="material_drawer_secondary_text">@color/material_drawer_dark_secondary_text
-        </item>
-        <item name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</item>
-        <item name="material_drawer_divider">@color/material_drawer_dark_divider</item>
-        <item name="material_drawer_selected">@color/material_drawer_dark_selected</item>
-        <item name="material_drawer_selected_text">@color/material_drawer_dark_selected_text</item>
-        <item name="material_drawer_header_selection_text">
-            @color/material_drawer_dark_header_selection_text
-        </item>
-        <item name="colorNavBackground">@color/material_drawer_dark_background</item>
     </style>
 
     <style name="BaseAppTheme.NormalNavigation" parent="BaseAppTheme" />
