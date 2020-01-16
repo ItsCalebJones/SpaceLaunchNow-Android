@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.common.prefs
 
 import android.app.Activity
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -38,11 +39,11 @@ object ThemeHelper {
     @JvmStatic
     fun getIconColor(activity: Activity): Int {
         var color: Int = if (isDarkMode(activity)){
-            ContextCompat.getColor(activity, R.color.white)
+            Color.WHITE
         } else{
-            ContextCompat.getColor(activity, R.color.black)
+            Color.BLACK
         }
-        return color;
+        return color
     }
 
 

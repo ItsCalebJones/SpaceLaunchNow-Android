@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.supporter;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -8,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,8 +50,10 @@ public class BecomeSupporterActivity extends AppCompatActivity {
             description.setText(getString(R.string.thank_you_2019));
         }
 
-        int color = ThemeHelper.getIconColor(this);
-        back.setColorFilter(color);
+        back.setImageDrawable(new IconicsDrawable(this)
+                .icon(GoogleMaterial.Icon.gmd_arrow_back)
+                .color(ThemeHelper.getIconColor(this))
+                .sizeDp(24));
     }
 
     @Override
