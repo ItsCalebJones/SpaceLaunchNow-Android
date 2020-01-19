@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
+import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.news.R;
 import timber.log.Timber;
 
@@ -101,7 +102,11 @@ public class TwitterFragment extends BaseFragment {
                 .build();
 
         int style;
-        style = R.style.SpaceLaunchNowTweetStyle;
+        if (ThemeHelper.isDarkMode(getActivity())){
+            style = R.style.SpaceLaunchNowTweetStyleDark;
+        } else {
+            style = R.style.SpaceLaunchNowTweetStyle;
+        }
 
 
         timelineAdapter = new TweetTimelineRecyclerViewAdapter.Builder(context)
