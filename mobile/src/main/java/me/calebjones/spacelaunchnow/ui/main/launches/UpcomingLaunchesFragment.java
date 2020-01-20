@@ -240,9 +240,11 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public void onRefresh() {
         searchTerm = null;
-        searchView.setQuery("", false);
-        searchView.clearFocus();
-        searchView.setIconified(true);
+        if (searchView != null) {
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+            searchView.setIconified(true);
+        }
         fetchData(true);
     }
 
@@ -293,6 +295,10 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         if (SupporterHelper.isSupporter()) {
             menu.removeItem(R.id.action_supporter);
         }
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
 
     }
 

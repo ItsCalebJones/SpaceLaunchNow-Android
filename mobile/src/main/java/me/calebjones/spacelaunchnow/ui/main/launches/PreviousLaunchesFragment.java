@@ -284,6 +284,10 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         if (SupporterHelper.isSupporter()) {
             menu.removeItem(R.id.action_supporter);
         }
+
+        final MenuItem item = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setOnQueryTextListener(this);
     }
 
     @Override
