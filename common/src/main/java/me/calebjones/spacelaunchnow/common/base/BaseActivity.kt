@@ -33,9 +33,9 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        super.onDestroy()
         Timber.d("onDestroy")
         mRealm.close()
-        super.onDestroy()
     }
 
     public override fun onStart() {
