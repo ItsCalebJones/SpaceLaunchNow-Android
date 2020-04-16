@@ -3,7 +3,7 @@ ext {
     app = [
             versionMajor: 3,
             versionMinor: 3,
-            versionPatch: 7,
+            versionPatch: 9,
             versionCode: 1
 
     ]

@@ -485,7 +485,7 @@
     <string name="no_events">Geen gebeurtenissen gevonden</string>
     <string name="founded_alt">Opgericht:</string>
     <string name="status_alt">Status:</string>
-    <string name="de_orbited">Uit baan rond de aarde: %s</string>
+    <string name="de_orbited">Uit baan rond de aarde:</string>
     <string name="mission_agency">Agentschap missies</string>
     <string name="no_expeditions">Geen Expedities Gevonden</string>
     <string name="no_docked">Geen Aangekoppelde Ruimtevaartuigen</string>
