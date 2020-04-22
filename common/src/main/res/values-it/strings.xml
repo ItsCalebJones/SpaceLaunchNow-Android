@@ -485,7 +485,7 @@
     <string name="no_events">Nessun evento trovato</string>
     <string name="founded_alt">Fondato</string>
     <string name="status_alt">stato</string>
-    <string name="de_orbited">De-orbitato</string>
+    <string name="de_orbited">De-orbitato:</string>
     <string name="mission_agency">Agenzia della missione</string>
     <string name="no_expeditions">Nessuna spedizione trovata</string>
     <string name="no_docked">Nessun veicolo agganciato</string>
