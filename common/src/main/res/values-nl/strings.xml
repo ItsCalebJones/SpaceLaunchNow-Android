@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Nieuws</string>
     <string name="twitter">Twitter</string>
@@ -88,7 +88,7 @@
     <string name="unknown_mission">Onbekende missie</string>
     <string name="watch_live">Bekijk live</string>
     <string name="share">Deel</string>
-    <string name="explore">Ontdek</string>
+    <string name="explore">Meer</string>
     <string name="days">DAGEN</string>
     <string name="hours">UREN</string>
     <string name="minutes">MINUTEN</string>
@@ -128,7 +128,7 @@
     <string name="vehicle">Vaartuig</string>
     <string name="no_launches">Oh nee...geen lanceringen!</string>
     <string name="select_launches">Selecteer lanceringen om te volgen</string>
-    <string name="selection_description">Je selecties zullen zichtbaar zijn op de homepage en notificaties voor lancering versturen.</string>
+    <string name="selection_description">Je selectie wordt gebruikt voor de homepagina en voor notificaties.</string>
     <string name="nasa">NASA</string>
     <string name="spacex">SpaceX</string>
     <string name="roscosmos">ROSCOSMOS</string>
@@ -141,12 +141,12 @@
     <string name="cape_canaveral">Cape Canaveral</string>
     <string name="plesetsk_cosmodrome">Plesetsk Cosmodrome</string>
     <string name="all">Alles</string>
-    <string name="edit_notification_settings">Pas instellingen notificaties aan</string>
+    <string name="edit_notification_settings">Pas notificatie instellingen aan</string>
     <string name="additional_filters">Extra lanceringsfilters</string>
     <string name="these_do_not_affect_launch_notifications">Deze hebben geen effect op de lanceringsnotificaties</string>
     <string name="hide_no_go_launches">Verberg afgelaste lanceringen</string>
     <string name="hide_tbd_launches">Verberg nog te bevestigen lanceringen</string>
-    <string name="keep_launches">Hou lanceringen voor 24 uur bij</string>
+    <string name="keep_launches">Houd lanceringen nog 24 uur bij</string>
     <string name="unknown_mission_date">Onbekende missiedatum</string>
     <string name="launch">Lancering</string>
     <string name="about_description">Applicatie-informatie over licentie, bibliotheken, versies, enz...</string>
@@ -164,11 +164,11 @@
     <string name="title_activity_fullscreen_image">Space Launch Now</string>
     <string name="title_activity_download">Download</string>
     <string name="title_activity_web_view_fallback">Space Launch Now</string>
-    <string name="intro_card_description">Blijf op de hoogte van al je favoriete orbitale lanceringen, missies en draagraketten.</string>
-    <string name="supporter_card_description">Exclusieve widgets, Android Wear wijzerplaat, verwijder reclame en meer.</string>
-    <string name="vehicle_card_title">Vind draagraketten</string>
+    <string name="intro_card_description">Blijf op de hoogte van al je favoriete lanceringen, missies en raketten.</string>
+    <string name="supporter_card_description">Exclusieve widgets, Android Wear wijzerplaat, geen reclame en meer.</string>
+    <string name="vehicle_card_title">Vind raketten</string>
     <string name="notification_card">Notificaties voor lanceringen</string>
-    <string name="vehicle_card_description">Leer de draagraketten kennen die ons in een baan om de aarde brachten.</string>
+    <string name="vehicle_card_description">Leer de raketten kennen die ons in een baan om de aarde brachten.</string>
     <string name="notification_card_description">Krijg notificaties voor de lanceringen waar je van houdt.</string>
     <string name="done">Klaar</string>
     <string name="error_loading_launch">Fout: Fout bij het laden van de lancering</string>
@@ -192,7 +192,7 @@
     <string name="mass_gto_full">massa naar geostationaire baan om de aarde: %d kg</string>
     <string name="mass_launch_full">Massa bij lancering: %d T</string>
     <string name="thrust_full">Stuwkracht bij lancering: %d kN</string>
-    <string name="upcoming">Eerstvolgend</string>
+    <string name="upcoming">Volgende</string>
     <string name="previous">Vorige</string>
     <string name="select_country">Selecteer een land</string>
     <string name="select_country_description">Vink een land aan hieronder, om alle filters te verwijderen gebruik het reset icoon in de werkbalk.</string>
@@ -217,15 +217,15 @@
     <string name="waiting_on_launch_time_specific">Wachten op de exacte lanceertijd van %s</string>
     <string name="unconfirmed">(Onbevestigd)</string>
     <string name="no_go">\"No-Go\" lanceringen</string>
-    <string name="no_go_description">Dit verbergt lanceringen die een \"no-go\" status hebben of binnen hun lanceringsperiode zijn maar technische problemen hebben.</string>
+    <string name="no_go_description">Dit verbergt lanceringen die een \"no-go\" status hebben. Dit kan een actieve lancering verbergen als deze problemen ondervindt tijdens het aftellen.</string>
     <string name="to_be_determined">Verberg nog te bevestigen lanceringen</string>
-    <string name="to_be_determined_description">Dit verbergt lanceringen die geen bevestigde lanceringsdatum of -tijd hebben. Dit kan occasioneel lanceringen verbergen die zijn opgeschort voor de dag.</string>
-    <string name="launch_info">Hou lanceringen bij voor 24 uur</string>
+    <string name="to_be_determined_description">Dit verbergt lanceringen die een \"no-go\" status hebben. Dit kan een actieve lancering verbergen als deze problemen ondervindt tijdens het aftellen.</string>
+    <string name="launch_info">Houd lanceringen nog 24 uur bij</string>
     <string name="launch_info_description">Deze optie toont lanceringen op de homepage tot 24 uur na lancering.</string>
     <string name="home">Home</string>
     <string name="launches">Lanceringen</string>
     <string name="missions">Missies</string>
-    <string name="vehicles">Draagraketten</string>
+    <string name="vehicles">Raketten</string>
     <string name="settings">Instellingen</string>
     <string name="stay_connected">Blijf geconnecteerd</string>
     <string name="connect_description">Connecteer met de gemeenschap</string>
@@ -260,9 +260,10 @@
     <string name="no_calendars_available">Geen kalenders beschikbaar om lanceringen te synchroniseren.</string>
     <string name="calendar_permission_required">Toestemming kalender nodig</string>
     <string name="calendar_permission_required_description">Deze toestemming is nodig om lanceringen te synchroniseren met je kalender.</string>
+    <string name="support_again">Support ons opnieuw!</string>
     <string name="local_timezone">Locale tijdszone</string>
     <string name="local_timezone_on">Lanceringstijden vertalen naar lokale tijd om je huidige tijdszone te matchen.</string>
-    <string name="local_timezone_off">Lanceringstijden in UTC voorstellen.</string>
+    <string name="local_timezone_off">Lanceertijden in UTC weergeven.</string>
     <string name="time_format">Tijdsformaat</string>
     <string name="time_format_on">Lanceringstijden in 24 uur.</string>
     <string name="time_format_off">Lanceringstijden in AM/PM.</string>
@@ -271,8 +272,8 @@
     <string name="night_mode_off">Nachtmodus is gedeactiveerd.</string>
     <string name="automatic_daynight">Automatisch dag/nacht</string>
     <string name="automatic_daynight_summary">Verwissel automatisch tussen dag en nacht op basis van het huidige uur.</string>
-    <string name="widget_themes">Widget themas.</string>
-    <string name="widget_themes_summary">Selecteer van enkele standaard widget themas.</string>
+    <string name="widget_themes">Widget themas</string>
+    <string name="widget_themes_summary">Selecteer een voorgedefinieerd thema</string>
     <string name="widget_background">Widget achtergrond</string>
     <string name="widget_background_summary">Selecteer achtergrondkleur voor widgets.</string>
     <string name="primary_text">Primaire tekstkleur</string>
@@ -385,7 +386,7 @@
     <string name="wear_os">Wear OS</string>
     <string name="misc">Divers</string>
     <string name="launchers">Lanceerders</string>
-    <string name="orbiters">Ruimteschip</string>
+    <string name="orbiters">Ruimtevaartuigen</string>
     <string name="translate_settings">Werk mee aan het vertalen van Space Launch Now!</string>
     <string name="translate">Vertaal</string>
     <string name="get_help">Ondersteuning</string>
@@ -424,7 +425,7 @@
     <string name="upcoming_with_space">"Binnenkort "</string>
     <string name="previous_with_space">"Vorige "</string>
     <string name="watch">Bekijk</string>
-    <string name="notification_schedule_changed">Update schema: volgende poging niet vroeger dan %s</string>
+    <string name="notification_schedule_changed">Update schema: volgende poging niet eerder dan %s</string>
     <string name="notification_launch_successful">De lancering was een succes!</string>
     <string name="notification_launch_failure">De lancering is mislukt.</string>
     <string name="notification_launch_partial_failure">De lancering is gedeeltelijk mislukt.</string>
@@ -442,7 +443,7 @@
     <string name="settings_one_minute_off">Ontvang geen notificatie wanneer een lancering binnen één minuut is.</string>
     <string name="no_live_stream_available">Geen live stream beschikbaar.</string>
     <string name="date_confirmed">Datum is bevestigd maar de tijd van lancering is onbekend.</string>
-    <string name="date_unconfirmed">Huidige datum is een \"niet vroeger dan\"  inschatting.</string>
+    <string name="date_unconfirmed">Huidige datum is een \"niet eerder dan\"  inschatting.</string>
     <string name="source">Selecteer een bron</string>
     <string name="long_press_share">Lang ingedrukt houden om een item te delen.</string>
     <string name="no_astronauts">Geen astronauten gevonden.</string>
@@ -495,8 +496,8 @@
     <string name="history">Geschiedenis</string>
     <string name="time_format_description">Selecteer het gewenste tijdsformaat</string>
     <string name="landing_information">Landingsinformatie</string>
-    <string name="launch_service_providers">Lanceer providers</string>
-    <string name="launch_locations">Lanceer locaties</string>
+    <string name="launch_service_providers">Organisaties</string>
+    <string name="launch_locations">Locaties</string>
     <string name="northrop_grumman">Northrop Grumman</string>
     <string name="blue_origin">Blue Origin</string>
     <string name="rocket_lab">Rocket Lab</string>
@@ -554,4 +555,14 @@
     <string name="born_one_argument">Geboren: %1$s</string>
     <string name="died_two_arguments">Overleden: %1$s (%2$d)</string>
     <string name="related_news">Gerelateerd nieuws</string>
+    <string name="flight_life">Vluchtduur: %s</string>
+    <string name="thrust">Vermogen tijdens lancering:</string>
+    <string name="to_be_determined_with_value">Nog te bevestigen... %s</string>
+    <string name="click_for_info">Klik voor meer informatie.</string>
+    <string name="choose_theme">Kies een thema</string>
+    <string name="set_custom_calendar">Stel een eigen reminder in voor agenda notificaties.</string>
+    <string name="event_and_news">Evenementen en Nieuws Notificaties</string>
+    <string name="event_and_news_description">Ontvang notificaties over gebeurtenissen en nieuws na een lancering.</string>
+    <string name="choose_theme_mode">Kies Thema Modus</string>
+    <string name="you_again">Jij weer? Natuurlijk!</string>
 </resources>

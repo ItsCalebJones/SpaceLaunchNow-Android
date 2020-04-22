@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Novità</string>
     <string name="twitter">Twitter</string>
@@ -554,4 +554,5 @@
     <string name="born_one_argument">Nato: %1$s</string>
     <string name="died_two_arguments">Morto: %1$s (%2$d)</string>
     <string name="related_news">Notizie correlate</string>
+    <string name="you_again">Di nuovo tu? Sicuro!</string>
 </resources>
