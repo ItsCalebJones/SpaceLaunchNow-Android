@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string-array name="widget_presets">
         <item>Jasny</item>
         <item>Ciemny</item>
@@ -11,7 +11,7 @@
         <item>Material - pomarańczowy</item>
         <item>Własny</item>
     </string-array>
-    <string-array name="widget_presets_values">
+    <string-array name="widget_presets_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>

@@ -144,7 +144,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             //Get launch date
             launchDate = sdf.format(launchItem.getNet());
 
-            holder.launch_date.setText(String.format("To be determined... %s", launchDate));
+            holder.launch_date.setText(String.format(mContext.getString(R.string.to_be_determined_with_value), launchDate));
         } else {
             launchDate = sdf.format(launchItem.getNet());
             holder.launch_date.setText(launchDate);
@@ -154,7 +154,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         if (launchItem.getLocation() != null) {
             holder.location.setText(launchItem.getLocation());
         } else {
-            holder.location.setText("Click for more information.");
+            holder.location.setText(mContext.getString(R.string.click_for_info));
         }
 
         if (launchItem.getName() != null) {

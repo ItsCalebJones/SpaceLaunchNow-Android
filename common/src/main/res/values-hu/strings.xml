@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="twitter">Twitter</string>
     <string name="action_settings">Beállítások</string>
@@ -358,4 +358,5 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="dynamic_watch_face_description">Az indított járművek dinamikus képeinek megtekintése.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="you_again">Megint te? Hát persze!</string>
 </resources>

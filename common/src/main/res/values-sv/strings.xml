@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="action_settings">Inställningar</string>
     <string name="status_go">"Klar för start"</string>
     <string name="status_nogo">Starten är uppskjuten</string>

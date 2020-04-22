@@ -50,10 +50,10 @@
         app:iconSpaceReserved="false">
         <ListPreference
             app:key="@string/theme_pref_key"
-            app:title="Choose Theme Mode"
+            app:title="@string/choose_theme_mode"
             app:iconSpaceReserved="false"
             app:defaultValue="default"
-            app:dialogTitle="Choose Theme"
+            app:dialogTitle="@string/choose_theme"
             app:entries="@array/theme_list_array"
             app:entryValues="@array/theme_entry_array"
             app:useSimpleSummaryProvider="true"/>
@@ -236,8 +236,8 @@
             android:defaultValue="true"
             android:dependency="notificationEnabled"
             android:key="eventNotifications"
-            android:summary="Receive notifications for post-launch spaceflight events and news."
-            android:title="Events and News Notifications"
+            android:summary="@string/event_and_news_description"
+            android:title="@string/event_and_news"
             app:iconSpaceReserved="false" />
         <SwitchPreference
             android:defaultValue="false"
