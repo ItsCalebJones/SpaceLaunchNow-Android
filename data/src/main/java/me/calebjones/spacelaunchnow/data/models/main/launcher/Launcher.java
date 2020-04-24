@@ -12,7 +12,7 @@ public class Launcher extends RealmObject {
     @SerializedName("id")
     @Expose
     public Integer id;
-    @SerializedName("previous_flights")
+    @SerializedName("flights")
     @Expose
     public Integer previousFlights;
     @SerializedName("flight_proven")
@@ -27,9 +27,6 @@ public class Launcher extends RealmObject {
     @SerializedName("details")
     @Expose
     public String details;
-
-
-
     @SerializedName("image_url")
     @Expose
     public String imageUrl;
