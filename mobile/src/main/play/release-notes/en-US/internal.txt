@@ -1,2 +1,2 @@
 INTERNAL BUILD
-Full theme customization has been disabled due to a performance bug experienced by a large portion of users. This is an unfortunate bug that I will have to take more time to figure out a long term solution.
+A small update to available languages and bug fixes.

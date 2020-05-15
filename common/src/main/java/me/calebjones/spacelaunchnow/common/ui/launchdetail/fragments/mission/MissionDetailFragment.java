@@ -274,6 +274,12 @@ public class MissionDetailFragment extends RetroFitFragment {
                     launchVehicleSpecsLaunchMass.setText(context.getString(R.string.mass_at_launch));
                 }
 
+                if (launchVehicle.getToThrust() != null) {
+                    launchVehicleSpecsThrust.setText(String.format(context.getString(R.string.thrust_full), launchVehicle.getToThrust()));
+                } else {
+                    launchVehicleSpecsThrust.setText(context.getString(R.string.thrust_at_launch));
+                }
+
                 if (launchVehicle.getDescription() != null && launchVehicle.getDescription().length() > 0) {
                     launchVehicleDescription.setText(launchVehicle.getDescription());
                     launchVehicleDescription.setVisibility(View.VISIBLE);
