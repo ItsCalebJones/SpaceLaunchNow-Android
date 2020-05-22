@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string-array name="widget_presets">
         <item>Licht</item>
         <item>Donker</item>
@@ -11,7 +11,7 @@
         <item>Materiaal oranje</item>
         <item>Aangepast</item>
     </string-array>
-    <string-array name="widget_presets_values">
+    <string-array name="widget_presets_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -42,5 +42,13 @@
         <item>Standaard</item>
         <item>12-uurs AM/PM formaat</item>
         <item>24-uurs formaat</item>
+    </string-array>
+    <string-array name="theme_list_array" tools:ignore="InconsistentArrays">
+        <item>Licht</item>
+        <item>Donker</item>
+    </string-array>
+    <string-array name="theme_entry_array" tools:ignore="InconsistentArrays">
+        <item>light</item>
+        <item>donker</item>
     </string-array>
 </resources>

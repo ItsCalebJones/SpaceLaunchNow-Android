@@ -16,6 +16,9 @@
             android:name=".ui.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/BaseAppTheme" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9824528399164059~9700152528"/>
     </application>
 
 </manifest>

@@ -12,7 +12,9 @@
     </style>
 
     <!-- Base application theme. -->
-    <style name="BaseAppTheme" parent="Theme.MaterialComponents.Light">
+    <style name="BaseAppTheme" parent="Theme.MaterialComponents.DayNight">
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -21,9 +23,11 @@
         <item name="shareIconColor">@color/md_grey_700</item>
         <item name="android:textColorPrimary">#212121</item>
         <item name="android:textColorSecondary">#757575</item>
-
+        <item name="android:actionMenuTextColor">#212121</item>
         <item name="cardStyle">@style/CardView.Light</item>
         <item name="android:textColorHighlight">@color/colorPrimaryLight</item>
+        <item name="colorSecondary">@color/colorAccent</item>
+        <item name="colorOnSecondary">@color/white</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -33,12 +37,24 @@
         <item name="colorTextPrimaryInverse">@color/white</item>
         <item name="cardBackground">@color/material_drawer_background</item>
         <item name="fabAccent">@color/colorAccent</item>
+
+        <item name="material_drawer_background">@color/material_drawer_background</item>
+        <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
+        <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
+        <item name="material_drawer_divider">@color/material_drawer_divider</item>
+        <item name="material_drawer_selected">@color/material_drawer_selected</item>
+        <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
+        <item name="material_drawer_header_selection_text">
+            @color/material_drawer_header_selection_text
+        </item>
+        <item name="colorNavBackground">@color/material_drawer_background</item>
     </style>
 
-
-
-    <!-- Base application theme. -->
     <style name="BaseAppTheme.Dark" parent="Theme.MaterialComponents">
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -55,7 +71,7 @@
         <item name="cardBackground">@color/material_drawer_dark_background</item>
     </style>
 
-    <style name="BaseAppTheme.Setting" parent="Theme.MaterialComponents.Light.DarkActionBar">
+    <style name="BaseAppTheme.Setting" parent="Theme.MaterialComponents.Light">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -75,43 +91,27 @@
         <item name="buttonTint">@color/white</item>
     </style>
 
-    <style name="BaseAppTheme.LightBackground" parent="BaseAppTheme">
-        <item name="material_drawer_background">@color/material_drawer_background</item>
-        <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
-        <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
-        <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>
-        <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
-        <item name="material_drawer_divider">@color/material_drawer_divider</item>
-        <item name="material_drawer_selected">@color/material_drawer_selected</item>
-        <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
-        <item name="material_drawer_header_selection_text">
-            @color/material_drawer_header_selection_text
-        </item>
-        <item name="colorNavBackground">@color/material_drawer_background</item>
-    </style>
-
-    <style name="BaseAppTheme.DarkBackground" parent="BaseAppTheme.Dark">
-        <item name="material_drawer_background">@color/material_drawer_dark_background</item>
-        <item name="material_drawer_primary_text">@color/material_drawer_dark_primary_text</item>
-        <item name="material_drawer_primary_icon">@color/material_drawer_dark_primary_icon</item>
-        <item name="material_drawer_secondary_text">@color/material_drawer_dark_secondary_text
-        </item>
-        <item name="material_drawer_hint_text">@color/material_drawer_dark_hint_text</item>
-        <item name="material_drawer_divider">@color/material_drawer_dark_divider</item>
-        <item name="material_drawer_selected">@color/material_drawer_dark_selected</item>
-        <item name="material_drawer_selected_text">@color/material_drawer_dark_selected_text</item>
-        <item name="material_drawer_header_selection_text">
-            @color/material_drawer_dark_header_selection_text
-        </item>
-        <item name="colorNavBackground">@color/material_drawer_dark_background</item>
-    </style>
-
     <style name="BaseAppTheme.NormalNavigation" parent="BaseAppTheme" />
 
 
-    <style name="BaseAppTheme.AppBarOverlay" parent="BaseAppTheme" />
+    <style name="BaseAppTheme.AppBarOverlay" parent="BaseAppTheme">
+        <!-- android:textColorPrimary is the  color of the title text in the Toolbar, in the Theme.AppCompat theme:  -->
+        <item name="android:textColorPrimary">@color/material_color_white</item>
 
-    <style name="BaseAppTheme.PopupOverlay" parent="BaseAppTheme" />
+        <!-- android:textColorPrimaryInverse is the  color of the title
+             text in the Toolbar, in the Theme.AppCompat.Light theme:  -->
+        <!-- <item name="android:textColorPrimaryInverse">@color/abc_primary_text_material_light</item> -->
+
+        <item name="android:actionMenuTextColor">@color/black</item>
+        <!-- android:textColorSecondary is the color of the menu
+             overflow icon (three vertical dots) -->
+        <item name="android:textColorSecondary">@color/material_color_white</item>
+
+    </style>
+
+    <style name="BaseAppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" >
+
+    </style>
 
     <style name="BaseAppTheme.TabBarOverlay" parent="BaseAppTheme">
         <item name="enforceMaterialTheme">true</item>
@@ -127,11 +127,13 @@
     </style>
 
     <style name="PrimaryButtonTheme" parent="BaseAppTheme">
-        <item name="colorAccent">?colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="ExploreButtonTheme" parent="BaseAppTheme">
-        <item name="colorAccent">?colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 
@@ -143,37 +145,6 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <style name="SPL"></style>
-
-    <style name="SPL.SnackBar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="SPL.SnackBar.Layout">
-        <item name="android:background">@color/colorPrimary</item>
-    </style>
-
-    <style name="SPL.SnackBar.Text">
-        <item name="android:textSize">14sp</item>
-        <item name="android:gravity">left</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:layout_weight">1</item>
-    </style>
-
-    <style name="SPL.SnackBar.Button">
-        <item name="android:padding">10dp</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="SPL.SnackBar.Button.Decline">
-        <item name="android:background">@null</item>
-        <item name="android:layout_width">40dp</item>
     </style>
 
     <style name="FullscreenTheme" parent="BaseAppTheme">
@@ -193,6 +164,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light" />
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_dialog</item>
+    </style>
 
 </resources>

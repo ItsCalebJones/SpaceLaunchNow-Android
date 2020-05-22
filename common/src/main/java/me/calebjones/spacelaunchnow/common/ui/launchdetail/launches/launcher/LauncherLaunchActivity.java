@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
@@ -115,8 +114,6 @@ public class LauncherLaunchActivity extends BaseActivityOld implements UpcomingL
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-        tabLayout.setTabTextColors(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()),
-                Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
         menu.setVisibility(View.GONE);
     }
 

@@ -14,6 +14,18 @@ pipeline {
     options {
     // Stop the build early in case of compile or test failures
     skipStagesAfterUnstable()
+        buildDiscarder(
+            logRotator(
+                // number of build logs to keep
+                numToKeepStr:'10',
+                // history to keep in days
+                daysToKeepStr: '15',
+                // artifacts are kept for days
+                artifactDaysToKeepStr: '15',
+                // number of builds have their artifacts kept
+                artifactNumToKeepStr: '5'
+            )
+        )
     }
 
     environment {

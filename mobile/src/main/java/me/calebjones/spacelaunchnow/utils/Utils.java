@@ -55,6 +55,7 @@ import java.util.concurrent.ExecutionException;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.utils.customtab.WebViewFallback;
 
@@ -136,8 +137,13 @@ public class Utils {
         CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
 
         ListPreferences sharedPreference = ListPreferences.getInstance(context);
-
-        intentBuilder.setToolbarColor(ContextCompat.getColor((context), R.color.colorPrimary));
+        int color;
+        if (ThemeHelper.isDarkMode(activity)){
+            color = R.color.darkPrimary;
+        } else {
+            color = R.color.colorPrimary;
+        }
+        intentBuilder.setToolbarColor(ContextCompat.getColor((context), color));
 
         intentBuilder.setShowTitle(true);
 

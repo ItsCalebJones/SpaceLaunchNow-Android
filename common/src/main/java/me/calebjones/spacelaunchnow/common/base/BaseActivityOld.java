@@ -5,8 +5,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 
-import com.afollestad.aesthetic.Aesthetic;
-import com.afollestad.aesthetic.AestheticActivity;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.Locale;
@@ -16,7 +16,7 @@ import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import timber.log.Timber;
 
-public class BaseActivityOld extends AestheticActivity {
+public class BaseActivityOld extends AppCompatActivity {
 
     public BaseActivityOld() {
     }
@@ -31,13 +31,13 @@ public class BaseActivityOld extends AestheticActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Aesthetic.Companion.isFirstTime()) {
-            Aesthetic.get()
-                    .colorPrimaryRes(R.color.material_color_blue_500)
-                    .colorAccentRes(R.color.material_color_red_500)
-                    .colorCardViewBackgroundRes(R.color.white)
-                    .apply();
-        }
+//        if (Aesthetic.Companion.isFirstTime()) {
+//            Aesthetic.get()
+//                    .colorPrimaryRes(R.color.material_color_blue_500)
+//                    .colorAccentRes(R.color.material_color_red_500)
+//                    .colorCardViewBackgroundRes(R.color.white)
+//                    .apply();
+//        }
         Timber.d("onCreate");
         realm = Realm.getDefaultInstance();
     }

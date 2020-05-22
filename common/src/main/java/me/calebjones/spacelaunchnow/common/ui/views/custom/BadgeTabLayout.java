@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.material.tabs.TabLayout;
 
 
@@ -94,7 +93,6 @@ public class BadgeTabLayout extends TabLayout {
             if (mView != null) {
                 this.mTextView =  mView.findViewById(R.id.tv_title);
                 this.mBadgeTextView = mView.findViewById(R.id.tv_count);
-                this.mTextView.setTextColor(Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
             }
 
             if (this.mBadgeTextView != null) {

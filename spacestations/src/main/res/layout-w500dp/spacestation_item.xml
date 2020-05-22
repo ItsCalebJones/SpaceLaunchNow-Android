@@ -7,7 +7,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="@dimen/max_width"
         android:layout_height="wrap_content"
@@ -17,7 +17,6 @@
         android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
         android:maxWidth="400dp"
         android:layout_gravity="center"
-        android:background="?cardBackground"
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="8dp"
         app:cardElevation="2dp">
@@ -242,5 +241,5 @@
                 app:layout_constraintStart_toEndOf="@+id/deorbited_title"
                 app:layout_constraintTop_toTopOf="@+id/deorbited_title" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

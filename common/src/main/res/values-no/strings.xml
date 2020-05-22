@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Nyheter</string>
     <string name="twitter">Twitter</string>
@@ -251,7 +251,7 @@
     <string name="no_events">Ingen Hendelser Funnet</string>
     <string name="founded_alt">Grunnlagt:</string>
     <string name="status_alt">Status:</string>
-    <string name="de_orbited">De-orbited</string>
+    <string name="de_orbited">De-orbited:</string>
     <string name="no_expeditions">Ingen ekspedisjoner funnet</string>
     <string name="no_docked">Ingen dokkede fartøy</string>
     <string name="no_news">Ingen nyheter lastet</string>

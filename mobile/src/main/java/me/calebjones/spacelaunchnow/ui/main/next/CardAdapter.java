@@ -65,18 +65,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     private SimpleDateFormat fullDate;
     private SimpleDateFormat shortDate;
     private SharedPreferences sharedPref;
-    private int color;
-    private int primaryTextColor;
-    private int secondaryTextColor;
 
-    public CardAdapter(Context context, int color) {
+
+    public CardAdapter(Context context) {
         launchList = new RealmList<>();
         this.context = context;
-        this.color = color;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-
-        primaryTextColor = Utils.getTitleTextColor(color);
-        secondaryTextColor = Utils.getSecondaryTitleTextColor(color);
         setupDates();
     }
 
@@ -131,13 +125,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(final ViewHolder holder, int i) {
         Launch launchItem = launchList.get(i);
-        holder.title.setTextColor(primaryTextColor);
-        holder.location.setTextColor(secondaryTextColor);
-        holder.launchDateCompact.setTextColor(secondaryTextColor);
         if (launchItem.isValid()) {
             Timber.i("Binding %s", launchItem.getName());
             String title;
-            holder.titleBackground.setBackgroundColor(color);
             try {
                 if (launchItem.isValid()) {
                     if (launchItem.getRocket().getConfiguration() != null) {
@@ -157,7 +147,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                     //Retrieve missionType
                     if (launchItem.getMission() != null) {
-                        Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName(), Utils.getIconColor(color));
+                        Utils.setCategoryIcon(holder.categoryIcon, launchItem.getMission().getTypeName());
                     } else {
                         holder.categoryIcon.setImageResource(R.drawable.ic_unknown_white);
                     }

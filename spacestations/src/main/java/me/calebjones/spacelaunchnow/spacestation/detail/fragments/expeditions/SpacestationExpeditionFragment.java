@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.android.material.card.MaterialCardView;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +15,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -58,7 +57,7 @@ public class SpacestationExpeditionFragment extends BaseFragment {
     @BindView(R2.id.spacestaion_past_subtitle)
     TextView spacestaionPastSubtitle;
     @BindView(R2.id.past_card_view)
-    MaterialCardView pastCardView;
+    CardView pastCardView;
     @BindView(R2.id.past_expedition_recyclerview)
     RecyclerView pastExpeditionRecyclerview;
     @BindView(R2.id.stateful_view)

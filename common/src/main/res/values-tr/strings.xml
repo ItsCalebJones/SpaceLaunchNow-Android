@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
+    <string name="news">Haberler</string>
+    <string name="twitter">Twitter</string>
     <string name="action_settings">Ayarlar</string>
     <string name="status_go">"Fırlatılış"</string>
     <string name="status_nogo">Fırlatılış Tarihi Onaylanmadı</string>

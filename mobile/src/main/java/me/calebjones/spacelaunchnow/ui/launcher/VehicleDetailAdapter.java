@@ -149,7 +149,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
                     && !launchVehicle.getInfoUrl().contains("null")) {
                 holder.infoButton.setVisibility(View.VISIBLE);
             } else {
-                holder.infoButton.setVisibility(View.GONE);
+                holder.infoButton.setVisibility(View.INVISIBLE);
             }
 
 
@@ -158,7 +158,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
                     && !launchVehicle.getWikiUrl().contains("null")) {
                 holder.wikiButton.setVisibility(View.VISIBLE);
             } else {
-                holder.wikiButton.setVisibility(View.GONE);
+                holder.wikiButton.setVisibility(View.INVISIBLE);
             }
         }
     }

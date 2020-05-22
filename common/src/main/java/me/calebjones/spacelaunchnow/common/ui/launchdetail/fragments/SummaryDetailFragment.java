@@ -16,7 +16,6 @@ import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.models.Forecast;
 import android.zetterstrom.com.forecast.models.Unit;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants;

@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.crashlytics.android.Crashlytics;
 
 import java.lang.reflect.Field;
@@ -35,6 +34,7 @@ import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
+import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.utils.EndlessRecyclerViewScrollListener;
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
@@ -96,7 +96,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
         if (adapter == null) {
             Timber.v("Creating new ListAdapter");
-            adapter = new ListAdapter(getContext(), Aesthetic.get().isDark().blockingFirst());
+            adapter = new ListAdapter(getContext(), ThemeHelper.isDarkMode(getActivity()));
         }
 
         view = inflater.inflate(R.layout.fragment_launches, container, false);
@@ -240,9 +240,11 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
     @Override
     public void onRefresh() {
         searchTerm = null;
-        searchView.setQuery("", false);
-        searchView.clearFocus();
-        searchView.setIconified(true);
+        if (searchView != null) {
+            searchView.setQuery("", false);
+            searchView.clearFocus();
+            searchView.setIconified(true);
+        }
         fetchData(true);
     }
 
@@ -294,19 +296,10 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             menu.removeItem(R.id.action_supporter);
         }
 
-        int color = Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst());
         final MenuItem item = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
-        final ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_button);
-        searchIcon.setColorFilter(color);
-        final ImageView cancelButton
-                = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
-        cancelButton.setColorFilter(color);
-        final SearchView.SearchAutoComplete searchAutoComplete = searchView
-                .findViewById(androidx.appcompat.R.id.search_src_text);
-        searchAutoComplete.setHintTextColor(color);
-        searchAutoComplete.setTextColor(color);
+
     }
 
     @Override

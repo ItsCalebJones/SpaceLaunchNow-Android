@@ -9,7 +9,7 @@
     android:elevation="0dp"
     android:paddingTop="@dimen/material_baseline_grid_1x">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:layout_width="@dimen/max_width"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
@@ -18,7 +18,6 @@
         android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
         android:maxWidth="400dp"
         android:layout_gravity="center"
-        android:background="?cardBackground"
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="8dp"
         app:cardElevation="2dp">
@@ -233,5 +232,5 @@
                 app:layout_constraintTop_toBottomOf="@id/countdown_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

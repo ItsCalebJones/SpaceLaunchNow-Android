@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Novinky</string>
     <string name="twitter">Twitter</string>
@@ -260,7 +260,6 @@
     <string name="no_calendars_available">Žádné kalendáře dostupné k synchronizaci událostí startů.</string>
     <string name="calendar_permission_required">Je nutné povolení k přístupu ke kalendáři</string>
     <string name="calendar_permission_required_description">Toto oprávnění je zapotřebí k synchronizaci startů s kalendářem.</string>
-    <string name="you_again">Zase ty? Tak určitě!</string>
     <string name="local_timezone">Místní časové pásmo</string>
     <string name="local_timezone_on">Doby startů odpovídající aktuálnímu časovému pásmu.</string>
     <string name="local_timezone_off">Doby startů odpovídající koordinovanému světovému času.</string>
@@ -557,4 +556,5 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="born_one_argument">Narozen: %1$s</string>
     <string name="died_two_arguments">Zemřel: %1$s (%2$d)</string>
     <string name="related_news">Související zprávy</string>
+    <string name="you_again">Zase ty? Tak určitě!</string>
 </resources>

@@ -12,12 +12,11 @@
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/colorPrimary"
+        android:background="?colorPrimary"
         android:elevation="12dp"
         app:tabGravity="fill"
-        app:tabBackground="@color/colorPrimary"
-        app:tabSelectedTextColor="@color/material_color_white"
-        app:tabTextColor="@color/material_color_white_70_percent"
+        app:tabBackground="?colorPrimary"
+        app:tabTextColor="@color/white"
         app:tabMode="scrollable" />
 
     <androidx.viewpager.widget.ViewPager

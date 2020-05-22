@@ -43,46 +43,17 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:key="appearance_category"
-        android:title="@string/appearance"
         android:summary="@string/appearance_description"
+        android:title="@string/appearance"
         app:iconSpaceReserved="false">
-        <SwitchPreference
-            app:iconSpaceReserved="false"
-            android:defaultValue="false"
-            android:key="custom_themes_is_dark"
-            android:title="@string/dark_theme">
-        </SwitchPreference>
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="0xFF2196F3"
-            app:iconSpaceReserved="false"
-            android:key="custom_themes_primary"
-            android:title="@string/primary_color_title"
-            android:summary="@string/primary_color_summary"
-            app:cpv_allowPresets="true"
-            app:cpv_showColorShades="true"
-            app:cpv_previewSize="large"
-            app:cpv_showAlphaSlider="false"/>
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="0xFFFF5252"
-            app:iconSpaceReserved="false"
-            android:key="custom_themes_accent"
-            android:title="@string/accent_color_title"
-            android:summary="@string/accent_color_summary"
-            app:cpv_allowPresets="true"
-            app:cpv_showColorShades="true"
-            app:cpv_previewSize="large"
-            app:cpv_showAlphaSlider="false"/>
-        <com.jaredrummler.android.colorpicker.ColorPreferenceCompat
-            android:defaultValue="@color/custom_background_material_light"
-            app:iconSpaceReserved="false"
-            android:key="custom_themes_background"
-            android:title="@string/background_color_title"
-            android:summary="@string/background_color_summary"
-            app:cpv_allowPresets="true"
-            app:cpv_colorPresets="@array/background_color_presets"
-            app:cpv_showColorShades="false"
-            app:cpv_previewSize="large"
-            app:cpv_showAlphaSlider="false"/>
+        <ListPreference
+            app:key="@string/theme_pref_key"
+            app:title="@string/choose_theme_mode"
+            app:defaultValue="default"
+            app:dialogTitle="@string/choose_theme"
+            app:entries="@array/theme_list_array"
+            app:entryValues="@array/theme_entry_array"
+            app:useSimpleSummaryProvider="true"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="calendar_category"
@@ -110,7 +81,7 @@
         <MultiSelectListPreference
             android:defaultValue="@array/multi_calendar_reminder_default"
             android:dependency="calendar_sync_state"
-            android:dialogMessage="Set custom reminders for calendar notifications."
+            android:dialogMessage="@string/set_custom_calendar"
             android:entries="@array/multi_calendar_reminder"
             android:entryValues="@array/multi_calendar_reminder_values"
             android:key="calendar_reminder_array"
@@ -265,8 +236,8 @@
             android:defaultValue="true"
             android:dependency="notificationEnabled"
             android:key="eventNotifications"
-            android:summary="Receive notifications for post-launch spaceflight events and news."
-            android:title="Events and News Notifications"
+            android:summary="@string/event_and_news_description"
+            android:title="@string/event_and_news"
             app:iconSpaceReserved="false" />
         <SwitchPreference
             android:defaultValue="false"

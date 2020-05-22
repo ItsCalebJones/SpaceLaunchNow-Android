@@ -144,13 +144,11 @@ public class NotificationBuilder {
                 .extend(wearableExtender)
                 .setContentIntent(pending);
 
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
-                "default ringtone");
-        Uri alarmSound = Uri.parse(ringtoneBox);
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else {
-            mBuilder.setChannelId(channelId).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+            mBuilder.setChannelId(channelId).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+            mBuilder.setDefaults(Notification.DEFAULT_SOUND);
         }
 
         if (launch.getRocket().getConfiguration().getImageUrl() != null
@@ -287,15 +285,14 @@ public class NotificationBuilder {
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(expandedText))
                 .extend(wearableExtender)
-                .setContentIntent(pending);
+                .setContentIntent(pending)
+                .setVibrate(new long[]{0L});
 
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
-                "default ringtone");
-        Uri alarmSound = Uri.parse(ringtoneBox);
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else {
-            mBuilder.setChannelId(channelId).setSound(alarmSound).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+            mBuilder.setChannelId(channelId).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+            mBuilder.setDefaults(Notification.DEFAULT_SOUND);
         }
 
 
@@ -652,14 +649,14 @@ public class NotificationBuilder {
                 .extend(wearableExtender)
                 .setContentIntent(eventIntent);
 
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
-                "default ringtone");
-        Uri alarmSound = Uri.parse(ringtoneBox);
+
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else {
             mBuilder.setChannelId(channelNewsName).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+            mBuilder.setDefaults(Notification.DEFAULT_SOUND);
         }
+
 
         if (event.getFeatureImage() != null
                 && event.getFeatureImage().length() > 0) {
@@ -745,6 +742,7 @@ public class NotificationBuilder {
 
         notificationId = Utils.getUniqueId();
 
+
         mBuilder.setContentTitle(title)
                 .setSmallIcon(R.drawable.ic_rocket)
                 .setAutoCancel(true)
@@ -753,12 +751,11 @@ public class NotificationBuilder {
                         .bigText(expandedText))
                 .setContentIntent(eventIntent);
 
-        String ringtoneBox = sharedPref.getString("notifications_new_message_ringtone",
-                "default ringtone");
         if (isDoNotDisturb) {
             mBuilder.setChannelId(CHANNEL_LAUNCH_SILENT);
         } else {
             mBuilder.setChannelId(channelNewsName).setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+            mBuilder.setDefaults(Notification.DEFAULT_SOUND);
         }
 
         if (article.getFeaturedImage() != null

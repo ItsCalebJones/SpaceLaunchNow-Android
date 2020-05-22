@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Noticias</string>
     <string name="twitter">Twitter</string>
     <string name="action_settings">Configuración</string>
     <string name="status_go">"Listo para el lanzamiento"</string>
     <string name="status_nogo">Fecha de lanzamiento sin confirmar</string>
-    <string name="status_success">"Lanzamiento con éxito"</string>
+    <string name="status_success">"Lanzamiento exitoso"</string>
     <string name="status_failure">"Fallo en el lanzamiento"</string>
     <string name="spacex_summary">SpaceX diseña, produce y lanza cohetes y naves espaciales avanzadas. La compañía fue fundada en 2002 para revolucionar la tecnología espacial con el objetivo final de permitir a la gente vivir en otros planetas.</string>
     <string name="usaf_summary">La Fuerza Aérea de los Estados Unidos es la rama aérea de las Fuerzas Armadas de los Estados Unidos y uno de los siete servicios uniformados estadounidenses.</string>
@@ -260,7 +260,7 @@
     <string name="no_calendars_available">No hay calendarios disponibles para sincronizar eventos de lanzamiento.</string>
     <string name="calendar_permission_required">Permiso de calendario necesario</string>
     <string name="calendar_permission_required_description">Este permiso es necesario para sincronizar lanzamientos con su calendario.</string>
-    <string name="you_again">¿Tu otra vez? ¡Por supuesto!</string>
+    <string name="support_again">¡Apóyanos de nuevo!</string>
     <string name="local_timezone">Hora local</string>
     <string name="local_timezone_on">Tiempos de lanzamiento traducidos localmente para adaptarse a su zona horaria actual.</string>
     <string name="local_timezone_off">Tiempos de lanzamiento representados en UTC.</string>
@@ -555,4 +555,14 @@
     <string name="born_one_argument">Nacido: %1$s</string>
     <string name="died_two_arguments">Fallecido: %1$s (%2$d)</string>
     <string name="related_news">Noticias relacionadas</string>
+    <string name="flight_life">Vida del vuelo: %s</string>
+    <string name="thrust">Empuje en el lanzamiento:</string>
+    <string name="to_be_determined_with_value">Por determinar... %s</string>
+    <string name="click_for_info">Clic para más información.</string>
+    <string name="choose_theme">Elige el tema</string>
+    <string name="set_custom_calendar">Establece recordatorios personalizados para notificaciones de calendario.</string>
+    <string name="event_and_news">Notificaciones de noticias y eventos</string>
+    <string name="event_and_news_description">Recibe notificaciones de eventos de postlanzamientos y noticias.</string>
+    <string name="choose_theme_mode">Elige el tipo de tema</string>
+    <string name="you_again">¿Tu otra vez? ¡Por supuesto!</string>
 </resources>

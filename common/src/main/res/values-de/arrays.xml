@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string-array name="widget_presets">
         <item>Hell</item>
         <item>Dunkel</item>
@@ -11,7 +11,7 @@
         <item>Material Orange</item>
         <item>Benutzerdefiniert</item>
     </string-array>
-    <string-array name="widget_presets_values">
+    <string-array name="widget_presets_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -26,6 +26,17 @@
         <item>Alle</item>
         <item>Kommende</item>
         <item>Vergangene</item>
+    </string-array>
+    <string-array name="status_array">
+        <item>Aktiv</item>
+        <item>im Ruhestand</item>
+        <item>Verstorben</item>
+        <item>Im Training</item>
+        <item>Im Flug verloren</item>
+        <item>Im Training verloren</item>
+        <item>Gestorben im aktiven Dienst</item>
+        <item>Abgewiesen</item>
+        <item>Zurückgetreten während des Trainings</item>
     </string-array>
     <string-array name="time_format_array">
         <item>Standard</item>

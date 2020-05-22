@@ -44,7 +44,6 @@ import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
@@ -162,7 +161,6 @@ public class Utils {
     public static void openCustomTab(Context context, String url) {
         CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
                 .addDefaultShareMenuItem()
-                .setToolbarColor(Aesthetic.get().colorPrimary().blockingFirst())
                 .setShowTitle(true)
                 .build();
 
@@ -274,7 +272,7 @@ public class Utils {
         }
     }
 
-    public static void setCategoryIcon(ImageView imageView, String type, Boolean night) {
+    public static void setCategoryIcon(ImageView imageView, String type) {
         if (type != null) {
             switch (type) {
                 case "Earth Science":
@@ -317,12 +315,7 @@ public class Utils {
         } else {
             imageView.setImageResource(R.drawable.ic_unknown);
         }
-
-        if (night) {
-            imageView.setColorFilter(Color.WHITE);
-        } else {
-            imageView.setColorFilter(Color.BLACK);
-        }
+        imageView.setColorFilter(Color.WHITE);
     }
 
     public static void setCategoryIcon(RemoteViews remoteViews, String type, Boolean night, Integer id) {

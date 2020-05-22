@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Novità</string>
     <string name="twitter">Twitter</string>
@@ -142,7 +142,7 @@
     <string name="plesetsk_cosmodrome">Cosmodromo di Plesetsk</string>
     <string name="all">Tutti</string>
     <string name="edit_notification_settings">Modifica le impostazioni delle notifiche</string>
-    <string name="additional_filters">Filtri aggiuntivi per i lancj</string>
+    <string name="additional_filters">Filtri aggiuntivi per i lanci</string>
     <string name="these_do_not_affect_launch_notifications">Questi non condizionano le notifiche dei lanci</string>
     <string name="hide_no_go_launches">Nascondi i lanci NO-GO</string>
     <string name="hide_tbd_launches">Nascondi i lanci TBD</string>
@@ -260,7 +260,6 @@
     <string name="no_calendars_available">Non ci sono calendari disponibili su cui sincronizzare gli eventi</string>
     <string name="calendar_permission_required">È necessario il permesso per i calendari</string>
     <string name="calendar_permission_required_description">Questo permesso è richiesto per sincronizzare i lanci con il tuo calendario.</string>
-    <string name="you_again">Di nuovo tu? Sicuro!</string>
     <string name="local_timezone">Fuso orario locale</string>
     <string name="local_timezone_on">gli orari dei lanci sono trasferiti nel fuso orario in cui sei al momento</string>
     <string name="local_timezone_off">Orari di lancio rappresentati in UTC.</string>
@@ -486,7 +485,7 @@
     <string name="no_events">Nessun evento trovato</string>
     <string name="founded_alt">Fondato</string>
     <string name="status_alt">stato</string>
-    <string name="de_orbited">De-orbitato</string>
+    <string name="de_orbited">De-orbitato:</string>
     <string name="mission_agency">Agenzia della missione</string>
     <string name="no_expeditions">Nessuna spedizione trovata</string>
     <string name="no_docked">Nessun veicolo agganciato</string>
@@ -555,4 +554,5 @@
     <string name="born_one_argument">Nato: %1$s</string>
     <string name="died_two_arguments">Morto: %1$s (%2$d)</string>
     <string name="related_news">Notizie correlate</string>
+    <string name="you_again">Di nuovo tu? Sicuro!</string>
 </resources>

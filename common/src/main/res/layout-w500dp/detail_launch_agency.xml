@@ -14,7 +14,7 @@
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.card.MaterialCardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/lsp_card"
             android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
@@ -25,7 +25,6 @@
             android:layout_marginTop="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"
-            android:background="?cardBackground"
             app:cardCornerRadius="4dp"
             app:cardElevation="@dimen/material_card_elevation_resting"
             app:cardPreventCornerOverlap="true"
@@ -200,6 +199,6 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

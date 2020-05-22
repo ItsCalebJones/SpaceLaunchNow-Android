@@ -94,6 +94,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/astronaut_detail_tabs"
             android:background="?colorPrimary"
+            app:tabTextColor="@color/white"
             android:layout_width="fill_parent"
             android:layout_height="?attr/actionBarSize" />
 

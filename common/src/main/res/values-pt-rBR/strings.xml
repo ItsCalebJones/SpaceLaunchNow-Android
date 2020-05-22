@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Novidades</string>
     <string name="twitter">Twitter</string>
@@ -19,13 +19,13 @@
     <string name="gd_summary">General Dynamics Corporation é uma empresa aeroespacial e de defesa americana formada por fusões e alienações. É o quinto maior contratante de defesa do mundo com base nas receitas de 2012.</string>
     <string name="asa_summary">Arianespace SA é uma empresa multinacional francesa fundada em 1980 como o primeiro fornecedor comercial de serviços de lançamento do mundo.</string>
     <string name="TsSKB_summary">O Centro Estatal de Pesquisa Espacial e Produção Progress, também conhecido como TsSKB-Progress, é uma \"Empresa Unitária do Estado Federal\" sob a jurisdição da Roscosmos, a Agência Espacial Federal Russa responsável pela ciência espacial e pela pesquisa aeroespacial. É o desenvolvedor do famoso foguete Soyuz-FG usado para vôos espaciais tripulados, assim como o Soyuz-U usado para lançar sondas não tripuladas.</string>
-    <string name="nasa_summary">A Administração Nacional de Aeronáutica e Espaço (NASA) é a agencia governamental dos Estados Unido responsável pelo programa civil espacial assim como a pesquisa aeronáutica e aeroespacial.</string>
+    <string name="nasa_summary">A Administração Nacional de Aeronáutica e Espaço (NASA) é a agência governamental dos Estados Unidos responsável pelo programa civil espacial, assim como a pesquisa aeronáutica e aeroespacial.</string>
     <string name="general_settings">Definições gerais para rastreamento de lançamento e comportamento do aplicativo.</string>
     <string name="supporter_title">Torne-se um apoiador</string>
     <string name="supporter_description">Ajude a garantir suporte contínuo, correções de erros pontuais e novos recursos.</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Mantenha-se atualizado sobre todos os seus lançamentos orbitais favoritos, missões e veículos de lançamento.</string>
-    <string name="slide_two_title">Notificação de lançamento</string>
+    <string name="slide_two_title">Notificação para lançamentos</string>
     <string name="slide_two_description">Receba notificações para os próximos lançamentos e observe a história do voo espacial</string>
     <string name="slide_three_title">Encontrar veículo espacial</string>
     <string name="slide_three_description">Conheça os veículos que nos levaram à órbita.</string>
@@ -45,7 +45,7 @@
     <string name="support_settings">Obtenha os recursos pro e contribua com o desenvolvimento futuro.</string>
     <string name="wear_settings">Alterar configuração de visualização do Android Wear.</string>
     <string name="supporter_unlock_text">Eu aprecio sua consideração apoiando o Space Launch Now.\n\nCada nível de apoio é uma compra única que desbloqueia todos os recursos pro para sempre. Pague o que você deseja para apoiar o desenvolvimento contínuo e atualizações!</string>
-    <string name="thank_you_support">Obrigado pelo seu apoio contínuo!</string>
+    <string name="thank_you_support">Muito obrigado pelo seu apoio contínuo!</string>
     <string name="ok">OK</string>
     <string name="issues_connecting_billing">Problemas ao conectar com a Assinatura do Google Play</string>
     <string name="thanks_support_development">Obrigado por ajudar o apoio ao desenvolvimento!</string>
@@ -56,7 +56,7 @@
     <string name="billing_not_available">Serviço de Assinatura Google Play não disponível.</string>
     <string name="whats_new">O que há de novo?</string>
     <string name="unknown_rocket">Foguete Desconhecido</string>
-    <string name="unknown_mission_location">Missão e Localização Desconhecidos</string>
+    <string name="unknown_mission_location">Missão e Local Desconhecidos</string>
     <string name="unknown_orbiter">Orbitador Desconhecido</string>
     <string name="unknown_agency">Agência Desconhecida</string>
     <string name="unknown_launch">Lançamento Desconhecido</string>
@@ -180,7 +180,7 @@
     <string name="need_support_description">A maneira mais rápida e confiável de obter suporte é através do Discord. Se essa não for uma opção, não hesite em me enviar um e-mail diretamente.</string>
     <string name="email">E-mail</string>
     <string name="cancel">Cancelar</string>
-    <string name="unknown_location">Localização Desconhecida</string>
+    <string name="unknown_location">Local Desconhecido</string>
     <string name="details">Detalhes</string>
     <string name="mission">Missão</string>
     <string name="agencies">Agência</string>
@@ -198,7 +198,7 @@
     <string name="select_country_description">Selecione um país abaixo, para remover todos os filtros abaixo use o ícone de redefinir na barra de ferramentas.</string>
     <string name="close">Fechar</string>
     <string name="filter">Filtrar</string>
-    <string name="select_location">Selecionar uma Localização</string>
+    <string name="select_location">Selecionar um Local</string>
     <string name="select_location_description">Selecione um local abaixo, para remover todos os filtros abaixo use o ícone de redefinir na barra de ferramentas.</string>
     <string name="select_launch_vehicle">Selecionar um Veículo de Lançamento</string>
     <string name="select_launch_vehicle_description">Selecione um veículo abaixo, para remover todos os filtros abaixo use o ícone de redefinir na barra de ferramentas.</string>
@@ -260,11 +260,11 @@
     <string name="no_calendars_available">Nenhum calendário disponível para sincronizar os eventos de lançamento com o mesmo.</string>
     <string name="calendar_permission_required">Permissão ao calendário necessária</string>
     <string name="calendar_permission_required_description">Esta permissão é necessária para sincronizar os lançamentos com o seu calendário.</string>
-    <string name="you_again">Você de novo? Certo!</string>
+    <string name="support_again">Nos dê um apoio novamente!</string>
     <string name="local_timezone">Fuso Horário Local</string>
     <string name="local_timezone_on">As horas dos lançamentos são traduzidas localmente com o seu fuso horário atual.</string>
     <string name="local_timezone_off">O horário de lançamento pode ser representado em UTC (TUC).</string>
-    <string name="time_format">Formato da hora</string>
+    <string name="time_format">Formato da Hora</string>
     <string name="time_format_on">Horas de lançamento em 24 horas.</string>
     <string name="time_format_off">Horas de lançamento em AM/PM.</string>
     <string name="night_mode">Modo noturno</string>
@@ -306,7 +306,7 @@
     <string name="wifi_only">Apenas por WiFi</string>
     <string name="wifi_only_summary">Os dados de lançamento não serão sincronizados, a menos que uma conexão WiFi esteja disponível.</string>
     <string name="launch_tracking">Rastreio de lançamento</string>
-    <string name="calendar_settings">Configurações do Calendário</string>
+    <string name="calendar_settings">"Configurações do Calendário "</string>
     <string name="auto_calendar">Sincronização Automática de Calendário</string>
     <string name="auto_calendar_summary">Permitir que o próximo lançamento seja sincronizado com o calendário padrão.</string>
     <string name="event_count">Contador de Eventos</string>
@@ -352,7 +352,7 @@
     <string name="blur_settings_summary">Configurar a intensidade e características do efeito de desfocagem.</string>
     <string name="mission_agencies">Agências da Missão</string>
     <string name="status_hold">Lançamento aguardando</string>
-    <string name="status_in_flight">Lançamento em voo</string>
+    <string name="status_in_flight">Lançamento em Voo</string>
     <string name="status_partial_failure">Falha Parcial</string>
     <string name="do_not_disturb">Não perturbe</string>
     <string name="notification_preferences">Preferências de notificação</string>
@@ -406,7 +406,7 @@
     <string name="view_upcoming_launches">Ver próximos lançamentos</string>
     <string name="unknown_mission_or_payload">Carga ou Missão Desconhecida</string>
     <string name="view_more_launches">Ver mais lançamentos</string>
-    <string name="view_rocket_launches">Ver lançamentos da %s</string>
+    <string name="view_rocket_launches">Ver lançamentos do(da) %s</string>
     <string name="refresh">Atualizar</string>
     <string name="search">Buscar</string>
     <string name="date">Data</string>
@@ -434,7 +434,7 @@
     <string name="notification_ten_minutes">Tentativa de lançamento em menos de dez minuto em %s</string>
     <string name="notification_one_hour">Tentativa de lançamento em menos de uma hora em %s</string>
     <string name="notification_twenty_four_hours">Tentativa de lançamento em menos de 24 horas em %s</string>
-    <string name="settings_in_flight">Em voo</string>
+    <string name="settings_in_flight">Em Voo</string>
     <string name="settings_in_flight_summary">Receba notificações quando um lançamento for confirmado em voo.</string>
     <string name="settings_success">Sucesso</string>
     <string name="settings_success_summary">Receba notificações quando um lançamento for confirmado como bem-sucedido ou não.</string>
@@ -497,7 +497,7 @@
     <string name="time_format_description">Selecione o formato de hora preferido.</string>
     <string name="landing_information">Informação do pouso</string>
     <string name="launch_service_providers">Provedores de Serviço de Lançamento</string>
-    <string name="launch_locations">Localização do Lançamento</string>
+    <string name="launch_locations">Locais de Lançamento</string>
     <string name="northrop_grumman">Northrop Grumman</string>
     <string name="blue_origin">Blue Origin</string>
     <string name="rocket_lab">Rocket Lab</string>
@@ -508,13 +508,13 @@
     <string name="new_zealand">Nova Zelândia</string>
     <string name="japan">Japão</string>
     <string name="french_guiana">Guiana Francesa</string>
-    <string name="follow_all_launches">Seguir todos os Lançamentos</string>
+    <string name="follow_all_launches">Seguir Todos os Lançamentos</string>
     <string name="dynamic_watch_face">Dynamic Watch Face</string>
     <string name="dynamic_watch_face_description">Imagens dinâmicas de veículos de lançamento como o fundo da face do relógio.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Olá fragmento em branco</string>
     <string name="news_and_events">Novidades e Eventos</string>
-    <string name="view_x_launches">Ver lançamentos da %s</string>
+    <string name="view_x_launches">Ver lançamentos do(da) %s</string>
     <string name="booster_information">Informação do(a) %s</string>
     <string name="first_stage_x">Primeiro Estágio - %s</string>
     <string name="x_landing_information">%s Informação do Pouso</string>
@@ -532,7 +532,7 @@
     <string name="landing_attempt_booster">Tentativa de Pouso:</string>
     <string name="landing_success_booster">Sucesso de Pouso:</string>
     <string name="type_booster">Tipo:</string>
-    <string name="location_booster">Localização:</string>
+    <string name="location_booster">Local:</string>
     <string name="first_flight_orbiter">Primeiro Voo:</string>
     <string name="active_orbiter">Ativo:</string>
     <string name="human_rated_orbiter">Testado para humanos:</string>
@@ -555,4 +555,14 @@
     <string name="born_one_argument">Nascido(a): %1$s</string>
     <string name="died_two_arguments">Morte: %1$s (%2$d)</string>
     <string name="related_news">Novidades Relacionadas</string>
+    <string name="flight_life">Tempo de Voo: %s</string>
+    <string name="thrust">Impulso no Lançamento:</string>
+    <string name="to_be_determined_with_value">A ser determinado.... %s</string>
+    <string name="click_for_info">Clique para mais informação.</string>
+    <string name="choose_theme">Escolher Tema</string>
+    <string name="set_custom_calendar">Defina lembretes personalizados para notificações na agenda.</string>
+    <string name="event_and_news">Eventos e Notificações de Notícias</string>
+    <string name="event_and_news_description">Receba notificações de eventos de pós-voo espacial e notícias.</string>
+    <string name="choose_theme_mode">Escolha o Modo do Tema</string>
+    <string name="you_again">Você de novo? Certo!</string>
 </resources>

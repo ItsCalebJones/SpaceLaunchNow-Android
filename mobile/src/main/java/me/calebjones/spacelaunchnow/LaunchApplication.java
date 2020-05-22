@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -37,6 +38,8 @@ import java.util.TimeZone;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.Preference;
+
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -46,6 +49,7 @@ import me.calebjones.spacelaunchnow.common.content.notifications.NotificationHel
 import me.calebjones.spacelaunchnow.common.content.worker.CalendarSyncWorker;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
+import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.utils.Connectivity;
 import me.calebjones.spacelaunchnow.data.models.Constants;
@@ -72,6 +76,7 @@ public class LaunchApplication extends Application {
         super.onCreate();
         context = this;
         firebaseMessaging = FirebaseMessaging.getInstance();
+        setTheme();
         setupAndCheckOnce();
         setupAds();
         setupPreferences();
@@ -83,6 +88,13 @@ public class LaunchApplication extends Application {
         setupDrawableLoader();
         setupNotificationChannels();
         setupTwitter();
+    }
+
+    private void setTheme() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String themePref = prefs.getString(getString(R.string.theme_pref_key),
+                ThemeHelper.DEFAULT_MODE);
+        ThemeHelper.applyTheme(themePref);
     }
 
     private void setupTwitter() {

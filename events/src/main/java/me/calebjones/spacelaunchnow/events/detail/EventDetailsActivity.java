@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.app.ShareCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -22,13 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
-import com.afollestad.aesthetic.Aesthetic;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
@@ -41,6 +40,7 @@ import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
+import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ExpeditionAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.SpacestationAdapter;
@@ -97,13 +97,13 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
     @BindView(R2.id.launch_recycler_view)
     RecyclerView launchRecyclerView;
     @BindView(R2.id.launchCardRootView)
-    MaterialCardView launchCard;
+    CardView launchCard;
     @BindView(R2.id.expedition_recycler_view)
     RecyclerView expeditionRecyclerView;
     @BindView(R2.id.expeditionCardRootView)
     CoordinatorLayout expeditionView;
     @BindView(R2.id.spacestationCardRootView)
-    MaterialCardView spacestationCard;
+    CardView spacestationCard;
     @BindView(R2.id.event_spacestation_card_title)
     TextView eventSpacestationCardTitle;
     @BindView(R2.id.event_spacestation_card_subtitle)
@@ -175,14 +175,8 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
             sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         }
 
-//        if (getCyanea().isDark()){
-//            color = ContextCompat.getColor(this, R.color.white);
-//        } else {
-//            color = ContextCompat.getColor(this, R.color.black);
-//        }
-
         linearLayoutManager = new LinearLayoutManager(this);
-        adapter = new ListAdapter(this, Aesthetic.get().isDark().blockingFirst());
+        adapter = new ListAdapter(this, ThemeHelper.isDarkMode(this));
         launchRecyclerView.setLayoutManager(linearLayoutManager);
         launchRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
         launchRecyclerView.setAdapter(adapter);
@@ -263,12 +257,10 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
     private void updateViews(Event event) {
         this.event = event;
         eventTitle.setText(event.getName());
-        eventTitle.setTextColor(Utils.getTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
 
         if (event.getLocation() != null) {
             eventSubtitle.setText(event.getLocation());
         }
-        eventSubtitle.setTextColor(Utils.getSecondaryTitleTextColor(Aesthetic.get().colorPrimary().blockingFirst()));
 
         eventCardTitle.setText("Overview");
         eventType.setText(event.getType().getName());

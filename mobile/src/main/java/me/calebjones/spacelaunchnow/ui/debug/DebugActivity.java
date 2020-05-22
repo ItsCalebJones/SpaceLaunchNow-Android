@@ -4,16 +4,16 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.afollestad.aesthetic.AestheticActivity;
 
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.utils.ActivityUtils;
 
-public class DebugActivity extends AestheticActivity implements DebugContract.NavigatorProvider {
+public class DebugActivity extends AppCompatActivity implements DebugContract.NavigatorProvider {
 
     private DebugPresenter debugPresenter;
 

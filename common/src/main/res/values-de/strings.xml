@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Neuigkeiten</string>
     <string name="twitter">Twitter</string>
@@ -260,7 +260,6 @@
     <string name="no_calendars_available">Kein Kalender zum synchronisieren der Raketenstart-Events vorhanden.</string>
     <string name="calendar_permission_required">Kalender Erlaubnis notwendig</string>
     <string name="calendar_permission_required_description">Diese Erlaubnis ist notwendig, um Raketenstarts mit deinem Kalender zu synchronisieren.</string>
-    <string name="you_again">Du schon wieder? Sicher!</string>
     <string name="local_timezone">Lokale Zeitzone</string>
     <string name="local_timezone_on">Startzeiten sind in meiner lokalen Zeitzone.</string>
     <string name="local_timezone_off">Startzeiten sind in UTC.</string>
@@ -554,4 +553,6 @@
     <string name="born">Geboren: %1$s (%2$d)</string>
     <string name="born_one_argument">Geboren: %1$s</string>
     <string name="died_two_arguments">Gestorben: %1$s (%2$d)</string>
+    <string name="related_news">Ähnliche Nachrichten</string>
+    <string name="you_again">Du schon wieder? Sicher!</string>
 </resources>

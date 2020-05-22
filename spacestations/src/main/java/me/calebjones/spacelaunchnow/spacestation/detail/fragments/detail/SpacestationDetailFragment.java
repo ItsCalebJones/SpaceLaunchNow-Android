@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.google.android.material.card.MaterialCardView;
+import androidx.cardview.widget.CardView;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -27,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
+import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.spacestation.R;
@@ -48,7 +49,7 @@ public class SpacestationDetailFragment extends BaseFragment {
     @BindView(R2.id.deorbited)
     TextView deorbitedView;
     @BindView(R2.id.card_view)
-    MaterialCardView cardView;
+    CardView cardView;
     @BindView(R2.id.owners_recycler)
     RecyclerView ownersRecycler;
     @BindView(R2.id.spacestation_owner_title)
@@ -116,12 +117,13 @@ public class SpacestationDetailFragment extends BaseFragment {
 
         spacestaionDetailSubtitle.setText(String.format(getString(R.string.status), spacestation.getStatus().getName()));
         descriptionView.setText(spacestation.getDescription());
-
+        int color = ThemeHelper.getIconColor(getActivity());
         List<SpacestationSpecItem> specs = new ArrayList<>();
         if (spacestation.getHeight() != null) {
             specs.add(new SpacestationSpecItem(getString(R.string.height_plain),
                     String.format(getString(R.string.height_unit), spacestation.getHeight().toString()),
                     new IconicsDrawable(context)
+                            .color(color)
                             .icon(GoogleMaterial.Icon.gmd_swap_vert)
                             .sizeDp(24)));
         }
@@ -130,6 +132,7 @@ public class SpacestationDetailFragment extends BaseFragment {
             specs.add(new SpacestationSpecItem(getString(R.string.width_plain),
                     String.format(getString(R.string.width_unit), spacestation.getWidth().toString()),
                     new IconicsDrawable(context)
+                            .color(color)
                             .icon(GoogleMaterial.Icon.gmd_swap_horiz)
                             .sizeDp(24)));
         }
@@ -138,6 +141,7 @@ public class SpacestationDetailFragment extends BaseFragment {
             specs.add(new SpacestationSpecItem(getString(R.string.mass_plain),
                     String.format(getString(R.string.mass_unit), spacestation.getMass().toString()),
                     new IconicsDrawable(context)
+                            .color(color)
                             .icon(FontAwesome.Icon.faw_weight)
                             .sizeDp(24)));
         }
@@ -146,6 +150,7 @@ public class SpacestationDetailFragment extends BaseFragment {
             specs.add(new SpacestationSpecItem(getString(R.string.volume_plain),
                     String.format(getString(R.string.volume_unit), spacestation.getVolume().toString()),
                     new IconicsDrawable(context)
+                            .color(color)
                             .icon(FontAwesome.Icon.faw_cubes)
                             .sizeDp(24)));
         }
@@ -153,6 +158,7 @@ public class SpacestationDetailFragment extends BaseFragment {
             specs.add(new SpacestationSpecItem(getString(R.string.crew_plain),
                     String.format("%s", spacestation.getOnboardCrew()),
                     new IconicsDrawable(context)
+                            .color(color)
                             .icon(FontAwesome.Icon.faw_user_astronaut)
                             .sizeDp(24)));
         }
@@ -160,6 +166,7 @@ public class SpacestationDetailFragment extends BaseFragment {
             specs.add(new SpacestationSpecItem(getString(R.string.orbit),
                     String.format("%s", spacestation.getOrbit()),
                     new IconicsDrawable(context)
+                            .color(color)
                             .icon(FontAwesome.Icon.faw_globe)
                             .sizeDp(24)));
         }

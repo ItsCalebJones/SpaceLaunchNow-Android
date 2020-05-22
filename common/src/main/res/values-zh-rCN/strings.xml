@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="action_settings">设置</string>
     <string name="status_go">"准备发射"</string>
     <string name="status_nogo">发射时间待定</string>

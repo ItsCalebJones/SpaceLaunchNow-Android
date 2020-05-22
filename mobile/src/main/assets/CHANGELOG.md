@@ -3,19 +3,37 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 11-16-2019
+#### Updated 1-20-2020
 ---
+### Version 3.3.6
+#### Changelog
+Fix a crash on refreshing launches in the list.
 
-### Version 3.3.0 (Latest)
+
+### Version 3.3.5
+#### Changelog
+Fix a few themeing problems.
+
+### Version 3.3.4
+#### Changelog
+* Disable Theme customization due to a performance bug in the framework.
+
+This is an unfortunate bug that I will have to take more time to figure out a long term solution. 
+
+
+### Version 3.3.2
+#### Changelog
+* Small patch for bug fixes and 2020 new year changes.
+
+
+### Version 3.3.0
 #### Changelog
 * Add 'Related News' to launches via the Spaceflight News API.
 * Update in-app translations.
 * Fix bug with notification sounds on Android versions prior to 8.0
 
 
----
-
-### Version 3.2.0 (Latest)
+### Version 3.2.0
 #### Changelog
 * Add 'Related News' to launches via the Spaceflight News API.
 * Update in-app translations.
