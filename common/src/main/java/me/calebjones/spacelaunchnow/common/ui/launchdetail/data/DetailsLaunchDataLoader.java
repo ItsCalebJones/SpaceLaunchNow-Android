@@ -9,6 +9,7 @@ import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.DataSaver;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.error.SpaceLaunchNowError;
+import me.calebjones.spacelaunchnow.data.networking.responses.base.LaunchResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,4 +57,39 @@ public class DetailsLaunchDataLoader {
         });
     }
 
+    public void getLaunchBySlug(String slug, Realm realm, Callbacks.DetailsNetworkCallback networkCallback) {
+        Timber.i("Running get Launch by Slug - %s", slug);
+
+        DataClient.getInstance().getLaunchBySlug(slug, new Callback<LaunchResponse>() {
+            @Override
+            public void onResponse(Call<LaunchResponse> call, Response<LaunchResponse> response) {
+                if (response.isSuccessful()) {
+                    LaunchResponse launches = response.body();
+                    if (launches != null && launches.getCount() == 1){
+                        Launch launch = launches.getLaunches().get(0);
+                        Timber.v("Launch: %s",launch.getName() );
+                        dataSaver.saveLaunchToRealm(launch);
+                        networkCallback.onSuccess(launch);
+                    }
+
+                } else {
+                    SpaceLaunchNowError error = ErrorUtil.parseSpaceLaunchNowError(response);
+                    if (error.getMessage() != null && error.getMessage().contains("None found")) {
+                        final Launch launch = realm.where(Launch.class).equalTo("slug", slug).findFirst();
+                        if (launch != null) {
+                            realm.executeTransaction(realm -> launch.deleteFromRealm());
+                        }
+                        networkCallback.onLaunchDeleted();
+                    } else {
+                        networkCallback.onNetworkFailure(response.code());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LaunchResponse> call, Throwable t) {
+                networkCallback.onFailure(t);
+            }
+        });
+    }
 }
