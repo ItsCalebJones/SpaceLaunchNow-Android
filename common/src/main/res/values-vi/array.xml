@@ -1,44 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies_array">
-        <item>ISRO</item>
-        <item>CASC</item>
-        <item>ULA</item>
-        <item>Arienespace</item>
-        <item>ROSCOSMOS</item>
-        <item>SpaceX</item>
-        <item>NASA</item>
-    </string-array>
-    <string-array name="country_array">
-        <item>Đa</item>
-        <item>Ấn Độ</item>
-        <item>Nga</item>
-        <item>Trung Quốc</item>
-        <item>Hoa Kì</item>
-    </string-array>
-    <string-array name="location_array">
-        <item>Trạm phóng Sohae, Triều Tiên</item>
-        <item>Đảo Wallops, Virginia, Hoa Kì</item>
-        <item>Trung tâm Thiên văn Kennedy, Florida</item>
-        <item>Cape Canaveral, Florida, Hoa Kì</item>
-        <item>Căn cứ không quân Vandenberg, California, Hoa Kì</item>
-        <item>Cửu Giang, Trung Quốc</item>
-        <item>Thái Nguyên, Trung Quốc</item>
-        <item>Khu nhà phóng Kodiak, Hoa Kì</item>
-        <item>Kaitorete Spit, New Zealand</item>
-        <item>Woomera, Úc</item>
-        <item>Phóng ở biển</item>
-        <item>Dombarovskiy, Nga</item>
-        <item>Trạm phóng Svobodney, Nga</item>
-        <item>Kapustin Yar, Nga</item>
-        <item>Trạm phóng Plesetsk, Nga</item>
-        <item>Trạm phóng Baikonur, Kazakhstan, Nga</item>
-        <item>Kagoshima/Tanegashima, Nhật Bản</item>
-        <item>Sriharikota, Ấn Độ</item>
-        <item>Kourou, Guiana thuộc Pháp</item>
-        <item>Trạm phóng vệ tinh Văn Xương, Trung Quốc</item>
-        <item>Trạm phóng vệ tinh Tây Xương, Trung Quốc</item>
-    </string-array>
+
     <string-array name="multi_calendar_reminder">
         <item>Một phút</item>
         <item>Năm phút</item>
@@ -60,31 +22,5 @@
     <string-array name="multi_calendar_reminder_default">
         <item>5</item>
         <item>1440</item>
-    </string-array>
-    <string-array name="sync_timer">
-        <item>Một ngày</item>
-        <item>Ba ngày</item>
-        <item>Một tuần</item>
-    </string-array>
-    <string-array name="sync_timer_values">
-        <item>24</item>
-        <item>72</item>
-        <item>168</item>
-    </string-array>
-    <string-array name="upcoming_array">
-        <item>Một</item>
-        <item>Hai</item>
-        <item>Năm</item>
-        <item>Mười</item>
-        <item>Hai mươi</item>
-        <item>Tất cả (Không được khuyến khích)</item>
-    </string-array>
-    <string-array name="upcoming_array_values">
-        <item>1</item>
-        <item>2</item>
-        <item>5</item>
-        <item>10</item>
-        <item>20</item>
-        <item>1000</item>
     </string-array>
 </resources>

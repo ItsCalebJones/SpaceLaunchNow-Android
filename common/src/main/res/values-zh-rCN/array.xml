@@ -9,17 +9,4 @@
         <item>四小时</item>
         <item>一天</item>
     </string-array>
-    <string-array name="sync_timer">
-        <item>一天</item>
-        <item>三天</item>
-        <item>一周</item>
-    </string-array>
-    <string-array name="upcoming_array">
-        <item>一</item>
-        <item>二</item>
-        <item>五</item>
-        <item>十</item>
-        <item>二十</item>
-        <item>所有（不推荐）</item>
-    </string-array>
 </resources>
