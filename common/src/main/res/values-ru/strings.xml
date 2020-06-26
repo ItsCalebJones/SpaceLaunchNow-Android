@@ -5,10 +5,10 @@
     <string name="twitter">Twitter</string>
     <string name="action_settings">Настройки</string>
     <string name="status_go">"Готово к Пуску"</string>
-    <string name="status_nogo">Дата Пуску не подтверждена</string>
+    <string name="status_nogo">Дата Пуска не подтверждена</string>
     <string name="status_success">"Пуск был успешным"</string>
     <string name="status_failure">"Произошел сбой в полете"</string>
-    <string name="spacex_summary">SpaceX — американская компания, производитель космической техники. Основана в 2002 году прежним акционером PayPal и CEO «Tesla Motors» Илоном Маском, с целью сократить расходы на полёты в космос, открывая путь к колонизации Марса.</string>
+    <string name="spacex_summary">SpaceX проектирует, изготавливает и запускает продвинутые ракеты и космические конструкции. Компания была основана в 2002 году что-бы револеционировать космичиские технологии, с главной целью возможности человечества жить на других планетах.</string>
     <string name="usaf_summary">Военно-воздушные силы Соединённых Штатов Америки (англ. United States Air Force (USAF)) — один из видов Вооружённых сил Соединённых Штатов Америки.</string>
     <string name="casc_summary">Китайская аэрокосмическая научно-техническая корпорация (англ. China Aerospace Science and Technology Corporation (CASC)) является государственной космической корпорацией  и основным подрядчиком для Космической программы Китая.</string>
     <string name="cnsa_summary">Китайское национальное космическое управление (англ. China National Space Administration (CNSA)) — национальное космическое агентство Китайской народной республики, ответственное за национальную космическую программу.</string>
@@ -133,7 +133,34 @@
     <string name="improve_our_data_content">Заинтересованы в улучшении точности представленных данных? Заходите на Discord сервер Space Launch Now и попросите стать помощником.</string>
     <string name="biography">биография</string>
     <string name="mission_agency">Агентство миссии</string>
+    <string name="russia_and_kazakhstan">Россия и Казахстан</string>
+    <string name="china">Китай</string>
+    <string name="japan">Япония</string>
     <string name="dynamic_watch_face">Динамический циферблат для смарт-часов</string>
     <string name="dynamic_watch_face_description">Сменяющиеся фотографии ракет как фон на циферблате.</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="x_landing_information">%s Информация о посадке</string>
+    <string name="additional_landing_information">Дополнительная информация о посадке</string>
+    <string name="launch_day_weather">Погода Дня Запуска</string>
+    <string name="video_source_unavailable">Видео не доступно.</string>
+    <string name="read_more">Читать Дальше</string>
+    <string name="serial_number">Серийный номер:</string>
+    <string name="status_booster">Статус:</string>
+    <string name="flights_booster">Полёты:</string>
+    <string name="landing_attempt_booster">Попытка посадки:</string>
+    <string name="landing_success_booster">Успешная посадка:</string>
+    <string name="type_booster">Тип:</string>
+    <string name="location_booster">Локация:</string>
+    <string name="first_flight_orbiter">Первый Полёт</string>
+    <string name="specifications_orbiter">Характеристики</string>
+    <string name="force_english_off">Использовать язык вашего устройства.</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="primary_color_title">Главный Цвет</string>
+    <string name="primary_color_summary">Установить основной пользовательский цвет.</string>
+    <string name="accent_color_title">Цвет Акцента.</string>
+    <string name="accent_color_summary">Установить пользовательский цвет акцента.</string>
+    <string name="background_color_title">Фоновый цвет</string>
+    <string name="background_color_summary">Установить пользовательский цвет фона.</string>
+    <string name="click_for_info">Нажмите для получения дополнительной информации.</string>
+    <string name="choose_theme">Выбрать тему</string>
 </resources>

@@ -70,6 +70,16 @@ public class DataClient {
         return call;
     }
 
+    public Call<LaunchResponse> getLaunchBySlug(String slug, Callback<LaunchResponse> callback) {
+        Call<LaunchResponse> call;
+
+        call = spaceLaunchNowService.getLaunchBySlug(slug, "detailed");
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
     public Call<LaunchResponse> getNextUpcomingLaunchesForWidgets(int limit, int offset) {
         Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null, null, null);
         return call;

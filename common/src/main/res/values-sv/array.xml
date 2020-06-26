@@ -9,17 +9,4 @@
         <item>Fyra timmar</item>
         <item>En dag</item>
     </string-array>
-    <string-array name="sync_timer">
-        <item>En dag</item>
-        <item>Tre dagar</item>
-        <item>En vecka</item>
-    </string-array>
-    <string-array name="upcoming_array">
-        <item>Ett</item>
-        <item>Två</item>
-        <item>Fem</item>
-        <item>Tio</item>
-        <item>Tjugo</item>
-        <item>Alla (inte rekommenderat)</item>
-    </string-array>
 </resources>

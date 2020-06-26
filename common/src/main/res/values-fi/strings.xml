@@ -266,5 +266,4 @@
     <string name="dynamic_watch_face">Dynaaminen rannekellon ulkonäkö</string>
     <string name="dynamic_watch_face_description">Dynaamiset kuvat kantoraketeista rannekellon taustakuvana.</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="you_again">Sinäkö Taas? Selvä!</string>
 </resources>

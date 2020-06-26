@@ -1,44 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies_array">
-        <item>ISRO</item>
-        <item>CASC</item>
-        <item>ULA</item>
-        <item>Arianespace</item>
-        <item>ROSCOSMOS</item>
-        <item>SpaceX</item>
-        <item>NASA</item>
-    </string-array>
-    <string-array name="country_array">
-        <item>Multi</item>
-        <item>India</item>
-        <item>Russia</item>
-        <item>China</item>
-        <item>USA</item>
-    </string-array>
-    <string-array name="location_array">
-        <item>Sohae Launch Station, North Korea</item>
-        <item>Wallops Island, Virginia, USA</item>
-        <item>Kennedy Space Center, FL, USA</item>
-        <item>Cape Canaveral, FL, USA</item>
-        <item>Vandenberg AFB, CA, USA</item>
-        <item>Jiuquan, China</item>
-        <item>Taiyuan, China</item>
-        <item>Kodiak Launch Complex, US</item>
-        <item>Kiatorete Spit, New Zealand</item>
-        <item>Woomera, Australia</item>
-        <item>Sea Launch</item>
-        <item>Dombarovskiy, Russia</item>
-        <item>Svobodney Cosmodrome, Russia</item>
-        <item>Kapustin Yar, Russia</item>
-        <item>Plesetsk Cosmodrome, Russia</item>
-        <item>Baikonur Cosmodrome, Kazakhstan, Russia</item>
-        <item>Kagoshima / Tanegashima, Japan</item>
-        <item>Sriharikota, India</item>
-        <item>Kourou, French Guiana</item>
-        <item>Wechang Satellite Launching Center, China</item>
-        <item>Xichang Satellite Launching Center, China</item>
-    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>One Minute</item>
         <item>Five Minutes</item>
@@ -48,7 +9,7 @@
         <item>Four Hours</item>
         <item>One Day</item>
     </string-array>
-    <string-array name="multi_calendar_reminder_values">
+    <string-array name="multi_calendar_reminder_values" translatable="false">
         <item>1</item>
         <item>5</item>
         <item>30</item>
@@ -57,34 +18,8 @@
         <item>480</item>
         <item>1440</item>
     </string-array>
-    <string-array name="multi_calendar_reminder_default">
+    <string-array name="multi_calendar_reminder_default" translatable="false">
         <item>5</item>
         <item>1440</item>
-    </string-array>
-    <string-array name="sync_timer">
-        <item>One Day</item>
-        <item>Three Days</item>
-        <item>One Week</item>
-    </string-array>
-    <string-array name="sync_timer_values">
-        <item>24</item>
-        <item>72</item>
-        <item>168</item>
-    </string-array>
-    <string-array name="upcoming_array">
-        <item>One</item>
-        <item>Two</item>
-        <item>Five</item>
-        <item>Ten</item>
-        <item>Twenty</item>
-        <item>All (Not Recommended)</item>
-    </string-array>
-    <string-array name="upcoming_array_values">
-        <item>1</item>
-        <item>2</item>
-        <item>5</item>
-        <item>10</item>
-        <item>20</item>
-        <item>1000</item>
     </string-array>
 </resources>

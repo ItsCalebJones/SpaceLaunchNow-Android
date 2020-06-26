@@ -3,7 +3,7 @@ ext {
     app = [
             versionMajor: 3,
             versionMinor: 3,
-            versionPatch: 12,
+            versionPatch: 13,
             versionCode: 1
 
     ]
@@ -96,7 +96,7 @@ ext.deps = [
         converter_gson                 : "com.squareup.retrofit2:converter-gson:2.6.2",
         adapter_rxjava                 : "com.squareup.retrofit2:adapter-rxjava2:2.4.0",
         gson                           : "com.google.code.gson:gson:2.8.6",
-
+        
         //Views
         colorPicker                    : "com.jaredrummler:colorpicker:1.1.0",
         materialdrawer                 : "com.mikepenz:materialdrawer:6.1.0",

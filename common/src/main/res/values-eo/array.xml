@@ -1,44 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies_array">
-        <item>ISRO</item>
-        <item>CASC</item>
-        <item>ULA</item>
-        <item>Arianespace</item>
-        <item>ROSCOSMOS</item>
-        <item>SpaceX</item>
-        <item>NASA</item>
-    </string-array>
-    <string-array name="country_array">
-        <item>Multi</item>
-        <item>India</item>
-        <item>Rusio</item>
-        <item>Ĉinio</item>
-        <item>Usonaj-Ŝtatoj</item>
-    </string-array>
-    <string-array name="location_array">
-        <item>Sohae Lanĉbazo, Norda Koreio</item>
-        <item>Wallops Island, Virginia, E-S</item>
-        <item>Kennedy Space Center, FL, E-S</item>
-        <item>Cape Canaveral, FL, E-S</item>
-        <item>Vandenberg AFB, CA, E-S</item>
-        <item>Jiuqan, Ĉinio</item>
-        <item>Taiyuqan, Ĉinio</item>
-        <item>Kodiak Lanĉbazo, E-S</item>
-        <item>Kiatorete Spit, Nov-Zelando</item>
-        <item>Woomera, Aŭstralio</item>
-        <item>Marlanĉo</item>
-        <item>Dombarovskiy, Rusio</item>
-        <item>Svobodney Lanĉbazo, Rusio</item>
-        <item>Kapustin Yar, Rusio</item>
-        <item>Plesetsk Lanĉbazo, Rusio</item>
-        <item>Baikonur Lanĉbazo, Kazaĥio, Rusio</item>
-        <item>Kagoshima / Tanegashima, Japanio</item>
-        <item>Sriharikota, India</item>
-        <item>Kourou, Franca Guyano</item>
-        <item>Wechang Lanĉbazo, Ĉinio</item>
-        <item>Xichang Lanĉbazo, Ĉinio</item>
-    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Unu Minuto</item>
         <item>Kvin Minutoj</item>
@@ -47,18 +8,5 @@
         <item>Du Horoj</item>
         <item>Kvar Horoj</item>
         <item>Unu Tago</item>
-    </string-array>
-    <string-array name="sync_timer">
-        <item>Unu Tago</item>
-        <item>Tri Tagoj</item>
-        <item>Unu Semajno</item>
-    </string-array>
-    <string-array name="upcoming_array">
-        <item>Unu</item>
-        <item>Du</item>
-        <item>Kvin</item>
-        <item>Dek</item>
-        <item>Dudek</item>
-        <item>Ĉiuij (Ne Rekomendita)</item>
     </string-array>
 </resources>

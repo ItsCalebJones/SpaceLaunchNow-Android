@@ -28,7 +28,7 @@
     <string name="slide_two_title">Benachrichtigungen für Raketenstarts</string>
     <string name="slide_two_description">Bekomme Benachrichtigungen für kommende Raketenstarts und entdecke die Geschichte der Raumfahrt</string>
     <string name="slide_three_title">Suche nach Trägerraketen</string>
-    <string name="slide_three_description">Lerne die Raketen kennen, die Menschen in Orbit gebracht haben.</string>
+    <string name="slide_three_description">Lerne die Raketen kennen, die Menschen in den Orbit gebracht haben.</string>
     <string name="thank_you">Diese App, Space Launch Now, hat als einfaches Wochenendprojekt begonnen. Im Verlaufe eines Jahres hat die App knapp 10.000 aktive Nutzer erlangt. Ich bin unglaublich dankbar für jeden, der sich die Zeit genommen hat, Bugs zu berichten, Feedback zu geben, an BETA\'s teilgenommen hat und Supporter geworden ist.</string>
     <string name="player_error">Fehler beim Initialisieren des YouTube-Players aufgetreten: %s</string>
     <string name="please_rate">Hey there! Dir scheint die App zu gefallen. Würde es dir was ausmachen, im Play Store vorbeizuschauen und eine Bewertung dazulassen? Das würde uns sehr helfen!
@@ -45,7 +45,7 @@
     <string name="support_settings">Schalte Pro Features frei und unterstütze zukünftige Entwicklungen.</string>
     <string name="wear_settings">Android Wear-Zifferblatt Einstellungen.</string>
     <string name="supporter_unlock_text">Danke, dass du erwägst, Space Launch Now zu unterstützen. \n\nAlle Support-Levels sind einmalige Käufe und schalten alle Pro-Features dauerhaft frei. Zahl was du willst, um alle Pro-Features freizuschalten!</string>
-    <string name="thank_you_support">Danke für deinen andauernden Support!</string>
+    <string name="thank_you_support">Danke dir für deinen andauernden Support!</string>
     <string name="ok">OK</string>
     <string name="issues_connecting_billing">Probleme beim Verbinden mit Google Play Billing</string>
     <string name="thanks_support_development">Danke für deine Hilfe, die Entwicklung zu unterstützen!</string>
@@ -65,14 +65,15 @@
     <string name="support_development">Unterstütze die Entwicklung</string>
     <string name="weather_forecast">Wettervorhersage</string>
     <string name="weather_description">Sieh Wetterinformationen vom Launchpad für vergangene und kommende Starts.</string>
-    <string name="calendar_sync">Kalender Sync</string>
+    <string name="calendar_sync">Kalender synchronisieren</string>
     <string name="calendar_sync_description">Synchronisiere kommende Starts automatisch mit deinem Kalender.</string>
     <string name="wear_complications">Wear OS Zusatzfunktionen</string>
     <string name="wear_complications_description">Hol dir Zusatzfunktion von Space Launch Now auf deiner Wear OS Uhr!</string>
     <string name="remove_ads">Entferne Werbung</string>
     <string name="remove_ads_description">Entferne Werbung für immer!</string>
     <string name="discord">Discord</string>
-    <string name="discord_description">Bekomme eine exklusive Supporter-Rolle im Space Launch Now Discord Server.</string>
+    <string name="discord_description">"Bekomme die exklusive Supporter-Rolle auf dem Space Launch Now Discord Server.
+"</string>
     <string name="exclusive_widgets">Exklusive anpassbare Widgets</string>
     <string name="exclusive_widgets_description">Bekomme Zugriff auf eine zusätzliches Widget und die Möglichkeit, diese einzustellen.</string>
     <string name="blur_description">Passe die Stärke und Eigenschaften des Weichzeichnen-Effekts der Hintergrundbilder an.</string>
@@ -80,7 +81,7 @@
     <string name="blur_sampling">Sampling</string>
     <string name="blur_radius">Radius</string>
     <string name="blur_saturation">Sättigung</string>
-    <string name="unknown_launch_location">Unbekannter Start-Standort</string>
+    <string name="unknown_launch_location">Der Standort des Starts ist Unbekannt.</string>
     <string name="unknown_launch_date">Unbekanntes Start-Datum</string>
     <string name="unknown_launch_status">Unbekannter Start-Status</string>
     <string name="unknown_countdown_status">Unbekannter Countdown-Status</string>
@@ -95,7 +96,7 @@
     <string name="seconds">SEKUNDEN</string>
     <string name="min">MIN</string>
     <string name="sec">SEK</string>
-    <string name="launch_service_provider">Launch Anbieter</string>
+    <string name="launch_service_provider">Organisation</string>
     <string name="primary_agency">Primäre Organisation</string>
     <string name="unknown_agency_type">Unbekannter Organisations-Typ</string>
     <string name="info">INFO</string>
@@ -112,10 +113,10 @@
     <string name="height">Höhe:</string>
     <string name="diameter">Durchmesser:</string>
     <string name="stages">Stufen:</string>
-    <string name="mass_to_leo">Masse nach LEO:</string>
-    <string name="mass_to_gto">Masse nach GTO:</string>
-    <string name="mass_at_launch">Masse zum Start:</string>
-    <string name="thrust_at_launch">Schub zum Start:</string>
+    <string name="mass_to_leo">Nutzlast Kapazität zum LEO:</string>
+    <string name="mass_to_gto">Nutzlast Kapazität zum GTO</string>
+    <string name="mass_at_launch">Gewicht bein Start:</string>
+    <string name="thrust_at_launch">Schub beim Start:</string>
     <string name="watch_launch">Start ansehen</string>
     <string name="estimated_launch_date">Geschätztes Startdatum</string>
     <string name="nothing_here">Hier gibts nichts, neu laden vom Menü?</string>
@@ -260,6 +261,7 @@
     <string name="no_calendars_available">Kein Kalender zum synchronisieren der Raketenstart-Events vorhanden.</string>
     <string name="calendar_permission_required">Kalender Erlaubnis notwendig</string>
     <string name="calendar_permission_required_description">Diese Erlaubnis ist notwendig, um Raketenstarts mit deinem Kalender zu synchronisieren.</string>
+    <string name="support_again">Unterstütze uns erneut!</string>
     <string name="local_timezone">Lokale Zeitzone</string>
     <string name="local_timezone_on">Startzeiten sind in meiner lokalen Zeitzone.</string>
     <string name="local_timezone_off">Startzeiten sind in UTC.</string>
@@ -554,5 +556,13 @@
     <string name="born_one_argument">Geboren: %1$s</string>
     <string name="died_two_arguments">Gestorben: %1$s (%2$d)</string>
     <string name="related_news">Ähnliche Nachrichten</string>
-    <string name="you_again">Du schon wieder? Sicher!</string>
+    <string name="flight_life">Geplante Missionsdauer: %s</string>
+    <string name="thrust">Schub beim Start:</string>
+    <string name="to_be_determined_with_value">Warten auf Bestätigung... %s</string>
+    <string name="click_for_info">Klicke hier für mehr Informationen.</string>
+    <string name="choose_theme">Wähle Stil</string>
+    <string name="set_custom_calendar">Lege personalisierte Erinnerungen für Kalenderbenachrichtigungen fest.</string>
+    <string name="event_and_news">Benachrichtigungen über Events und News.</string>
+    <string name="event_and_news_description">Erhalte Nachrichten über Events und News der Mission nach dem Start.</string>
+    <string name="choose_theme_mode">Wähle einen Stil.</string>
 </resources>

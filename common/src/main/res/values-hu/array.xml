@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies_array">
-        <item>ISRO</item>
-        <item>CASC</item>
-        <item>ULA</item>
-        <item>Arianespace</item>
-        <item>Roszkozmosz</item>
-        <item>SpaceX</item>
-        <item>NASA</item>
-    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Egy perc</item>
         <item>Öt perc</item>
@@ -18,17 +9,17 @@
         <item>Négy óra</item>
         <item>Egy nap</item>
     </string-array>
-    <string-array name="sync_timer">
-        <item>Egy nap</item>
-        <item>Három nap</item>
-        <item>Egy hét</item>
+    <string-array name="multi_calendar_reminder_values">
+        <item>1</item>
+        <item>5</item>
+        <item>30</item>
+        <item>60</item>
+        <item>240</item>
+        <item>480</item>
+        <item>1440</item>
     </string-array>
-    <string-array name="upcoming_array">
-        <item>Egy</item>
-        <item>Kettő</item>
-        <item>Öt</item>
-        <item>Tíz</item>
-        <item>Húsz</item>
-        <item>Összes (Nem ajánlott)</item>
+    <string-array name="multi_calendar_reminder_default">
+        <item>5</item>
+        <item>1440</item>
     </string-array>
 </resources>

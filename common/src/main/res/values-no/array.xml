@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies_array">
-        <item>ISRO</item>
-        <item>CASC</item>
-        <item>ULA</item>
-        <item>Arianespace</item>
-        <item>ROSCOSMOS</item>
-        <item>SpaceX</item>
-        <item>NASA</item>
-    </string-array>
-    <string-array name="country_array">
-        <item>Multi</item>
-        <item>India</item>
-        <item>Russland</item>
-        <item>Kina</item>
-        <item>USA</item>
-    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Ett Minutt</item>
         <item>Fem Minutter</item>
@@ -24,18 +8,5 @@
         <item>To Timer</item>
         <item>Fire Timer</item>
         <item>En Dag</item>
-    </string-array>
-    <string-array name="sync_timer">
-        <item>En Dag</item>
-        <item>Tre Dager</item>
-        <item>En Uke</item>
-    </string-array>
-    <string-array name="upcoming_array">
-        <item>En</item>
-        <item>To</item>
-        <item>Fem</item>
-        <item>Ti</item>
-        <item>Tjue</item>
-        <item>Alle (Ikke anbefalt)</item>
     </string-array>
 </resources>

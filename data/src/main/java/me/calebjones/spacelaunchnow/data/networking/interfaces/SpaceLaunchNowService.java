@@ -166,6 +166,10 @@ public interface SpaceLaunchNowService {
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/launch/")
+    Call<LaunchResponse> getLaunchBySlug(@Query("slug") String slug, @Query("mode") String mode);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/launch/")
     Call<LaunchResponse> getLaunchesByDate(@Query("limit") int amount, @Query("offset") int offset,
                                            @Query("net__lte") String startDate, @Query("net__gte") String endDate,
                                            @Query("launcher_config__id") Integer launcherId);
