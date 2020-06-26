@@ -485,7 +485,7 @@
     <string name="no_events">Nessun evento trovato</string>
     <string name="founded_alt">Fondato</string>
     <string name="status_alt">stato</string>
-    <string name="de_orbited">De-orbitato:</string>
+    <string name="de_orbited">De-orbitato</string>
     <string name="mission_agency">Agenzia della missione</string>
     <string name="no_expeditions">Nessuna spedizione trovata</string>
     <string name="no_docked">Nessun veicolo agganciato</string>
@@ -554,5 +554,4 @@
     <string name="born_one_argument">Nato: %1$s</string>
     <string name="died_two_arguments">Morto: %1$s (%2$d)</string>
     <string name="related_news">Notizie correlate</string>
-    <string name="you_again">Di nuovo tu? Sicuro!</string>
 </resources>

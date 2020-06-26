@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string-array name="widget_presets">
         <item>Luminoso</item>
         <item>Oscuro</item>
@@ -11,7 +11,7 @@
         <item>Material Naranja</item>
         <item>Personalizado</item>
     </string-array>
-    <string-array name="widget_presets_values">
+    <string-array name="widget_presets_values" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
@@ -42,5 +42,9 @@
         <item>Por defecto</item>
         <item>Formato 12 horas AM/PM</item>
         <item>Formato 24 h</item>
+    </string-array>
+    <string-array name="theme_list_array" tools:ignore="InconsistentArrays">
+        <item>Claro</item>
+        <item>Oscuro</item>
     </string-array>
 </resources>

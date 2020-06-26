@@ -43,4 +43,8 @@
         <item>Dwunastogodzinny format czasu (AM/PM)</item>
         <item>Dwudziestoczterogodzinny format czasu</item>
     </string-array>
+    <string-array name="theme_list_array" tools:ignore="InconsistentArrays">
+        <item>Jasny</item>
+        <item>Ciemny</item>
+    </string-array>
 </resources>

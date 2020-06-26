@@ -556,5 +556,4 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="born_one_argument">Narozen: %1$s</string>
     <string name="died_two_arguments">Zemřel: %1$s (%2$d)</string>
     <string name="related_news">Související zprávy</string>
-    <string name="you_again">Zase ty? Tak určitě!</string>
 </resources>

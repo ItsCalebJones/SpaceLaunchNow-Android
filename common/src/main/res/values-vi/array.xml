@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string-array name="multi_calendar_reminder">
         <item>Một phút</item>
         <item>Năm phút</item>
