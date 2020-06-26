@@ -111,7 +111,8 @@ public class LaunchDetailActivity extends BaseActivity
     private Rate rate;
     private DetailsDataRepository detailsDataRepository;
     private DetailsViewModel model;
-    private Boolean fromNotification;
+    private Boolean fromNotification = false;
+    private Boolean fromLink = false;
 
 
     @Override
@@ -203,15 +204,24 @@ public class LaunchDetailActivity extends BaseActivity
         //Grab information from Intent
         Intent mIntent = getIntent();
         String type = mIntent.getStringExtra("TYPE");
+        String action = mIntent.getAction();
+        fromNotification = mIntent.hasExtra("notification")
+                && mIntent.getBooleanExtra("notification", false);
 
         if (type != null && type.equals("launch")) {
             launchId = mIntent.getStringExtra("launchID");
             fetchDataFromDatabaseForTitle(launchId);
             fetchDataFromNetwork(launchId);
+        } else if (action != null){
+            Uri data = mIntent.getData();
+            String slug = data.getLastPathSegment();
+            Timber.i(slug);
+            fetchDataFromDatabaseForTitleBySlug(slug);
+            fetchDataFromNetworkBySlug(slug);
+            fromLink = true;
         }
 
-        fromNotification = mIntent.hasExtra("notification")
-                && mIntent.getBooleanExtra("notification", false);
+
 
 
         if (toolbar != null) {
@@ -228,6 +238,37 @@ public class LaunchDetailActivity extends BaseActivity
         if (detailSwipeRefresh != null) {
             detailSwipeRefresh.setEnabled(enable);
         }
+    }
+
+    private void fetchDataFromNetworkBySlug(String launchId) {
+        detailsDataRepository.fetchDataFromNetworkBySlug(launchId, new Callbacks.DetailsCallback() {
+            @Override
+            public void onLaunchLoaded(Launch launch) {
+                updateViewModel(launch);
+            }
+
+            @Override
+            public void onNetworkStateChanged(boolean refreshing) {
+                showNetworkLoading(refreshing);
+            }
+
+            @Override
+            public void onError(String message, @Nullable Throwable throwable) {
+                if (throwable != null) {
+                    Timber.e(throwable);
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, String.format("Error: %s", throwable.getLocalizedMessage()));
+                } else {
+                    Timber.e(message);
+                    SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
+                }
+                fetchDataFromDatabase(launchId);
+            }
+
+            @Override
+            public void onLaunchDeleted() {
+                SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, "Error: Launch not found.");
+            }
+        });
     }
 
     private void fetchDataFromNetwork(String launchId) {
@@ -277,6 +318,13 @@ public class LaunchDetailActivity extends BaseActivity
 
     private void fetchDataFromDatabaseForTitle(String launchId) {
         Launch launch = detailsDataRepository.getLaunch(launchId);
+        if (launch != null) {
+            setTitleView(launch);
+        }
+    }
+
+    private void fetchDataFromDatabaseForTitleBySlug(String slug) {
+        Launch launch = detailsDataRepository.getLaunchBySlug(slug);
         if (launch != null) {
             setTitleView(launch);
         }
@@ -568,6 +616,16 @@ public class LaunchDetailActivity extends BaseActivity
                     mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(mainIntent);
                     fromNotification = false;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else if (fromLink != null && fromLink) {
+                Intent mainIntent;
+                try {
+                    mainIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
+                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(mainIntent);
+                    fromLink = false;
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
