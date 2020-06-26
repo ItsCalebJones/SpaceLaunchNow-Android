@@ -95,9 +95,13 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
         }
 
         if (launch.getMission() != null && launch.getMission().getName() != null) {
-            holder.landingInformationTitle.setText(String.format(context.getString(R.string.x_landing_information), launch.getMission().getName()));
+            if (stage.getLanding() != null) {
+                holder.landingInformationTitle.setText(String.format(context.getString(R.string.x_landing_information), launch.getMission().getName()));
+            } else {
+                holder.landingInformationTitle.setText("Landing Information Unavailable");
+            }
         }
-
+        
         holder.landingGroup.setVisibility(View.GONE);
         holder.landingLocationGroup.setVisibility(View.GONE);
         holder.landingTypeGroup.setVisibility(View.GONE);
