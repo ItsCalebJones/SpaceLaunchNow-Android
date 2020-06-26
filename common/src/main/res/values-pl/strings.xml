@@ -8,14 +8,14 @@
     <string name="status_nogo">Data startu niepotwierdzona</string>
     <string name="status_success">"Start zakończony sukcesem"</string>
     <string name="status_failure">"Awaria podczas startu"</string>
-    <string name="spacex_summary">SpaceX projektuje, produkuje oraz wystrzeliwuje zaawansowane rakiety oraz statki kosmiczne. Firma została założona w 2002 roku dla zrewolucjonizowania technologii kosmicznych wraz z umożliwieniem ludzkości zamieszkania na innych planetach.</string>
+    <string name="spacex_summary">SpaceX projektuje, produkuje oraz wystrzeliwuje zaawansowane rakiety i statki kosmiczne. Firma została założona w 2002 roku aby zrewolucjonizować technologię kosmiczną. Jednym z jej celów jest umożliwienie ludzkości życia na innych planetach.</string>
     <string name="usaf_summary">Siły Powietrzne Stanów Zjednoczonych (USAF) to jednostka sił powietrznych Amerykańskiej Armii - jedna z siedmiu amerykańskich służb mundurowych.</string>
     <string name="casc_summary">CASC (China Aerospace Science and Technology Corporation) jest głównym kontraktorem chińskiego programu kosmicznego. Jest własnością państwa i posiada szereg podległych podmiotów, które projektują, rozwijają i produkują szereg statków kosmicznych, rakiet, strategicznych i taktycznych systemów rakietowych oraz sprzętu naziemnego.</string>
-    <string name="cnsa_summary">CNSA (China National Space Administration) to państwowa agencja kosmiczna Chińskiej Republiki Ludowej. Jest odpowiedzialna za rozwój i planowanie państwowego programu kosmicznego .</string>
+    <string name="cnsa_summary">CNSA (China National Space Administration) to państwowa agencja kosmiczna Chińskiej Republiki Ludowej. Jest odpowiedzialna za rozwój i planowanie państwowego programu kosmicznego.</string>
     <string name="isro_summary">Indyjska Organizacja Badań Kosmicznych (ISRO) to agencja kosmiczna rządu indyjskiego z siedzibą w Bengaluru. Wizją tej agencji jest \"wykorzystanie technologii kosmicznej do rozwoju narodowego, przy jednoczesnym dążeniu do badań nad kosmosem i eksploracji planet\".</string>
-    <string name="vko_summary">"Rosyjskie Siły Obronne Lotnictwa i Kosmonautyki były oddziałem Sił Zbrojnych Federacji Rosyjskiej odpowiedzialnych za obronę przeciwlotniczą i przeciwrakietową oraz działaniem rosyjskich satelitów wojskowych oraz kosmodromu Plasieck. "</string>
+    <string name="vko_summary">"Rosyjskie Siły Obronne Lotnictwa i Kosmonautyki były oddziałem Sił Zbrojnych Federacji Rosyjskiej odpowiedzialnym za obronę przeciwlotniczą i przeciwrakietową oraz działaniem rosyjskich satelitów wojskowych i kosmodromu Plasieck. "</string>
     <string name="roscosmos_summary">Roskosmos (Korporacja Państwowa ds. Aktywności Kosmicznej Roskosmos) jest organem rządowym odpowiedzialnym za rosyjski program nauk o kosmosie i ogólne badania w dziedzinie lotnictwa.</string>
-    <string name="ula_summary"><![CDATA[United Launch Alliance (ULA) jest wspólnym przedsięwzięciem Lockheed Martin Space Systems i Boeing Defence, Space & Security. ULA powstała w grudniu 2006 roku, łącząc zespoły w tych firmach, które świadczą usługi kosmiczne w zakresie lotów kosmicznych dla rządu Stanów Zjednoczonych.]]></string>
+    <string name="ula_summary"><![CDATA[United Launch Alliance (ULA) jest wspólnym przedsięwzięciem Lockheed Martin Space Systems i Boeing Defence, Space & Security. ULA powstała w grudniu 2006 roku, łącząc zespoły obu firm, które świadczą usługi kosmiczne w zakresie lotów kosmicznych dla rządu Stanów Zjednoczonych.]]></string>
     <string name="gd_summary">General Dynamics Corporation to amerykańska firma z branży lotniczej i obronnej utworzona przez fuzje i dezinwestycje. Jest piątym co do wielkości pod względem dochodów z 2012 roku wykonawcą branży obronnej.</string>
     <string name="asa_summary">Arianspace SA jest francuską, międzynarodową firmą założoną w 1980 roku, jako pierwszy na świecie komercyjny operator lotów kosmicznych.</string>
     <string name="TsSKB_summary">Państwowe Rakietowo-Kosmiczne Centrum CSKB-Progress, jest rosyjskim \"Federalnym Państwowym Przedsiębiorstwem Unitarnym\" pod jurysdykcją Roskosmosu, Rosyjskiej Federalnej Agencji Kosmicznej odpowiedzialnej za badania kosmiczne i badania w dziedzinie aeronautyki. Jest twórcą słynnej rakiety Sojuz-FG używanej do załogowych lotów kosmicznych, a także Sojuz-U używanej do wystrzeliwania bezzałogowych sond.</string>
@@ -27,7 +27,7 @@
     <string name="slide_one_description">Bądź na bieżąco ze wszystkimi startami Twoich ulubionych rakiet, misjami i statkami kosmicznymi.</string>
     <string name="slide_two_title">Powiadomienia o startach</string>
     <string name="slide_two_description">Bądź informowany o nadchodzących startach i dowiedz się o historii lotów kosmicznych</string>
-    <string name="slide_three_title">Znajdź start rakiety</string>
+    <string name="slide_three_title">Znajdź rakiety nośne</string>
     <string name="slide_three_description">Dowiedz się na temat statków, które zabrały nas na orbitę.</string>
     <string name="thank_you">Ta aplikacja, Space Launch Now, powstała jako prosty, weekendowy projekt. W ciągu roku zyskała jednak blisko 10000 aktywnych użytkowników. Jestem niesamowicie wdzięczny wszystkim, którzy poświęcili czas na zgłaszanie błędów, udzielanie informacji zwrotnych, uczestnictwo w beta testach oraz wspieraniu tego projektu.</string>
     <string name="player_error">Błąd podczas ładowania odtwarzacza YouTube: %s</string>
@@ -40,7 +40,7 @@
     <string name="button_dont_ask">Nie pytaj ponownie</string>
     <string name="swipe_to_dismiss">Przesuń, aby odrzucić</string>
     <string name="notifications_settings">Ustaw powiadomienia o planowanych startach.</string>
-    <string name="appearance_settings">Dostosuj skórkę aplikacji, widżetów i kolory.</string>
+    <string name="appearance_settings">Dostosuj skórkę aplikacji, widżety i kolory.</string>
     <string name="about_settings">Informacje o licencji, wykorzystanych bibliotekach, listy zmian, itp.</string>
     <string name="support_settings">Zdobądź funkcje Pro i wspomóż aplikację dla dalszego rozwoju.</string>
     <string name="wear_settings">Zmień ustawienia dla skórki Android Watch.</string>
@@ -48,11 +48,11 @@
     <string name="thank_you_support">Dziękujemy za udzielone wsparcie!</string>
     <string name="ok">OK</string>
     <string name="issues_connecting_billing">Problem podczas połączenia z Google Play Billing</string>
-    <string name="thanks_support_development">Dziękujemy za pomoc w rozwoju działu wsparcia!</string>
+    <string name="thanks_support_development">Dziękujemy za pomoc w rozwoju aplikacji!</string>
     <string name="billing_error_code">kod błędu płatności -</string>
     <string name="purchase_history">Historia płatności została przywrócona.</string>
     <string name="unable_to_start_billing">Nie można uruchomić procesora płatności.</string>
-    <string name="no_purchase_history">Zakupy przywrócone - nie znaleziono żadnego w tym koncie Google\'a.</string>
+    <string name="no_purchase_history">Zakupy przywrócone - nie znaleziono żadnych na tym koncie Google.</string>
     <string name="billing_not_available">Płatności Google Play są niedostępne.</string>
     <string name="whats_new">Co nowego?</string>
     <string name="unknown_rocket">Nieznana rakieta</string>
@@ -62,7 +62,7 @@
     <string name="unknown_launch">Nieznany start</string>
     <string name="description_unavailable">Opis niedostępny.</string>
     <string name="get_pro_features">Zdobądź funkcje Pro</string>
-    <string name="support_development">Wsparcie deweloperów</string>
+    <string name="support_development">Wesprzyj rozwój</string>
     <string name="weather_forecast">Prognoza pogody</string>
     <string name="weather_description">Uzyskaj informacje o pogodzie na platformie startowej dla historycznych i nadchodzących startów.</string>
     <string name="calendar_sync">Synchronizacja z kalendarzem</string>
@@ -72,7 +72,7 @@
     <string name="remove_ads">Pozbądź się reklam</string>
     <string name="remove_ads_description">Pozbądź się wszystkich reklam na zawsze!</string>
     <string name="discord">Discord</string>
-    <string name="discord_description">Otrzymaj szczególną rolę \"Supporter\" na kanale Space Launch Now w Discord.</string>
+    <string name="discord_description">Otrzymaj szczególną rolę \"Supporter\" na na serwerze Discord Space Launch Now.</string>
     <string name="exclusive_widgets">Ekskluzywne konfigurowalne widżety</string>
     <string name="exclusive_widgets_description">Uzyskaj dostęp do dodatkowego widżetu i możliwość jego dostosowywania.</string>
     <string name="blur_description">Skonfiguruj siłę i styl rozmycia dla obrazu tła.</string>
@@ -83,7 +83,7 @@
     <string name="unknown_launch_location">Nieznana lokalizacja miejsca startu</string>
     <string name="unknown_launch_date">Nieznana data startu</string>
     <string name="unknown_launch_status">Nieznany status startu</string>
-    <string name="unknown_countdown_status">Nieznany status odliczania czasu</string>
+    <string name="unknown_countdown_status">Nieznany status odliczania</string>
     <string name="unknown">Nieznane</string>
     <string name="unknown_mission">Nieznana misja</string>
     <string name="watch_live">Oglądaj na żywo</string>
@@ -133,7 +133,7 @@
     <string name="spacex">SpaceX</string>
     <string name="roscosmos">ROSCOSMOS</string>
     <string name="ula">ULA</string>
-    <string name="kennedy_space_center">Centrum Kosmiczne Johna F. Kennedy’ego</string>
+    <string name="kennedy_space_center">Centrum Kosmiczne im. Johna F. Kennedy’ego</string>
     <string name="vandenberg_afb">Baza Wojskowa Sił Powietrznych Stanów Zjednoczonych Vandenberg</string>
     <string name="arianespace">Arianspace</string>
     <string name="casc">CASC</string>
@@ -170,7 +170,7 @@
     <string name="notification_card">Powiadomienia o startach</string>
     <string name="vehicle_card_description">Dowiedz się na temat statków, które zabrały nas na orbitę.</string>
     <string name="notification_card_description">Włącz powiadomienia dla startów, którymi się interesujesz.</string>
-    <string name="done">Wykonano</string>
+    <string name="done">OK</string>
     <string name="error_loading_launch">Błąd: Błąd ładowania danych o starcie.</string>
     <string name="feedback_title">Wyślij informację zwrotną</string>
     <string name="feedback_description">Nie obawiaj się przesyłać uwag dotyczących działania aplikacji lub funkcji, które chciałbyś, aby się w tej aplikacji pojawiły. Jeśli znalazłeś błędy w danych o starcie, skontaktuj się za pomocą Discorda lub Reddita.</string>
@@ -260,6 +260,7 @@
     <string name="no_calendars_available">Brak dostępnych kalendarzów do synchronizacji startów.</string>
     <string name="calendar_permission_required">Wymagana zgoda dostępu do kalendarza</string>
     <string name="calendar_permission_required_description">Zgoda jest wymagana do synchronizacji startów z Twoim kalendarzem.</string>
+    <string name="support_again">Wesprzyj nas ponownie!</string>
     <string name="local_timezone">Lokalna strefa czasowa</string>
     <string name="local_timezone_on">Czas startu rakiety przekonwertowany dla Twojej strefy czasowej.</string>
     <string name="local_timezone_off">Czas startów podany wg strefy czasowej UTC.</string>
@@ -502,7 +503,7 @@
     <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Rosja i Kazachstan</string>
     <string name="china">Chiny</string>
-    <string name="kennedy_space_center_cape_canaveral">Centrum Kosmiczne im. Kennedy\'ego / Przylądek Canaveral</string>
+    <string name="kennedy_space_center_cape_canaveral">Centrum Kosmiczne im. Johna F. Kennedy\'ego / Przylądek Canaveral</string>
     <string name="wallops_island">Wallops Island</string>
     <string name="new_zealand">Nowa Zelandia</string>
     <string name="japan">Japonia</string>
@@ -554,5 +555,13 @@
     <string name="born_one_argument">Urodzony: %1$s</string>
     <string name="died_two_arguments">Zmarł: %1$s (%2$d)</string>
     <string name="related_news">Powiązane wiadomości</string>
-    <string name="you_again">Jeszcze raz? Pewnie!</string>
+    <string name="flight_life">Lot na żywo: %s</string>
+    <string name="thrust">Ciąg przy starcie:</string>
+    <string name="to_be_determined_with_value">Do ustalenia... %s</string>
+    <string name="click_for_info">Naciśnij po więcej informacji</string>
+    <string name="choose_theme">Wybierz motyw</string>
+    <string name="set_custom_calendar">Ustaw niestandardowe przypomnienia dla powiadomień w kalendarzu</string>
+    <string name="event_and_news">Powiadomienia o wydarzeniach i wiadomościach</string>
+    <string name="event_and_news_description">Otrzymuj powiadomienia o wiadomościach i wydarzeniach.</string>
+    <string name="choose_theme_mode">Wybierz rodzaj motywu</string>
 </resources>

@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies_array">
-        <item>ISRO</item>
-        <item>CASC</item>
-        <item>ULA</item>
-        <item>Arianespace</item>
-        <item>Роскосмос</item>
-        <item>SpaceX</item>
-        <item>NASA</item>
-    </string-array>
-    <string-array name="country_array">
-        <item>Много</item>
-        <item>Индия</item>
-        <item>Россия</item>
-        <item>Китай</item>
-        <item>США</item>
-    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Одна минута</item>
         <item>Пять минут</item>
@@ -24,18 +8,5 @@
         <item>Два часа</item>
         <item>Четыре часа</item>
         <item>Один день</item>
-    </string-array>
-    <string-array name="sync_timer">
-        <item>Один день</item>
-        <item>Три дня</item>
-        <item>Одна неделя</item>
-    </string-array>
-    <string-array name="upcoming_array">
-        <item>Один</item>
-        <item>Два</item>
-        <item>Пять</item>
-        <item>Десять</item>
-        <item>Двадцать</item>
-        <item>Все (Не Рекомендовано)</item>
     </string-array>
 </resources>

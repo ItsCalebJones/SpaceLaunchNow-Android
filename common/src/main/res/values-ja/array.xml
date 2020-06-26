@@ -9,17 +9,4 @@
         <item>4時間</item>
         <item>1日</item>
     </string-array>
-    <string-array name="sync_timer">
-        <item>1日</item>
-        <item>3日</item>
-        <item>1週間</item>
-    </string-array>
-    <string-array name="upcoming_array">
-        <item>１</item>
-        <item>２</item>
-        <item>５</item>
-        <item>１０</item>
-        <item>２０</item>
-        <item>全部(おすすめではありません)</item>
-    </string-array>
 </resources>

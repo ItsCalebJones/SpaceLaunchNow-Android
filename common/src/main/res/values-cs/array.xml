@@ -1,44 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="agencies_array">
-        <item>JSRO</item>
-        <item>CASC</item>
-        <item>ULA</item>
-        <item>Arianespace</item>
-        <item>ROSCOSMOS</item>
-        <item>SpaceX</item>
-        <item>NASA</item>
-    </string-array>
-    <string-array name="country_array">
-        <item>Multi</item>
-        <item>Indie</item>
-        <item>Rusko</item>
-        <item>Čína</item>
-        <item>USA</item>
-    </string-array>
-    <string-array name="location_array">
-        <item>Mys Canaveral, Florida, USA</item>
-        <item>Kennedyho vesmírné středisko, Florida, USA</item>
-        <item>Vandenbergova letecká základna, Kalifornie, USA</item>
-        <item>Ostrov Wallops, Virginie, USA</item>
-        <item>Kosmodrom Ťiou-čchüan, Čína</item>
-        <item>Kosmodrom Tchaj-jüan, Čína</item>
-        <item>Kosmodrom Si-čchang, Čína</item>
-        <item>Kosmodrom Wechang, Čína</item>
-        <item>Kourou, Francouzská Guyana</item>
-        <item>Kosmodrom Šríharikota, Indie</item>
-        <item>Kosmické centrum Tanegašima, Japonsko</item>
-        <item>Kosmodrom Bajkonur, Kazachstán</item>
-        <item>Kosmodrom Svobodnyj, Rusko</item>
-        <item>Kosmodrom Kapustin Jar, Rusko</item>
-        <item>Kosmodrom Pleseck, Rusko</item>
-        <item>Vojenská základna Dombarovskij, Rusko</item>
-        <item>Start z moře</item>
-        <item>Raketová základna a kosmodrom Woomera, Austrálie</item>
-        <item>Kiatorete Spit, Nový Zéland</item>
-        <item>Kosmodrom Kodiak, Aljaška, USA</item>
-        <item>Kosmodrom Sohae, Severní Korea</item>
-    </string-array>
     <string-array name="multi_calendar_reminder">
         <item>Jedna minuta</item>
         <item>Pět minut</item>
@@ -60,31 +21,5 @@
     <string-array name="multi_calendar_reminder_default">
         <item>5</item>
         <item>1440</item>
-    </string-array>
-    <string-array name="sync_timer">
-        <item>Jeden den</item>
-        <item>Tři dny</item>
-        <item>Jeden týden</item>
-    </string-array>
-    <string-array name="sync_timer_values">
-        <item>24</item>
-        <item>72</item>
-        <item>168</item>
-    </string-array>
-    <string-array name="upcoming_array">
-        <item>Jedna</item>
-        <item>Dva</item>
-        <item>Pět</item>
-        <item>Deset</item>
-        <item>Dvacet</item>
-        <item>Všechny (není doporučeno)</item>
-    </string-array>
-    <string-array name="upcoming_array_values">
-        <item>1</item>
-        <item>2</item>
-        <item>5</item>
-        <item>10</item>
-        <item>20</item>
-        <item>1000</item>
     </string-array>
 </resources>

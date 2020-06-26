@@ -307,7 +307,7 @@
     <string name="wifi_only_summary">Lanceringsdata zal niet gesynchroniseerd worden tenzij er een WiFi connectie beschikbaar is.</string>
     <string name="launch_tracking">Volgen lancering</string>
     <string name="calendar_settings">Instellingen kalender</string>
-    <string name="auto_calendar">Automatisch synchroniseren kalender</string>
+    <string name="auto_calendar">Automatisch synchroniseren met kalender</string>
     <string name="auto_calendar_summary">Toestaan om volgende lancering te synchroniseren met standaard kalender.</string>
     <string name="event_count">Aantal gebeurtenissen</string>
     <string name="event_count_summary">Stel in hoeveel gebeurtenissen te synchroniseren met de kalender.</string>
@@ -564,5 +564,4 @@
     <string name="event_and_news">Evenementen en Nieuws Notificaties</string>
     <string name="event_and_news_description">Ontvang notificaties over gebeurtenissen en nieuws na een lancering.</string>
     <string name="choose_theme_mode">Kies Thema Modus</string>
-    <string name="you_again">Jij weer? Natuurlijk!</string>
 </resources>
