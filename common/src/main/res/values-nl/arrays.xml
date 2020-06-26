@@ -47,8 +47,4 @@
         <item>Licht</item>
         <item>Donker</item>
     </string-array>
-    <string-array name="theme_entry_array" tools:ignore="InconsistentArrays">
-        <item>light</item>
-        <item>donker</item>
-    </string-array>
 </resources>

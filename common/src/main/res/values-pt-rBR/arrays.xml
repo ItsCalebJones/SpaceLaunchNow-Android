@@ -47,8 +47,4 @@
         <item>Claro</item>
         <item>Escuro</item>
     </string-array>
-    <string-array name="theme_entry_array" tools:ignore="InconsistentArrays">
-        <item>claro</item>
-        <item>escuro</item>
-    </string-array>
 </resources>
