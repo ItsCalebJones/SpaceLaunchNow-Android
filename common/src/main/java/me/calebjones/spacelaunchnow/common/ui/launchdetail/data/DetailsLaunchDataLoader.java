@@ -70,8 +70,9 @@ public class DetailsLaunchDataLoader {
                         Timber.v("Launch: %s",launch.getName() );
                         dataSaver.saveLaunchToRealm(launch);
                         networkCallback.onSuccess(launch);
+                    } else {
+                        networkCallback.onNetworkFailure(404);
                     }
-
                 } else {
                     SpaceLaunchNowError error = ErrorUtil.parseSpaceLaunchNowError(response);
                     if (error.getMessage() != null && error.getMessage().contains("None found")) {

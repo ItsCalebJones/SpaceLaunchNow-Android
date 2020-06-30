@@ -710,7 +710,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="visible"
-                    app:constraint_referenced_ids="core_information,serial_number_title,serial_number_text,status_title,status_text,previous_title,previous_text,flight_proven,flight_proven_title" />
+                    app:constraint_referenced_ids="" />
 
                 <Button
                     android:id="@+id/launcher_launches"

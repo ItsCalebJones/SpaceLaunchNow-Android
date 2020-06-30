@@ -202,6 +202,7 @@ public class DataClient {
         return call;
     }
 
+
     public Call<SpacecraftResponse> getSpacecraft(int limit, int offset, Callback<SpacecraftResponse> callback) {
         Call<SpacecraftResponse> call = spaceLaunchNowService.getSpacecraft(limit, offset, null, null, null);
 
@@ -228,6 +229,14 @@ public class DataClient {
 
     public Call<Event> getEventById(int id, Callback<Event> callback) {
         Call<Event> call = spaceLaunchNowService.getEventById(id);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<EventResponse> getEventBySlug(String slug, Callback<EventResponse> callback) {
+        Call<EventResponse> call = spaceLaunchNowService.getEventBySlug(slug);
 
         call.enqueue(callback);
 

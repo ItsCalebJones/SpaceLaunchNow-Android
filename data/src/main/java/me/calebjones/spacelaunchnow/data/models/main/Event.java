@@ -21,6 +21,9 @@ public class Event extends RealmObject {
     @SerializedName("url")
     @Expose
     public String url;
+    @SerializedName("slug")
+    @Expose
+    public String slug;
     @SerializedName("name")
     @Expose
     public String name;

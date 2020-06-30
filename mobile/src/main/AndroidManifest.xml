@@ -48,21 +48,12 @@
         </activity>
         <activity
             android:name=".common.ui.launchdetail.activity.LaunchDetailActivity"
+            android:parentActivityName=".ui.main.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:theme="@style/BaseAppTheme">
-            <intent-filter
-                android:autoVerify="true"
-                android:label="View Launch">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
-                <data android:scheme="http"
-                    android:host="spacelaunchnow.me"
-                    android:pathPrefix="/launch" />
-                <data android:scheme="https" />
-                <!-- note that the leading "/" is required for pathPrefix-->
-            </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
         </activity>
         <activity
             android:name=".ui.intro.OnboardingActivity"
@@ -227,6 +218,25 @@
             android:name=".common.ui.launchdetail.launches.agency.AgencyLaunchActivity"
             android:theme="@style/BaseAppTheme" />
         <activity android:name=".ui.spacecraft.OrbiterDetailActivity" />
+        <activity
+            android:name="me.calebjones.spacelaunchnow.deeplink.DeepLinkActivity"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter
+                android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="spacelaunchnow.me" />
+                <data android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".events.detail.EventDetailsActivity"
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/BaseAppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.MainActivity" />
+        </activity>
     </application>
-
 </manifest>

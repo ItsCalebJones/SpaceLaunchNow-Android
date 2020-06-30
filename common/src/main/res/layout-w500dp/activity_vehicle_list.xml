@@ -9,8 +9,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    ​
-
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/detail.appbar"
         android:layout_width="match_parent"

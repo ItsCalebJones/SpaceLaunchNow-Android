@@ -1,5 +1,6 @@
 package me.calebjones.spacelaunchnow.events.detail;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
@@ -23,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.airbnb.deeplinkdispatch.DeepLink;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -44,6 +48,7 @@ import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ExpeditionAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.SpacestationAdapter;
+import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
@@ -131,13 +136,15 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
     private EventDataRepository eventDataRepository;
     private EventDetailViewModel viewModel;
     private Event event;
-    private int eventId;
+    private int mEventId;
     private SimpleDateFormat sdf;
     private int color;
     private LinearLayoutManager linearLayoutManager;
     private ListAdapter adapter;
     private ExpeditionAdapter expeditionAdapter;
     private SpacestationAdapter spacestationAdapter;
+    private boolean fromDeepLink = false;
+    private static final String ACTION_DEEP_LINK = "deep_link";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +163,17 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
 
         //Grab information from Intent
         Intent mIntent = getIntent();
-        eventId = mIntent.getIntExtra("eventId", 0);
+        String slug = null;
+        mEventId = mIntent.getIntExtra("eventId", 0);
+
+        if (mIntent.getBooleanExtra(DeepLink.IS_DEEP_LINK, false)) {
+            Bundle parameters = mIntent.getExtras();
+            if (ACTION_DEEP_LINK.equals(mIntent.getAction())) {
+                fromDeepLink = true;
+                slug = parameters.getString("slug");
+            }
+        }
+
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -196,7 +213,7 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
                 updateViews(event);
             }
         });
-        fetchData(eventId);
+        fetchData(mEventId, slug);
 
         if (!SupporterHelper.isSupporter()) {
             AdRequest adRequest = new AdRequest.Builder().build();
@@ -225,12 +242,15 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
         }
     }
 
-    private void fetchData(int eventId) {
+    private void fetchData(int eventId, String slug) {
 
-        eventDataRepository.getEventById(eventId, new Callbacks.EventCallback() {
+        eventDataRepository.getEventByIdOrSlug(eventId, slug, new Callbacks.EventCallback() {
             @Override
             public void onEventLoaded(Event event) {
                 if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    if (slug != null){
+                        mEventId = event.getId();
+                    }
                     updateViewModel(event);
                 }
             }
@@ -366,7 +386,7 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            onBackPressed();
+            NavUtils.navigateUpFromSameTask(this);
             return true;
         }
 
@@ -396,6 +416,14 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
 
     @Override
     public void onRefresh() {
-        fetchData(eventId);
+        fetchData(mEventId, null);
+    }
+
+    @DeepLink({"https://spacelaunchnow.me/event/{slug}/", "https://spacelaunchnow.me/event/{slug}"})
+    public static TaskStackBuilder intentForTaskStackBuilderMethods(Context context) throws ClassNotFoundException {
+        Intent detailsIntent = new Intent(context, EventDetailsActivity.class).setAction(ACTION_DEEP_LINK);
+        TaskStackBuilder  taskStackBuilder = TaskStackBuilder.create(context);
+        taskStackBuilder.addNextIntentWithParentStack(detailsIntent);
+        return taskStackBuilder;
     }
 }

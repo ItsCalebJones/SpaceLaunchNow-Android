@@ -261,4 +261,8 @@ public interface SpaceLaunchNowService {
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/event/{id}/")
     Call<Event> getEventById(@Path("id") int id);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/event/")
+    Call<EventResponse> getEventBySlug(@Query("slug") String slug);
 }

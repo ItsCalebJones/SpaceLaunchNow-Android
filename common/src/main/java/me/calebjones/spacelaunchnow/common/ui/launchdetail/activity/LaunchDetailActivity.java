@@ -1,6 +1,8 @@
 package me.calebjones.spacelaunchnow.common.ui.launchdetail.activity;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NavUtils;
+import androidx.core.app.TaskStackBuilder;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.airbnb.deeplinkdispatch.DeepLink;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -113,6 +117,7 @@ public class LaunchDetailActivity extends BaseActivity
     private DetailsViewModel model;
     private Boolean fromNotification = false;
     private Boolean fromLink = false;
+    private static final String ACTION_DEEP_LINK = "deep_link";
 
 
     @Override
@@ -212,16 +217,15 @@ public class LaunchDetailActivity extends BaseActivity
             launchId = mIntent.getStringExtra("launchID");
             fetchDataFromDatabaseForTitle(launchId);
             fetchDataFromNetwork(launchId);
-        } else if (action != null){
-            Uri data = mIntent.getData();
-            String slug = data.getLastPathSegment();
-            Timber.i(slug);
-            fetchDataFromDatabaseForTitleBySlug(slug);
-            fetchDataFromNetworkBySlug(slug);
-            fromLink = true;
+        } else if (mIntent.getBooleanExtra(DeepLink.IS_DEEP_LINK, false)) {
+            Bundle parameters = mIntent.getExtras();
+            if (ACTION_DEEP_LINK.equals(mIntent.getAction())) {
+                fromLink = true;
+                String slug = parameters.getString("slug");
+                fetchDataFromDatabaseForTitleBySlug(slug);
+                fetchDataFromNetworkBySlug(slug);
+            }
         }
-
-
 
 
         if (toolbar != null) {
@@ -254,6 +258,7 @@ public class LaunchDetailActivity extends BaseActivity
 
             @Override
             public void onError(String message, @Nullable Throwable throwable) {
+
                 if (throwable != null) {
                     Timber.e(throwable);
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, String.format("Error: %s", throwable.getLocalizedMessage()));
@@ -261,7 +266,12 @@ public class LaunchDetailActivity extends BaseActivity
                     Timber.e(message);
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
-                fetchDataFromDatabase(launchId);
+                if (fromLink){
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                    navigateHome();
+                } else {
+                    fetchDataFromDatabase(launchId);
+                }
             }
 
             @Override
@@ -610,32 +620,27 @@ public class LaunchDetailActivity extends BaseActivity
         if (id == android.R.id.home) {
             // IF activity is opened from notification - go to home screen directly.
             if (fromNotification != null && fromNotification){
-                Intent mainIntent;
-                try {
-                    mainIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(mainIntent);
-                    fromNotification = false;
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            } else if (fromLink != null && fromLink) {
-                Intent mainIntent;
-                try {
-                    mainIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
-                    mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(mainIntent);
-                    fromLink = false;
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                navigateHome();
             } else {
-                onBackPressed();
+                NavUtils.navigateUpFromSameTask(this);
             }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void navigateHome(){
+        Intent mainIntent;
+        try {
+            mainIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));
+            mainIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(mainIntent);
+            fromLink = false;
+            finish();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -651,5 +656,13 @@ public class LaunchDetailActivity extends BaseActivity
         if (!launchId.equals("")) {
             fetchDataFromNetwork(launchId);
         }
+    }
+
+    @DeepLink({"https://spacelaunchnow.me/launch/{slug}/", "https://spacelaunchnow.me/launch/{slug}"})
+    public static TaskStackBuilder intentForTaskStackBuilderMethods(Context context) throws ClassNotFoundException {
+        Intent detailsIntent = new Intent(context, LaunchDetailActivity.class).setAction(ACTION_DEEP_LINK);
+        TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+        taskStackBuilder.addNextIntentWithParentStack(detailsIntent);
+        return taskStackBuilder;
     }
 }

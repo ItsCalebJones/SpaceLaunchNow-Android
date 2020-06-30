@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.airbnb.deeplinkdispatch.DeepLink;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.crashlytics.android.Crashlytics;
@@ -89,6 +90,7 @@ import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.astronauts.list.AstronautListFragment;
 import timber.log.Timber;
 
+@DeepLink("https://spacelaunchnow.me/")
 public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, NextLaunchFragment.CallBackListener {
 
     private static final String NAV_ITEM_ID = "navItemId";
