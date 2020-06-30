@@ -73,6 +73,7 @@ public class DetailsLaunchDataLoader {
                     } else {
                         networkCallback.onNetworkFailure(404);
                     }
+
                 } else {
                     SpaceLaunchNowError error = ErrorUtil.parseSpaceLaunchNowError(response);
                     if (error.getMessage() != null && error.getMessage().contains("None found")) {

@@ -621,6 +621,7 @@ public class LaunchDetailActivity extends BaseActivity
             // IF activity is opened from notification - go to home screen directly.
             if (fromNotification != null && fromNotification){
                 navigateHome();
+
             } else {
                 NavUtils.navigateUpFromSameTask(this);
             }
