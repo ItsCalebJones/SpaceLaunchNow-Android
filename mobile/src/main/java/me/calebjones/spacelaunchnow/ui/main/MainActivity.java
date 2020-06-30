@@ -90,7 +90,13 @@ import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.astronauts.list.AstronautListFragment;
 import timber.log.Timber;
 
-@DeepLink("https://spacelaunchnow.me/")
+@DeepLink({
+        "https://spacelaunchnow.me/",
+        "https://spacelaunchnow.me/launch/upcoming",
+        "https://spacelaunchnow.me/launch/upcoming/",
+        "https://spacelaunchnow.me/launch/previous",
+        "https://spacelaunchnow.me/launch/previous/"
+})
 public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, NextLaunchFragment.CallBackListener {
 
     private static final String NAV_ITEM_ID = "navItemId";
