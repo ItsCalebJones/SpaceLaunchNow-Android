@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import me.calebjones.spacelaunchnow.data.models.main.Event;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
 import me.calebjones.spacelaunchnow.data.networking.error.SpaceLaunchNowError;
@@ -75,6 +76,34 @@ public class EventDataLoader {
 
             @Override
             public void onFailure(Call<Event> call, Throwable t) {
+                networkCallback.onFailure(t);
+            }
+        });
+    }
+
+    public void getEventBySlug(String slug, final Callbacks.EventNetworkCallback networkCallback) {
+        Timber.i("Running get event by slug %s", slug);
+        DataClient.getInstance().getEventBySlug(slug, new Callback<EventResponse>() {
+            @Override
+            public void onResponse(Call<EventResponse> call, Response<EventResponse> response) {
+                if (response.isSuccessful()) {
+                    EventResponse events = response.body();
+                    if (events != null && events.getCount() == 1){
+                        Event event = events.getEvents().get(0);
+                        Timber.v("Even: %s", event.getName() );
+                        networkCallback.onSuccess(event);
+                    } else {
+                        networkCallback.onNetworkFailure(404);
+                    }
+
+                } else {
+                    networkCallback.onNetworkFailure(response.code());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EventResponse> call, Throwable t) {
                 networkCallback.onFailure(t);
             }
         });

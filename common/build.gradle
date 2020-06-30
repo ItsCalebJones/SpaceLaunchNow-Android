@@ -17,9 +17,19 @@ android {
 
         vectorDrawables.useSupportLibrary = true
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        'deepLink.incremental': 'true',
+                ]
+            }
+        }
+
     }
     lintOptions{
         disable 'MissingTranslation'
+        disable 'InvalidVectorPath'
+        disable 'RtlCompat'
     }
     buildTypes {
         debug {}
@@ -96,4 +106,6 @@ dependencies {
     implementation deps.transitionseverywhere
     implementation deps.customtabs
     implementation deps.preferences
+    implementation deps.deepLinkDispatch
+    kapt deps.deepLinkDispatchAnnotation
 }

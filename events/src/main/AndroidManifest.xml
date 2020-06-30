@@ -2,10 +2,5 @@
     package="me.calebjones.spacelaunchnow.events">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <application>
-        <activity
-            android:name=".detail.EventDetailsActivity"
-            android:theme="@style/BaseAppTheme" />
-    </application>
 
 </manifest>

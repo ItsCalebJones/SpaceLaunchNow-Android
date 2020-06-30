@@ -76,6 +76,10 @@ public class EventDataRepository {
         return realm.where(Event.class).equalTo("id", id).findFirst();
     }
 
+    public Event getEventBySlugFromRealm(String slug) {
+        return realm.where(Event.class).equalTo("slug", slug).findFirst();
+    }
+
 
     private void getEventsFromNetwork(int limit, int offset, final Callbacks.EventListCallback callback) {
 
@@ -104,15 +108,46 @@ public class EventDataRepository {
     }
 
     @UiThread
-    public void getEventById(int id, Callbacks.EventCallback callback) {
-        callback.onEventLoaded(getEventByIdFromRealm(id));
-        getEventByIdFromNetwork(id, callback);
+    public void getEventByIdOrSlug(int id, String slug, Callbacks.EventCallback callback) {
+        if (id != 0) {
+            callback.onEventLoaded(getEventByIdFromRealm(id));
+            getEventByIdFromNetwork(id, callback);
+        } else if (slug != null) {
+            callback.onEventLoaded(getEventBySlugFromRealm(slug));
+            getEventBySlugFromNetwork(slug, callback);
+        }
+
     }
 
     private void getEventByIdFromNetwork(int id, final Callbacks.EventCallback callback) {
 
         callback.onNetworkStateChanged(true);
         dataLoader.getEvent(id, new Callbacks.EventNetworkCallback() {
+            @Override
+            public void onSuccess(Event event) {
+
+                callback.onNetworkStateChanged(false);
+                callback.onEventLoaded(event);
+            }
+
+            @Override
+            public void onNetworkFailure(int code) {
+                callback.onNetworkStateChanged(false);
+                callback.onError("Unable to load launch data.", null);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                callback.onNetworkStateChanged(false);
+                callback.onError("An error has occurred! Uh oh.", throwable);
+            }
+        });
+    }
+
+    private void getEventBySlugFromNetwork(String slug, final Callbacks.EventCallback callback) {
+
+        callback.onNetworkStateChanged(true);
+        dataLoader.getEventBySlug(slug, new Callbacks.EventNetworkCallback() {
             @Override
             public void onSuccess(Event event) {
 

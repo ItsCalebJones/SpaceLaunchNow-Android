@@ -70,6 +70,8 @@ public class DetailsLaunchDataLoader {
                         Timber.v("Launch: %s",launch.getName() );
                         dataSaver.saveLaunchToRealm(launch);
                         networkCallback.onSuccess(launch);
+                    } else {
+                        networkCallback.onNetworkFailure(404);
                     }
 
                 } else {

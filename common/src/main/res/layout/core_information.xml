@@ -384,7 +384,7 @@
                 android:id="@+id/landing_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="landing_location, landing_location_title, landing_type, landing_type_title, divider,
+                app:constraint_referenced_ids="landing_location, landing_location_title, landing_type, landing_type_title,
                 success_icon, landing_success_title, attempt_icon, landing_attempt_title, divider3" />
 
             <androidx.constraintlayout.widget.Group

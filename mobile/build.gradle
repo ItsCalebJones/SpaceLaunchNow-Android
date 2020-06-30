@@ -72,6 +72,14 @@ android {
         multiDexEnabled true
         wearAppUnbundled true
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [
+                        'deepLink.incremental': 'true',
+                ]
+            }
+        }
+
     }
     buildTypes {
         debug {
@@ -200,6 +208,8 @@ dependencies {
     annotationProcessor deps.butterknifeCompiler
     implementation deps.bottomNavigation
     implementation deps.preferences
+    implementation deps.deepLinkDispatch
+    annotationProcessor deps.deepLinkDispatchAnnotation
 }
 
 apply plugin: 'com.google.gms.google-services'
