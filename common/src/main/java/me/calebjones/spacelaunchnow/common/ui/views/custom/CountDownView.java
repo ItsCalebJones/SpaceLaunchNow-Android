@@ -279,7 +279,7 @@ public class CountDownView extends ConstraintLayout {
     private void setReasonConstraintToBottom() {
         ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(constraintLayout);
-        constraintSet.connect(R.id.common_status_reason, ConstraintSet.TOP, R.id.bottom_divider, ConstraintSet.BOTTOM,20);
+        constraintSet.connect(R.id.common_status_reason, ConstraintSet.TOP, R.id.bottom_divider, ConstraintSet.BOTTOM,60);
         constraintSet.applyTo(constraintLayout);
     }
 
