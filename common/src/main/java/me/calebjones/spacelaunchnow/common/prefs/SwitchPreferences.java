@@ -56,6 +56,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     private static String PREFS_SWITCH_PLES;
     private static String PREFS_SWITCH_VAN;
     private static String PREFS_SWITCH_CAPE;
+    private static String PREFS_SWITCH_OTHER_LSP;
     private static String PREFS_SWITCH_KSC;
     private static String PREFS_SWITCH_WALLOPS;
     private static String PREFS_SWITCH_JAPAN;
@@ -104,6 +105,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         PREFS_SWITCH_NORTHROP = "SWITCH_NORTHROP";
         PREFS_SWITCH_ALL = "SWITCH_ALL";
         PREFS_FAB_HIDDEN = "FAB_HIDDEN";
+        PREFS_SWITCH_OTHER_LSP = "OTHER_LSP";
         PREFS_PREV_VEHICLE_FILTERED_WHICH = "PREV_VEHICLE_FILTERED_WHICH";
         PREFS_PREV_AGENCY_FILTERED_WHICH = "PREV_AGENCY_FILTERED_WHICH";
         PREFS_PREV_LOCATION_FILTERED_WHICH = "PREV_LOCATION_FILTERED_WHICH";
@@ -521,7 +523,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     }
 
 
-    //Nasa Switch
+    //Russian Switch
     public boolean getSwitchRussia() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         return this.sharedPrefs.getBoolean(PREFS_SWITCH_PLES, true);
@@ -555,6 +557,19 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         } else {
             firebaseMessaging.unsubscribeFromTopic("nasa");
         }
+    }
+
+    //Nasa Switch
+    public boolean getSwitchOtherLSP() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_OTHER_LSP, true);
+    }
+
+    public void setSwitchOtherLSP(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_OTHER_LSP, key);
+        this.prefsEditor.apply();
     }
 
     //SpaceX Switch
