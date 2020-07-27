@@ -67,7 +67,7 @@ public class NextLaunchDataRepository {
 
                 Timber.d("%s greater then %s - updating library data.", timeSinceUpdate, timeMaxUpdate);
                 if (!forceRefresh) {
-                    nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
+                    nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm, false));
                 }
                 if (forceRefresh) {
                     RealmResults<Launch> launches = realm.where(Launch.class).findAll();
@@ -76,7 +76,7 @@ public class NextLaunchDataRepository {
 
                 getNextUpcomingLaunchesFromNetwork(count, nextLaunchesCallback);
             } else {
-                nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm));
+                nextLaunchesCallback.onLaunchesLoaded(QueryBuilder.buildUpcomingSwitchQuery(context, realm, false));
             }
         } else {
             getNextUpcomingLaunchesFromNetwork(count, nextLaunchesCallback);
@@ -99,7 +99,7 @@ public class NextLaunchDataRepository {
             @Override
             public void onSuccess() {
                 callback.onNetworkStateChanged(false);
-                RealmResults<Launch> launches = QueryBuilder.buildUpcomingSwitchQuery(context, realm);
+                RealmResults<Launch> launches = QueryBuilder.buildUpcomingSwitchQuery(context, realm, false);
                 callback.onLaunchesLoaded(launches);
             }
 

@@ -16,33 +16,28 @@ import me.calebjones.spacelaunchnow.data.models.main.Launch;
 public class QueryBuilder {
     public static boolean first = true;
 
-    public static RealmResults<Launch> buildUpcomingSwitchQuery(Context context, Realm realm) {
+    public static RealmResults<Launch> buildUpcomingSwitchQuery(Context context,
+                                                                Realm realm,
+                                                                boolean isCalendar) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         RealmQuery<Launch> query;
         if (switchPreferences.getAllSwitch()) {
-            query = getAllUpcomingQuery(context, realm);
+            query = getAllUpcomingQuery(context, realm, isCalendar);
         } else {
-            query = getSortedUpcomingQuery(context, realm);
+            query = getSortedUpcomingQuery(context, realm, isCalendar);
         }
         return query.findAll();
     }
 
-    public static RealmResults<Launch> buildUpcomingSwitchQueryForCalendar(Context context, Realm realm) {
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-        RealmQuery<Launch> query;
-        if (switchPreferences.getAllSwitch()) {
-            query = getAllUpcomingQueryForCalendar(context, realm);
-        } else {
-            query = getSortedUpcomingQueryForCalendar(context, realm);
-        }
-        return query.findAll();
-    }
-
-    private static RealmQuery<Launch> getAllUpcomingQuery(Context context, Realm realm) {
+    private static RealmQuery<Launch> getAllUpcomingQuery(Context context,
+                                                          Realm realm,
+                                                          boolean isCalendar) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         Calendar calendar = Calendar.getInstance();
-        if (switchPreferences.getPersistSwitch()) {
-            calendar.add(Calendar.HOUR_OF_DAY, -24);
+        if (!isCalendar) {
+            if (switchPreferences.getPersistSwitch()) {
+                calendar.add(Calendar.HOUR_OF_DAY, -24);
+            }
         }
         Date date = calendar.getTime();
         RealmQuery<Launch> query = realm.where(Launch.class)
@@ -55,27 +50,19 @@ public class QueryBuilder {
         return query;
     }
 
-    private static RealmQuery<Launch> getAllUpcomingQueryForCalendar(Context context, Realm realm) {
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-        Calendar calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-        RealmQuery<Launch> query = realm.where(Launch.class)
-                .greaterThanOrEqualTo("net", date);
-        if (switchPreferences.getTBDSwitch()) {
-            query.notEqualTo("status.id", 2);
-            query.findAll();
-        }
-        query.sort("net", Sort.ASCENDING);
-        return query;
-    }
-
-    private static RealmQuery<Launch> getSortedUpcomingQuery(Context context, Realm realm) {
+    private static RealmQuery<Launch> getSortedUpcomingQuery(Context context,
+                                                             Realm realm,
+                                                             boolean isCalendar) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
         boolean firstLSP = true;
         boolean firstLocation = true;
+
         Calendar calendar = Calendar.getInstance();
-        if (switchPreferences.getPersistSwitch()) {
-            calendar.add(Calendar.HOUR_OF_DAY, -24);
+
+        if (!isCalendar) {
+            if (switchPreferences.getPersistSwitch()) {
+                calendar.add(Calendar.HOUR_OF_DAY, -24);
+            }
         }
 
         Date date = calendar.getTime();
@@ -86,254 +73,25 @@ public class QueryBuilder {
         if (switchPreferences.getTBDSwitch()) {
             query.notEqualTo("status.id", 2).findAll();
         }
+
         query.beginGroup();
 
-        if (!switchPreferences.getSwitchNasa()) {
-            firstLSP = false;
-            query.notEqualTo("rocket.configuration.manufacturer.id", 44);
-        }
-
-        if (!switchPreferences.getSwitchArianespace()) {
-            if (!firstLSP) {
-                query.or();
-            } else {
-                firstLSP = false;
-            }
-            query.notEqualTo("rocket.configuration.manufacturer.id", 115);
-        }
-
-        if (!switchPreferences.getSwitchSpaceX()) {
-            if (!firstLSP) {
-                query.or();
-            } else {
-                firstLSP = false;
-            }
-            query.notEqualTo("rocket.configuration.manufacturer.id", 121);
-        }
-
-        if (!switchPreferences.getSwitchULA()) {
-            if (!firstLSP) {
-                query.or();
-            } else {
-                firstLSP = false;
-            }
-            query.notEqualTo("rocket.configuration.manufacturer.id", 124);
-        }
-
-        if (!switchPreferences.getSwitchRoscosmos()) {
-            if (!firstLSP) {
-                query.or();
-            } else {
-                firstLSP = false;
-            }
-            query.notEqualTo("rocket.configuration.manufacturer.id", 111)
-                    .or()
-                    .notEqualTo("rocket.configuration.manufacturer.id", 163)
-                    .or()
-                    .notEqualTo("rocket.configuration.manufacturer.id", 63);
-        }
-
-        if (!switchPreferences.getSwitchISRO()) {
-            if (!firstLSP) {
-                query.or();
-            } else {
-                firstLSP = false;
-            }
-            query.notEqualTo("rocket.configuration.manufacturer.id", 31);
-            query.or();
-            query.notEqualTo("pad.location.id", 14);
-        }
-
-        if (!switchPreferences.getSwitchBO()) {
-            if (!firstLSP) {
-                query.or();
-            } else {
-                firstLSP = false;
-            }
-            query.notEqualTo("rocket.configuration.manufacturer.id", 141);
-        }
-
-        if (!switchPreferences.getSwitchRL()) {
-            if (!firstLSP) {
-                query.or();
-            } else {
-                firstLSP = false;
-            }
-            query.notEqualTo("rocket.configuration.manufacturer.id", 147);
-        }
-
-        if (!switchPreferences.getSwitchNorthrop()) {
-            if (!firstLSP) {
-                query.or();
-            } else {
-                firstLSP = false;
-            }
-            query.notEqualTo("rocket.configuration.manufacturer.id", 257);
-        }
-
-        query.endGroup();
-        query.and();
-        query.beginGroup();
-
-        if (!switchPreferences.getSwitchKSC()) {
+        if (switchPreferences.getSwitchKSC()) {
             firstLocation = false;
-
-            query.notEqualTo("pad.location.id", 27);
+            query.beginGroup();
+            query.equalTo("pad.location.id", 27);
             query.or();
-            query.notEqualTo("pad.location.id", 12);
+            query.equalTo("pad.location.id", 12);
+            query.endGroup();
         }
 
-        if (!switchPreferences.getSwitchCASC()) {
-            if (!firstLocation) {
-                query.or();
-            } else {
-                firstLocation = false;
-            }
-            query.notEqualTo("pad.location.id", 17);
-            query.or();
-            query.notEqualTo("pad.location.id", 19);
-            query.or();
-            query.notEqualTo("pad.location.id", 33);
-            query.or();
-            query.notEqualTo("pad.location.id", 16);
-        }
-
-        if (!switchPreferences.getSwitchFG()) {
-            if (!firstLocation) {
-                query.or();
-            } else {
-                firstLocation = false;
-            }
-            query.notEqualTo("pad.location.id", 13);
-        }
-
-
-        if (!switchPreferences.getSwitchRussia()) {
-            if (!firstLocation) {
-                query.or();
-            } else {
-                firstLocation = false;
-            }
-            query.notEqualTo("pad.location.id", 15);
-            query.or();
-            query.notEqualTo("pad.location.id", 5);
-            query.or();
-            query.notEqualTo("pad.location.id", 6);
-            query.or();
-            query.notEqualTo("pad.location.id", 18);
-        }
-
-        if (!switchPreferences.getSwitchVan()) {
-            if (!firstLocation) {
-                query.or();
-            } else {
-                firstLocation = false;
-            }
-            query.notEqualTo("pad.location.id", 11);
-        }
-
-        if (!switchPreferences.getSwitchWallops()) {
-            if (!firstLocation) {
-                query.or();
-            } else {
-                firstLocation = false;
-            }
-            query.notEqualTo("pad.location.id", 21);
-        }
-
-        if (!switchPreferences.getSwitchNZ()) {
-            if (!firstLocation) {
-                query.or();
-            } else {
-                firstLocation = false;
-            }
-            query.notEqualTo("pad.location.id", 10);
-        }
-
-
-        if (!switchPreferences.getSwitchJapan()) {
-            if (!firstLocation) {
-                query.or();
-            } else {
-                firstLocation = false;
-            }
-            query.notEqualTo("pad.location.id", 24);
-            query.or();
-            query.notEqualTo("pad.location.id", 26);
-            query.or();
-            query.notEqualTo("pad.location.id", 32);
-        }
-
-        query.endGroup();
-
-        query.sort("net", Sort.ASCENDING);
-        return query;
-    }
-
-    private static RealmQuery<Launch> getSortedUpcomingQueryForCalendar(Context context, Realm realm) {
-        SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);
-        boolean first = true;
-        Calendar calendar = Calendar.getInstance();
-
-        Date date = calendar.getTime();
-        RealmQuery<Launch> query = realm.where(Launch.class).greaterThanOrEqualTo("net", date);
-        query.findAll();
-
-        if (switchPreferences.getTBDSwitch()) {
-            query.notEqualTo("status.id", 2).findAll();
-        }
-        query.beginGroup();
-
-        if (switchPreferences.getSwitchNasa()) {
-            first = false;
-            query.equalTo("rocket.configuration.manufacturer.id", 44);
-        }
-
-        if (switchPreferences.getSwitchArianespace()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.configuration.manufacturer.id", 115);
-        }
-
-        if (switchPreferences.getSwitchSpaceX()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.configuration.manufacturer.id", 121);
-        }
-
-        if (switchPreferences.getSwitchULA()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.configuration.manufacturer.id", 124);
-        }
-
-        if (switchPreferences.getSwitchRoscosmos()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.configuration.manufacturer.id", 111)
-                    .or()
-                    .equalTo("rocket.configuration.manufacturer.id", 163)
-                    .or()
-                    .equalTo("rocket.configuration.manufacturer.id", 63);
-        }
         if (switchPreferences.getSwitchCASC()) {
-            if (!first) {
+            if (!firstLocation) {
                 query.or();
             } else {
-                first = false;
+                firstLocation = false;
             }
+            query.beginGroup();
             query.equalTo("pad.location.id", 17);
             query.or();
             query.equalTo("pad.location.id", 19);
@@ -341,77 +99,25 @@ public class QueryBuilder {
             query.equalTo("pad.location.id", 33);
             query.or();
             query.equalTo("pad.location.id", 16);
-        }
-
-        if (switchPreferences.getSwitchISRO()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.configuration.manufacturer.id", 31);
-            query.or();
-            query.equalTo("pad.location.id", 14);
-        }
-
-        if (switchPreferences.getSwitchBO()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.configuration.manufacturer.id", 141);
-        }
-
-        if (switchPreferences.getSwitchRL()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.configuration.manufacturer.id", 147);
-        }
-
-        if (switchPreferences.getSwitchNorthrop()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("rocket.configuration.manufacturer.id", 257);
-        }
-
-        query.endGroup();
-        query.and();
-        query.beginGroup();
-
-        if (switchPreferences.getSwitchKSC()) {
-            if (!first) {
-                query.or();
-            } else {
-                first = false;
-            }
-            query.equalTo("pad.location.id", 27);
-            query.or();
-            query.equalTo("pad.location.id", 12);
+            query.endGroup();
         }
 
         if (switchPreferences.getSwitchFG()) {
-            if (!first) {
+            if (!firstLocation) {
                 query.or();
             } else {
-                first = false;
+                firstLocation = false;
             }
             query.equalTo("pad.location.id", 13);
         }
 
-
         if (switchPreferences.getSwitchRussia()) {
-            if (!first) {
+            if (!firstLocation) {
                 query.or();
             } else {
-                first = false;
+                firstLocation = false;
             }
+            query.beginGroup();
             query.equalTo("pad.location.id", 15);
             query.or();
             query.equalTo("pad.location.id", 5);
@@ -419,45 +125,184 @@ public class QueryBuilder {
             query.equalTo("pad.location.id", 6);
             query.or();
             query.equalTo("pad.location.id", 18);
+            query.endGroup();
         }
 
         if (switchPreferences.getSwitchVan()) {
-            if (!first) {
+            if (!firstLocation) {
                 query.or();
+            } else {
+                firstLocation = false;
             }
             query.equalTo("pad.location.id", 11);
         }
 
         if (switchPreferences.getSwitchWallops()) {
-            if (!first) {
+            if (!firstLocation) {
                 query.or();
+            } else {
+                firstLocation = false;
             }
             query.equalTo("pad.location.id", 21);
         }
 
         if (switchPreferences.getSwitchNZ()) {
-            if (!first) {
+            if (!firstLocation) {
                 query.or();
+            } else {
+                firstLocation = false;
             }
             query.equalTo("pad.location.id", 10);
         }
 
-
         if (switchPreferences.getSwitchJapan()) {
-            if (!first) {
+            if (!firstLocation) {
                 query.or();
+            } else {
+                firstLocation = false;
             }
-            query.equalTo("pad.location.id", 9);
+            query.beginGroup();
+            query.equalTo("pad.location.id", 24);
             query.or();
-            query.equalTo("pad.location.id", 41);
+            query.equalTo("pad.location.id", 26);
+            query.or();
+            query.equalTo("pad.location.id", 32);
+            query.endGroup();
         }
 
         query.endGroup();
 
+        query.and();
+
+        query.beginGroup();
+
+        if (!switchPreferences.getSwitchNasa()) {
+            firstLSP = false;
+            query.beginGroup();
+            query.notEqualTo("rocket.configuration.manufacturer.id", 44);
+            query.or();
+            query.notEqualTo("launchServiceProvider.id", 44);
+            query.endGroup();
+        }
+
+        if (!switchPreferences.getSwitchArianespace()) {
+            if (!firstLSP) {
+                query.and();
+            } else {
+                firstLSP = false;
+            }
+            query.beginGroup();
+            query.notEqualTo("rocket.configuration.manufacturer.id", 115);
+            query.or();
+            query.notEqualTo("launchServiceProvider.id", 115);
+            query.endGroup();
+        }
+
+        if (!switchPreferences.getSwitchSpaceX()) {
+            if (!firstLSP) {
+                query.and();
+            } else {
+                firstLSP = false;
+            }
+            query.beginGroup();
+            query.notEqualTo("launchServiceProvider.id", 121);
+            query.endGroup();
+        }
+
+        if (!switchPreferences.getSwitchULA()) {
+            if (!firstLSP) {
+                query.and();
+            } else {
+                firstLSP = false;
+            }
+            query.beginGroup();
+            query.notEqualTo("launchServiceProvider.id", 124);
+            query.endGroup();
+        }
+
+        if (!switchPreferences.getSwitchRoscosmos()) {
+            if (!firstLSP) {
+                query.and();
+            } else {
+                firstLSP = false;
+            }
+            query.beginGroup();
+            query.notEqualTo("rocket.configuration.manufacturer.id", 111);
+            query.or();
+            query.notEqualTo("rocket.configuration.manufacturer.id", 163);
+            query.or();
+            query.notEqualTo("rocket.configuration.manufacturer.id", 63);
+            query.or();
+            query.notEqualTo("launchServiceProvider.id", 111);
+            query.or();
+            query.notEqualTo("launchServiceProvider.id", 163);
+            query.or();
+            query.notEqualTo("launchServiceProvider.id", 63);
+            query.endGroup();
+
+        }
+
+        if (!switchPreferences.getSwitchISRO()) {
+            if (!firstLSP) {
+                query.and();
+            } else {
+                firstLSP = false;
+            }
+            query.beginGroup();
+            query.notEqualTo("rocket.configuration.manufacturer.id", 31);
+            query.or();
+            query.notEqualTo("pad.location.id", 14);
+            query.or();
+            query.notEqualTo("launchServiceProvider.id", 31);
+            query.endGroup();
+        }
+
+        if (!switchPreferences.getSwitchBO()) {
+            if (!firstLSP) {
+                query.and();
+            } else {
+                firstLSP = false;
+            }
+            query.beginGroup();
+            query.notEqualTo("rocket.configuration.manufacturer.id", 141);
+            query.or();
+            query.notEqualTo("launchServiceProvider.id", 141);
+            query.endGroup();
+        }
+
+        if (!switchPreferences.getSwitchRL()) {
+            if (!firstLSP) {
+                query.and();
+            } else {
+                firstLSP = false;
+            }
+            query.beginGroup();
+            query.notEqualTo("rocket.configuration.manufacturer.id", 147);
+            query.or();
+            query.notEqualTo("launchServiceProvider.id", 147);
+            query.endGroup();
+        }
+
+        if (!switchPreferences.getSwitchNorthrop()) {
+            if (!firstLSP) {
+                query.and();
+            } else {
+                firstLSP = false;
+            }
+            query.beginGroup();
+            query.notEqualTo("rocket.configuration.manufacturer.id", 257);
+            query.or();
+            query.notEqualTo("launchServiceProvider.id", 257);
+            query.endGroup();
+        }
+
+        query.endGroup();
+
+
+
         query.sort("net", Sort.ASCENDING);
         return query;
     }
-
 
     public static RealmResults<Launch> buildSwitchQuery(Context context, Realm realm) {
         SwitchPreferences switchPreferences = SwitchPreferences.getInstance(context);

@@ -68,7 +68,7 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
             launchRealms = query.sort("net", Sort.ASCENDING).findAll();
             Timber.v("loadLaunches - Realm query created.");
         } else {
-            launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
+            launchRealms = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm, false);
             Timber.v("loadLaunches - Filtered Realm query created - size: %s", launchRealms.size());
         }
 
