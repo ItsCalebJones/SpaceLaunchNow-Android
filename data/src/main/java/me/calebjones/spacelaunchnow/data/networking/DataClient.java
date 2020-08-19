@@ -5,6 +5,7 @@ import java.io.IOException;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
+import me.calebjones.spacelaunchnow.data.models.main.dashboards.Starship;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.Spacecraft;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
@@ -74,6 +75,16 @@ public class DataClient {
         Call<LaunchResponse> call;
 
         call = spaceLaunchNowService.getLaunchBySlug(slug, "detailed");
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Starship> getStarshipDashboard(Callback<Starship> callback) {
+        Call<Starship> call;
+
+        call = spaceLaunchNowService.getStarshipDashboard("list");
 
         call.enqueue(callback);
 

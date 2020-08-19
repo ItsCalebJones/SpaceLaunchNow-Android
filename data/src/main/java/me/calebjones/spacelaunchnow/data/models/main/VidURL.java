@@ -6,36 +6,24 @@ import com.google.gson.annotations.SerializedName;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class Mission extends RealmObject {
+public class VidURL extends RealmObject {
 
     @PrimaryKey
     @SerializedName("id")
     @Expose
     public Integer id;
-    @SerializedName("name")
+    @SerializedName("title")
     @Expose
     public String name;
     @SerializedName("description")
     @Expose
     public String description;
-    @SerializedName("type_name")
+    @SerializedName("feature_image")
     @Expose
-    public Integer type;
-    @SerializedName("type")
+    public String image;
+    @SerializedName("url")
     @Expose
-    public String typeName;
-    @SerializedName("orbit")
-    @Expose
-    public Orbit orbit;
-
-
-    public Orbit getOrbit() {
-        return orbit;
-    }
-
-    public void setOrbit(Orbit orbit) {
-        this.orbit = orbit;
-    }
+    public String url;
 
     public Integer getId() {
         return id;
@@ -61,19 +49,19 @@ public class Mission extends RealmObject {
         this.description = description;
     }
 
-    public Integer getType() {
-        return type;
+    public String getImage() {
+        return image;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public String getTypeName() {
-        return typeName;
+    public String getUrl() {
+        return url;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

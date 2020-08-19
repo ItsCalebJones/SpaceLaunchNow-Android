@@ -17,7 +17,6 @@ import androidx.viewpager.widget.ViewPager;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
-import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
 import me.calebjones.spacelaunchnow.ui.main.next.NextLaunchFragment;
 import timber.log.Timber;
@@ -50,7 +49,7 @@ public class LaunchesViewPager extends BaseFragment {
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
+        View inflatedView = inflater.inflate(R.layout.starship_fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
 //        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),

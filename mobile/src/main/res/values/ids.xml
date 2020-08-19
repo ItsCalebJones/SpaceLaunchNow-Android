@@ -11,4 +11,5 @@
     <item name="menu_iss" type="id"/>
     <item name="menu_astronauts" type="id"/>
     <item name="menu_events" type="id"/>
+    <item name="menu_starship" type="id"/>
 </resources>

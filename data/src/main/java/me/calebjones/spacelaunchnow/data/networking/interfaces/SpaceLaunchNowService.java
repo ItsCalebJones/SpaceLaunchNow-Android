@@ -4,6 +4,7 @@ import me.calebjones.spacelaunchnow.data.BuildConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
+import me.calebjones.spacelaunchnow.data.models.main.dashboards.Starship;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.Spacecraft;
@@ -31,7 +32,7 @@ import retrofit2.http.Query;
 
 public interface SpaceLaunchNowService {
 
-    String version = "api/3.4.0";
+    String version = "api/ll/2.0.0";
 
     // Spacecraft Configs
     // GET: /config/spacecraft
@@ -178,7 +179,7 @@ public interface SpaceLaunchNowService {
     // Astronaut
     // GET: /astronaut/
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
-    @GET(version + "/astronaut/{id}/?mode=launch_list")
+    @GET(version + "/astronaut/{id}/?mode=launchlist")
     Call<Astronaut> getAstronautsById(@Path("id") int id);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
@@ -265,4 +266,8 @@ public interface SpaceLaunchNowService {
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/event/")
     Call<EventResponse> getEventBySlug(@Query("slug") String slug);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/dashboard/starship/")
+    Call<Starship> getStarshipDashboard(@Query("mode") String mode);
 }

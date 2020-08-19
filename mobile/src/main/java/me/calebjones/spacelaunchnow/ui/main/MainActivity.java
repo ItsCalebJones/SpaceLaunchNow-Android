@@ -76,6 +76,7 @@ import me.calebjones.spacelaunchnow.common.ui.generate.Rate;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.news.ui.NewsViewPager;
+import me.calebjones.spacelaunchnow.starship.ui.StarshipViewPager;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
@@ -118,6 +119,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private SpacestationListFragment mSpacestationListFragment;
     private EventListFragment mEventsFragment;
     private AstronautListFragment mAstronautsListFragment;
+    private StarshipViewPager mStarshipDashboardFragment;
     private Drawer drawer = null;
     private SharedPreferences sharedPref;
     private SwitchPreferences switchPreferences;
@@ -132,6 +134,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private static final String VEHICLE_TAG = "VEHICLE_VIEWPAGER";
     private static final String ISS_TAG = "ISS_TAG";
     private static final String ASTRONAUT_TAG = "ASTRONAUT_TAG";
+    private static final String STARSHIP_TAG = "STARSHIP_TAG";
     private static final String EVENTS_TAG = "EVENTS_TAG";
     private static final String ASTRONAUT_DETAIL_TAG = "ASTRONAUT_DETAIL_TAG";
 
@@ -250,6 +253,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withIcon(FontAwesome.Icon.faw_user_astronaut)
                                 .withName(getString(R.string.astronauts))
                                 .withIdentifier(R.id.menu_astronauts)
+                                .withSelectable(true),
+                        new PrimaryDrawerItem()
+                                .withIcon(FontAwesome.Icon.faw_space_shuttle)
+                                .withName(getString(R.string.starship))
+                                .withIdentifier(R.id.menu_starship)
                                 .withSelectable(true),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem()
@@ -688,6 +696,19 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (mAstronautsListFragment == null)
                     mAstronautsListFragment = AstronautListFragment.newInstance();
                 navigateToFragment(mAstronautsListFragment, ASTRONAUT_TAG);
+
+                if (rate != null) {
+                    rate.showRequest();
+                }
+                break;
+            case R.id.menu_starship:
+                setActionBarTitle(getString(R.string.starship));
+                mNavItemId = R.id.menu_starship;
+                drawer.setSelection(mNavItemId, false);
+                removeAppBarElevation();
+                if (mStarshipDashboardFragment == null)
+                    mStarshipDashboardFragment = StarshipViewPager.newInstance();
+                navigateToFragment(mStarshipDashboardFragment, STARSHIP_TAG);
 
                 if (rate != null) {
                     rate.showRequest();

@@ -135,6 +135,7 @@ dependencies {
     implementation project(':news')
     implementation project(':spacestations')
     implementation project(':events')
+    implementation project(':starship')
     // Android Official Libraries
     implementation deps.archcore_coreRuntime
     implementation deps.appcompat
