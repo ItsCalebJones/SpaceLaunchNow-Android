@@ -49,7 +49,7 @@ public class LaunchesViewPager extends BaseFragment {
 
         sharedPreference = ListPreferences.getInstance(this.context);
 
-        View inflatedView = inflater.inflate(R.layout.starship_fragment_view_pager, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
 //        tabLayout.setTabTextColors(Utils.getTitleTextColor(getCyanea().getPrimary()),

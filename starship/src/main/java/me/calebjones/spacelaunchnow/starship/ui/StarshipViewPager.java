@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,17 +24,21 @@ import com.google.android.material.tabs.TabLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.dashboards.Starship;
-import me.calebjones.spacelaunchnow.starship.StarshipListViewModel;
+import me.calebjones.spacelaunchnow.starship.StarshipDashboardViewModel;
 import me.calebjones.spacelaunchnow.starship.data.Callbacks;
 import me.calebjones.spacelaunchnow.starship.data.StarshipDataRepository;
+import me.calebjones.spacelaunchnow.starship.ui.dashboard.StarshipDashboardFragment;
+import me.calebjones.spacelaunchnow.starship.ui.upcoming.StarshipUpcomingFragment;
+import me.calebjones.spacelaunchnow.starship.ui.vehicles.StarshipVehiclesFragment;
 import me.spacelaunchnow.starship.R;
 import me.spacelaunchnow.starship.R2;
 import timber.log.Timber;
 
-public class StarshipViewPager extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class StarshipViewPager extends BaseFragment {
 
 
     @BindView(R2.id.tabLayout)
@@ -40,12 +47,15 @@ public class StarshipViewPager extends BaseFragment implements SwipeRefreshLayou
     ViewPager viewPager;
     @BindView(R2.id.swipe_refresh)
     SwipeRefreshLayout swipeRefresh;
+    @BindView(R2.id.stateful_layout)
+    SimpleStatefulLayout statefulLayout;
 
     private PagerAdapter pagerAdapter;
     private Context context;
-    private StarshipListViewModel model;
+    private StarshipDashboardViewModel model;
     private StarshipDataRepository dataRepository;
     private Unbinder unbinder;
+    private boolean firstLaunch = true;
 
 
     public static StarshipViewPager newInstance() {
@@ -68,7 +78,7 @@ public class StarshipViewPager extends BaseFragment implements SwipeRefreshLayou
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.context = getActivity();
-
+        setHasOptionsMenu(true);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -83,14 +93,15 @@ public class StarshipViewPager extends BaseFragment implements SwipeRefreshLayou
         View inflatedView = inflater.inflate(R.layout.starship_fragment_view_pager, container, false);
         unbinder = ButterKnife.bind(this, inflatedView);
 
+
         tabLayout.addTab(tabLayout.newTab().setText("Overview"));
-        tabLayout.addTab(tabLayout.newTab().setText("Up Next"));
-        tabLayout.addTab(tabLayout.newTab().setText("News"));
+        tabLayout.addTab(tabLayout.newTab().setText("Tests"));
+        tabLayout.addTab(tabLayout.newTab().setText("Vehicles"));
 
         pagerAdapter = new PagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount());
 
-        swipeRefresh.setOnRefreshListener(this);
+        swipeRefresh.setEnabled(false);
 
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -111,8 +122,16 @@ public class StarshipViewPager extends BaseFragment implements SwipeRefreshLayou
             }
         });
 
-        model = ViewModelProviders.of(this).get(StarshipListViewModel.class);
+        model = ViewModelProviders.of(this).get(StarshipDashboardViewModel.class);
+
+        if (firstLaunch) {
+            statefulLayout.showProgress();
+        } else {
+            statefulLayout.showContent();
+        }
+        statefulLayout.setOfflineRetryOnClickListener(v -> fetchData());
         fetchData();
+        firstLaunch = false;
         return inflatedView;
     }
 
@@ -138,6 +157,7 @@ public class StarshipViewPager extends BaseFragment implements SwipeRefreshLayou
             @Override
             public void onError(String message, @Nullable Throwable throwable) {
                 if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    statefulLayout.showOffline();
                     if (throwable != null) {
                         Timber.e(throwable);
                     } else {
@@ -149,19 +169,38 @@ public class StarshipViewPager extends BaseFragment implements SwipeRefreshLayou
         });
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.starship_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (id == R.id.action_refresh) {
+            fetchData();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void showNetworkLoading(boolean refreshing) {
         swipeRefresh.setRefreshing(refreshing);
     }
 
     private void updateViewModel(Starship starship) {
-        model.getStarshipDashboard().setValue(starship);
+        if (starship != null) {
+            model.getStarshipDashboard().setValue(starship);
+            statefulLayout.showContent();
+        } else {
+            statefulLayout.showEmpty();
+        }
     }
-
-    @Override
-    public void onRefresh() {
-        fetchData();
-    }
-
 
     public class PagerAdapter extends FragmentPagerAdapter {
         int mNumOfTabs;
@@ -178,9 +217,9 @@ public class StarshipViewPager extends BaseFragment implements SwipeRefreshLayou
                 case 0:
                     return new StarshipDashboardFragment();
                 case 1:
-                    return new StarshipDashboardFragment();
+                    return new StarshipUpcomingFragment();
                 case 2:
-                    return new StarshipDashboardFragment();
+                    return new StarshipVehiclesFragment();
                 default:
                     return null;
             }

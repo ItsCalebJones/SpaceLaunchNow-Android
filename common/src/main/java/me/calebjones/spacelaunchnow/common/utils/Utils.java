@@ -52,6 +52,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.browser.customtabs.CustomTabsIntent;
 import me.calebjones.spacelaunchnow.common.R;
@@ -59,6 +61,7 @@ import me.calebjones.spacelaunchnow.common.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.common.customtab.SLNWebViewFallback;
 import saschpe.android.customtabs.CustomTabsHelper;
 import saschpe.android.customtabs.WebViewFallback;
+import timber.log.Timber;
 
 public class Utils {
 
@@ -92,6 +95,18 @@ public class Utils {
                 .scaleX(x).scaleY(y);
 
         return propertyAnimator;
+    }
+
+    public static String getYouTubeID(String vidURL) {
+        final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([a-zA-Z0-9_-]{11}|[a-zA-Z].*)";
+        final Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(vidURL);
+        Timber.v("Checking for match of %s", vidURL);
+        if (matcher.find() && (matcher.group(1) != null || matcher.group(2) != null) && matcher.group(5) != null) {
+            return matcher.group(5);
+        }
+        return null;
     }
 
     /**

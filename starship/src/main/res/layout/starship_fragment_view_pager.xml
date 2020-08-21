@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="true"
@@ -13,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentTop="true"
+        android:background="?colorPrimary"
         android:elevation="12dp"
         app:tabGravity="fill"
         app:tabMode="fixed"
@@ -20,15 +19,22 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
-        android:layout_below="@id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/tabLayout">
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewpager"
+        <cz.kinst.jakub.view.SimpleStatefulLayout
+            android:id="@+id/stateful_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:elevation="0dp" />
+            android:layout_height="match_parent">
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="0dp" />
+
+        </cz.kinst.jakub.view.SimpleStatefulLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>

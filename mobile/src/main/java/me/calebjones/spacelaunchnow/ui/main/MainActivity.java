@@ -702,7 +702,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 }
                 break;
             case R.id.menu_starship:
-                setActionBarTitle(getString(R.string.starship));
+                setActionBarTitle("Starship Development");
                 mNavItemId = R.id.menu_starship;
                 drawer.setSelection(mNavItemId, false);
                 removeAppBarElevation();

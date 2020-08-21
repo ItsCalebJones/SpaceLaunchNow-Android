@@ -311,7 +311,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
 
                 for (VidURL url : detailLaunch.getVidURLs()) {
-                    youTubeURL = getYouTubeID(url.getUrl());
+                    youTubeURL = Utils.getYouTubeID(url.getUrl());
                     if (youTubeURL != null) break;
                 }
 
@@ -344,7 +344,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                                 context.startActivity(sendIntent);
                             } else {
                                 String url = item.getVideoURL().toString();
-                                String youTubeID = getYouTubeID(url);
+                                String youTubeID = Utils.getYouTubeID(url);
                                 if (youTubePlayer != null && youTubeID != null) {
                                     youTubeURL = youTubeID;
                                     if (dialog != null && dialog.isShowing())
@@ -445,19 +445,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             youTubePlayer.cueVideo(videoId, 0);
         else
             youTubePlayer.cueVideo(videoId, 0);
-    }
-
-
-    private String getYouTubeID(String vidURL) {
-        final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([a-zA-Z0-9_-]{11}|[a-zA-Z].*)";
-        final Pattern pattern = Pattern.compile(regex);
-
-        Matcher matcher = pattern.matcher(vidURL);
-        Timber.v("Checking for match of %s", vidURL);
-        if (matcher.find() && (matcher.group(1) != null || matcher.group(2) != null) && matcher.group(5) != null) {
-            return matcher.group(5);
-        }
-        return null;
     }
 
     private void setupCountdownTimer(Launch launch) {

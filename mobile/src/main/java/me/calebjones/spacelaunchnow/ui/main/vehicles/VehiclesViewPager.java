@@ -52,7 +52,7 @@ public class VehiclesViewPager extends BaseFragment {
 
         setHasOptionsMenu(true);
 
-        View inflatedView = inflater.inflate(R.layout.starship_fragment_view_pager, container, false);
+        View inflatedView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.launchers));

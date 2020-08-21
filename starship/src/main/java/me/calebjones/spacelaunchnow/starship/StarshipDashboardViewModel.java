@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.data.models.main.dashboards.Starship;
 
-public class StarshipListViewModel extends ViewModel {
+public class StarshipDashboardViewModel extends ViewModel {
     private MutableLiveData<Starship> starship;
 
-    public StarshipListViewModel() { }
+    public StarshipDashboardViewModel() { }
 
 
     public MutableLiveData<Starship> getStarshipDashboard() {

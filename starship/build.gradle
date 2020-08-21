@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
@@ -50,7 +53,7 @@ dependencies {
     //Views
     implementation deps.statefulLayout
     implementation deps.butterknife
-    annotationProcessor deps.butterknifeCompiler
+    implementation project(path: ':events')
     implementation deps.glide
     annotationProcessor deps.glideCompiler
     implementation deps.playAds
@@ -61,4 +64,9 @@ dependencies {
     // YouTube Player
     implementation deps.androidyoutubeplayer_core
     implementation deps.androidyoutubeplayer_chromecast
+
+    implementation deps.glide
+    kapt deps.glideCompiler
+    implementation deps.glideTransformation
+    kapt 'com.jakewharton:butterknife-compiler:10.2.1'
 }

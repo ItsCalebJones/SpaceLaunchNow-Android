@@ -86,9 +86,9 @@ dependencies {
     implementation deps.retrofit
     implementation deps.converter_gson
     implementation deps.gson
-    implementation deps.glide
     implementation deps.legacySupportv4
     implementation deps.vectordrawable
+    implementation deps.glide
     kapt deps.glideCompiler
     implementation deps.glideTransformation
     implementation deps.timber

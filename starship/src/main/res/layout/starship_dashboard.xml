@@ -6,10 +6,10 @@
     android:orientation="vertical"
     >
 
-    <include layout="@layout/starship_dashboard_launch_card" />
-
-    <include layout="@layout/starship_dashboard_event_card" />
-
     <include layout="@layout/starship_dashboard_livestream_card" />
+
+    <include layout="@layout/starship_dashboard_roadclosure_card" />
+
+    <include layout="@layout/starship_dashboard_notices_card" />
 
 </LinearLayout>

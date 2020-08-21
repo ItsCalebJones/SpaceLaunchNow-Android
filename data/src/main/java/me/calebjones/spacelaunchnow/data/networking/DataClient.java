@@ -231,7 +231,7 @@ public class DataClient {
     }
 
     public Call<EventResponse> getUpcomingEvents(int limit, int offset, Callback<EventResponse> callback) {
-        Call<EventResponse> call = spaceLaunchNowService.getUpcomingEvents(limit, offset);
+        Call<EventResponse> call = spaceLaunchNowService.getUpcomingEvents(limit, offset, "list");
 
         call.enqueue(callback);
 
@@ -239,7 +239,7 @@ public class DataClient {
     }
 
     public Call<Event> getEventById(int id, Callback<Event> callback) {
-        Call<Event> call = spaceLaunchNowService.getEventById(id);
+        Call<Event> call = spaceLaunchNowService.getEventById(id, "list");
 
         call.enqueue(callback);
 
@@ -247,7 +247,7 @@ public class DataClient {
     }
 
     public Call<EventResponse> getEventBySlug(String slug, Callback<EventResponse> callback) {
-        Call<EventResponse> call = spaceLaunchNowService.getEventBySlug(slug);
+        Call<EventResponse> call = spaceLaunchNowService.getEventBySlug(slug, "list");
 
         call.enqueue(callback);
 

@@ -250,22 +250,23 @@ public interface SpaceLaunchNowService {
                                              @Query("serial_number") String serialNumber,
                                              @Query("flight_proven") Boolean flightProven,
                                              @Query("launcher_config") Integer launcherConfig,
-                                             @Query("launcher_config__launch_agency") Integer agency);
+                                             @Query("launcher_config__launch_agency") Integer agency,
+                                             @Query("mode") String mode);
 
 
     // Events
     // GET: /event
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/event/upcoming/")
-    Call<EventResponse> getUpcomingEvents(@Query("limit") int amount, @Query("offset") int offset);
+    Call<EventResponse> getUpcomingEvents(@Query("limit") int amount, @Query("offset") int offset, @Query("mode") String mode);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/event/{id}/")
-    Call<Event> getEventById(@Path("id") int id);
+    Call<Event> getEventById(@Path("id") int id, @Query("mode") String mode);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/event/")
-    Call<EventResponse> getEventBySlug(@Query("slug") String slug);
+    Call<EventResponse> getEventBySlug(@Query("slug") String slug, @Query("mode") String mode);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/dashboard/starship/")

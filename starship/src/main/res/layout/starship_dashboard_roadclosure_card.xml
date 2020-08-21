@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/material_card_edge_margin"
+    android:animateLayoutChanges="true"
+    android:background="?cardBackground"
+    android:padding="@dimen/material_card_edge_margin"
+    android:visibility="visible"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="@dimen/material_card_elevation_resting"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/roadclosure_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?colorAccent"
+            android:padding="@dimen/material_baseline_grid_1x"
+            android:text="Road Closures"
+            android:textAlignment="center"
+            android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+            android:textColor="@color/dark_primary_text_color_selector"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <cz.kinst.jakub.view.SimpleStatefulLayout
+            android:id="@+id/roadclosure_stateful_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:emptyLayout="@layout/empty_generic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/roadclosure_title">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/roadclosure_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </cz.kinst.jakub.view.SimpleStatefulLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

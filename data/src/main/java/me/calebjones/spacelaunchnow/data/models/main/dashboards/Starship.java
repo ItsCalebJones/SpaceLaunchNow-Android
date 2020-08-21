@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
-import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.data.models.main.VidURL;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.Launcher;
 import me.calebjones.spacelaunchnow.data.models.main.starship.Notice;
@@ -14,12 +14,12 @@ import me.calebjones.spacelaunchnow.data.models.main.starship.RoadClosure;
 
 public class Starship extends RealmObject {
 
-    @SerializedName("launches")
+    @SerializedName("previous")
     @Expose
-    public RealmList<Launch> launches;
-    @SerializedName("events")
+    public PreviousObjects previousObjects;
+    @SerializedName("upcoming")
     @Expose
-    public RealmList<Event> events;
+    public UpcomingObjects upcomingObjects;
     @SerializedName("live_streams")
     @Expose
     public RealmList<VidURL> liveStreams;
@@ -33,20 +33,21 @@ public class Starship extends RealmObject {
     @Expose
     public RealmList<Launcher> vehicles;
 
-    public RealmList<Launch> getLaunches() {
-        return launches;
+
+    public PreviousObjects getPreviousObjects() {
+        return previousObjects;
     }
 
-    public void setLaunches(RealmList<Launch> launches) {
-        this.launches = launches;
+    public void setPreviousObjects(PreviousObjects previousObjects) {
+        this.previousObjects = previousObjects;
     }
 
-    public RealmList<Event> getEvents() {
-        return events;
+    public UpcomingObjects getUpcomingObjects() {
+        return upcomingObjects;
     }
 
-    public void setEvents(RealmList<Event> events) {
-        this.events = events;
+    public void setUpcomingObjects(UpcomingObjects upcomingObjects) {
+        this.upcomingObjects = upcomingObjects;
     }
 
     public RealmList<VidURL> getLiveStreams() {
