@@ -68,6 +68,7 @@ import me.calebjones.spacelaunchnow.common.youtube.models.VideoListItem;
 import me.calebjones.spacelaunchnow.common.youtube.models.VideoResponse;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
+import me.calebjones.spacelaunchnow.data.models.main.VidURL;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 
@@ -309,8 +310,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
             if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
 
-                for (RealmStr url : detailLaunch.getVidURLs()) {
-                    youTubeURL = getYouTubeID(url.getVal());
+                for (VidURL url : detailLaunch.getVidURLs()) {
+                    youTubeURL = Utils.getYouTubeID(url.getUrl());
                     if (youTubeURL != null) break;
                 }
 
@@ -343,7 +344,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                                 context.startActivity(sendIntent);
                             } else {
                                 String url = item.getVideoURL().toString();
-                                String youTubeID = getYouTubeID(url);
+                                String youTubeID = Utils.getYouTubeID(url);
                                 if (youTubePlayer != null && youTubeID != null) {
                                     youTubeURL = youTubeID;
                                     if (dialog != null && dialog.isShowing())
@@ -358,80 +359,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                             }
                         });
 
-                        for (RealmStr s : detailLaunch.getVidURLs()) {
+                        for (VidURL s : detailLaunch.getVidURLs()) {
                             //Do your stuff here
-                            try {
-                                URI uri = new URI(s.getVal());
-                                String name;
-                                YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context, context.getResources().getString(R.string.GoogleMapsKey));
-                                if (uri.getHost().contains("youtube")) {
-                                    name = "YouTube";
-                                    String youTubeURL = getYouTubeID(s.getVal());
-                                    if (youTubeURL.contains("spacex/live")){
-                                        adapter.add(new VideoListItem.Builder(context)
-                                                .content("YouTube - SpaceX Livestream")
-                                                .videoURL(s.getVal())
-                                                .build());
-                                    } else {
-                                        youTubeAPIHelper.getVideoById(youTubeURL,
-                                                new Callback<VideoResponse>() {
-                                                    @Override
-                                                    public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                                                        if (response.isSuccessful()) {
-                                                            if (response.body() != null) {
-                                                                List<Video> videos = response.body().getVideos();
-                                                                if (videos.size() > 0) {
-                                                                    try {
-                                                                        adapter.add(new VideoListItem.Builder(context)
-                                                                                .content(videos.get(0).getSnippet().getTitle())
-                                                                                .videoURL(s.getVal())
-                                                                                .build());
-                                                                    } catch (Exception e) {
-                                                                        adapter.add(new VideoListItem.Builder(context)
-                                                                                .content(name)
-                                                                                .videoURL(s.getVal())
-                                                                                .build());
-                                                                    }
-                                                                } else {
-                                                                    adapter.add(new VideoListItem.Builder(context)
-                                                                            .content(name)
-                                                                            .videoURL(s.getVal())
-                                                                            .build());
-                                                                }
-                                                            } else {
-                                                                adapter.add(new VideoListItem.Builder(context)
-                                                                        .content(name)
-                                                                        .videoURL(s.getVal())
-                                                                        .build());
-                                                            }
-                                                        } else {
-                                                            adapter.add(new VideoListItem.Builder(context)
-                                                                    .content(name)
-                                                                    .videoURL(s.getVal())
-                                                                    .build());
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Call<VideoResponse> call, Throwable t) {
-                                                        adapter.add(new VideoListItem.Builder(context)
-                                                                .content(name)
-                                                                .videoURL(s.getVal())
-                                                                .build());
-                                                    }
-                                                });
-                                    }
-                                } else {
-                                    name = uri.getHost();
-                                    adapter.add(new VideoListItem.Builder(context)
-                                            .content(name)
-                                            .videoURL(s.getVal())
-                                            .build());
-                                }
-
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                            }
+                            adapter.add(new VideoListItem.Builder(context)
+                                    .content(s.getName())
+                                    .videoURL(s.getUrl())
+                                    .build());
                         }
 
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
@@ -512,19 +445,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             youTubePlayer.cueVideo(videoId, 0);
         else
             youTubePlayer.cueVideo(videoId, 0);
-    }
-
-
-    private String getYouTubeID(String vidURL) {
-        final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([a-zA-Z0-9_-]{11}|[a-zA-Z].*)";
-        final Pattern pattern = Pattern.compile(regex);
-
-        Matcher matcher = pattern.matcher(vidURL);
-        Timber.v("Checking for match of %s", vidURL);
-        if (matcher.find() && (matcher.group(1) != null || matcher.group(2) != null) && matcher.group(5) != null) {
-            return matcher.group(5);
-        }
-        return null;
     }
 
     private void setupCountdownTimer(Launch launch) {

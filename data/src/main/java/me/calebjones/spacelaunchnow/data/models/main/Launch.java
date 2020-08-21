@@ -28,7 +28,7 @@ public class Launch extends RealmObject {
     @SerializedName("name")
     @Expose
     public String name;
-    @SerializedName("img_url")
+    @SerializedName("image")
     @Expose
     public String imgUrl;
     @SerializedName("status")
@@ -75,7 +75,7 @@ public class Launch extends RealmObject {
     public RealmList<RealmStr> infoURLs = null;
     @SerializedName("vidURLs")
     @Expose
-    public RealmList<RealmStr> vidURLs = null;
+    public RealmList<VidURL> vidURLs = null;
     @SerializedName("rocket")
     @Expose
     public Rocket rocket;
@@ -262,11 +262,11 @@ public class Launch extends RealmObject {
         this.infoURLs = infoURLs;
     }
 
-    public RealmList<RealmStr> getVidURLs() {
+    public RealmList<VidURL> getVidURLs() {
         return vidURLs;
     }
 
-    public void setVidURLs(RealmList<RealmStr> vidURLs) {
+    public void setVidURLs(RealmList<VidURL> vidURLs) {
         this.vidURLs = vidURLs;
     }
 

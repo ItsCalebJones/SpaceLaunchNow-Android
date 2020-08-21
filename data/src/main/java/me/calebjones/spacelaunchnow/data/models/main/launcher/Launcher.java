@@ -31,6 +31,18 @@ public class Launcher extends RealmObject {
     @Expose
     public String imageUrl;
 
+    public LauncherConfig getLauncherConfig() {
+        return launcherConfig;
+    }
+
+    public void setLauncherConfig(LauncherConfig launcherConfig) {
+        this.launcherConfig = launcherConfig;
+    }
+
+    @SerializedName("launcher_config")
+    @Expose
+    public LauncherConfig launcherConfig;
+
     public Integer getPreviousFlights() {
         return previousFlights;
     }

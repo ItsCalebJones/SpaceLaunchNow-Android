@@ -13,6 +13,10 @@
         android:id="@+id/categoryIcon"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:padding="@dimen/material_baseline_grid_2x"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/launch_rocket"
@@ -26,8 +30,8 @@
         android:id="@+id/launch_rocket"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="@dimen/material_baseline_grid_1x"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
         android:fontFamily="sans-serif-condensed"
         android:gravity="left"
         android:maxLines="2"
@@ -38,7 +42,8 @@
         app:layout_constraintBottom_toTopOf="@+id/mission"
         app:layout_constraintEnd_toStartOf="@+id/status_pill_mini"
         app:layout_constraintStart_toEndOf="@+id/categoryIcon"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/categoryIcon"
+        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
@@ -48,14 +53,13 @@
         android:ellipsize="end"
         android:gravity="left"
         android:maxLines="2"
-        android:paddingBottom="2dp"
         android:paddingRight="16dp"
         android:singleLine="false"
         android:text="@string/unknown_mission"
         android:textColor="?android:textColorSecondary"
         app:layout_constraintBottom_toTopOf="@+id/location"
         app:layout_constraintEnd_toEndOf="@+id/launch_rocket"
-        app:layout_constraintStart_toEndOf="@+id/categoryIcon"
+        app:layout_constraintStart_toStartOf="@+id/launch_rocket"
         app:layout_constraintTop_toBottomOf="@+id/launch_rocket" />
 
     <TextView
@@ -65,13 +69,12 @@
         android:ellipsize="end"
         android:gravity="left"
         android:maxLines="2"
-        android:paddingBottom="2dp"
         android:paddingRight="16dp"
         android:singleLine="false"
         android:text="@string/unknown_launch_location"
         android:textColor="?android:textColorSecondary"
         app:layout_constraintBottom_toTopOf="@+id/launch_date"
-        app:layout_constraintEnd_toEndOf="@+id/launch_rocket"
+        app:layout_constraintEnd_toEndOf="@+id/mission"
         app:layout_constraintStart_toStartOf="@+id/mission"
         app:layout_constraintTop_toBottomOf="@+id/mission" />
 
@@ -79,17 +82,17 @@
         android:id="@+id/launch_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:ellipsize="end"
         android:gravity="left"
         android:maxLines="2"
-        android:paddingBottom="4dp"
         android:paddingRight="16dp"
         android:singleLine="false"
         android:text="@string/unknown_launch_date"
         android:textColor="?android:textColorSecondary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/launch_rocket"
-        app:layout_constraintStart_toEndOf="@+id/categoryIcon"
+        app:layout_constraintBottom_toBottomOf="@+id/categoryIcon"
+        app:layout_constraintEnd_toEndOf="@+id/location"
+        app:layout_constraintStart_toStartOf="@+id/location"
         app:layout_constraintTop_toBottomOf="@+id/location" />
 
     <include
