@@ -159,7 +159,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                 payloadType.setText(mission.getTypeName());
                 if (mission.getOrbit() != null && mission.getOrbit().getAbbrev() != null) {
                     orbit.setVisibility(View.VISIBLE);
-                    orbit.setText(String.format("%s (%s)", mission.getOrbit(), mission.getOrbit().getAbbrev()));
+                    orbit.setText(String.format("%s (%s)", mission.getOrbit().getName(), mission.getOrbit().getAbbrev()));
                 } else {
                     orbit.setVisibility(View.GONE);
                 }

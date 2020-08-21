@@ -85,21 +85,17 @@ public class StarshipUpcomingFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
         model = ViewModelProviders.of(getParentFragment()).get(StarshipDashboardViewModel.class);
-        model.getStarshipDashboard().observe(this, this::updateViews);
+        model.getStarshipDashboard().observe(this, this::viewRefreshed);
 
-        adapter = new CombinedAdapter(getContext(), ThemeHelper.isDarkMode(getActivity()));
-        launchRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        launchRecycler.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
-        launchRecycler.setAdapter(adapter);
 
         upcomingSwitch.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
                 if (checkedId == R.id.upcomingButton) {
                     showUpcoming = true;
-                    updateViews(starship);
+                    updateViews(starship, false);
                 } else if (checkedId == R.id.previousButton) {
                     showUpcoming = false;
-                    updateViews(starship);
+                    updateViews(starship, false);
                 }
             }
         });
@@ -107,46 +103,59 @@ public class StarshipUpcomingFragment extends BaseFragment {
         return view;
     }
 
+    private void viewRefreshed(Starship starship){
+        updateViews(starship, true);
+    }
 
-    private void updateViews(Starship starship) {
+
+    private void updateViews(Starship starship, boolean refreshed) {
+        launchRecycler.smoothScrollToPosition(0);
         this.starship = starship;
-        ArrayList<Object> upcomingCombinedObjects = new ArrayList<>();
-        ArrayList<Object> previousCombinedObjects = new ArrayList<>();
+        ArrayList<Object> combinedObjects = new ArrayList<>();
 
 
         if (showUpcoming) {
             if (this.starship.getUpcomingObjects().getEvents().size() > 0) {
-                upcomingCombinedObjects.addAll(this.starship.getUpcomingObjects().getEvents());
+                combinedObjects.addAll(this.starship.getUpcomingObjects().getEvents());
             }
 
             if (this.starship.getUpcomingObjects().getLaunches().size() > 0) {
-                upcomingCombinedObjects.addAll(this.starship.getUpcomingObjects().getLaunches());
+                combinedObjects.addAll(this.starship.getUpcomingObjects().getLaunches());
             }
 
-            if (upcomingCombinedObjects.size() > 0) {
+            if (combinedObjects.size() > 0) {
                 combinedStatefulLayout.showContent();
             } else {
                 combinedStatefulLayout.showEmpty();
             }
-
-            adapter.addItems(sortMultiClassList(upcomingCombinedObjects, true));
+            combinedObjects = sortMultiClassList(combinedObjects, true);
         } else {
             if (this.starship.getPreviousObjects().getEvents().size() > 0) {
-                previousCombinedObjects.addAll(this.starship.getPreviousObjects().getEvents());
+                combinedObjects.addAll(this.starship.getPreviousObjects().getEvents());
             }
 
             if (this.starship.getPreviousObjects().getLaunches().size() > 0) {
-                previousCombinedObjects.addAll(this.starship.getPreviousObjects().getLaunches());
+                combinedObjects.addAll(this.starship.getPreviousObjects().getLaunches());
             }
 
-            if (previousCombinedObjects.size() > 0) {
+            if (combinedObjects.size() > 0) {
                 combinedStatefulLayout.showContent();
             } else {
                 combinedStatefulLayout.showEmpty();
             }
 
-            adapter.addItems(sortMultiClassList(previousCombinedObjects, false));
+            combinedObjects = sortMultiClassList(combinedObjects, false);
         }
+
+        if (refreshed) {
+            adapter = new CombinedAdapter(getContext(), ThemeHelper.isDarkMode(getActivity()));
+            launchRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+            launchRecycler.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+            launchRecycler.setAdapter(adapter);
+        } else {
+            adapter.clear();
+        }
+        adapter.addItems(combinedObjects);
     }
 
     public ArrayList<Object> sortMultiClassList(ArrayList<Object> yourList, boolean ascending) {
