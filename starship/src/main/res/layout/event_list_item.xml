@@ -45,7 +45,7 @@
         tools:text="Soyuz MS-17 Docking" />
 
     <TextView
-        android:id="@+id/event_date"
+        android:id="@+id/event_location"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
@@ -56,13 +56,13 @@
         android:singleLine="false"
         tools:text="Location"
         android:textColor="?android:textColorSecondary"
-        app:layout_constraintBottom_toTopOf="@+id/event_location"
+        app:layout_constraintBottom_toTopOf="@+id/event_date"
         app:layout_constraintEnd_toEndOf="@+id/event_title"
         app:layout_constraintStart_toStartOf="@+id/event_title"
         app:layout_constraintTop_toBottomOf="@+id/event_title" />
 
     <TextView
-        android:id="@+id/event_location"
+        android:id="@+id/event_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -75,8 +75,8 @@
         android:textColor="?android:textColorSecondary"
         app:layout_constraintBottom_toBottomOf="@+id/event_icon"
         app:layout_constraintEnd_toEndOf="@+id/event_title"
-        app:layout_constraintStart_toStartOf="@+id/event_date"
-        app:layout_constraintTop_toBottomOf="@+id/event_date"
+        app:layout_constraintStart_toStartOf="@+id/event_location"
+        app:layout_constraintTop_toBottomOf="@+id/event_location"
         tools:text="Date" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

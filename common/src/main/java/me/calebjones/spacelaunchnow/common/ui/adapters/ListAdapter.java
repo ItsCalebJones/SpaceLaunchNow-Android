@@ -144,7 +144,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             //Get launch date
             launchDate = sdf.format(launchItem.getNet());
 
-            holder.launch_date.setText(String.format(mContext.getString(R.string.to_be_determined_with_value), launchDate));
+            holder.launch_date.setText(launchDate);
         } else {
             launchDate = sdf.format(launchItem.getNet());
             holder.launch_date.setText(launchDate);
