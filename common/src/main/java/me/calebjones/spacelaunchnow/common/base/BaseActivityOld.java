@@ -60,9 +60,9 @@ public class BaseActivityOld extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         Timber.d("onDestroy");
         realm.close();
+        super.onDestroy();
     }
 
     @Override

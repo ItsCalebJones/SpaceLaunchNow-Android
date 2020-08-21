@@ -25,18 +25,27 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
+import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.views.DialogAdapter;
+import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.common.youtube.models.VideoListItem;
+import me.calebjones.spacelaunchnow.data.models.main.Event;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.data.models.main.VidURL;
 import me.calebjones.spacelaunchnow.data.models.main.dashboards.Starship;
 import me.calebjones.spacelaunchnow.starship.StarshipDashboardViewModel;
 import me.calebjones.spacelaunchnow.starship.data.StarshipDataRepository;
+import me.calebjones.spacelaunchnow.starship.ui.upcoming.CombinedAdapter;
 import me.spacelaunchnow.starship.R;
 import me.spacelaunchnow.starship.R2;
 
@@ -49,6 +58,8 @@ public class StarshipDashboardFragment extends BaseFragment {
     YouTubePlayerView youtubeView;
     @BindView(R2.id.starship_dashboard_coordinator)
     CoordinatorLayout starshipDashboardCoordinator;
+    @BindView(R2.id.upnext_recyclerview)
+    RecyclerView upnextRecyclerview;
     @BindView(R2.id.roadclosure_recyclerview)
     RecyclerView roadclosureRecyclerview;
     @BindView(R2.id.notices_recyclerview)
@@ -63,6 +74,8 @@ public class StarshipDashboardFragment extends BaseFragment {
     SimpleStatefulLayout roadclosureStatefulLayout;
     @BindView(R2.id.notices_stateful_layout)
     SimpleStatefulLayout noticesStatefulLayout;
+    @BindView(R2.id.upnext_stateful_layout)
+    SimpleStatefulLayout upnextStatefulLayout;
 
 
     private StarshipDataRepository dataRepository;
@@ -74,6 +87,7 @@ public class StarshipDashboardFragment extends BaseFragment {
     private NoticesAdapter noticesAdapter;
     private Dialog dialog;
     private String youTubeURL;
+    private CombinedAdapter adapter;
 
 
     /**
@@ -107,11 +121,18 @@ public class StarshipDashboardFragment extends BaseFragment {
 
         roadClosureAdapter = new RoadClosureAdapter(getContext());
         roadclosureRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        roadclosureRecyclerview.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         roadclosureRecyclerview.setAdapter(roadClosureAdapter);
 
         noticesAdapter = new NoticesAdapter(getContext());
         noticeRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        noticeRecyclerview.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
         noticeRecyclerview.setAdapter(noticesAdapter);
+
+        adapter = new CombinedAdapter(getContext(), ThemeHelper.isDarkMode(getActivity()));
+        upnextRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        upnextRecyclerview.setAdapter(adapter);
+
 
         if (savedInstanceState != null) {
             youTubeURL = savedInstanceState.getString("youTubeID");
@@ -170,6 +191,22 @@ public class StarshipDashboardFragment extends BaseFragment {
                 });
             }, true);
         }
+        ArrayList<Object> upcomingCombinedObjects = new ArrayList<>();
+        if (starship.getUpcomingObjects().getEvents().size() > 0) {
+            upcomingCombinedObjects.addAll(starship.getUpcomingObjects().getEvents());
+        }
+
+        if (starship.getUpcomingObjects().getLaunches().size() > 0) {
+            upcomingCombinedObjects.addAll(starship.getUpcomingObjects().getLaunches());
+        }
+
+        if (upcomingCombinedObjects.size() > 0) {
+            upnextStatefulLayout.showContent();
+        } else {
+            upnextStatefulLayout.showEmpty();
+        }
+
+        adapter.addItems(sortMultiClassList(upcomingCombinedObjects));
 
         if (starship.getRoadClosures().size() > 0) {
             roadclosureStatefulLayout.showContent();
@@ -228,6 +265,23 @@ public class StarshipDashboardFragment extends BaseFragment {
             }
         });
 
+    }
+
+    public ArrayList<Object> sortMultiClassList(ArrayList<Object> yourList) {
+        Collections.sort(yourList, (Comparator<Object>) (o1, o2) -> {
+            if (o1 instanceof LaunchList && o2 instanceof LaunchList) {
+                return ((LaunchList) o1).getNet().compareTo(((LaunchList) o2).getNet());
+            } else if (o1 instanceof LaunchList && o2 instanceof Event) {
+                return ((LaunchList) o1).getNet().compareTo(((Event) o2).getDate());
+            } else if (o1 instanceof Event && o2 instanceof LaunchList) {
+                return ((Event) o1).getDate().compareTo(((LaunchList) o2).getNet());
+            } else if (o1 instanceof Event && o2 instanceof Event) {
+                return ((Event) o1).getDate().compareTo(((Event) o2).getDate());
+            } else {
+                throw new IllegalArgumentException("Don't know how to compare");
+            }
+        });
+        return yourList;
     }
 
 

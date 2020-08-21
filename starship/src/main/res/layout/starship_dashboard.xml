@@ -8,6 +8,8 @@
 
     <include layout="@layout/starship_dashboard_livestream_card" />
 
+    <include layout="@layout/starship_dashboard_upnext" />
+
     <include layout="@layout/starship_dashboard_roadclosure_card" />
 
     <include layout="@layout/starship_dashboard_notices_card" />

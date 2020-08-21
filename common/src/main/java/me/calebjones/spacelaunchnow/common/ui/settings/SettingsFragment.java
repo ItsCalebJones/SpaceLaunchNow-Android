@@ -121,9 +121,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mRealm.close();
         Timber.d("onDestroy");
+        super.onDestroy();
     }
 
     @Override

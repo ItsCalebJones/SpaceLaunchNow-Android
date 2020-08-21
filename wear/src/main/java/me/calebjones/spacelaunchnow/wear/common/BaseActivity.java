@@ -16,6 +16,5 @@ public class BaseActivity extends WearableActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Timber.v("onDestroy");
     }
 }

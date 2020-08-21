@@ -95,7 +95,7 @@ public class StarshipViewPager extends BaseFragment {
 
 
         tabLayout.addTab(tabLayout.newTab().setText("Overview"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tests"));
+        tabLayout.addTab(tabLayout.newTab().setText("Events"));
         tabLayout.addTab(tabLayout.newTab().setText("Vehicles"));
 
         pagerAdapter = new PagerAdapter

@@ -29,13 +29,13 @@
         android:id="@+id/text_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="4dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/categoryIcon"
         app:layout_constraintEnd_toStartOf="@+id/pill_layout"
         app:layout_constraintStart_toEndOf="@+id/categoryIcon"
         app:layout_constraintTop_toTopOf="@+id/categoryIcon"
-        app:layout_constraintVertical_bias="0.25">
+        app:layout_constraintVertical_bias="0.0">
 
 
         <TextView
@@ -91,24 +91,25 @@
     <LinearLayout
         android:id="@+id/pill_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/categoryIcon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/categoryIcon"
-        app:layout_constraintVertical_bias="0.25">
+        app:layout_constraintVertical_bias="0.0">
 
         <include
             android:id="@+id/status_pill_mini"
             layout="@layout/status_pill_mini"
-            android:layout_width="70dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp" />
 
         <include
             android:id="@+id/landing_pill_mini"
             layout="@layout/landing_pill_mini"
-            android:layout_width="70dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
@@ -117,7 +118,7 @@
         <include
             android:id="@+id/launcher_pill_mini"
             layout="@layout/launcher_pill_mini"
-            android:layout_width="70dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"

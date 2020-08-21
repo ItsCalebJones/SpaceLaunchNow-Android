@@ -165,10 +165,11 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+
         if (bp != null) {
             bp.release();
         }
+        super.onDestroy();
     }
 
     @Override
