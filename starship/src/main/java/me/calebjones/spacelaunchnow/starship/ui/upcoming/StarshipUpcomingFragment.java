@@ -192,6 +192,14 @@ public class StarshipUpcomingFragment extends BaseFragment {
         return yourList;
     }
 
+    @Override
+    public void onResume() {
+        if (starship != null) {
+            updateViews(starship, false);
+        }
+        super.onResume();
+    }
+
 
     @Override
     public void onAttach(Context context) {

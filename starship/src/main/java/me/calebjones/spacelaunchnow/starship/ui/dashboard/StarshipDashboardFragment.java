@@ -202,11 +202,14 @@ public class StarshipDashboardFragment extends BaseFragment {
 
         if (upcomingCombinedObjects.size() > 0) {
             upnextStatefulLayout.showContent();
+            upcomingCombinedObjects = sortMultiClassList(upcomingCombinedObjects);
+            Object object = upcomingCombinedObjects.get(0);
+            upcomingCombinedObjects = new ArrayList<>();
+            upcomingCombinedObjects.add(object);
+            adapter.addItems(upcomingCombinedObjects);
         } else {
             upnextStatefulLayout.showEmpty();
         }
-
-        adapter.addItems(sortMultiClassList(upcomingCombinedObjects));
 
         if (starship.getRoadClosures().size() > 0) {
             roadclosureStatefulLayout.showContent();

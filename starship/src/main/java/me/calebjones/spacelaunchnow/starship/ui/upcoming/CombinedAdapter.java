@@ -260,7 +260,7 @@ public class CombinedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 //Get launch date
                 launchDate = sdf.format(launchItem.getNet());
 
-                launch_date.setText(String.format(context.getString(me.calebjones.spacelaunchnow.common.R.string.to_be_determined_with_value), launchDate));
+                launch_date.setText(launchDate);
             } else {
                 launchDate = sdf.format(launchItem.getNet());
                 launch_date.setText(launchDate);
