@@ -181,8 +181,5 @@ public class AgencyDetailFragment extends BaseFragment {
         startActivity(intent);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+
 }

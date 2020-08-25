@@ -293,9 +293,6 @@ public class StarshipDashboardFragment extends BaseFragment {
         super.onAttach(context);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+
 
 }

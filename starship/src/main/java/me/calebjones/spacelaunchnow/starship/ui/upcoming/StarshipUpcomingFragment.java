@@ -200,15 +200,4 @@ public class StarshipUpcomingFragment extends BaseFragment {
         super.onResume();
     }
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
 }

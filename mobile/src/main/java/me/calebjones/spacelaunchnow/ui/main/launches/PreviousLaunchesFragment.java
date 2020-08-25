@@ -249,20 +249,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         sChildFragmentManagerField = f;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
 
-        if (sChildFragmentManagerField != null) {
-            try {
-                sChildFragmentManagerField.set(this, null);
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                e.getLocalizedMessage();
-                Timber.e("Error setting mChildFragmentManager field %s ", e);
-            }
-        }
-    }
 
     @Override
     public void onDestroyView() {

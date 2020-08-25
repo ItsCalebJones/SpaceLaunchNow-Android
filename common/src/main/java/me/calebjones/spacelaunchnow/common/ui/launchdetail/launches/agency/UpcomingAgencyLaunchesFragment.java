@@ -143,11 +143,7 @@ public class UpcomingAgencyLaunchesFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
+
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");

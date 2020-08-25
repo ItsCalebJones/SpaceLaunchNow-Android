@@ -109,11 +109,7 @@ public class LaunchesViewPager extends BaseFragment {
         super.onStop();
     }
 
-    @Override
-    public void onDetach() {
-        Timber.d("onDetach");
-        super.onDetach();
-    }
+
 
     @Override
     public void onDestroyView() {

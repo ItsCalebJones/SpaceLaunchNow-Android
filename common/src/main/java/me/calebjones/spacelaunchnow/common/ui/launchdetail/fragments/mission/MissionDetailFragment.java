@@ -313,9 +313,6 @@ public class MissionDetailFragment extends RetroFitFragment {
         return new MissionDetailFragment();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+
 
 }

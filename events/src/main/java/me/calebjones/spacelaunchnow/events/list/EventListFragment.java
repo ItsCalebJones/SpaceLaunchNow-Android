@@ -191,10 +191,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
         super.onAttach(context);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+
 
     @Override
     public void onRefresh() {
