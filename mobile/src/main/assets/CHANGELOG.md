@@ -3,6 +3,13 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
+#### Updated 8-25-2020
+---
+### Version 3.6.0
+#### Changelog
+Add Starship development tracking page - follow along with livestreams, view Road Closures and testing events.
+
+## Changelog
 #### Updated 1-20-2020
 ---
 ### Version 3.3.6

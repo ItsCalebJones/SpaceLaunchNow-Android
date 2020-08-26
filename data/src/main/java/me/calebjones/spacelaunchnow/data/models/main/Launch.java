@@ -72,7 +72,7 @@ public class Launch extends RealmObject {
     public Pad pad;
     @SerializedName("infoURLs")
     @Expose
-    public RealmList<RealmStr> infoURLs = null;
+    public RealmList<InfoURL> infoURLs = null;
     @SerializedName("vidURLs")
     @Expose
     public RealmList<VidURL> vidURLs = null;
@@ -254,11 +254,11 @@ public class Launch extends RealmObject {
         this.pad = pad;
     }
 
-    public RealmList<RealmStr> getInfoURLs() {
+    public RealmList<InfoURL> getInfoURLs() {
         return infoURLs;
     }
 
-    public void setInfoURLs(RealmList<RealmStr> infoURLs) {
+    public void setInfoURLs(RealmList<InfoURL> infoURLs) {
         this.infoURLs = infoURLs;
     }
 
