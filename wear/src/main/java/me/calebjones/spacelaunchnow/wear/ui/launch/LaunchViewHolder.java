@@ -20,8 +20,6 @@ public class LaunchViewHolder extends RecyclerView.ViewHolder {
     TextView launchRocket;
     @BindView(R.id.mission)
     TextView launchMission;
-    @BindView(R.id.location)
-    TextView launchLocation;
     @BindView(R.id.launch_date)
     TextView launchDate;
     @BindView(R.id.rootview)

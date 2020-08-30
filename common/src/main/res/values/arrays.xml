@@ -58,6 +58,14 @@
         <item>24-Hour Format</item>
     </string-array>
 
+    <string-array name="time_format_array_entries"
+        translatable="false">
+        <item>Default</item>
+        <item>12-Hour AM/PM Format</item>
+        <item>24-Hour Format</item>
+    </string-array>
+
+
     <integer-array name="background_color_presets" translatable="false">
         <item>@color/custom_background_material_light</item>
         <item>@color/custom_background_material_dark</item>
@@ -123,15 +131,16 @@
     </integer-array>
     <string-array name="empty"/>
     <string-array name="theme_list_array"
-        tools:ignore="InconsistentArrays">
+        translatable="false">
         <item>Light</item>
         <item>Dark</item>
+        <item>Default</item>
     </string-array>
 
     <string-array name="theme_entry_array"
-        tools:ignore="InconsistentArrays"
         translatable="false">
         <item>light</item>
         <item>dark</item>
+        <item>default</item>
     </string-array>
 </resources>

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.wear.widget.WearableLinearLayoutManager;
 import androidx.wear.widget.WearableRecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +39,7 @@ import static me.calebjones.spacelaunchnow.wear.model.Constants.UI_STATE_REQUEST
 public class LaunchFragment extends Fragment implements ContentManager.ContentCallback, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.recycler_view)
-    RecyclerView recyclerView;
+    WearableRecyclerView recyclerView;
     @BindView(R.id.connectivity_icon)
     ImageView mConnectivityIcon;
     @BindView(R.id.connectivity_text)
@@ -85,7 +86,7 @@ public class LaunchFragment extends Fragment implements ContentManager.ContentCa
         WearableRecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST);
         recyclerView.addItemDecoration(itemDecoration);
         recyclerView.setElevation(0);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new WearableLinearLayoutManager(getActivity()));
 
         return rootView;
     }

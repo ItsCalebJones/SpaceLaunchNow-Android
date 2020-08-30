@@ -43,8 +43,4 @@
         <item>Format AM/PM</item>
         <item>Format 24 Heures</item>
     </string-array>
-    <string-array name="theme_list_array" tools:ignore="InconsistentArrays">
-        <item>Clair</item>
-        <item>Foncé</item>
-    </string-array>
 </resources>

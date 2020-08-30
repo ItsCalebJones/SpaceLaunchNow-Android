@@ -43,8 +43,4 @@
         <item>12 órás AM/PM formátum</item>
         <item>24 órás formátum</item>
     </string-array>
-    <string-array name="theme_list_array" tools:ignore="InconsistentArrays">
-        <item>Világos</item>
-        <item>Sötét</item>
-    </string-array>
 </resources>

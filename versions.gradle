@@ -3,15 +3,15 @@ ext {
     app = [
             versionMajor: 3,
             versionMinor: 6,
-            versionPatch: 0,
-            versionCode: 5
+            versionPatch: 1,
+            versionCode: 1
 
 
     ]
 
     // Sdk and tools
     minSdkVersion = 21
-    wearMinSdkVersion = 23
+    wearMinSdkVersion = 24
     targetSdkVersion = 28
     compileSdkVersion = 29
     buildToolsVersion = '29.0.2'
@@ -61,8 +61,8 @@ ext.deps = [
         percentlayout                  : "androidx.percentlayout:percentlayout:1.0.0",
         wear                           : "androidx.wear:wear:1.0.0",
         media                          : "androidx.media:media:1.0.0",
-        wearable                       : "com.google.android.wearable:wearable:2.4.0",
-        supportWearable                : "com.google.android.support:wearable:2.4.0",
+        wearable                       : "com.google.android.wearable:wearable:2.7.0",
+        supportWearable                : "com.google.android.support:wearable:2.7.0",
         room                           : "androidx.room:room-runtime:$roomVersion",
         roomCompiler                   : "androidx.room:room-compiler:$roomVersion",
         paging                         : "androidx.paging:paging-runtime-ktx:2.1.1",

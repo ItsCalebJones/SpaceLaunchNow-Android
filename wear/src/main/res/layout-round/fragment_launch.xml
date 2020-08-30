@@ -83,14 +83,14 @@
 
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.wear.widget.WearableRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
             android:paddingEnd="15dp"
             android:paddingStart="20dp"
-            android:visibility="visible" />
+            android:visibility="visible"/>
 
         <ProgressBar
             android:id="@+id/progress_bar"

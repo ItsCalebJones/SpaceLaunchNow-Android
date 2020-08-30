@@ -27,7 +27,7 @@
             android:summary="@string/time_format_description"
             android:title="@string/time_format"
             android:entries="@array/time_format_array"
-            android:entryValues="@array/time_format_array"
+            android:entryValues="@array/time_format_array_entries"
             />
         <SwitchPreference
             android:defaultValue="false"

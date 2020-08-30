@@ -123,6 +123,7 @@ dependencies {
     implementation deps.timber
     implementation deps.materialValue
     implementation deps.inAppbilling
+    implementation deps.constraintLayout
     compileOnly deps.wearable
-    compileOnly 'com.google.android.wearable:wearable:2.4.0'
+    compileOnly 'com.google.android.wearable:wearable:2.7.0'
 }

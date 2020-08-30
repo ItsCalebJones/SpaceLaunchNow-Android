@@ -8,10 +8,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class InfoURL extends RealmObject {
 
-    @PrimaryKey
-    @SerializedName("id")
-    @Expose
-    public Integer id;
     @SerializedName("title")
     @Expose
     public String name;
@@ -21,17 +17,10 @@ public class InfoURL extends RealmObject {
     @SerializedName("feature_image")
     @Expose
     public String image;
+    @PrimaryKey
     @SerializedName("url")
     @Expose
     public String url;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

@@ -43,8 +43,4 @@
         <item>12-uurs AM/PM formaat</item>
         <item>24-uurs formaat</item>
     </string-array>
-    <string-array name="theme_list_array" tools:ignore="InconsistentArrays">
-        <item>Licht</item>
-        <item>Donker</item>
-    </string-array>
 </resources>
