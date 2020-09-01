@@ -176,129 +176,127 @@ public class QueryBuilder {
 
         query.beginGroup();
 
-        if (!switchPreferences.getSwitchNasa()) {
+        if (switchPreferences.getSwitchNasa()) {
             firstLSP = false;
             query.beginGroup();
-            query.notEqualTo("rocket.configuration.manufacturer.id", 44);
+            query.equalTo("rocket.configuration.manufacturer.id", 44);
             query.or();
-            query.notEqualTo("launchServiceProvider.id", 44);
+            query.equalTo("launchServiceProvider.id", 44);
             query.endGroup();
         }
 
-        if (!switchPreferences.getSwitchArianespace()) {
+        if (switchPreferences.getSwitchArianespace()) {
             if (!firstLSP) {
-                query.and();
+                query.or();
             } else {
                 firstLSP = false;
             }
             query.beginGroup();
-            query.notEqualTo("rocket.configuration.manufacturer.id", 115);
+            query.equalTo("rocket.configuration.manufacturer.id", 115);
             query.or();
-            query.notEqualTo("launchServiceProvider.id", 115);
+            query.equalTo("launchServiceProvider.id", 115);
             query.endGroup();
         }
 
-        if (!switchPreferences.getSwitchSpaceX()) {
+        if (switchPreferences.getSwitchSpaceX()) {
             if (!firstLSP) {
-                query.and();
+                query.or();
             } else {
                 firstLSP = false;
             }
             query.beginGroup();
-            query.notEqualTo("launchServiceProvider.id", 121);
+            query.equalTo("launchServiceProvider.id", 121);
             query.endGroup();
         }
 
-        if (!switchPreferences.getSwitchULA()) {
+        if (switchPreferences.getSwitchULA()) {
             if (!firstLSP) {
-                query.and();
+                query.or();
             } else {
                 firstLSP = false;
             }
             query.beginGroup();
-            query.notEqualTo("launchServiceProvider.id", 124);
+            query.equalTo("launchServiceProvider.id", 124);
             query.endGroup();
         }
 
-        if (!switchPreferences.getSwitchRoscosmos()) {
+        if (switchPreferences.getSwitchRoscosmos()) {
             if (!firstLSP) {
-                query.and();
+                query.or();
             } else {
                 firstLSP = false;
             }
             query.beginGroup();
-            query.notEqualTo("rocket.configuration.manufacturer.id", 111);
+            query.equalTo("rocket.configuration.manufacturer.id", 111);
             query.or();
-            query.notEqualTo("rocket.configuration.manufacturer.id", 163);
+            query.equalTo("rocket.configuration.manufacturer.id", 163);
             query.or();
-            query.notEqualTo("rocket.configuration.manufacturer.id", 63);
+            query.equalTo("rocket.configuration.manufacturer.id", 63);
             query.or();
-            query.notEqualTo("launchServiceProvider.id", 111);
+            query.equalTo("launchServiceProvider.id", 111);
             query.or();
-            query.notEqualTo("launchServiceProvider.id", 163);
+            query.equalTo("launchServiceProvider.id", 163);
             query.or();
-            query.notEqualTo("launchServiceProvider.id", 63);
+            query.equalTo("launchServiceProvider.id", 63);
             query.endGroup();
 
         }
 
-        if (!switchPreferences.getSwitchISRO()) {
+        if (switchPreferences.getSwitchISRO()) {
             if (!firstLSP) {
-                query.and();
+                query.or();
             } else {
                 firstLSP = false;
             }
             query.beginGroup();
-            query.notEqualTo("rocket.configuration.manufacturer.id", 31);
+            query.equalTo("rocket.configuration.manufacturer.id", 31);
             query.or();
-            query.notEqualTo("pad.location.id", 14);
+            query.equalTo("pad.location.id", 14);
             query.or();
-            query.notEqualTo("launchServiceProvider.id", 31);
+            query.equalTo("launchServiceProvider.id", 31);
             query.endGroup();
         }
 
-        if (!switchPreferences.getSwitchBO()) {
+        if (switchPreferences.getSwitchBO()) {
             if (!firstLSP) {
-                query.and();
+                query.or();
             } else {
                 firstLSP = false;
             }
             query.beginGroup();
-            query.notEqualTo("rocket.configuration.manufacturer.id", 141);
+            query.equalTo("rocket.configuration.manufacturer.id", 141);
             query.or();
-            query.notEqualTo("launchServiceProvider.id", 141);
+            query.equalTo("launchServiceProvider.id", 141);
             query.endGroup();
         }
 
-        if (!switchPreferences.getSwitchRL()) {
+        if (switchPreferences.getSwitchRL()) {
             if (!firstLSP) {
-                query.and();
+                query.or();
             } else {
                 firstLSP = false;
             }
             query.beginGroup();
-            query.notEqualTo("rocket.configuration.manufacturer.id", 147);
+            query.equalTo("rocket.configuration.manufacturer.id", 147);
             query.or();
-            query.notEqualTo("launchServiceProvider.id", 147);
+            query.equalTo("launchServiceProvider.id", 147);
             query.endGroup();
         }
 
-        if (!switchPreferences.getSwitchNorthrop()) {
+        if (switchPreferences.getSwitchNorthrop()) {
             if (!firstLSP) {
-                query.and();
+                query.or();
             } else {
                 firstLSP = false;
             }
             query.beginGroup();
-            query.notEqualTo("rocket.configuration.manufacturer.id", 257);
+            query.equalTo("rocket.configuration.manufacturer.id", 257);
             query.or();
-            query.notEqualTo("launchServiceProvider.id", 257);
+            query.equalTo("launchServiceProvider.id", 257);
             query.endGroup();
         }
 
         query.endGroup();
-
-
 
         query.sort("net", Sort.ASCENDING);
         return query;
