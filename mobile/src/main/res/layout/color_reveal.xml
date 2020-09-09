@@ -54,6 +54,7 @@
                 android:background="@color/white"
                 android:padding="12dp" />
 
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout"
                 android:layout_width="fill_parent"
@@ -66,10 +67,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
                     android:text="@string/launch_service_providers"
                     android:textAlignment="textStart"
                     android:textAppearance="@style/MaterialTypography.Locale.Title"
                     android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/nasa_switch"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -79,8 +82,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginBottom="24dp"
                     android:text="@string/launch_locations"
                     android:textAlignment="textStart"
@@ -92,6 +95,21 @@
                     app:layout_constraintTop_toBottomOf="@+id/northrop_switch"
                     app:layout_constraintVertical_bias="0.0" />
 
+                <TextView
+                    android:id="@+id/other_locations_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:text="@string/include_other_misc_locations"
+                    android:textAlignment="textStart"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                    android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/ples_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/texas_switch" />
+
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/nasa_switch"
                     android:layout_width="0dp"
@@ -101,11 +119,9 @@
                     android:checked="false"
                     android:text="@string/nasa"
                     android:textColor="?colorTextPrimaryInverse"
-
                     app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintEnd_toStartOf="@+id/rl_switch"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintHorizontal_chainStyle="spread_inside"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/launch_providers_title" />
 
@@ -114,11 +130,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/spacex"
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintEnd_toStartOf="@+id/bo_switch"
                     app:layout_constraintStart_toStartOf="@+id/nasa_switch"
                     app:layout_constraintTop_toBottomOf="@id/nasa_switch" />
@@ -128,12 +143,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/roscosmos"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintEnd_toStartOf="@+id/arianespace_switch"
                     app:layout_constraintStart_toStartOf="@+id/spacex_switch"
                     app:layout_constraintTop_toBottomOf="@id/spacex_switch" />
@@ -143,13 +156,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     android:checked="false"
                     android:text="@string/ula"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
-                    app:layout_constraintEnd_toStartOf="@+id/isro_switch"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintEnd_toStartOf="@+id/arianespace_switch"
                     app:layout_constraintStart_toStartOf="@+id/roscosmos_switch"
                     app:layout_constraintTop_toBottomOf="@id/roscosmos_switch" />
 
@@ -159,12 +171,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:checked="false"
                     android:text="@string/blue_origin"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintBottom_toBottomOf="@+id/spacex_switch"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/rl_switch"
@@ -176,12 +187,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:checked="false"
                     android:text="@string/arianespace"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintBottom_toBottomOf="@+id/roscosmos_switch"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/bo_switch"
@@ -189,35 +199,33 @@
 
 
                 <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/isro_switch"
+                    android:id="@+id/texas_switch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     android:checked="false"
-                    android:text="@string/isro"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/ula_switch"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/arianespace_switch"
-                    app:layout_constraintTop_toBottomOf="@+id/arianespace_switch" />
+                    android:text="@string/texas"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintEnd_toEndOf="@+id/wallops_switch"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/wallops_switch" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/northrop_switch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:checked="false"
                     android:text="@string/northrop_grumman"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
-                    app:layout_constraintEnd_toStartOf="@+id/isro_switch"
-                    app:layout_constraintStart_toStartOf="@+id/ula_switch"
-                    app:layout_constraintTop_toBottomOf="@+id/ula_switch" />
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/ula_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/arianespace_switch" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/rl_switch"
@@ -227,10 +235,8 @@
                     android:layout_marginEnd="16dp"
                     android:checked="false"
                     android:text="@string/rocket_lab"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/nasa_switch"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/nasa_switch"
@@ -244,46 +250,41 @@
                     android:layout_marginTop="8dp"
                     android:checked="false"
                     android:text="@string/russia_and_kazakhstan"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
-                    app:layout_constraintEnd_toStartOf="@+id/casc_switch"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintEnd_toStartOf="@+id/fg_switch"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/locations_title" />
+                    app:layout_constraintTop_toBottomOf="@+id/strict_switch" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/casc_switch"
+                    android:id="@+id/fg_switch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:checked="false"
-                    android:text="@string/china"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
+                    android:text="@string/french_guiana"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintBottom_toBottomOf="@+id/ples_switch"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/ples_switch"
-                    app:layout_constraintTop_toBottomOf="@+id/locations_title" />
+                    app:layout_constraintTop_toTopOf="@+id/ples_switch" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/KSC_switch"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:checked="false"
                     android:text="@string/kennedy_space_center_cape_canaveral"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintBottom_toBottomOf="@+id/van_switch"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/casc_switch"
-                    app:layout_constraintTop_toBottomOf="@+id/casc_switch" />
+                    app:layout_constraintStart_toStartOf="@+id/fg_switch"
+                    app:layout_constraintTop_toTopOf="@+id/van_switch" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/van_switch"
@@ -292,9 +293,8 @@
                     android:layout_marginTop="8dp"
                     android:checked="false"
                     android:text="@string/vandenberg_afb"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintEnd_toStartOf="@+id/KSC_switch"
                     app:layout_constraintStart_toStartOf="@+id/ples_switch"
                     app:layout_constraintTop_toBottomOf="@+id/ples_switch" />
@@ -306,58 +306,94 @@
                     android:layout_marginTop="8dp"
                     android:checked="false"
                     android:text="@string/wallops_island"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
-                    app:layout_constraintEnd_toStartOf="@+id/japan_switch"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintEnd_toStartOf="@+id/new_zealand_switch"
                     app:layout_constraintStart_toStartOf="@+id/ples_switch"
                     app:layout_constraintTop_toBottomOf="@+id/van_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/china_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="@string/china"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintEnd_toStartOf="@+id/japan_switch"
+                    app:layout_constraintStart_toStartOf="@+id/ples_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/other_locations_title" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/india_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="@string/isro"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintEnd_toStartOf="@+id/japan_switch"
+                    app:layout_constraintStart_toStartOf="@+id/ples_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/china_switch" />
+
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/misc_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:checked="false"
+                    android:text="@string/air_sea_launch"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintEnd_toStartOf="@+id/japan_switch"
+                    app:layout_constraintStart_toStartOf="@+id/ples_switch"
+                    app:layout_constraintTop_toBottomOf="@+id/india_switch" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/new_zealand_switch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
                     android:checked="false"
                     android:text="@string/new_zealand"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
-                    app:layout_constraintEnd_toStartOf="@+id/french_guiana_switch"
-                    app:layout_constraintStart_toStartOf="@+id/ples_switch"
-                    app:layout_constraintTop_toBottomOf="@+id/wallops_switch" />
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintBottom_toBottomOf="@+id/wallops_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/fg_switch"
+                    app:layout_constraintTop_toTopOf="@+id/wallops_switch" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/japan_switch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:checked="false"
                     android:text="@string/japan"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/wallops_switch"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintBottom_toBottomOf="@+id/china_switch"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/casc_switch"
-                    app:layout_constraintTop_toBottomOf="@+id/KSC_switch" />
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/china_switch"
+                    app:layout_constraintTop_toTopOf="@+id/china_switch" />
 
                 <androidx.appcompat.widget.AppCompatCheckBox
-                    android:id="@+id/french_guiana_switch"
+                    android:id="@+id/kodiak_switch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="16dp"
                     android:checked="false"
-                    android:text="@string/french_guiana"
-
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@+id/new_zealand_switch"
+                    android:text="@string/pacific_spaceport"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintBottom_toBottomOf="@+id/india_switch"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/casc_switch"
-                    app:layout_constraintTop_toBottomOf="@+id/japan_switch" />
+                    app:layout_constraintStart_toEndOf="@+id/india_switch"
+                    app:layout_constraintTop_toTopOf="@+id/india_switch" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/all_switch"
@@ -368,38 +404,73 @@
                     android:layout_marginBottom="8dp"
                     android:checked="false"
                     android:text="@string/follow_all_launches"
-                    android:textColor="@color/white"
-                    app:buttonTint="@color/white"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/all_info"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintHorizontal_weight="0.8"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_zealand_switch" />
+                    app:layout_constraintTop_toBottomOf="@+id/misc_switch"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/strict_switch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight=".20"
+                    android:checked="false"
+                    android:text="@string/strict_matching_title"
+                    android:textColor="?colorTextPrimaryInverse"
+                    app:buttonTint="?colorTextPrimaryInverse"
+                    app:layout_constraintEnd_toStartOf="@+id/other_info"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintHorizontal_weight="0.8"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/locations_title" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/all_info"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_weight=".20"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
                     android:src="@drawable/ic_about"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/all_switch"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_weight="0.2"
                     app:layout_constraintStart_toEndOf="@+id/all_switch"
                     app:layout_constraintTop_toTopOf="@+id/all_switch" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/other_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_weight=".20"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_about"
+                    app:layout_constraintBottom_toBottomOf="@+id/strict_switch"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_weight="0.2"
+                    app:layout_constraintStart_toEndOf="@+id/strict_switch"
+                    app:layout_constraintTop_toTopOf="@+id/strict_switch" />
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/action_notification_settings"
                 style="@style/Base.Widget.AppCompat.Button.Colored"
+                android:textColor="?colorTextPrimaryInverse"
+                app:buttonTint="?colorTextPrimaryInverse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/edit_notification_settings" />

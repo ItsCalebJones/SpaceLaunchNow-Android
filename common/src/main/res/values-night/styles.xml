@@ -7,7 +7,7 @@
     </style>
 
     <style name="BaseAppTheme.Launcher">
-        <item name="android:windowBackground">@drawable/launcher_drawable</item>
+        <item name="android:windowBackground">@drawable/launcher_drawable_night</item>
         <item name="spinnerStyle">@style/MySpinner</item>
     </style>
 

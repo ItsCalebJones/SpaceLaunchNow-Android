@@ -56,7 +56,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     private static String PREFS_SWITCH_PLES;
     private static String PREFS_SWITCH_VAN;
     private static String PREFS_SWITCH_CAPE;
-    private static String PREFS_SWITCH_OTHER_LSP;
+    private static String PREFS_SWITCH_TEXAS;
+    private static String PREFS_SWITCH_OTHER_LOCATIONS;
+    private static String PREFS_SWITCH_STRICT;
+    private static String PREFS_SWITCH_PACIFIC_SPACEPORT;
     private static String PREFS_SWITCH_KSC;
     private static String PREFS_SWITCH_WALLOPS;
     private static String PREFS_SWITCH_JAPAN;
@@ -105,7 +108,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         PREFS_SWITCH_NORTHROP = "SWITCH_NORTHROP";
         PREFS_SWITCH_ALL = "SWITCH_ALL";
         PREFS_FAB_HIDDEN = "FAB_HIDDEN";
-        PREFS_SWITCH_OTHER_LSP = "OTHER_LSP";
+        PREFS_SWITCH_PACIFIC_SPACEPORT = "SWITCH_PACIFIC";
+        PREFS_SWITCH_TEXAS = "SWITCH_TEXAS";
+        PREFS_SWITCH_OTHER_LOCATIONS = "OTHER_LOCATIONS";
+        PREFS_SWITCH_STRICT = "SWITCH_STRICT";
         PREFS_PREV_VEHICLE_FILTERED_WHICH = "PREV_VEHICLE_FILTERED_WHICH";
         PREFS_PREV_AGENCY_FILTERED_WHICH = "PREV_AGENCY_FILTERED_WHICH";
         PREFS_PREV_LOCATION_FILTERED_WHICH = "PREV_LOCATION_FILTERED_WHICH";
@@ -560,16 +566,46 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
     }
 
     //Nasa Switch
-    public boolean getSwitchOtherLSP() {
+    public boolean getSwitchOtherLocations() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_SWITCH_OTHER_LSP, true);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_OTHER_LOCATIONS, true);
     }
 
-    public void setSwitchOtherLSP(boolean key) {
+    public void setSwitchOtherLocation(boolean key) {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
         this.prefsEditor = this.sharedPrefs.edit();
-        this.prefsEditor.putBoolean(PREFS_SWITCH_OTHER_LSP, key);
+        this.prefsEditor.putBoolean(PREFS_SWITCH_OTHER_LOCATIONS, key);
         this.prefsEditor.apply();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("other");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("other");
+        }
+    }
+
+    public boolean getSwitchStrictMatching() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_STRICT, false);
+    }
+
+    public void setSwitchStrictMatching(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_STRICT, key);
+        this.prefsEditor.apply();
+        if (key) {
+            setAllSwitch(false);
+            firebaseMessaging.subscribeToTopic("strict");
+            firebaseMessaging.unsubscribeFromTopic("not_strict");
+        } else {
+            if (!getAllSwitch()) {
+                firebaseMessaging.unsubscribeFromTopic("strict");
+                firebaseMessaging.subscribeToTopic("not_strict");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("strict");
+                firebaseMessaging.unsubscribeFromTopic("not_strict");
+            }
+        }
     }
 
     //SpaceX Switch
@@ -802,6 +838,40 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         }
     }
 
+    public boolean getSwitchTexas() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_TEXAS, true);
+    }
+
+    public void setSwitchTexas(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_TEXAS, key);
+        this.prefsEditor.apply();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("texas");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("texas");
+        }
+    }
+
+    public boolean getSwitchKodiak() {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        return this.sharedPrefs.getBoolean(PREFS_SWITCH_PACIFIC_SPACEPORT, true);
+    }
+
+    public void setSwitchKodiak(boolean key) {
+        this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
+        this.prefsEditor = this.sharedPrefs.edit();
+        this.prefsEditor.putBoolean(PREFS_SWITCH_PACIFIC_SPACEPORT, key);
+        this.prefsEditor.apply();
+        if (key) {
+            firebaseMessaging.subscribeToTopic("kodiak");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("kodiak");
+        }
+    }
+
     //All Switch
     public boolean getAllSwitch() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
@@ -816,7 +886,14 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         if (key) {
             resetSwitches();
             firebaseMessaging.subscribeToTopic("all");
+            firebaseMessaging.unsubscribeFromTopic("not_strict");
+            firebaseMessaging.unsubscribeFromTopic("strict");
         } else {
+            if(getSwitchStrictMatching()){
+                firebaseMessaging.subscribeToTopic("strict");
+            } else {
+                firebaseMessaging.subscribeToTopic("not_strict");
+            }
             firebaseMessaging.unsubscribeFromTopic("all");
         }
     }
@@ -839,6 +916,10 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         setSwitchNZ(true);
         setSwitchFG(true);
         setSwitchWallops(true);
+        setSwitchTexas(true);
+        setSwitchKodiak(true);
+        setSwitchOtherLocation(true);
+        setSwitchStrictMatching(false);
     }
 
     @Override
@@ -886,5 +967,21 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
         this.prefsEditor = this.sharedPrefs.edit();
         this.prefsEditor.putBoolean(PREFS_FAB_HIDDEN, key);
         this.prefsEditor.apply();
+    }
+
+    public boolean isLSPFilerted(){
+        return (getSwitchRussia() || getSwitchArianespace() || getSwitchNasa()
+                || getSwitchSpaceX() || getSwitchULA() || getSwitchRoscosmos()
+                || getSwitchBO() || getSwitchRL() || getSwitchNorthrop());
+    }
+
+    public boolean isLocationFilerted(){
+        return (getSwitchKSC() || getSwitchFG() || getSwitchRussia() || getSwitchVan()
+                ||  getSwitchWallops() || getSwitchNZ() || getSwitchTexas());
+    }
+
+    public boolean isOtherFilerted(){
+        return (getSwitchJapan() || getSwitchKodiak() || getSwitchOtherLocations() || getSwitchCASC()
+                ||  getSwitchISRO());
     }
 }

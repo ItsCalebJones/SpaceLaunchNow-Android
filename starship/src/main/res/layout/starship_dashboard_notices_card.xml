@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:background="?colorAccent"
             android:padding="@dimen/material_baseline_grid_1x"
-            android:text="Notices"
+            android:text="@string/notices"
             android:textAlignment="center"
             android:textAppearance="@style/MaterialTypography.Regular.Subheading"
             android:textColor="@color/dark_primary_text_color_selector"

@@ -13,7 +13,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:padding="@dimen/material_baseline_grid_1x"
-        android:text="Events"
+        android:text="@string/events"
         android:textAlignment="center"
         android:textAppearance="@style/MaterialTypography.Regular.Subheading"
         android:textSize="30sp"

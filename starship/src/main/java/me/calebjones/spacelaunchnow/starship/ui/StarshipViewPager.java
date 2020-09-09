@@ -94,9 +94,9 @@ public class StarshipViewPager extends BaseFragment {
         unbinder = ButterKnife.bind(this, inflatedView);
 
 
-        tabLayout.addTab(tabLayout.newTab().setText("Overview"));
-        tabLayout.addTab(tabLayout.newTab().setText("Events"));
-        tabLayout.addTab(tabLayout.newTab().setText("Vehicles"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.overview));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.events));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.vehicles));
 
         pagerAdapter = new PagerAdapter
                 (getChildFragmentManager(), tabLayout.getTabCount());

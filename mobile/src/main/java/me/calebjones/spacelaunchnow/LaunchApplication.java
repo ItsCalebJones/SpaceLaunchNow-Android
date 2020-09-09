@@ -21,6 +21,9 @@ import com.anjlab.android.iab.v3.TransactionDetails;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
@@ -257,13 +260,13 @@ public class LaunchApplication extends Application {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
-            firebaseMessaging.subscribeToTopic("debug_v2");
-            firebaseMessaging.unsubscribeFromTopic("prod_v2");
+            firebaseMessaging.subscribeToTopic("debug_v3");
+            firebaseMessaging.unsubscribeFromTopic("prod_v3");
 
         } else {
             Timber.plant(new CrashlyticsTree(context));
-            firebaseMessaging.subscribeToTopic("prod_v2");
-            firebaseMessaging.unsubscribeFromTopic("debug_v2");
+            firebaseMessaging.subscribeToTopic("prod_v3");
+            firebaseMessaging.unsubscribeFromTopic("debug_v3");
         }
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
@@ -295,11 +298,18 @@ public class LaunchApplication extends Application {
         boolean wallops = switchPreferences.getSwitchWallops();
         boolean northrop = switchPreferences.getSwitchNorthrop();
         boolean newZealand = switchPreferences.getSwitchNZ();
+        boolean texas = switchPreferences.getSwitchTexas();
+        boolean kodiak = switchPreferences.getSwitchKodiak();
+        boolean other = switchPreferences.getSwitchOtherLocations();
+        boolean strictMatching = switchPreferences.getSwitchStrictMatching();
+
 
         if (all) {
             firebaseMessaging.subscribeToTopic("all");
         } else {
             firebaseMessaging.unsubscribeFromTopic("all");
+            firebaseMessaging.unsubscribeFromTopic("not_strict");
+            firebaseMessaging.unsubscribeFromTopic("strict");
         }
 
         if (events) {
@@ -308,6 +318,28 @@ public class LaunchApplication extends Application {
         } else {
             firebaseMessaging.unsubscribeFromTopic("events");
             firebaseMessaging.unsubscribeFromTopic("featured_news");
+        }
+
+        if(!all) {
+            if (strictMatching) {
+                firebaseMessaging.subscribeToTopic("strict");
+                firebaseMessaging.unsubscribeFromTopic("not_strict");
+            } else {
+                firebaseMessaging.unsubscribeFromTopic("strict");
+                firebaseMessaging.subscribeToTopic("not_strict");
+            }
+        }
+
+        if (texas) {
+            firebaseMessaging.subscribeToTopic("texas");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("texas");
+        }
+
+        if (kodiak) {
+            firebaseMessaging.subscribeToTopic("kodiak");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("kodiak");
         }
 
         if (ksc) {
@@ -341,9 +373,9 @@ public class LaunchApplication extends Application {
         }
 
         if (ariane) {
-            firebaseMessaging.subscribeToTopic("ariane");
+            firebaseMessaging.subscribeToTopic("arianespace");
         } else {
-            firebaseMessaging.unsubscribeFromTopic("ariane");
+            firebaseMessaging.unsubscribeFromTopic("arianespace");
         }
 
         if (blueOrigin) {
@@ -412,6 +444,12 @@ public class LaunchApplication extends Application {
             firebaseMessaging.unsubscribeFromTopic("newZealand");
         }
 
+        if (other) {
+            firebaseMessaging.subscribeToTopic("other");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("other");
+        }
+
         if (notificationEnabled) {
             firebaseMessaging.subscribeToTopic("notificationEnabled");
             firebaseMessaging.subscribeToTopic("webcastLive");
@@ -470,6 +508,12 @@ public class LaunchApplication extends Application {
         } else {
             firebaseMessaging.unsubscribeFromTopic("oneMinute");
         }
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
+            String token = instanceIdResult.getToken();
+            Timber.v("Here is your FCM token: %s", token);
+            // send it to server
+        });
 
     }
 

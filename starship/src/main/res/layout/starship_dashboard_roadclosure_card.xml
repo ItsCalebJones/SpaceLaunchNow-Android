@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:background="?colorAccent"
             android:padding="@dimen/material_baseline_grid_1x"
-            android:text="Road Closures"
+            android:text="@string/road_closures"
             android:textAlignment="center"
             android:textAppearance="@style/MaterialTypography.Regular.Subheading"
             android:textColor="@color/dark_primary_text_color_selector"

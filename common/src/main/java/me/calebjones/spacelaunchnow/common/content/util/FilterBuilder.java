@@ -51,10 +51,28 @@ public class FilterBuilder {
         if (switchPreferences.getSwitchJapan()) {
             location_ids.add(24);
             location_ids.add(26);
+            location_ids.add(32);
         }
 
         if (switchPreferences.getSwitchFG()) {
             location_ids.add(13);
+        }
+
+        if (switchPreferences.getSwitchTexas()) {
+            location_ids.add(143);
+            location_ids.add(9999);
+        }
+
+        if (switchPreferences.getSwitchKodiak()) {
+            location_ids.add(25);
+        }
+
+
+        if (switchPreferences.getSwitchOtherLocations()) {
+            location_ids.add(20);
+            location_ids.add(144);
+            location_ids.add(31);
+            location_ids.add(3);
         }
 
         return listToString(location_ids);

@@ -19,7 +19,7 @@
         android:id="@+id/upcoming_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upcoming"
+        android:text="@string/upcoming"
         app:checkedButton="@id/upcomingButton"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
@@ -35,14 +35,14 @@
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upcoming" />
+            android:text="@string/upcoming" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/previousButton"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Previous" />
+            android:text="@string/previous" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

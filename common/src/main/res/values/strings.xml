@@ -137,7 +137,7 @@
     <string name="vandenberg_afb">Vandenberg AFB</string>
     <string name="arianespace">Arianespace</string>
     <string name="casc">CASC</string>
-    <string name="isro">ISRO</string>
+    <string name="isro">India</string>
     <string name="cape_canaveral">Cape Canaveral</string>
     <string name="plesetsk_cosmodrome">Plesetsk Cosmodrome</string>
     <string name="all">All</string>
@@ -504,7 +504,7 @@
     <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Russia and Kazakhstan</string>
     <string name="china">China</string>
-    <string name="kennedy_space_center_cape_canaveral">Kennedy Space Center / Cape Canaveral</string>
+    <string name="kennedy_space_center_cape_canaveral">Cape Canaveral</string>
     <string name="wallops_island">Wallops Island</string>
     <string name="new_zealand">New Zealand</string>
     <string name="japan">Japan</string>
@@ -568,4 +568,15 @@
     <string name="event_and_news">Events and News Notifications</string>
     <string name="event_and_news_description">Receive notifications for post-launch spaceflight events and news.</string>
     <string name="choose_theme_mode">Choose Theme Mode</string>
+    <string name="air_sea_launch">Air / Sea Launch</string>
+    <string name="strict_matching">Exclusively show launches that match with agencies selected for locations that have multiple launch agencies available.\n\nIf you only want SpaceX launches from KSC then enable strict matching and select only KSC and SpaceX.\n\nOtherwise without strict matching - all KSC and all SpaceX launches would be shown.</string>
+    <string name="strict_matching_title">Strict Matching</string>
+    <string name="texas">Texas</string>
+    <string name="pacific_spaceport">Pacific Spaceport</string>
+    <string name="include_other_misc_locations">Include other Misc. Locations</string>
+    <string name="view_more_livestreams">View More Livestreams</string>
+    <string name="notices">Notices</string>
+    <string name="road_closures">Road Closures</string>
+    <string name="up_next">Up Next</string>
+    <string name="overview">Overview</string>
 </resources>

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:padding="@dimen/material_baseline_grid_1x"
-        android:text="Up Next"
+        android:text="@string/up_next"
         android:textAppearance="@style/MaterialTypography.Regular.Title"
         android:textSize="30sp"
         android:textStyle="bold"
