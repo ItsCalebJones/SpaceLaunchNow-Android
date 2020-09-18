@@ -137,7 +137,7 @@
     <string name="vandenberg_afb">Vandenberg AFB</string>
     <string name="arianespace">Arianespace</string>
     <string name="casc">CASC</string>
-    <string name="isro">ISRO</string>
+    <string name="isro">Inde</string>
     <string name="cape_canaveral">Cape Canaveral</string>
     <string name="plesetsk_cosmodrome">Cosmodrome de Plessetsk</string>
     <string name="all">Tous</string>
@@ -478,6 +478,7 @@
     <string name="spacestations">Stations Spatiales</string>
     <string name="spacestation">Station Spatiale</string>
     <string name="astronauts">Astronautes</string>
+    <string name="starship">Starship</string>
     <string name="events">Événements</string>
     <string name="favorites">Favoris</string>
     <string name="show_me">Montrez Moi</string>
@@ -503,7 +504,7 @@
     <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Russie et Kazakhstan</string>
     <string name="china">Chine</string>
-    <string name="kennedy_space_center_cape_canaveral">Centre Spatial Kennedy / Cap Canaveral</string>
+    <string name="kennedy_space_center_cape_canaveral">Cap Canaveral</string>
     <string name="wallops_island">Île de Wallops</string>
     <string name="new_zealand">Nouvelle Zélande</string>
     <string name="japan">Japon</string>
@@ -564,4 +565,15 @@
     <string name="event_and_news">Notifications d\'événements et de news</string>
     <string name="event_and_news_description">Recevoir des notifications pour les événements \"après lancement\" et articles de presse.</string>
     <string name="choose_theme_mode">Choisir le mode du thème</string>
+    <string name="air_sea_launch">Lancement aérien / maritime</string>
+    <string name="strict_matching">Affiche uniquement les lancements qui correspondent aux agences sélectionnées pour les sites de lancement utilisés par plusieurs agences.\n\n\n\nSi vous voulez uniquement les lancements SpaceX depuis le centre spatial Kennedy, activez le filtrage strict et sélectionnez uniquement CSK et SpaceX.\n\n\nSans le filtrage strict, tous les lancements SpaceX ainsi que tous les lancements depuis le CSK seraient affichés.</string>
+    <string name="strict_matching_title">Filtrage strict</string>
+    <string name="texas">Texas</string>
+    <string name="pacific_spaceport">Pacific Spaceport</string>
+    <string name="include_other_misc_locations">Inclure les autres sites de lancement</string>
+    <string name="view_more_livestreams">Voir plus de directs</string>
+    <string name="notices">Annonces</string>
+    <string name="road_closures">Fermetures de route</string>
+    <string name="up_next">Prochain</string>
+    <string name="overview">Vue d\'ensemble</string>
 </resources>

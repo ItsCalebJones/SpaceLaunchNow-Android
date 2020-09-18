@@ -7,7 +7,7 @@
     <string name="status_go">"Gotowy do startu"</string>
     <string name="status_nogo">Data startu niepotwierdzona</string>
     <string name="status_success">"Start zakończony sukcesem"</string>
-    <string name="status_failure">"Awaria podczas startu"</string>
+    <string name="status_failure">"Przy starcie nastąpiła awaria"</string>
     <string name="spacex_summary">SpaceX projektuje, produkuje oraz wystrzeliwuje zaawansowane rakiety i statki kosmiczne. Firma została założona w 2002 roku aby zrewolucjonizować technologię kosmiczną. Jednym z jej celów jest umożliwienie ludzkości życia na innych planetach.</string>
     <string name="usaf_summary">Siły Powietrzne Stanów Zjednoczonych (USAF) to jednostka sił powietrznych Amerykańskiej Armii - jedna z siedmiu amerykańskich służb mundurowych.</string>
     <string name="casc_summary">CASC (China Aerospace Science and Technology Corporation) jest głównym kontraktorem chińskiego programu kosmicznego. Jest własnością państwa i posiada szereg podległych podmiotów, które projektują, rozwijają i produkują szereg statków kosmicznych, rakiet, strategicznych i taktycznych systemów rakietowych oraz sprzętu naziemnego.</string>
@@ -32,7 +32,7 @@
     <string name="thank_you">Ta aplikacja, Space Launch Now, powstała jako prosty, weekendowy projekt. W ciągu roku zyskała jednak blisko 10000 aktywnych użytkowników. Jestem niesamowicie wdzięczny wszystkim, którzy poświęcili czas na zgłaszanie błędów, udzielanie informacji zwrotnych, uczestnictwo w beta testach oraz wspieraniu tego projektu.</string>
     <string name="player_error">Błąd podczas ładowania odtwarzacza YouTube: %s</string>
     <string name="please_rate">Hej, wydaje się, że polubiłeś tę aplikację. Może odwiedziłbyś Google Play Store i ją ocenił? Bardzo by nam to pomogło!
-\n\nJeśli jednak nie lubisz tej aplikacji, bylibyśmy wdzięczni dowiedzieć się, jak ją udoskonalić. Dzięki!</string>
+\n\nJeśli jednak nie lubisz tej aplikacji, bylibyśmy wdzięczni za informację jak ją udoskonalić. Dzięki!</string>
     <string name="please_rate_short">Hej, wydaje się, że polubiłeś tę aplikację. Bardzo byś nam pomógł oceniając ją na pięć gwiazdek! Jeśli jednak tak nie jest, daj nam znać, co chciałbyś zmienić.</string>
     <string name="button_yes">Oceń!</string>
     <string name="button_no">Nie, dziękuję</string>
@@ -137,7 +137,7 @@
     <string name="vandenberg_afb">Baza Wojskowa Sił Powietrznych Stanów Zjednoczonych Vandenberg</string>
     <string name="arianespace">Arianspace</string>
     <string name="casc">CASC</string>
-    <string name="isro">ISRO</string>
+    <string name="isro">Indie</string>
     <string name="cape_canaveral">Przylądek Canaveral</string>
     <string name="plesetsk_cosmodrome">Kosmodrom Plasieck</string>
     <string name="all">Wszystkie</string>
@@ -478,6 +478,7 @@
     <string name="spacestations">Stacje kosmiczne</string>
     <string name="spacestation">Stacje kosmiczne</string>
     <string name="astronauts">Astronauci</string>
+    <string name="starship">Starship</string>
     <string name="events">Wydarzenia</string>
     <string name="favorites">Ulubione</string>
     <string name="show_me">Pokaż mi</string>
@@ -503,7 +504,7 @@
     <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Rosja i Kazachstan</string>
     <string name="china">Chiny</string>
-    <string name="kennedy_space_center_cape_canaveral">Centrum Kosmiczne im. Johna F. Kennedy\'ego / Przylądek Canaveral</string>
+    <string name="kennedy_space_center_cape_canaveral">Przylądek Canaveral</string>
     <string name="wallops_island">Wallops Island</string>
     <string name="new_zealand">Nowa Zelandia</string>
     <string name="japan">Japonia</string>
@@ -564,4 +565,15 @@
     <string name="event_and_news">Powiadomienia o wydarzeniach i wiadomościach</string>
     <string name="event_and_news_description">Otrzymuj powiadomienia o wiadomościach i wydarzeniach.</string>
     <string name="choose_theme_mode">Wybierz rodzaj motywu</string>
+    <string name="air_sea_launch">Start powietrzny / morski</string>
+    <string name="strict_matching">Pokaż wyłącznie starty pasujące do wybranych agencji i lokacji, w przypadku agencji posiadających kilka wyrzutni.\n\nJeśli chcesz widzieć tylko starty SpaceX z KSC, wybierz ścisłe dopasowanie i zaznacz KSC oraz SpaceX.\n\nW przeciwnym przypadku zostaną wyświetlone wszystkie starty dla KSC oraz dla SpaceX.</string>
+    <string name="strict_matching_title">Szczegółowe dopasowanie</string>
+    <string name="texas">Teksas</string>
+    <string name="pacific_spaceport">Pacific Spaceport</string>
+    <string name="include_other_misc_locations">Uwzględnij inne lokacje</string>
+    <string name="view_more_livestreams">Zobacz więcej relacji na żywo</string>
+    <string name="notices">Powiadomienia</string>
+    <string name="road_closures">Zamknięcie drogi</string>
+    <string name="up_next">W przyszłości</string>
+    <string name="overview">Przegląd</string>
 </resources>

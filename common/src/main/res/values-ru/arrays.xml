@@ -5,4 +5,10 @@
         <item>Следующее</item>
         <item>Предыдущие</item>
     </string-array>
+    <string-array name="status_array">
+        <item>Активное</item>
+        <item>Потерян в полёте</item>
+        <item>Потерян в тренировке</item>
+        <item>Умер во время служения</item>
+    </string-array>
 </resources>

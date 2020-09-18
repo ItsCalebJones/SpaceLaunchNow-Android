@@ -7,7 +7,7 @@
     <string name="status_go">"Prosseguir para lançamento"</string>
     <string name="status_nogo">Data de lançamento não confirmada</string>
     <string name="status_success">"Lançamento bem-sucedido"</string>
-    <string name="status_failure">"Ocorreu falha no lançamento"</string>
+    <string name="status_failure">"Ocorreu Falha no Lançamento"</string>
     <string name="spacex_summary">A SpaceX projeta, fabrica e lança foguetes e espaçonaves avançadas. A empresa foi fundada em 2002 para revolucionar a tecnologia espacial, com o objetivo final de permitir que as pessoas vivam em outros planetas.</string>
     <string name="usaf_summary">A Força Aérea dos Estados Unidos é o ramo de serviço aéreo de guerra das Forças Armadas dos Estados Unidos e um dos sete serviços americanos uniformizados.</string>
     <string name="casc_summary">A Corporação de Ciência e Tecnologia Aeroespacial da China (CASC) é a principal contratante do programa espacial chinês. É uma estatal e possui várias entidades subordinadas que projetam, desenvolvem e fabricam uma série de espaçonaves, veículos de lançamento, sistemas de mísseis estratégicos e táticos e equipamento de solo.</string>
@@ -25,7 +25,7 @@
     <string name="supporter_description">Ajude a garantir suporte contínuo, correções de erros pontuais e novos recursos.</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Mantenha-se atualizado sobre todos os seus lançamentos orbitais favoritos, missões e veículos de lançamento.</string>
-    <string name="slide_two_title">Notificação para lançamentos</string>
+    <string name="slide_two_title">Notificação para Lançamentos</string>
     <string name="slide_two_description">Receba notificações para os próximos lançamentos e observe a história do voo espacial</string>
     <string name="slide_three_title">Encontrar veículo espacial</string>
     <string name="slide_three_description">Conheça os veículos que nos levaram à órbita.</string>
@@ -137,7 +137,7 @@
     <string name="vandenberg_afb">Base da Força Aérea de Vandenberg</string>
     <string name="arianespace">Arianespace</string>
     <string name="casc">CASC</string>
-    <string name="isro">ISRO</string>
+    <string name="isro">Índia</string>
     <string name="cape_canaveral">Cabo Canaveral</string>
     <string name="plesetsk_cosmodrome">Cosmódromo de Plesetsk</string>
     <string name="all">Todos</string>
@@ -478,6 +478,7 @@
     <string name="spacestations">Estações Espaciais</string>
     <string name="spacestation">Estação espacial</string>
     <string name="astronauts">Astronautas</string>
+    <string name="starship">Starship</string>
     <string name="events">Eventos</string>
     <string name="favorites">Favoritos</string>
     <string name="show_me">Mostre-me</string>
@@ -503,7 +504,7 @@
     <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Rússia e Cazaquistão</string>
     <string name="china">China</string>
-    <string name="kennedy_space_center_cape_canaveral">Centro Espacial Kennedy / Cabo Canaveral</string>
+    <string name="kennedy_space_center_cape_canaveral">Cabo Canaveral</string>
     <string name="wallops_island">Ilha Wallops</string>
     <string name="new_zealand">Nova Zelândia</string>
     <string name="japan">Japão</string>
@@ -564,4 +565,15 @@
     <string name="event_and_news">Eventos e Notificações de Notícias</string>
     <string name="event_and_news_description">Receba notificações de eventos de pós-voo espacial e notícias.</string>
     <string name="choose_theme_mode">Escolha o Modo do Tema</string>
+    <string name="air_sea_launch">Lançamento Aéreo/Marítimo</string>
+    <string name="strict_matching">Exibe exclusivamente lançamentos que correspondem às agências selecionadas para locais que têm várias agências de lançamento disponíveis.\n\n\n\nSe você deseja apenas lançamentos da SpaceX no KSC, então habilite a correspondência estrita e selecione apenas KSC e SpaceX.\n\n\n\nCaso contrário, sem correspondência estrita - todos os lançamentos do KSC e da SpaceX seriam exibidos.</string>
+    <string name="strict_matching_title">Correspondência Estrita</string>
+    <string name="texas">Texas</string>
+    <string name="pacific_spaceport">Espaçoporto Pacífico</string>
+    <string name="include_other_misc_locations">Incluir outras Localizações Diversas</string>
+    <string name="view_more_livestreams">Ver Outras Transmissões Ao Vivo</string>
+    <string name="notices">Notícias</string>
+    <string name="road_closures">Fechamentos de Estradas</string>
+    <string name="up_next">Próximo Acima</string>
+    <string name="overview">Visão Geral</string>
 </resources>

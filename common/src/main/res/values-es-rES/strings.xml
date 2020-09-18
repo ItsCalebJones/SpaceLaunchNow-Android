@@ -137,7 +137,7 @@
     <string name="vandenberg_afb">Vandenberg AFB</string>
     <string name="arianespace">Arianespace</string>
     <string name="casc">CASC</string>
-    <string name="isro">ISRO</string>
+    <string name="isro">India</string>
     <string name="cape_canaveral">Cabo Cañaveral</string>
     <string name="plesetsk_cosmodrome">Cosmódromo de Plesetsk</string>
     <string name="all">Todo</string>
@@ -478,6 +478,7 @@
     <string name="spacestations">Estaciones espaciales</string>
     <string name="spacestation">"Estación espacial "</string>
     <string name="astronauts">Astronautas</string>
+    <string name="starship">Starship</string>
     <string name="events">Eventos</string>
     <string name="favorites">Favoritos</string>
     <string name="show_me">Mostrar</string>
@@ -503,7 +504,7 @@
     <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Rusia y Kazajistán</string>
     <string name="china">China</string>
-    <string name="kennedy_space_center_cape_canaveral">Centro Espacial Kennedy / Cabo Cañaveral</string>
+    <string name="kennedy_space_center_cape_canaveral">Cabo Cañaveral</string>
     <string name="wallops_island">Isla Wallops</string>
     <string name="new_zealand">Nueva Zelanda</string>
     <string name="japan">Japón</string>
@@ -564,4 +565,15 @@
     <string name="event_and_news">Notificaciones de noticias y eventos</string>
     <string name="event_and_news_description">Recibe notificaciones de eventos de postlanzamientos y noticias.</string>
     <string name="choose_theme_mode">Elige el tipo de tema</string>
+    <string name="air_sea_launch">Lanzamiento desde el aire / mar</string>
+    <string name="strict_matching">Muestre de forma exclusiva los lanzamientos que coincidan con las agencias seleccionadas para ubicaciones que tienen varias agencias de lanzamiento disponibles.\n\nSi solo desea que SpaceX se lance desde KSC, habilite la coincidencia estricta y seleccione solo KSC y SpaceX.\n\nDe lo contrario, sin una coincidencia estricta, se mostrarían todos los lanzamientos de KSC y SpaceX.</string>
+    <string name="strict_matching_title">Coincidencia estricta</string>
+    <string name="texas">Texas</string>
+    <string name="pacific_spaceport">Pacific Spaceport</string>
+    <string name="include_other_misc_locations">Incluir otras Ubicaciones</string>
+    <string name="view_more_livestreams">Ver más transmisiones en vivo</string>
+    <string name="notices">Avisos</string>
+    <string name="road_closures">Cierres de carreteras</string>
+    <string name="up_next">Hasta la próxima</string>
+    <string name="overview">Visión global</string>
 </resources>

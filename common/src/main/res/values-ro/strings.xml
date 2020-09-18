@@ -272,5 +272,31 @@
     <string name="night_mode_off">Modul de Noapte este dezactivat</string>
     <string name="automatic_daynight">Automat Zi / Noapte</string>
     <string name="automatic_daynight_summary">Schimbați automat între tema Zi și Noapte în funcție de ora zilei.</string>
+    <string name="widget_themes">Widget Themes</string>
+    <string name="widget_themes_summary">Alege dintre câteva teme widget default.</string>
+    <string name="widget_background">Fundal Widget</string>
+    <string name="widget_background_summary">Alege culoarea fundalului pentru widget-uri.</string>
+    <string name="primary_text">Culoarea Primară a Textului</string>
+    <string name="primary_text_summary">Alege culoarea primară a textului pentru widget-uri.</string>
+    <string name="secondary_text">Culoarea Secundară a Textului</string>
+    <string name="secondary_text_summary">Selectează culoarea secundară pentru widget-uri.</string>
+    <string name="launch_list_widget_accent">Launch List Widget - Culoarea Accentului</string>
+    <string name="launch_list_widget_accent_summary">Selectează culoarea accentului pentru Launch List Widgets.</string>
+    <string name="launch_list_widget_text">Launch List Widget - Culoarea Titlului</string>
+    <string name="launch_list_widget_text_summary">Alege culoarea textului pentru Launch List Widgets title text.</string>
+    <string name="icon_color">Culoarea Pictogramei</string>
+    <string name="icon_color_summary">Alege culoarea pictogramei pentru Launch Card Widget.</string>
+    <string name="hide_refresh">Ascunde Refresh</string>
+    <string name="hide_refresh_summary">Ascunde butonul de refresh.</string>
+    <string name="round_corners">Colțuri Rotunde</string>
+    <string name="round_corners_summary">Activați colțurile rotunde pentru Widget-uri.</string>
+    <string name="enable_weather">Activați Vremea</string>
+    <string name="enable_weather_summary">Arată cardul de vreme pentru următoarea lansare în în detaliile de la lansare.</string>
+    <string name="weather_type">Tipul de măsurare a vremii.</string>
+    <string name="weather_type_on">Folosește unitățile imperiale de măsură din SUA pentru temperatură, viteza vântului și precipitații</string>
+    <string name="weather_type_off">Folosește unitățile metrice din sistemul internațional de măsură pentru temperatură, viteza vântului și precipitații.</string>
+    <string name="upcoming_launches">Lansările Viitoare</string>
+    <string name="upcoming_launches_summary">Specifică câte lansări viitoare vrei să încarci.</string>
+    <string name="allow_background">Allow Background Syncs</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
