@@ -578,4 +578,5 @@
     <string name="road_closures">Road Closures</string>
     <string name="up_next">Up Next</string>
     <string name="overview">Overview</string>
+    <string translatable="false" name="theme_pref_key">theme_pref</string>
 </resources>
