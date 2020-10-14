@@ -586,7 +586,7 @@ public class LaunchDetailActivity extends BaseActivity
             ShareCompat.IntentBuilder.from(this)
                     .setType("text/plain")
                     .setChooserTitle("Share: " + launch.getName())
-                    .setText(String.format("%s\n\nWatch Live: %s", message, launch.getSlug()))
+                    .setText(launch.getSlug())
                     .startChooser();
         } else {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Error - unable to share this launch.");

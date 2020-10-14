@@ -87,7 +87,8 @@ public class Launch extends RealmObject {
     public Date lastUpdate;
 
     public String getSlug() {
-        return slug;
+        String baseUrl = "https://spacelaunchnow.me/launch/";
+        return baseUrl + slug;
     }
 
     public void setSlug(String slug) {
