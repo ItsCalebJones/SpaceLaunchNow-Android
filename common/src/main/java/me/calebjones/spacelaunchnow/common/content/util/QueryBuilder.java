@@ -167,6 +167,8 @@ public class QueryBuilder {
                 query.beginGroup();
                 query.equalTo("pad.location.id", 143);
                 query.or();
+                query.equalTo("pad.location.id", 29);
+                query.or();
                 query.equalTo("pad.location.id", 9999);
                 query.endGroup();
             }
@@ -455,6 +457,8 @@ public class QueryBuilder {
                     }
                     query.beginGroup();
                     query.equalTo("pad.location.id", 143);
+                    query.or();
+                    query.equalTo("pad.location.id", 29);
                     query.or();
                     query.equalTo("pad.location.id", 9999);
                     query.endGroup();
