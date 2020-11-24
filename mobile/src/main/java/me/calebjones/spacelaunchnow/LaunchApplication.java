@@ -257,6 +257,8 @@ public class LaunchApplication extends Application {
     private void setupNotification() {
         firebaseMessaging.unsubscribeFromTopic("debug");
         firebaseMessaging.unsubscribeFromTopic("production");
+        firebaseMessaging.unsubscribeFromTopic("debug_v2");
+        firebaseMessaging.unsubscribeFromTopic("prod_v2");
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
