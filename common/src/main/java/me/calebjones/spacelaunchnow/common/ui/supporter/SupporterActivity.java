@@ -73,11 +73,6 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     private List<String> ownedProducts;
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Context context = this;

@@ -180,91 +180,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         setUpViews(launch);
     }
 
-    private void fetchPastWeather() {
-        future = false;
-        weatherCard.setTitle(getString(R.string.launch_day_weather));
-        if (detailLaunch.getPad() != null) {
-
-            Pad pad = detailLaunch.getPad();
-
-            double latitude = Double.parseDouble(pad.getLatitude());
-            double longitude = Double.parseDouble(pad.getLongitude());
-
-            Unit unit;
-
-            if (sharedPref.getBoolean("weather_US_SI", true)) {
-                unit = Unit.US;
-            } else {
-                unit = Unit.SI;
-            }
-
-            long longTime = detailLaunch.getNet().getTime() / 1000;
-            int time = (int) longTime;
-            ForecastClient.getInstance().getForecast(latitude, longitude, time, null, unit, null, false, new Callback<Forecast>() {
-                @Override
-                public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
-                    if (response.isSuccessful()) {
-                        Forecast forecast = response.body();
-                        if (SummaryDetailFragment.this.isVisible()) {
-                            updateWeatherView(forecast);
-                        }
-                    } else {
-                        Timber.e("Error: %s", response.errorBody());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Forecast> forecastCall, Throwable t) {
-                    Timber.e("ERROR: %s", t.getLocalizedMessage());
-                }
-            });
-        }
-    }
-
-    private void updateWeatherView(Forecast forecast) {
-        weatherCard.setWeather(forecast, detailLaunch.getPad().getLocation().getName(), future, nightMode);
-        weatherCard.setVisibility(View.VISIBLE);
-    }
-
-    private void fetchCurrentWeather() {
-        future = true;
-        // Sample WeatherLib client init
-        if (detailLaunch.getPad() != null) {
-
-            Pad pad = detailLaunch.getPad();
-
-            double latitude = Double.parseDouble(pad.getLatitude());
-            double longitude = Double.parseDouble(pad.getLongitude());
-
-            Unit unit;
-
-            if (sharedPref.getBoolean("weather_US_SI", true)) {
-                unit = Unit.US;
-            } else {
-                unit = Unit.SI;
-            }
-
-            ForecastClient.getInstance()
-                    .getForecast(latitude, longitude, null, null, unit, null, false, new Callback<Forecast>() {
-                        @Override
-                        public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
-                            if (response.isSuccessful()) {
-                                Forecast forecast = response.body();
-                                if (SummaryDetailFragment.this.isVisible()) {
-                                    updateWeatherView(forecast);
-                                }
-                            } else {
-                                Timber.e("Error: %s", response.errorBody());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Forecast> forecastCall, Throwable t) {
-                            Timber.e("ERROR: %s", t.getLocalizedMessage());
-                        }
-                    });
-        }
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -283,18 +198,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private void setUpViews(Launch launch) {
         try {
             getLifecycle().addObserver(youTubePlayerView);
-            weatherCard.setVisibility(View.GONE);
             videosEmpty.setVisibility(View.GONE);
             detailLaunch = launch;
-
-            // Check if Weather card is enabled, defaults to false if null.
-            if (sharedPref.getBoolean("weather", false)) {
-                if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
-                    fetchCurrentWeather();
-                } else {
-                    fetchPastWeather();
-                }
-            }
 
             fetchRelatedNews(launch.getId());
 
