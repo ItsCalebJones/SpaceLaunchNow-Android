@@ -444,6 +444,7 @@
     <string name="no_live_stream_available">No live stream available.</string>
     <string name="date_confirmed">Date is confirmed however launch time is unknown.</string>
     <string name="date_unconfirmed">Current date is a \'No Earlier Than\' estimation.</string>
+    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
     <string name="source">Select a Source</string>
     <string name="long_press_share">Long press an item to share.</string>
     <string name="no_astronauts">No astronauts found.</string>

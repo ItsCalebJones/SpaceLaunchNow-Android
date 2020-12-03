@@ -241,26 +241,28 @@ public class CountDownView extends ConstraintLayout {
         String hold = launch.getHoldreason();
         String failure = launch.getFailreason();
         statusReason.setVisibility(GONE);
-        if (hold != null) {
+        if (hold != null && hold.length() > 0) {
             statusReason.setText(hold);
             setReasonConstraintToBottom();
             statusReason.setVisibility(VISIBLE);
         }
 
-        if (failure != null) {
+        if (failure != null && failure.length() > 0) {
             statusReason.setText(failure);
             setReasonConstraintToBottom();
             statusReason.setVisibility(VISIBLE);
         }
 
-        if (launch.getTbddate()){
+        if (launch.getStatus().getId() == 2){
             statusReason.setText(R.string.date_unconfirmed);
             statusReason.setVisibility(VISIBLE);
             setReasonConstraintToStatusPill();
-        } else if (!launch.getTbddate() && launch.getTbdtime()){
-            statusReason.setText(R.string.date_confirmed);
+        } else if (launch.getStatus().getId() == 8){
+            statusReason.setText(R.string.to_be_confirmed);
             setReasonConstraintToStatusPill();
             statusReason.setVisibility(VISIBLE);
+        } else {
+            statusReason.setVisibility(GONE);
         }
 
         long timeToFinish = launchDate.getTimeInMillis() - now.getTimeInMillis();
