@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="widget_presets">
+        <item>Lumină</item>
+        <item>Întuneric</item>
+        <item>Lumină - Transparenta</item>
+        <item>Întuneric - Transparent</item>
+        <item>Material Albastru</item>
+        <item>Material Roșu</item>
+        <item>Material Teal</item>
+        <item>Material Portocaliu</item>
+        <item>Custom</item>
+    </string-array>
+    <string-array name="widget_presets_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+    <string-array name="spinner_list_item_array">
+        <item>Toate</item>
+        <item>Viitoare</item>
+        <item>Anterioare</item>
+    </string-array>
+    <string-array name="status_array">
+        <item>Activ</item>
+        <item>Retras</item>
+        <item>Decedat</item>
+        <item>În-Antrenare</item>
+        <item>Pierdut in Zbor</item>
+        <item>Pierdut in Timpul Antrenarii</item>
+        <item>Decedat în Timpul Serviciului</item>
+        <item>Dismis</item>
+        <item>Retras în Timpul Antrenamentului</item>
+    </string-array>
+    <string-array name="time_format_array">
+        <item>Default</item>
+        <item>12-Ore Format AM/PM</item>
+        <item>24-Ore Format</item>
+    </string-array>
+    <string-array name="time_format_array_entries" translatable="false">
+        <item>Default</item>
+        <item>12-Ore Format AM/PM</item>
+        <item>24-Ore Format</item>
+    </string-array>
+    <string-array name="theme_list_array" translatable="false">
+        <item>Lumină</item>
+        <item>Întuneric</item>
+        <item>Default</item>
+    </string-array>
+    <string-array name="theme_entry_array" translatable="false">
+        <item>lumina</item>
+        <item>intuneric</item>
+        <item>default</item>
+    </string-array>
+</resources>

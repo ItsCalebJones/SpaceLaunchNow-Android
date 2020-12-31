@@ -138,7 +138,7 @@
     <string name="vandenberg_afb">Vandenberg AFB</string>
     <string name="arianespace">Arianespace</string>
     <string name="casc">CASC</string>
-    <string name="isro">ISRO</string>
+    <string name="isro">Indien</string>
     <string name="cape_canaveral">Cape Canaveral</string>
     <string name="plesetsk_cosmodrome">Kosmodrom Plessezk</string>
     <string name="all">Alle</string>
@@ -453,7 +453,7 @@
     <string name="biography">Biografie</string>
     <string name="profile">Profil</string>
     <string name="flights">Flüge</string>
-    <string name="single_use">Single Use</string>
+    <string name="single_use">Einweg</string>
     <string name="docked">Angedockt:</string>
     <string name="human_rated">Bemannt:</string>
     <string name="no_active_expeditions">Keine aktiven Expeditionen</string>
@@ -479,6 +479,7 @@
     <string name="spacestations">Raumstationen</string>
     <string name="spacestation">Raumstation</string>
     <string name="astronauts">Raumfahrer</string>
+    <string name="starship">Starship</string>
     <string name="events">Events</string>
     <string name="favorites">Favoriten</string>
     <string name="show_me">Zeig Mir</string>
@@ -504,7 +505,7 @@
     <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Russland und Kasachstan</string>
     <string name="china">China</string>
-    <string name="kennedy_space_center_cape_canaveral">Kennedy Space Center / Cape Canaveral</string>
+    <string name="kennedy_space_center_cape_canaveral">Cape Canaveral</string>
     <string name="wallops_island">Wallops Island</string>
     <string name="new_zealand">Neuseeland</string>
     <string name="japan">Japan</string>
@@ -565,4 +566,15 @@
     <string name="event_and_news">Benachrichtigungen über Events und News.</string>
     <string name="event_and_news_description">Erhalte Nachrichten über Events und News der Mission nach dem Start.</string>
     <string name="choose_theme_mode">Wähle einen Stil.</string>
+    <string name="air_sea_launch">Luft/ See Start</string>
+    <string name="strict_matching">Zeige exklusiv nur Starts der Startanbietern die für einen bestimmten Standort, von dem aus mehrere Anbieter aus starten, ausgewählt worden sind.\n\nZum Beispiel, wenn du nur SpaceX Starts vom Kennedy Space Center sehen willst, dann aktiviere \"strikte Übereinstimmung\" und wähle Kennedy Space Center und SpaceX aus.\n\nIst \"strikte Übereinstimmung\" nicht aktiviert, werden alle SpaceX und Kennedy Space Center Starts angezeigt.</string>
+    <string name="strict_matching_title">strikte Übereinstimmung</string>
+    <string name="texas">Texas</string>
+    <string name="pacific_spaceport">Pazifischer Weltraumbahnhof</string>
+    <string name="include_other_misc_locations">Andere verschiedene Standorte einschließen</string>
+    <string name="view_more_livestreams">Mehr Livestreams anzeigen</string>
+    <string name="notices">Hinweise</string>
+    <string name="road_closures">Straßensperrungen</string>
+    <string name="up_next">Als nächstes</string>
+    <string name="overview">Übersicht</string>
 </resources>

@@ -132,7 +132,7 @@
     <string name="vandenberg_afb">Vandenberg AFB</string>
     <string name="arianespace">Arianespace</string>
     <string name="casc">CASC</string>
-    <string name="isro">ISRO</string>
+    <string name="isro">Intia</string>
     <string name="cape_canaveral">Cape Canaveral</string>
     <string name="plesetsk_cosmodrome">Plesetsk Cosmodrome</string>
     <string name="all">Kaikki</string>
@@ -197,6 +197,10 @@
     <string name="error_loading_mission">Tehtäviä ei voi ladata.</string>
     <string name="updating_mission_data">Päivitetään tehtävän tietoja... tässä voi kestää hetki.</string>
     <string name="error_unknown_launch">Virhe - Tuntematon Laukaisu</string>
+    <string name="weather_favorable">Sää Suotuisa: %d%%</string>
+    <string name="watch_webcast">Katso Live-lähetystä, jotta saat viimeisimmän tilannetiedon.</string>
+    <string name="waiting_on_launch_time">Odottaa uusinta tietoa laukaisuajasta laukaisun tuottajalta.</string>
+    <string name="waiting_on_launch_time_specific">Odottaa tarkkaa laukaisuaikaa laukaisun tarjoajalta %s.</string>
     <string name="unconfirmed">(Ei Vahvistettu)</string>
     <string name="no_go">Perutut Laukaisut</string>
     <string name="home">Koti</string>
@@ -225,9 +229,12 @@
     <string name="day_mode_restart">Päivätila Saattaa Tarvita Sovelluksen Uudelleenkäynnistyksen Jotta Se Tulee Toimintaan.</string>
     <string name="supporter_feature">(Tukijan Ominaisuus)</string>
     <string name="current_calendar">Tämänhetkinen kalenteri:</string>
+    <string name="select_calendar">Valitse kalenteri ja lisää laukaisu tapahtumat.</string>
     <string name="default_calendar">Oletus Kalenteri</string>
     <string name="permission_denied">Käyttö Evätty</string>
+    <string name="no_calendars_available">Ei kalentereita saatavilla jotta voisit lisätä laukaisu tapahtumat kalenteriin.</string>
     <string name="calendar_permission_required">Kalenterin Lupa Tarvittu</string>
+    <string name="support_again">Tue meitä uudestaan!</string>
     <string name="local_timezone">Paikallinen Aikavyöhyke</string>
     <string name="time_format">Aikamuoto</string>
     <string name="time_format_on">Laukaisu ajat 24 tunnin muodossa.</string>
@@ -249,7 +256,11 @@
     <string name="launch_list_widget_accent">Laukaisulista \'Widget\' - Aksenttiväri</string>
     <string name="launch_list_widget_accent_summary">Valitse aksenttiväri laukaisulista \'Widget\':eille.</string>
     <string name="launch_list_widget_text">Laukaisulista \'Widget\' - Otsikon Tekstiväri</string>
+    <string name="hide_refresh_summary">Piilota lataa uudelleen nappi.</string>
+    <string name="round_corners">Pyöristetyt Kulmat</string>
+    <string name="round_corners_summary">Aktivoi pyöristetyt kulmat widgeteille.</string>
     <string name="enable_weather">Ota sää käyttöön</string>
+    <string name="enable_weather_summary">Näytä sää tiedote tuleville laukaisuille Laukaisu tiedoissa.</string>
     <string name="upcoming_launches">Tulevat Laukaisut</string>
     <string name="data_saver">Datan Säästäjä</string>
     <string name="wifi_only">Vain WiFi:llä</string>

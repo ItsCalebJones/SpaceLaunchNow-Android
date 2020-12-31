@@ -7,7 +7,7 @@
     <string name="status_go">"Gotowy do startu"</string>
     <string name="status_nogo">Data startu niepotwierdzona</string>
     <string name="status_success">"Start zakończony sukcesem"</string>
-    <string name="status_failure">"Przy starcie nastąpiła awaria"</string>
+    <string name="status_failure">"Awaria podczas startu"</string>
     <string name="spacex_summary">SpaceX projektuje, produkuje oraz wystrzeliwuje zaawansowane rakiety i statki kosmiczne. Firma została założona w 2002 roku aby zrewolucjonizować technologię kosmiczną. Jednym z jej celów jest umożliwienie ludzkości życia na innych planetach.</string>
     <string name="usaf_summary">Siły Powietrzne Stanów Zjednoczonych (USAF) to jednostka sił powietrznych Amerykańskiej Armii - jedna z siedmiu amerykańskich służb mundurowych.</string>
     <string name="casc_summary">CASC (China Aerospace Science and Technology Corporation) jest głównym kontraktorem chińskiego programu kosmicznego. Jest własnością państwa i posiada szereg podległych podmiotów, które projektują, rozwijają i produkują szereg statków kosmicznych, rakiet, strategicznych i taktycznych systemów rakietowych oraz sprzętu naziemnego.</string>

@@ -260,6 +260,7 @@
     <string name="no_calendars_available">Žádné kalendáře dostupné k synchronizaci událostí startů.</string>
     <string name="calendar_permission_required">Je nutné povolení k přístupu ke kalendáři</string>
     <string name="calendar_permission_required_description">Toto oprávnění je zapotřebí k synchronizaci startů s kalendářem.</string>
+    <string name="support_again">Podpořte nás znovu!</string>
     <string name="local_timezone">Místní časové pásmo</string>
     <string name="local_timezone_on">Doby startů odpovídající aktuálnímu časovému pásmu.</string>
     <string name="local_timezone_off">Doby startů odpovídající koordinovanému světovému času.</string>
@@ -479,6 +480,7 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="spacestations">Vesmírné stanice</string>
     <string name="spacestation">Vesmírná stanice</string>
     <string name="astronauts">Astronauti</string>
+    <string name="starship">Starship</string>
     <string name="events">Události</string>
     <string name="favorites">Oblíbené</string>
     <string name="show_me">Ukaž mi</string>
@@ -556,4 +558,24 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="born_one_argument">Narozen: %1$s</string>
     <string name="died_two_arguments">Zemřel: %1$s (%2$d)</string>
     <string name="related_news">Související zprávy</string>
+    <string name="flight_life">Počet letů: %s</string>
+    <string name="thrust">Tah při startu:</string>
+    <string name="to_be_determined_with_value">Být odhodlán...%s</string>
+    <string name="click_for_info">Klikněte pro více informací.</string>
+    <string name="choose_theme">Vybrat téma</string>
+    <string name="set_custom_calendar">Nastavit vlastní připomenutí oznámení kalendáře.</string>
+    <string name="event_and_news">Události a oznámení o novinkách</string>
+    <string name="event_and_news_description">Dostávat oznámení o událostech a novinkách vesmírných letů po jejich startu.</string>
+    <string name="choose_theme_mode">Vybrat barevné schéma</string>
+    <string name="air_sea_launch">Vzdušný / vodní start</string>
+    <string name="strict_matching">Exkluzivně ukažte starty, které odpovídají agenturám vybraným pro lokality, které mají k dispozici více startovacích agentur.\n\nPokud chcete pouze spuštění SpaceX z KSC, povolte přísné shody a vyberte pouze KSC a SpaceX.\n\nJinak bez přísného porovnávání - budou zobrazeny všechny starty z KSC a všechna starty SpaceX.</string>
+    <string name="strict_matching_title">Přesná schoda</string>
+    <string name="texas">Texas</string>
+    <string name="pacific_spaceport">Pacifický kosmodrom</string>
+    <string name="include_other_misc_locations">Zahrnout další různá Místa</string>
+    <string name="view_more_livestreams">Zobrazit více stramů</string>
+    <string name="notices">Poznámky</string>
+    <string name="road_closures">Dopravní uzavírky</string>
+    <string name="up_next">Nadcházející</string>
+    <string name="overview">přehled</string>
 </resources>

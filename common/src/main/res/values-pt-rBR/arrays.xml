@@ -43,4 +43,19 @@
         <item>Formato 12-Horas AM/PM</item>
         <item>Formato 24-Horas</item>
     </string-array>
+    <string-array name="time_format_array_entries" translatable="false">
+        <item>Padrão</item>
+        <item>Formato 12-Horas AM/PM</item>
+        <item>Formato 24-Horas</item>
+    </string-array>
+    <string-array name="theme_list_array" translatable="false">
+        <item>Claro</item>
+        <item>Escuro</item>
+        <item>Padrão</item>
+    </string-array>
+    <string-array name="theme_entry_array" translatable="false">
+        <item>claro</item>
+        <item>escuro</item>
+        <item>padrão</item>
+    </string-array>
 </resources>
