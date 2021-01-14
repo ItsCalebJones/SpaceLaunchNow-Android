@@ -52,8 +52,8 @@ public class NewsDataClient {
         return call;
     }
 
-    public Call<NewsItemResponse> getArticles(int limit, Callback<NewsItemResponse>  callback){
-        Call<NewsItemResponse>  call;
+    public Call<RealmList<NewsItem>> getArticles(int limit, Callback<RealmList<NewsItem>>  callback){
+        Call<RealmList<NewsItem>>  call;
 
         call = newsInterface.getArticles(limit);
 
@@ -62,20 +62,10 @@ public class NewsDataClient {
         return call;
     }
 
-    public Call<NewsItemResponse> getArticlesByPage(int limit, String page, Callback<NewsItemResponse>  callback){
-        Call<NewsItemResponse>  call;
+    public Call<RealmList<NewsItem>> getArticlesByLaunch(int limit, String launchId, Callback<RealmList<NewsItem>>  callback){
+        Call<RealmList<NewsItem>>  call;
 
-        call = newsInterface.getArticlesByPage(limit, page);
-
-        call.enqueue(callback);
-
-        return call;
-    }
-
-    public Call<NewsItemResponse> getArticlesByLaunch(int limit, String launchId, Callback<NewsItemResponse>  callback){
-        Call<NewsItemResponse>  call;
-
-        call = newsInterface.getArticlesByLaunch(limit, launchId);
+        call = newsInterface.getArticlesByLaunch(launchId, limit);
 
         call.enqueue(callback);
 
@@ -162,6 +152,7 @@ public class NewsDataClient {
     private static final String[] DATE_FORMATS = new String[] {
             "MMMM dd, yyyy HH:mm:ss zzz",
             "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
             "yyyy-MM-dd"
     };
 

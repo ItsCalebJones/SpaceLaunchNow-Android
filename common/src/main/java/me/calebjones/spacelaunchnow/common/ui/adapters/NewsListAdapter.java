@@ -70,7 +70,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
                     .into(holder.newsIcon);
         }
         holder.title.setText(item.getTitle());
-        holder.subtitle.setText(item.getNewsSiteLong());
+        holder.subtitle.setText(item.getNewsSite());
     }
 
     @Override
