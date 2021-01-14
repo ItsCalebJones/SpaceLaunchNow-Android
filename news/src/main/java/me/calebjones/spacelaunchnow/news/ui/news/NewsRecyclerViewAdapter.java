@@ -52,9 +52,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     public void onBindViewHolder(final ViewHolder holder, int position) {
         NewsItem news = newsList.get(position);
         holder.articleTitle.setText(news.getTitle());
-        holder.articleSite.setText(news.getNewsSiteLong());
-        Date published = new Date(news.getDatePublished() * 1000);
-        holder.articlePublicationDate.setText(DateFormat.getDateInstance(DateFormat.LONG).format(((long) news.getDatePublished() * 1000)));
+        holder.articleSite.setText(news.getNewsSite());
+        holder.articlePublicationDate.setText(DateFormat.getDateInstance(DateFormat.LONG).format(news.getDatePublished()));
         if (news.getFeaturedImage() != null) {
             GlideApp.with(context)
                     .load(news.getFeaturedImage())

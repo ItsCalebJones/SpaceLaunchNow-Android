@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import androidx.annotation.UiThread;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import io.realm.Sort;
@@ -58,7 +59,7 @@ public class NewsDataRepository {
     }
 
     public RealmResults<NewsItem> getRelatedNewsFromRealm(String launchId) {
-        RealmQuery<NewsItem> query = realm.where(NewsItem.class).isNotNull("id").and().contains("launches.val", launchId);
+        RealmQuery<NewsItem> query = realm.where(NewsItem.class).isNotNull("id").and().contains("launches.id", launchId);
         return query.sort("datePublished", Sort.DESCENDING).findAll();
     }
 
@@ -72,8 +73,8 @@ public class NewsDataRepository {
         callback.onNetworkStateChanged(true);
         dataLoader.getNewsList(limit, new Callbacks.NewsListNetworkCallback() {
             @Override
-            public void onSuccess(NewsItemResponse news) {
-                addNewsToRealm(news.getNewsItems());
+            public void onSuccess(RealmList<NewsItem> news) {
+                addNewsToRealm(news);
                 callback.onNetworkStateChanged(false);
                 callback.onNewsLoaded(getNewsFromRealm());
             }
@@ -81,7 +82,7 @@ public class NewsDataRepository {
             @Override
             public void onNetworkFailure(int code) {
                 callback.onNetworkStateChanged(false);
-                callback.onError("Unable to load launch data.", null);
+                callback.onError("Unable to load news data.", null);
             }
 
             @Override
@@ -116,7 +117,7 @@ public class NewsDataRepository {
             @Override
             public void onNetworkFailure(int code) {
                 callback.onNetworkStateChanged(false);
-                callback.onError("Unable to load launch data.", null);
+                callback.onError("Unable to load news data.", null);
             }
 
             @Override
@@ -132,8 +133,8 @@ public class NewsDataRepository {
         callback.onNetworkStateChanged(true);
         dataLoader.getNewsByLaunch(limit, launchId, new Callbacks.NewsListNetworkCallback() {
             @Override
-            public void onSuccess(NewsItemResponse news) {
-                addNewsToRealm(news.getNewsItems());
+            public void onSuccess(RealmList<NewsItem> news) {
+                addNewsToRealm(news);
                 callback.onNetworkStateChanged(false);
                 callback.onNewsLoaded(getRelatedNewsFromRealm(launchId));
             }
