@@ -8,24 +8,6 @@
     <string name="status_nogo">Indítási dátum nincs meghatározva</string>
     <string name="status_success">"Sikeres indítás"</string>
     <string name="status_failure">"Sikertelen indítás"</string>
-    <string name="spacex_summary">A SpaceX korszerű rakétákat és űrhajókat tervez, gyárt és indít. A vállalatot 2002-ben alapították azzal céllal, hogy forradalmasítsa az űrtechnológiát, és ezáltal  lehetővé tegye az emberiségnek, hogy más bolygókon éljen.</string>
-    <string name="usaf_summary">Az Egyesült Államok Légiereje az Amerikai Fegyveres Erők légiharci alakulata, és az egyike a hét amerikai egyenruhás alakulatnak.</string>
-    <string name="casc_summary">A Kínai Űrkutatás-Tudományi és Technológiai Vállalat
-(CASC) a fő beszállítója a kínai űrprogramnak. Ez egy állami tulajdonú vállalat, melynek többféle alárendelt szervezetei vannak, melyek terveznek, fejlesztenek és gyártanak különféle űrjhajókat, indítójárműveket, stratégiai és taktikai rakétarendszereket és földi felszerelést.</string>
-    <string name="cnsa_summary">A Kínai Nemzeti Űrhivatal  (CNSA) a nemzeti
-űrügynöksége a Kínai Népköztársaságnak. Ez felelős
-a nemzeti űrprogramnak és az űrtevékenységek megtervezéséért és fejlesztéséért.</string>
-    <string name="isro_summary">Az Indiai Űrkutatási Szervezet (ISRO) a nemzeti űrügynöksége az indiai kormánynak. Bengaluruban található a szervezet székhelye. Az szervezet jövőképe: \"hasznosítani kell az űrtechnológiát nemzeti fejlesztésre, miközben folytatni a tudományos kutatást és a bolygók felfedezését\"</string>
-    <string name="vko_summary">"Az Orosz Űr- és Légteri Védelmi Erők egy ágazata volt az Orosz Fegyveres Erőknek, mely felelős volt a légi- és rakétavédelemért Oroszország területén, tobábbá működtette a Pleszecki Űrközpontot és az orosz katonai műholdakat."</string>
-    <string name="roscosmos_summary">A Roszkozmosz Állami Vállalat az Űrtevékenységekért, közismertebben Roszkozmosz, egy kormányzati szervezet, mely felelős az orosz űrprogramért, és az általános űrkutatási fejlesztésekért.</string>
-    <string name="ula_summary"><![CDATA[A United Launch Alliance (ULA) a Lockheed Martin Space Systems és a Boeing Defense, Space & Security
-közös vállalata. A ULA-t 2006. decemberében úgy alapították, hogy a két cég fejlesztőcsapatait összevonták, melyek biztosították a műhold indításokat az Egyesült Államok kormányána számára.]]></string>
-    <string name="gd_summary">A General Dynamics Vállalat egy amerikai űrkutatási és védelmi cég mely több kisebb egyesülésből jött létre. Ez a világ ötödik legnagyobb védelmi beszállítója a 2012-es bevételek alapján.</string>
-    <string name="asa_summary">Az Arianespace SA egy francia multinacionális vállalat melyet 1980-ban alapítottak, mint a világ első kereskededelmi rakétaindítás szolgáltatója.</string>
-    <string name="TsSKB_summary">A Progressz Állami Kutatási és Gyártási Központ, más néven TsSKB-Progressz, egy orosz \"szövetségi-állami egyesült vállalat\" a Roszkoszmosz hatásköre alatt, amely felelős az űrkutatási fejlesztésért és kutatásért.
-A TsSKB-Progressz a híres Szojuz-FG rakéta fejlesztője,
-amelyet emberes repülésekhez használnak, és a Szojuz-U fejlesztője, melyet műholdak és egyéb ember nélküli rakományok indítására használnak.</string>
-    <string name="nasa_summary">A Nemzeti Repülési és Űrhajózási Hivatal (NASA) az Amerikai Egyesült Államok kormányzati ügynöksége, az ország civil repüléstani, űrkutatási és űrrepülési szervezete.</string>
     <string name="general_settings">Általános beállítások az indítások követésére és az alkalmazás működésére.</string>
     <string name="supporter_title">Legyen Támogató</string>
     <string name="supporter_description">Segítsen biztosítani a folyamatos támogatást, időközönkénti hibajavításokat, és új funkciókat.</string>

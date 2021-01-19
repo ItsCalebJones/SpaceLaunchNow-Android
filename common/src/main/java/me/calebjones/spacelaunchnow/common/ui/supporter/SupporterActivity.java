@@ -65,6 +65,10 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
     FloatingActionButton fabSupporter;
     @BindView(R2.id.nested_scroll_view)
     NestedScrollView nestedScrollView;
+    @BindView(R2.id.detail_title)
+    TextView title;
+    @BindView(R2.id.detail_sub_title)
+    TextView subtitle;
 
     private BillingProcessor bp;
     private boolean isAvailable;
@@ -81,11 +85,18 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         ButterKnife.bind(this);
         ownedProducts = new ArrayList<>();
 
-        if (SupporterHelper.isSupporter()) {
-            purchaseButton.setText(R.string.support_again);
-            enterReveal(supportThankYou);
+        if (SupporterHelper.is2021Supporter()) {
+            purchaseButton.setText(R.string.support_us_2021);
+            title.setText("Thank You!");
+            subtitle.setText("");
+        } else if (SupporterHelper.isSupporter()){
+            purchaseButton.setText(R.string.support_again_2021);
+            title.setText("Become a 2021 Supporter");
+            subtitle.setText("Continue Your Support");
         } else {
-            purchaseButton.setText(R.string.supporter_title);
+            title.setText("Become a Supporter");
+            subtitle.setText("Get Pro Features");
+            purchaseButton.setText(R.string.supporter_title_2021);
         }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -227,35 +238,35 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         }
 
         configureProductItem(bronzeButton, bronzeTitle, bronzeDescription,
-                SupporterHelper.SKU_2020_BRONZE,
+                SupporterHelper.SKU_2021_BRONZE,
                 new IconicsDrawable(this)
                         .icon(FontAwesome.Icon.faw_thumbs_up)
                         .color(Color.WHITE)
                         .sizeDp(24));
 
         configureProductItem(metalButton, metalTitle, metalDescription,
-                SupporterHelper.SKU_2020_METAL,
+                SupporterHelper.SKU_2021_METAL,
                 new IconicsDrawable(this)
                         .icon(GoogleMaterial.Icon.gmd_local_cafe)
                         .color(Color.WHITE)
                         .sizeDp(24));
 
         configureProductItem(silverButton, silverTitle, silverDescription,
-                SupporterHelper.SKU_2020_SILVER,
+                SupporterHelper.SKU_2021_SILVER,
                 new IconicsDrawable(this)
                         .icon(FontAwesome.Icon.faw_store)
                         .color(Color.WHITE)
                         .sizeDp(24));
 
         configureProductItem(goldButton, goldTitle, goldDescription,
-                SupporterHelper.SKU_2020_GOLD,
+                SupporterHelper.SKU_2021_GOLD,
                 new IconicsDrawable(this)
                         .icon(GoogleMaterial.Icon.gmd_local_dining)
                         .color(Color.WHITE)
                         .sizeDp(24));
 
         configureProductItem(platinumButton, platinumTitle, platinumDescription,
-                SupporterHelper.SKU_2020_PLATINUM,
+                SupporterHelper.SKU_2021_PLATINUM,
                 new IconicsDrawable(this)
                         .icon(FontAwesome.Icon.faw_money_bill_wave)
                         .color(Color.WHITE)
@@ -427,30 +438,30 @@ public class SupporterActivity extends BaseActivity implements BillingProcessor.
         SkuDetails details = null;
 
         switch (sku) {
-            case SupporterHelper.SKU_2020_BRONZE:
+            case SupporterHelper.SKU_2021_BRONZE:
                 if (bp != null) {
-                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_BRONZE);
+                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2021_BRONZE);
                 }
                 return details;
 
-            case SupporterHelper.SKU_2020_METAL:
+            case SupporterHelper.SKU_2021_METAL:
                 if (bp != null) {
-                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_METAL);
+                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2021_METAL);
                 }
                 return details;
-            case SupporterHelper.SKU_2020_SILVER:
+            case SupporterHelper.SKU_2021_SILVER:
                 if (bp != null) {
-                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_SILVER);
+                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2021_SILVER);
                 }
                 return details;
-            case SupporterHelper.SKU_2020_GOLD:
+            case SupporterHelper.SKU_2021_GOLD:
                 if (bp != null) {
-                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_GOLD);
+                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2021_GOLD);
                 }
                 return details;
-            case SupporterHelper.SKU_2020_PLATINUM:
+            case SupporterHelper.SKU_2021_PLATINUM:
                 if (bp != null) {
-                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2020_PLATINUM);
+                    details = bp.getPurchaseListingDetails(SupporterHelper.SKU_2021_PLATINUM);
                 }
                 return details;
             default:
