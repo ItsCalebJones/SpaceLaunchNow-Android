@@ -77,7 +77,7 @@
                 android:textSize="26sp" />
 
             <TextView
-                android:id="@+id/detail_mission_location"
+                android:id="@+id/detail_sub_title"
                 style="@style/MaterialTypography.Regular.Subheading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

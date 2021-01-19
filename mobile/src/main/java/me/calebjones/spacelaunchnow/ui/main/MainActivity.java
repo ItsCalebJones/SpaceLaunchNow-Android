@@ -158,12 +158,13 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
             showFilter = true;
             startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
+        } else if (!Once.beenDone("show2021dialog") &&
+                Once.beenDone("appOpen", Amount.moreThan(5))) {
+            Once.markDone("show2021dialog");
+            if (!SupporterHelper.is2021Supporter()) {
+                becomeSupporter();
+            }
         }
-//        } else if (!Once.beenDone("show2020dialog") &&
-//                Once.beenDone("appOpen", Amount.moreThan(5))) {
-//            Once.markDone("show2020dialog");
-//            becomeSupporter();
-//        }
 
         // Get intent, action and MIME type
         Intent intent = getIntent();

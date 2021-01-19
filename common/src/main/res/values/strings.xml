@@ -8,18 +8,6 @@
     <string name="status_nogo">Launch Date Unconfirmed</string>
     <string name="status_success">"Successful Launch"</string>
     <string name="status_failure">"Launch Failure Occurred"</string>
-    <string name="spacex_summary">SpaceX designs, manufactures and launches advanced rockets and spacecraft. The company was founded in 2002 to revolutionize space technology, with the ultimate goal of enabling people to live on other planets.</string>
-    <string name="usaf_summary">The United States Air Force is the aerial warfare service branch of the United States Armed Forces and one of the seven American uniformed services.</string>
-    <string name="casc_summary">The China Aerospace Science and Technology Corporation(CASC) is the main contractor for the Chinese space program. It is state-owned and has a number of subordinate entities which design, develop and manufacture a range of spacecraft, Launch vehicles, strategic and tactical missile systems, and ground equipment.</string>
-    <string name="cnsa_summary">The China National Space Administration (CNSA) is the national space agency of the People\'s Republic of China. It is responsible for the national space program and for planning and development of space activities.</string>
-    <string name="isro_summary">The Indian Space Research Organisation (ISRO), is the space agency of the Indian government headquartered in the city of Bengaluru. Its vision is to \"harness space technology for national development, while pursuing space science research and planetary exploration\".</string>
-    <string name="vko_summary">"The Russian Aerospace Defence Forces (VKO) was the branch of the Armed Forces of the Russian Federation responsible for air and missile defence, and the operation of Russian military satellites and the Plesetsk Cosmodrome. "</string>
-    <string name="roscosmos_summary">The Roscosmos State Corporation for Space Activities, commonly known as Roscosmos, is the governmental body responsible for the Russian space science program and general aerospace research.</string>
-    <string name="ula_summary"><![CDATA[United Launch Alliance (ULA) is a joint venture of Lockheed Martin Space Systems and Boeing Defense, Space & Security. ULA was formed in December 2006 by combining the teams at these companies which provide spacecraft Launch services to the government of the United States.]]></string>
-    <string name="gd_summary">General Dynamics Corporation is an American aerospace and defense company formed by mergers and divestitures. It is the world\'s fifth-largest defense contractor based on 2012 revenues.</string>
-    <string name="asa_summary">Arianespace SA is a French multinational company founded in 1980 as the world\'s first commercial Launch service provider.</string>
-    <string name="TsSKB_summary">The Progress State Research and Production Space Centre, also known as TsSKB-Progress, is a Russian \"Federal State Unitary Enterprise\" under the jurisdiction of Roscosmos, the Russian Federal Space Agency responsible for space science and aerospace research. It is the developer of the famous Soyuz-FG rocket used for manned space flight, as well as Soyuz-U used for launching unmanned probes.</string>
-    <string name="nasa_summary">The National Aeronautics and Space Administration (NASA) is the United States government agency responsible for the civilian space program as well as aeronautics and aerospace research.</string>
     <string name="general_settings">General settings for launch tracking and application behavior.</string>
     <string name="supporter_title">Become a Supporter</string>
     <string name="supporter_description">Help ensure continued support, timely bug fixes, and new features.</string>
@@ -260,7 +248,7 @@
     <string name="no_calendars_available">No Calendars available to sync launch events with.</string>
     <string name="calendar_permission_required">Calendar Permission Needed</string>
     <string name="calendar_permission_required_description">This permission is needed to sync launches with your calendar.</string>
-    <string name="support_again">Support us again!</string>
+    <string name="support_again">Support me in 2021!</string>
     <string name="local_timezone">Local Timezone</string>
     <string name="local_timezone_on">Launch times locally translated times to fit your current timezone.</string>
     <string name="local_timezone_off">Launch times to be represented in UTC.</string>
@@ -559,8 +547,8 @@
     <string name="related_news">Related News</string>
     <string name="flight_life">Flight Life: %s</string>
     <string name="thrust">Thrust at Launch:</string>
-    <string name="thank_you_2019" translatable="false">Because of users like you, Space Launch Now has continued to grow - from a small limited weekend project to a fully fledged service available on Android, iOS and the web! We\'ve been able to cover special events such as SpaceX\'s Starhopper test flight, share breaking news in the case of Starhoppers untimely demise and watch fledgling companies launch experminental proto-types.\n\nIf you would - please consider supporting the continued development of Space Launch Now in 2020 by making another in-app-purchase or by becoming a Patron!</string>
-    <string name="supporter_thank_you_2019" translatable="false">Because of users like you, Space Launch Now has continued to grow - from a small limited weekend project to a fully fledged service available on Android, iOS and the web! We\'ve been able to cover special events such as SpaceX\'s Starhopper test flight, share breaking news in the case of Starhoppers untimely demise and watch fledgling companies launch experminental proto-types.\n\nThank you for choosing to support this project.\n\nIf you would - please consider supporting the continued development of Space Launch Now again in 2020 by making another in-app-purchase or by becoming a Patron!</string>
+    <string name="thank_you_2021" translatable="false">Hi - Caleb here - it\'s been my pleasure to continue to develop Space Launch Now.\n\nPlease consider supporting the continued development of Space Launch Now in 2021 by making an in-app-purchase or by becoming a Patron!\n\nGet Pro Features\n• Remove Ads\n• Custom Widgets\n• Calendar Sync</string>
+    <string name="supporter_thank_you_2021" translatable="false">Hi - Caleb here - it\'s been my pleasure to continue to develop Space Launch Now.\n\n If you would - please consider supporting development of Space Launch Now in 2021 by making another in-app-purchase or by becoming a Patron!</string>
     <string name="to_be_determined_with_value">To be determined... %s</string>
     <string name="click_for_info">Click for more information.</string>
     <string name="choose_theme">Choose Theme</string>
@@ -580,4 +568,7 @@
     <string name="up_next">Up Next</string>
     <string name="overview">Overview</string>
     <string translatable="false" name="theme_pref_key">theme_pref</string>
+    <string name="supporter_title_2021" translatable="false">Become a Supporter!</string>
+    <string name="support_again_2021" translatable="false">Become a 2021 Supporter!</string>
+    <string name="support_us_2021" translatable="false">Support us again!</string>
 </resources>

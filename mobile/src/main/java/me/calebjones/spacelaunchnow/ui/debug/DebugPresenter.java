@@ -58,9 +58,9 @@ public class DebugPresenter implements DebugContract.Presenter {
         sharedPreference.setDebugSupporter(selected);
         realm = Realm.getDefaultInstance();
         if (selected) {
-            realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR)));
+            realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_2021_BRONZE)));
             realm.beginTransaction();
-            realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_TWO_DOLLAR));
+            realm.copyToRealmOrUpdate(SupporterHelper.getProduct(SupporterHelper.SKU_2021_BRONZE));
             realm.commitTransaction();
             realm.close();
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
