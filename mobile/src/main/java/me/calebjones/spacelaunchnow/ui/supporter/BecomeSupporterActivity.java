@@ -281,6 +281,7 @@ public class BecomeSupporterActivity extends BaseActivity implements BillingProc
         Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.purchaseTime);
         Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.purchaseToken);
         Timber.i("Purchase Data: %s", details.purchaseInfo.purchaseData.purchaseState.name());
+        onBackPressed();
     }
 
     @Override
