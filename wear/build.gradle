@@ -92,12 +92,15 @@ def computeVersionCode() {
     return 2000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + app.versionCode
 }
 
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+
 play {
     serviceAccountCredentials = rootProject.file("publisher-key.json")
-    track = "internal"
-    releaseStatus = "completed"
-    commit = false
+    track.set("internal")
+    releaseStatus.set(ReleaseStatus.COMPLETED)
+    commit.set(false)
 }
+
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
