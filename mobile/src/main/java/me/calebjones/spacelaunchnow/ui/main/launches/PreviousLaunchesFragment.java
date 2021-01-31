@@ -98,13 +98,19 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
-        adapterWrapper = AdmobBannerRecyclerAdapterWrapper.builder(context)
-                .setFirstAdIndex(5)
-                .setLimitOfAds(10)
-                .setNoOfDataBetweenAds(10)
-                .setAdapter(adapter)
-                .build();
-        mRecyclerView.setAdapter(adapterWrapper);
+
+        if (!SupporterHelper.isSupporter()) {
+            adapterWrapper = AdmobBannerRecyclerAdapterWrapper.builder(context)
+                    .setSingleAdUnitId("ca-app-pub-9824528399164059/9959827876")
+                    .setFirstAdIndex(5)
+                    .setLimitOfAds(10)
+                    .setNoOfDataBetweenAds(10)
+                    .setAdapter(adapter)
+                    .build();
+            mRecyclerView.setAdapter(adapterWrapper);
+        } else {
+            mRecyclerView.setAdapter(adapter);
+        }
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
