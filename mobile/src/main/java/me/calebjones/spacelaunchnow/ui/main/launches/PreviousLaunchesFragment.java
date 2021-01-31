@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.clockbyte.admobadapter.bannerads.AdmobBannerRecyclerAdapterWrapper;
 import com.crashlytics.android.Crashlytics;
 
 import java.util.List;
@@ -48,6 +49,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
 
     private View view;
     private ListAdapter adapter;
+    private AdmobBannerRecyclerAdapterWrapper adapterWrapper;
     private LinearLayoutManager layoutManager;
     private Context context;
     private PreviousDataRepository previousDataRepository;
@@ -96,7 +98,13 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
-        mRecyclerView.setAdapter(adapter);
+        adapterWrapper = AdmobBannerRecyclerAdapterWrapper.builder(context)
+                .setFirstAdIndex(5)
+                .setLimitOfAds(10)
+                .setNoOfDataBetweenAds(10)
+                .setAdapter(adapter)
+                .build();
+        mRecyclerView.setAdapter(adapterWrapper);
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
@@ -145,6 +153,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             }
             adapter.addItems(launches);
             adapter.notifyDataSetChanged();
+            adapterWrapper.notifyDataSetChanged();
 
         } else {
             statefulView.showEmpty();

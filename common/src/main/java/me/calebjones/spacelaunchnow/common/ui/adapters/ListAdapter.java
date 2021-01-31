@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,7 +41,7 @@ import timber.log.Timber;
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to RecyclerView
  */
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
+public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int position;
     private RealmList<LaunchList> launchList;
     private Context mContext;
@@ -104,14 +105,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         return new ViewHolder(v);
     }
 
+
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int i) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder rHolder, int i) {
         final LaunchList launchItem = launchList.get(i);
 
         String[] title;
         String launchDate;
 
         position = i;
+
+        ListAdapter.ViewHolder holder = (ListAdapter.ViewHolder) rHolder;
 
         //Retrieve missionType
         if (launchItem.getImage() != null) {

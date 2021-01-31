@@ -36,7 +36,7 @@ public interface SpaceLaunchNowService {
 
     // Spacecraft Configs
     // GET: /config/spacecraft
-    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_CODE})
     @GET(version + "/config/spacecraft")
     Call<SpacecraftConfigResponse> getSpacecraftConfigs(@Query("limit") int amount, @Query("offset") int offset,
                                                         @Query("search") String search, @Query("launch_agency") int status,

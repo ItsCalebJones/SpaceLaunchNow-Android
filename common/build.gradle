@@ -32,8 +32,15 @@ android {
         disable 'RtlCompat'
     }
     buildTypes {
-        debug {}
+        debug{
+            buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+            buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
+
+            //..
+        }
         release {
+            buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+            buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -107,5 +114,7 @@ dependencies {
     implementation deps.customtabs
     implementation deps.preferences
     implementation deps.deepLinkDispatch
+
+    implementation deps.adAdapter
     kapt deps.deepLinkDispatchAnnotation
 }

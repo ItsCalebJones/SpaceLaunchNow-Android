@@ -32,6 +32,7 @@ import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -145,6 +146,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private String action;
     private boolean showFilter = false;
     private String newsUrl;
+    private boolean allowsPersonalAds = false;
+    private boolean allowAds = false;
+    private int adShowCount = 0;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +170,18 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 becomeSupporter();
             }
         }
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-9824528399164059/7019745864");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                // Load the next interstitial.
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+        });
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
@@ -428,7 +445,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 final Handler handler = new Handler();
                 handler.postDelayed(() -> showChangelogSnackbar(), 1000);
 
-            } else  if (!SupporterHelper.isSupporter()) {
+            } else if (!SupporterHelper.isSupporter()) {
                 if (!Once.beenDone("userCheckedSupporter")) {
                     if (Once.beenDone("appOpen", Amount.exactly(3))) {
                         if (!Once.beenDone("showRemoveAdThree") && !SupporterHelper.isSupporter()) {
@@ -638,6 +655,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_launches:
                 setActionBarTitle("Space Launch Now");
@@ -650,6 +668,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkHideAd();
                 break;
             case R.id.menu_news:
                 setActionBarTitle(getString(R.string.space_launch_news));
@@ -676,6 +695,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_iss:
                 setActionBarTitle(getString(R.string.spacestations));
@@ -689,6 +709,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_astronauts:
                 setActionBarTitle(getString(R.string.astronauts));
@@ -702,6 +723,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_starship:
                 setActionBarTitle("Starship Development");
@@ -715,6 +737,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_events:
                 setActionBarTitle(getString(R.string.events));
@@ -728,6 +751,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_vehicle:
                 setActionBarTitle(getString(R.string.vehicles));
@@ -740,6 +764,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_launch:
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
@@ -867,13 +892,40 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         }
     }
 
+
     public void checkHideAd() {
         hideAd();
     }
 
     public void checkShowAd() {
+        Timber.v("Checking if Ads are showing!");
         if (adviewEnabled) {
             showAd();
+        }
+    }
+
+    public void checkRefreshAd() {
+        if (adviewEnabled) {
+            checkShowAd();
+            adShowCount += 1;
+            Timber.v("Ad show count - %s", adShowCount);
+            if (adShowCount % 4 == 0 && adShowCount != 0) {
+                loadAd();
+            } else if (adShowCount % 10 == 0
+                    && adShowCount != 0 &&
+                    Once.beenDone("show2021dialog")) {
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    Timber.d("The interstitial wasn't loaded yet.");
+                }
+            }
+        }
+    }
+
+    public void hideAdIfEnabled() {
+        if (adviewEnabled) {
+            hideAd();
         }
     }
 
@@ -962,8 +1014,8 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     }
 
     private void configureAdState(GDPRConsentState consentState) {
-        boolean allowsPersonalAds = true;
-        boolean allowAds = true;
+        allowsPersonalAds = true;
+        allowAds = true;
         GDPRConsent consent = consentState.getConsent();
 
         if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
@@ -977,7 +1029,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             GDPR.getInstance().resetConsent();
         }
 
-        Timber.v("Load Ads");
+        loadAd();
+    }
+
+    private void loadAd() {
+        Timber.v("Loading Ad");
         if (!SupporterHelper.isSupporter() && allowAds) {
             Timber.d("Loading ads.");
             if (allowsPersonalAds) {
