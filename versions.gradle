@@ -43,7 +43,7 @@ ext.plugs = [
         androidMavenGradle  : "com.github.dcendents:android-maven-gradle-plugin:2.0",
         googleService       : "com.google.gms:google-services:4.2.0",
         kotlinPlugin        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
-        playPublisher       : "com.github.triplet.gradle:play-publisher:2.8.0-SNAPSHOT"
+        playPublisher       : "com.github.triplet.gradle:play-publisher:2.8.0"
 ]
 
 ext.deps = [
