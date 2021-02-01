@@ -42,7 +42,6 @@ import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 
 import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
 import me.calebjones.spacelaunchnow.common.content.data.upcoming.UpcomingDataRepository;
-import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.filter.LaunchFilterDialog;

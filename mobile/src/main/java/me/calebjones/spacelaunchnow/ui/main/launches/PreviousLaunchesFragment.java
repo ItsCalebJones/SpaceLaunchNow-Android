@@ -159,7 +159,6 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             }
             adapter.addItems(launches);
             adapter.notifyDataSetChanged();
-            adapterWrapper.notifyDataSetChanged();
 
         } else {
             statefulView.showEmpty();
