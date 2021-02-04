@@ -199,7 +199,12 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         holder.status.setText(launchItem.getStatus().getName());
         holder.statusCard.setCardBackgroundColor(LaunchStatusUtil.getLaunchStatusColor(mContext, launchItem.getStatus().getId()));
-
+        holder.rootView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, LaunchDetailActivity.class);
+            intent.putExtra("TYPE", "launch");
+            intent.putExtra("launchID", launchItem.getId());
+            mContext.startActivity(intent);
+        });
     }
 
     @Override
@@ -207,7 +212,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return launchList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R2.id.status)
         TextView status;
         @BindView(R2.id.status_pill_mini)
@@ -230,6 +235,8 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView mission;
         @BindView(R2.id.categoryIcon)
         ImageView categoryIcon;
+        @BindView(R2.id.rootview)
+        View rootView;
 
 
         //Add content to the card
@@ -237,23 +244,8 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(view);
             ButterKnife.bind(this, view);
 
-            categoryIcon.setOnClickListener(this);
-            title.setOnClickListener(this);
-            location.setOnClickListener(this);
-            launch_date.setOnClickListener(this);
-            mission.setOnClickListener(this);
         }
 
-        //React to click events.
-        @Override
-        public void onClick(View v) {
-            final LaunchList launch = launchList.get(getAdapterPosition());
-
-            Intent intent = new Intent(mContext, LaunchDetailActivity.class);
-            intent.putExtra("TYPE", "launch");
-            intent.putExtra("launchID", launch.getId());
-            mContext.startActivity(intent);
-        }
     }
 
 }
