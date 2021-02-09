@@ -56,7 +56,7 @@ pipeline {
                     sh 'cp $keysFile wear/src/main/res/values/api_keys.xml'
                 }
                 withCredentials([file(credentialsId: 'GoogleServiceJson', variable: 'googleServiceJson')]) {
-                    sh 'cp googleServiceJson mobile/google-services.json'
+                    sh 'cp $googleServiceJson mobile/google-services.json'
                 }
             }
         }
