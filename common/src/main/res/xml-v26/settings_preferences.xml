@@ -211,7 +211,7 @@
             android:summary="@string/notification_filter_description"
             android:title="@string/notification_filters" />
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:iconSpaceReserved="false"
             android:dependency="notificationEnabled"
             android:key="netstampChanged"
@@ -219,14 +219,14 @@
             android:summaryOn="@string/status_updates_on"
             android:title="@string/status_updates" />
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:iconSpaceReserved="false"
             android:dependency="notificationEnabled"
             android:key="inFlight"
             android:summary="@string/settings_in_flight_summary"
             android:title="@string/settings_in_flight" />
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:iconSpaceReserved="false"
             android:dependency="notificationEnabled"
             android:key="success"
@@ -240,7 +240,7 @@
             android:title="@string/event_and_news"
             app:iconSpaceReserved="false" />
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             app:iconSpaceReserved="false"
             android:dependency="notificationEnabled"
             android:key="webcastOnly"
@@ -268,14 +268,14 @@
         android:summary="@string/notification_interval_summary"
         android:title="@string/notification_interval">
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:iconSpaceReserved="false"
             android:key="twentyFourHour"
             android:summaryOff="@string/twenty_four_hour_off"
             android:summaryOn="@string/twenty_four_hour_on"
             android:title="@string/twenty_four_hour_title" />
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:iconSpaceReserved="false"
             android:key="oneHour"
             android:summaryOff="@string/one_hour_off"
@@ -289,7 +289,7 @@
             android:summaryOn="@string/ten_minutes_on"
             android:title="@string/ten_minutes_title" />
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:iconSpaceReserved="false"
             android:key="oneMinute"
             android:summaryOff="@string/settings_one_minute_off"

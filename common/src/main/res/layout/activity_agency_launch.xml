@@ -13,6 +13,8 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            app:theme="@style/BaseAppTheme.AppBarOverlay"
+            app:popupTheme="@style/BaseAppTheme.PopupOverlay"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"/>
@@ -20,6 +22,7 @@
 
         <me.calebjones.spacelaunchnow.common.ui.views.custom.BadgeTabLayout
             android:id="@+id/tabs"
+            style="@style/BaseAppTheme.TabBarOverlay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?colorPrimary"/>

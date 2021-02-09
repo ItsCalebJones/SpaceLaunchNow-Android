@@ -63,15 +63,15 @@ public class AppFireBaseMessagingService extends FirebaseMessagingService {
     private void checkNotificationType(String notificationType, JSONObject data) throws JSONException, ParseException {
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
-        boolean netstampChanged = Prefs.getBoolean("netstampChanged", true);
+        boolean netstampChanged = Prefs.getBoolean("netstampChanged", false);
         boolean webcastLive = Prefs.getBoolean("notificationEnabled", true);
         boolean webcastOnly = Prefs.getBoolean("webcastOnly", false);
-        boolean twentyFourHour = Prefs.getBoolean("twentyFourHour", true);
-        boolean oneHour = Prefs.getBoolean("oneHour", true);
+        boolean twentyFourHour = Prefs.getBoolean("twentyFourHour", false);
+        boolean oneHour = Prefs.getBoolean("oneHour", false);
         boolean tenMinutes = Prefs.getBoolean("tenMinutes", true);
-        boolean inFlight = Prefs.getBoolean("inFlight", true);
-        boolean success = Prefs.getBoolean("success", true);
-        boolean oneMinute = Prefs.getBoolean("oneMinute", true);
+        boolean inFlight = Prefs.getBoolean("inFlight", false);
+        boolean success = Prefs.getBoolean("success", false);
+        boolean oneMinute = Prefs.getBoolean("oneMinute", false);
         boolean eventNotifications = Prefs.getBoolean("eventNotifications", true);
 
         if (notificationEnabled) {

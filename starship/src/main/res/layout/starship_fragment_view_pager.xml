@@ -8,14 +8,14 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
+        style="@style/BaseAppTheme.TabBarOverlay"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_alignParentTop="true"
         android:background="?colorPrimary"
         android:elevation="12dp"
         app:tabGravity="fill"
-        app:tabMode="fixed"
-        app:tabTextColor="@color/white" />
+        app:tabMode="fixed"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"

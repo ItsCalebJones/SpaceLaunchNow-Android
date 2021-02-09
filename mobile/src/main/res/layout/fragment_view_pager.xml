@@ -10,12 +10,12 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
+        style="@style/BaseAppTheme.TabBarOverlay"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="?colorPrimary"
         android:elevation="12dp"
-        app:tabTextColor="@color/material_color_white"
         app:tabGravity="fill"
         app:tabMode="fixed" />
 

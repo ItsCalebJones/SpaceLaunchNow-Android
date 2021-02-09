@@ -272,14 +272,14 @@ public class LaunchApplication extends Application {
         }
 
         boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
-        boolean netstampChanged = Prefs.getBoolean("netstampChanged", true);
-        boolean webcastOnly = Prefs.getBoolean("webcastOnly", false);
-        boolean twentyFourHour = Prefs.getBoolean("twentyFourHour", true);
-        boolean oneHour = Prefs.getBoolean("oneHour", true);
+        boolean netstampChanged = Prefs.getBoolean("netstampChanged", false);
+        boolean webcastOnly = Prefs.getBoolean("webcastOnly", true);
+        boolean twentyFourHour = Prefs.getBoolean("twentyFourHour", false);
+        boolean oneHour = Prefs.getBoolean("oneHour", false);
         boolean tenMinutes = Prefs.getBoolean("tenMinutes", true);
-        boolean oneMinute = Prefs.getBoolean("oneMinute", true);
-        boolean inFlight = Prefs.getBoolean("inFlight", true);
-        boolean success = Prefs.getBoolean("success", true);
+        boolean oneMinute = Prefs.getBoolean("oneMinute", false);
+        boolean inFlight = Prefs.getBoolean("inFlight", false);
+        boolean success = Prefs.getBoolean("success", false);
         boolean events = Prefs.getBoolean("eventNotifications", true);
 
         boolean all = switchPreferences.getAllSwitch();
@@ -519,25 +519,9 @@ public class LaunchApplication extends Application {
 
     }
 
-    private void migrateNotifications() {
-        if (!Once.beenDone("migrateNotifications")) {
-            Once.markDone("migrateNotifications");
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            boolean notificationEnabled = prefs.getBoolean("notifications_new_message", true);
-            boolean netstampChanged = prefs.getBoolean("notifications_launch_imminent_updates", true);
-            boolean webcastOnly = prefs.getBoolean("notifications_new_message_webcast", false);
-            boolean twentyFourHour = prefs.getBoolean("notifications_launch_day", true);
-            boolean oneHour = prefs.getBoolean("notifications_launch_imminent", true);
-            boolean tenMinutes = prefs.getBoolean("notifications_launch_minute", true);
 
-            Prefs.putBoolean("notificationEnabled", notificationEnabled);
-            Prefs.putBoolean("netstampChanged", netstampChanged);
-            Prefs.putBoolean("webcastOnly", webcastOnly);
-            Prefs.putBoolean("twentyFourHour", twentyFourHour);
-            Prefs.putBoolean("oneHour", oneHour);
-            Prefs.putBoolean("tenMinutes", tenMinutes);
-        }
-    }
+
+
 
 
     private void setupCrashlytics() {

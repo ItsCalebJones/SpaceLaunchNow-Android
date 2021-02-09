@@ -3,6 +3,15 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
+#### Updated 2-9-2021
+---
+### Version 3.7.2
+#### Changelog
+Cleanup some style issues in Launcher details page.
+Improve UX contrast on tab views.
+Make default notification settings less spammy - by default only ten minute notifications.
+
+## Changelog
 #### Updated 2-3-2021
 ---
 ### Version 3.7.1

@@ -192,7 +192,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 }
                 break;
             case "netstampChanged":
-                if (Prefs.getBoolean(key, true)) {
+                if (Prefs.getBoolean(key, false)) {
                     firebaseMessaging.subscribeToTopic("netstampChanged");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("netstampChanged");
@@ -206,14 +206,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 }
                 break;
             case "twentyFourHour":
-                if (Prefs.getBoolean(key, true)) {
+                if (Prefs.getBoolean(key, false)) {
                     firebaseMessaging.subscribeToTopic("twentyFourHour");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
                 }
                 break;
             case "oneHour":
-                if (Prefs.getBoolean(key, true)) {
+                if (Prefs.getBoolean(key, false)) {
                     firebaseMessaging.subscribeToTopic("oneHour");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("oneHour");
@@ -227,14 +227,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 }
                 break;
             case "oneMinute":
-                if (Prefs.getBoolean(key, true)) {
+                if (Prefs.getBoolean(key, false)) {
                     firebaseMessaging.subscribeToTopic("oneMinute");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("oneMinute");
                 }
                 break;
             case "inFlight":
-                if (Prefs.getBoolean(key, true)) {
+                if (Prefs.getBoolean(key, false)) {
                     firebaseMessaging.subscribeToTopic("inFlight");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("inFlight");

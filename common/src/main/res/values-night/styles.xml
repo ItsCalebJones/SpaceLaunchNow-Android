@@ -86,7 +86,8 @@
         <item name="tabIndicatorAnimationDuration">250</item>
         <item name="tabIndicatorColor">@color/colorAccent</item>
         <item name="tabTextAppearance">?attr/textAppearanceButton</item>
-        <item name="tabTextColor">@color/dark_primary_text_color_selector</item>
+        <item name="tabTextColor">@color/material_color_white_70_percent</item>
+        <item name="tabSelectedTextColor">@color/material_color_white</item>
         <item name="tabRippleColor">@color/colorPrimaryDark</item>
         <item name="tabUnboundedRipple">true</item>
     </style>
@@ -98,6 +99,10 @@
 
     <style name="ExploreButtonTheme" parent="BaseAppTheme">
         <item name="colorAccent">@color/darkPrimary</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ExploreButtonTheme.Borderless" parent="BaseAppTheme">
         <item name="android:textColor">@color/white</item>
     </style>
 
