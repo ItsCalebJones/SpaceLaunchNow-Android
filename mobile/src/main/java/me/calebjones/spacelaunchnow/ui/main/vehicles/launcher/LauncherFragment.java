@@ -133,7 +133,7 @@ public class LauncherFragment extends RetroFitFragment implements SwipeRefreshLa
         }
 
         SpaceLaunchNowService request = getSpaceLaunchNowRetrofit().create(SpaceLaunchNowService.class);
-        Call<AgencyResponse> call = request.getAgencies(true, "detailed");
+        Call<AgencyResponse> call = request.getAgencies(true, "detailed", 50);
         call.enqueue(new Callback<AgencyResponse>() {
             @Override
             public void onResponse(Call<AgencyResponse> call, Response<AgencyResponse> response) {

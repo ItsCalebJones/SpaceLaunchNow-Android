@@ -157,8 +157,8 @@ public class DataClient {
         return call;
     }
 
-    public Call<AgencyResponse> getFeaturedAgencies(Callback<AgencyResponse> callback) {
-        Call<AgencyResponse> call = spaceLaunchNowService.getAgencies(true, "list");
+    public Call<AgencyResponse> getFeaturedAgencies(Callback<AgencyResponse> callback, int limit) {
+        Call<AgencyResponse> call = spaceLaunchNowService.getAgencies(true, "list", limit);
 
         call.enqueue(callback);
 

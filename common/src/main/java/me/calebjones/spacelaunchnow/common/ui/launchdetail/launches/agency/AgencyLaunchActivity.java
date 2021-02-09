@@ -144,7 +144,7 @@ public class AgencyLaunchActivity extends BaseActivityOld implements UpcomingAge
             public void onFailure(Call<AgencyResponse> call, Throwable t) {
                 menu.setVisibility(View.GONE);
             }
-        });
+        }, 50);
     }
 
     @Override
