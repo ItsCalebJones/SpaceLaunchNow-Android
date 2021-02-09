@@ -86,7 +86,8 @@
         <item name="tabIndicatorAnimationDuration">250</item>
         <item name="tabIndicatorColor">@color/colorAccent</item>
         <item name="tabTextAppearance">?attr/textAppearanceButton</item>
-        <item name="tabTextColor">@color/dark_primary_text_color_selector</item>
+        <item name="tabTextColor">@color/material_color_white_70_percent</item>
+        <item name="tabSelectedTextColor">@color/material_color_white</item>
         <item name="tabRippleColor">@color/colorPrimaryDark</item>
         <item name="tabUnboundedRipple">true</item>
     </style>
