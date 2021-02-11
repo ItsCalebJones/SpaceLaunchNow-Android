@@ -174,11 +174,18 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-9824528399164059/7019745864");
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
+
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
+                Timber.d("Loading new InterstitialAd.");
                 // Load the next interstitial.
                 mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+
+            @Override
+            public void onAdLoaded() {
+                Timber.d("InterstitialAd loaded!");
             }
 
         });
@@ -413,7 +420,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     public void onResume() {
         super.onResume();
         Timber.v("onResume");
-
 
         if ("SHOW_FILTERS".equals(action)) {
             getIntent().setAction("");
@@ -899,22 +905,26 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     public void checkShowAd() {
         Timber.v("Checking if Ads are showing!");
-        if (adviewEnabled) {
+        if (adviewEnabled && mNavItemId != R.id.menu_launches) {
             showAd();
         }
     }
 
     public void checkRefreshAd() {
+        adShowCount += 1;
         if (adviewEnabled) {
             checkShowAd();
-            adShowCount += 1;
             Timber.v("Ad show count - %s", adShowCount);
-            if (adShowCount % 4 == 0 && adShowCount != 0) {
-                loadAd();
+            if (adShowCount % 3 == 0 && adShowCount != 0) {
+                if (mNavItemId != R.id.menu_launches) {
+                    loadAd();
+                }
             } else if (adShowCount % 10 == 0
                     && adShowCount != 0 &&
                     Once.beenDone("show2021dialog")) {
+
                 if (mInterstitialAd.isLoaded()) {
+                    Timber.d("Showing interstitial ad!");
                     mInterstitialAd.show();
                 } else {
                     Timber.d("The interstitial wasn't loaded yet.");
@@ -1029,11 +1039,15 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             GDPR.getInstance().resetConsent();
         }
 
-        loadAd();
+        if (mNavItemId != R.id.menu_launches) {
+            loadAd();
+        } else {
+            checkRefreshAd();
+        }
     }
 
     private void loadAd() {
-        Timber.v("Loading Ad");
+        Timber.v("Checking supporter or not.");
         if (!SupporterHelper.isSupporter() && allowAds) {
             Timber.d("Loading ads.");
             if (allowsPersonalAds) {
