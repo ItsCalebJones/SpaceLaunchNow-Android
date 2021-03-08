@@ -29,6 +29,9 @@ public class LaunchStatusUtil {
             case 7:
                 //Failure to launch
                 return context.getResources().getString(R.string.status_partial_failure);
+            case 8:
+                //Failure to launch
+                return context.getResources().getString(R.string.to_be_confirmed_title);
             default:
                 return "Unknown Launch Status";
         }
@@ -57,6 +60,9 @@ public class LaunchStatusUtil {
             case 7:
                 //Partial Failure
                 return context.getResources().getColor(R.color.material_color_blue_grey_500);
+            case 8:
+                //Partial Failure
+                return context.getResources().getColor(R.color.material_color_blue_grey_800);
             default:
                 return context.getResources().getColor(R.color.material_color_purple_800);
         }

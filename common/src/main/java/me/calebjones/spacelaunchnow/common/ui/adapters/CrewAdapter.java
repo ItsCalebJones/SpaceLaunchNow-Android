@@ -42,7 +42,7 @@ public class CrewAdapter extends RecyclerView.Adapter<CrewAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, int i) {
         AstronautFlight item = astronauts.get(i);
         holder.title.setText(item.getAstronaut().getName());
-        holder.subtitle.setText(item.getRole());
+        holder.subtitle.setText(item.getRole().getRole());
         String image;
         if (item.getAstronaut().getProfileImageThumbnail() != null){
             image = item.getAstronaut().getProfileImageThumbnail();

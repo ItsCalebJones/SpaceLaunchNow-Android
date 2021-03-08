@@ -64,6 +64,8 @@ public class StarshipDashboardFragment extends BaseFragment {
     RecyclerView roadclosureRecyclerview;
     @BindView(R2.id.notices_recyclerview)
     RecyclerView noticeRecyclerview;
+    @BindView(R2.id.update_recyclerview)
+    RecyclerView updateRecyclerview;
     @BindView(R2.id.live_streams_button)
     MaterialButton liveStreamsButton;
     @BindView(R2.id.title)
@@ -76,6 +78,8 @@ public class StarshipDashboardFragment extends BaseFragment {
     SimpleStatefulLayout noticesStatefulLayout;
     @BindView(R2.id.upnext_stateful_layout)
     SimpleStatefulLayout upnextStatefulLayout;
+    @BindView(R2.id.update_stateful_layout)
+    SimpleStatefulLayout updateStatefulLayout;
 
 
     private StarshipDataRepository dataRepository;
@@ -85,6 +89,7 @@ public class StarshipDashboardFragment extends BaseFragment {
     private YouTubePlayer youTubePlayer;
     private RoadClosureAdapter roadClosureAdapter;
     private NoticesAdapter noticesAdapter;
+    private UpdateAdapter updateAdapter;
     private Dialog dialog;
     private String youTubeURL;
     private CombinedAdapter adapter;
@@ -132,6 +137,10 @@ public class StarshipDashboardFragment extends BaseFragment {
         adapter = new CombinedAdapter(getContext(), ThemeHelper.isDarkMode(getActivity()));
         upnextRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         upnextRecyclerview.setAdapter(adapter);
+
+        updateAdapter = new UpdateAdapter(getContext());
+        updateRecyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
+        updateRecyclerview.setAdapter(updateAdapter);
 
 
         if (savedInstanceState != null) {
@@ -223,6 +232,13 @@ public class StarshipDashboardFragment extends BaseFragment {
             noticesAdapter.addItems(starship.getNotices());
         } else {
             noticesStatefulLayout.showEmpty();
+        }
+
+        if (starship.getUpdates().size() > 0){
+            updateStatefulLayout.showContent();
+            updateAdapter.addItems(starship.getUpdates());
+        } else {
+            updateStatefulLayout.showEmpty();
         }
 
         liveStreamsButton.setOnClickListener(v -> {

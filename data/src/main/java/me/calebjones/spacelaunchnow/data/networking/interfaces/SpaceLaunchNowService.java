@@ -32,7 +32,7 @@ import retrofit2.http.Query;
 
 public interface SpaceLaunchNowService {
 
-    String version = "api/ll/2.0.0";
+    String version = "api/ll/2.2.0";
 
     // Spacecraft Configs
     // GET: /config/spacecraft

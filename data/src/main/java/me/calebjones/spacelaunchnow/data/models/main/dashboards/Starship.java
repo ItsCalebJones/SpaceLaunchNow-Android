@@ -7,6 +7,7 @@ import io.realm.RealmList;
 import io.realm.RealmObject;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
+import me.calebjones.spacelaunchnow.data.models.main.Update;
 import me.calebjones.spacelaunchnow.data.models.main.VidURL;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.Launcher;
 import me.calebjones.spacelaunchnow.data.models.main.starship.Notice;
@@ -32,6 +33,9 @@ public class Starship extends RealmObject {
     @SerializedName("vehicles")
     @Expose
     public RealmList<Launcher> vehicles;
+    @SerializedName("updates")
+    @Expose
+    public RealmList<Update> updates = null;
 
 
     public PreviousObjects getPreviousObjects() {
@@ -80,5 +84,13 @@ public class Starship extends RealmObject {
 
     public void setVehicles(RealmList<Launcher> vehicles) {
         this.vehicles = vehicles;
+    }
+
+    public RealmList<Update> getUpdates() {
+        return updates;
+    }
+
+    public void setUpdates(RealmList<Update> updates) {
+        this.updates = updates;
     }
 }
