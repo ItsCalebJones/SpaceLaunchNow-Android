@@ -17,6 +17,14 @@ public class LaunchStatus extends RealmObject {
     @Expose
     public String name;
 
+    @SerializedName("abbrev")
+    @Expose
+    public String abbrev;
+
+    @SerializedName("description")
+    @Expose
+    public String description;
+
     public Integer getId() {
         return id;
     }
@@ -31,5 +39,21 @@ public class LaunchStatus extends RealmObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAbbrev() {
+        return abbrev;
+    }
+
+    public void setAbbrev(String abbrev) {
+        this.abbrev = abbrev;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

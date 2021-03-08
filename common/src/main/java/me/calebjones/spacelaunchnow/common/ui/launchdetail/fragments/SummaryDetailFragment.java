@@ -57,6 +57,7 @@ import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.NewsListAdapter;
+import me.calebjones.spacelaunchnow.common.ui.adapters.UpdateAdapter;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.common.ui.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.common.ui.views.DialogAdapter;
@@ -108,6 +109,10 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     YouTubePlayerView youTubePlayerView;
     @BindView(R2.id.related_card)
     View relatedCard;
+    @BindView(R2.id.update_card)
+    View updateCard;
+    @BindView(R2.id.update_recycler_view)
+    RecyclerView updateRecyclerView;
 
     private SharedPreferences sharedPref;
     private ListPreferences sharedPreference;
@@ -127,6 +132,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private NewsDataRepository dataRepository;
     private NewsListAdapter listAdapter;
     boolean isYouTubePlaying = false;
+    private UpdateAdapter updateAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -280,6 +286,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                         dialog = builder.show();
                     }
                 });
+
             } else {
                 if (future) {
                     videosEmpty.setVisibility(View.VISIBLE);
@@ -287,6 +294,16 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 watchButton.setVisibility(View.GONE);
                 errorMessage.setText(getString(R.string.video_source_unavailable));
                 errorMessage.setVisibility(View.VISIBLE);
+            }
+
+            if (detailLaunch.getUpdates() != null && detailLaunch.getUpdates().size() > 0){
+                updateAdapter = new UpdateAdapter(context);
+                updateRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+                updateRecyclerView.setAdapter(updateAdapter);
+                updateAdapter.addItems(detailLaunch.getUpdates());
+                updateCard.setVisibility(View.VISIBLE);
+            } else {
+                updateCard.setVisibility(View.GONE);
             }
 
             //Try to convert to Month day, Year.

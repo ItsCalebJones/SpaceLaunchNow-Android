@@ -309,7 +309,7 @@ public class CombinedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 orbitCard.setVisibility(View.GONE);
             }
 
-            status.setText(launchItem.getStatus().getName());
+            status.setText(launchItem.getStatus().getAbbrev());
             statusCard.setCardBackgroundColor(LaunchStatusUtil.getLaunchStatusColor(context, launchItem.getStatus().getId()));
         }
 

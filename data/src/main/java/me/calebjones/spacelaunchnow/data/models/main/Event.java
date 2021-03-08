@@ -51,6 +51,9 @@ public class Event extends RealmObject {
     @SerializedName("date")
     @Expose
     public Date date;
+    @SerializedName("updates")
+    @Expose
+    public RealmList<Update> updates = null;
 
     @SerializedName("launches")
     private RealmList<LaunchList> launches;
@@ -169,5 +172,13 @@ public class Event extends RealmObject {
 
     public void setWebcastLive(Boolean webcastLive) {
         this.webcastLive = webcastLive;
+    }
+
+    public RealmList<Update> getUpdates() {
+        return updates;
+    }
+
+    public void setUpdates(RealmList<Update> updates) {
+        this.updates = updates;
     }
 }

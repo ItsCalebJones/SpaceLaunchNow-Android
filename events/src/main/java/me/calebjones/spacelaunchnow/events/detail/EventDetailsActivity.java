@@ -48,6 +48,7 @@ import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ExpeditionAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.SpacestationAdapter;
+import me.calebjones.spacelaunchnow.common.ui.adapters.UpdateAdapter;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
@@ -119,6 +120,10 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
     AppCompatButton eventWebButton;
     @BindView(R2.id.event_watch_button)
     AppCompatButton eventWatchButton;
+    @BindView(R2.id.update_card)
+    View updateCard;
+    @BindView(R2.id.update_recycler_view)
+    RecyclerView updateRecyclerView;
 
 
 
@@ -143,6 +148,7 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
     private ListAdapter adapter;
     private ExpeditionAdapter expeditionAdapter;
     private SpacestationAdapter spacestationAdapter;
+    private UpdateAdapter updateAdapter;
     private boolean fromDeepLink = false;
     private static final String ACTION_DEEP_LINK = "deep_link";
 
@@ -324,6 +330,16 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
             spacestationAdapter.addItems(event.getSpacestations());
         } else {
             spacestationCard.setVisibility(View.GONE);
+        }
+
+        if (event.getUpdates() != null && event.getUpdates().size() > 0){
+            updateAdapter = new UpdateAdapter(this);
+            updateRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            updateRecyclerView.setAdapter(updateAdapter);
+            updateAdapter.addItems(event.getUpdates());
+            updateCard.setVisibility(View.VISIBLE);
+        } else {
+            updateCard.setVisibility(View.GONE);
         }
     }
 

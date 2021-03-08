@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -33,6 +34,7 @@ import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.content.LaunchStatusUtil;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 
@@ -197,7 +199,10 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.orbitCard.setVisibility(View.GONE);
         }
 
-        holder.status.setText(launchItem.getStatus().getName());
+        holder.status.setText(launchItem.getStatus().getAbbrev());
+        holder.status.setOnClickListener(v -> {
+            Toast.makeText(mContext, launchItem.getStatus().getDescription(), Toast.LENGTH_LONG).show();
+        });
         holder.statusCard.setCardBackgroundColor(LaunchStatusUtil.getLaunchStatusColor(mContext, launchItem.getStatus().getId()));
         holder.rootView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, LaunchDetailActivity.class);
