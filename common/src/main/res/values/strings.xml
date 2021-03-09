@@ -465,8 +465,8 @@
     <string name="total_fill">Total: %s</string>
     <string name="start_fill">Start: %s</string>
     <string name="end_fill">End: %s</string>
-    <string name="spacestations">Spacestations</string>
-    <string name="spacestation">Spacestation</string>
+    <string name="spacestations">Space Stations</string>
+    <string name="spacestation">Space Station</string>
     <string name="astronauts">Astronauts</string>
     <string name="starship">Starship</string>
     <string name="events">Events</string>
