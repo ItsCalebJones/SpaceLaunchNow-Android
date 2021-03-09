@@ -919,7 +919,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (mNavItemId != R.id.menu_launches) {
                     loadAd();
                 }
-            } else if (adShowCount % 10 == 0
+            } else if (adShowCount % 7 == 0
                     && adShowCount != 0 &&
                     Once.beenDone("show2021dialog")) {
 
