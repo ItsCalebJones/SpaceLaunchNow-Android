@@ -178,10 +178,6 @@ public class StarshipDashboardFragment extends BaseFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showLivestreams() {
-
-    }
-
 
     private void updateViews(Starship starship) {
         if (starship.getLiveStreams().size() > 0) {
@@ -236,6 +232,8 @@ public class StarshipDashboardFragment extends BaseFragment {
 
         if (starship.getUpdates().size() > 0){
             updateStatefulLayout.showContent();
+            updateAdapter = new UpdateAdapter(getContext());
+            updateRecyclerview.setAdapter(updateAdapter);
             updateAdapter.addItems(starship.getUpdates());
         } else {
             updateStatefulLayout.showEmpty();

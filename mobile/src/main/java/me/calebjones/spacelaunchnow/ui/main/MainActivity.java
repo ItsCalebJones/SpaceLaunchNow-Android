@@ -69,6 +69,7 @@ import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.events.list.EventListFragment;
@@ -281,7 +282,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withIdentifier(R.id.menu_astronauts)
                                 .withSelectable(true),
                         new PrimaryDrawerItem()
-                                .withIcon(FontAwesome.Icon.faw_space_shuttle)
+                                .withIcon(this.getDrawable(R.drawable.ic_starship))
                                 .withName(getString(R.string.starship))
                                 .withIdentifier(R.id.menu_starship)
                                 .withSelectable(true),
