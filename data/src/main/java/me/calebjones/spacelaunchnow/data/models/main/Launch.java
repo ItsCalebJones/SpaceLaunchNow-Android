@@ -46,12 +46,6 @@ public class Launch extends RealmObject {
     @SerializedName("inhold")
     @Expose
     public Boolean inhold;
-    @SerializedName("tbdtime")
-    @Expose
-    public Boolean tbdtime;
-    @SerializedName("tbddate")
-    @Expose
-    public Boolean tbddate;
     @SerializedName("probability")
     @Expose
     public Integer probability;
@@ -192,22 +186,6 @@ public class Launch extends RealmObject {
 
     public void setInhold(Boolean inhold) {
         this.inhold = inhold;
-    }
-
-    public Boolean getTbdtime() {
-        return tbdtime;
-    }
-
-    public void setTbdtime(Boolean tbdtime) {
-        this.tbdtime = tbdtime;
-    }
-
-    public Boolean getTbddate() {
-        return tbddate;
-    }
-
-    public void setTbddate(Boolean tbddate) {
-        this.tbddate = tbddate;
     }
 
     public Integer getProbability() {

@@ -214,9 +214,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                             Date date = launchItem.getNet();
                             String launchTime = shortDate.format(date);
-                            if (launchItem.getTbddate()) {
-                                launchTime = launchTime + " " + context.getString(R.string.unconfirmed);
-                            }
                             holder.launchDateCompact.setText(launchTime);
                         }
                     } else {
