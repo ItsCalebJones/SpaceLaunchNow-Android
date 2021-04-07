@@ -3,7 +3,7 @@ ext {
     app = [
             versionMajor: 3,
             versionMinor: 8,
-            versionPatch: 2,
+            versionPatch: 3,
             versionCode: 1
 
 
@@ -34,18 +34,6 @@ ext {
 }
 
 // Plugins
-ext.plugs = [
-        gradle              : "com.android.tools.build:gradle:4.0.1",
-        realm               : "io.realm:realm-gradle-plugin:5.15.2",
-        advancedBuildVersion: "org.moallemi.gradle.advanced-build-version:gradle-plugin:1.6.0",
-        butterknife         : "com.jakewharton:butterknife-gradle-plugin:10.2.1",
-        gradleBintrayPlugin : "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3",
-        androidMavenGradle  : "com.github.dcendents:android-maven-gradle-plugin:2.0",
-        googleService       : "com.google.gms:google-services:4.2.0",
-        kotlinPlugin        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
-        playPublisher       : "com.github.triplet.gradle:play-publisher:3.2.0"
-]
-
 ext.deps = [
         //AndroidX
         design                         : "com.android.support:design:$supportLibraryVersion",
@@ -86,7 +74,7 @@ ext.deps = [
 
         //Analytics and Logging
         timber                         : "com.jakewharton.timber:timber:4.7.1",
-        crashlytics                    : "com.crashlytics.sdk.android:crashlytics:2.10.1",
+        crashlytics                    : "com.google.firebase:firebase-crashlytics:17.4.1",
 
         //RxJava
         rxjava                         : "io.reactivex.rxjava2:rxjava:2.2.6",
@@ -99,7 +87,7 @@ ext.deps = [
         converter_gson                 : "com.squareup.retrofit2:converter-gson:2.6.2",
         adapter_rxjava                 : "com.squareup.retrofit2:adapter-rxjava2:2.4.0",
         gson                           : "com.google.code.gson:gson:2.8.6",
-        
+
         //Views
         colorPicker                    : "com.jaredrummler:colorpicker:1.1.0",
         materialdrawer                 : "com.mikepenz:materialdrawer:6.1.0",
@@ -171,4 +159,18 @@ ext.deps = [
 
 
 ]
+ext.plugs = [
+        gradle              : "com.android.tools.build:gradle:4.0.1",
+        realm               : "io.realm:realm-gradle-plugin:5.15.2",
+        advancedBuildVersion: "org.moallemi.gradle.advanced-build-version:gradle-plugin:1.6.0",
+        butterknife         : "com.jakewharton:butterknife-gradle-plugin:10.2.1",
+        gradleBintrayPlugin : "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3",
+        androidMavenGradle  : "com.github.dcendents:android-maven-gradle-plugin:2.0",
+        googleService       : "com.google.gms:google-services:4.3.5",
+        kotlinPlugin        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
+        playPublisher       : "com.github.triplet.gradle:play-publisher:3.2.0",
+        crashlytics         : "com.google.firebase:firebase-crashlytics-gradle:2.5.2"
+
+]
+
 // Dependencies

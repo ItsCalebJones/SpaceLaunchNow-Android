@@ -27,7 +27,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.airbnb.deeplinkdispatch.DeepLink;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.crashlytics.android.Crashlytics;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -64,7 +63,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
@@ -155,9 +153,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Timber.d("onCreate");
-        if (!Fabric.isInitialized()) {
-            Fabric.with(this, new Crashlytics());
-        }
 
         int m_theme = R.style.BaseAppTheme;
 

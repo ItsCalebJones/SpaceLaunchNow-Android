@@ -5,13 +5,11 @@ import android.content.ContextWrapper;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 import com.pixplicity.easyprefs.library.Prefs;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import me.calebjones.spacelaunchnow.data.models.Products;
@@ -31,7 +29,6 @@ public class WearApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-        Fabric.with(this, new Crashlytics());
         Realm.init(this);
 
         // Get a Realm instance for this thread
@@ -86,7 +83,6 @@ public class WearApplication extends Application {
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(product));
                 realm.close();
-                Crashlytics.setBool("Supporter", SupporterHelper.isSupporter());
             }
         }
     }

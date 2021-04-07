@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.crashlytics.android.Crashlytics;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -260,7 +259,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
             } catch (NullPointerException e) {
                 Timber.e(e);
-                Crashlytics.logException(e);
             }
         }
     }

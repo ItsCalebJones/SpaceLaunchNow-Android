@@ -122,6 +122,7 @@ def computeVersionName() {
 def computeVersionCode() {
     return 1000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + app.versionCode
 }
+
 import com.github.triplet.gradle.androidpublisher.ReleaseStatus
 
 play {
@@ -154,9 +155,9 @@ dependencies {
     implementation deps.playAds
     implementation deps.constraintLayout
     implementation deps.easyprefs
-    implementation deps.firebaseAnalytics
     // Architecture and Tools
     implementation deps.once
+    implementation deps.firebaseAnalytics
     implementation deps.crashlytics
     implementation deps.dexter
     implementation deps.statefulLayout

@@ -25,6 +25,8 @@ buildscript {
         classpath plugs.androidMavenGradle
         classpath plugs.googleService
         classpath plugs.kotlinPlugin
+        classpath plugs.crashlytics
+
     }
 }
 

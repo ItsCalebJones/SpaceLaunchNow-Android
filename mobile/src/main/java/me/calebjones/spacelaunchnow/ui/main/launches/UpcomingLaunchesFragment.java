@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.clockbyte.admobadapter.bannerads.AdmobBannerRecyclerAdapterWrapper;
-import com.crashlytics.android.Crashlytics;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -267,7 +266,6 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             f = Fragment.class.getDeclaredField("mChildFragmentManager");
             f.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            Crashlytics.logException(e);
             Timber.e("Error getting mChildFragmentManager field %s", e);
         }
         sChildFragmentManagerField = f;

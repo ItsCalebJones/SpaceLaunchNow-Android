@@ -18,10 +18,9 @@ import android.zetterstrom.com.forecast.ForecastConfiguration;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -43,7 +42,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.Preference;
 
-import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import jonathanfinerty.once.Once;
@@ -204,18 +202,17 @@ public class LaunchApplication extends Application {
             });
         }
 
-        new Thread(() -> {
-            // Initialize Fabric with the debug-disabled crashlytics.
-            Crashlytics.setString("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
-            Crashlytics.setString("Language", Locale.getDefault().getDisplayLanguage());
-            Crashlytics.setBool("is24", DateFormat.is24HourFormat(context));
-            Crashlytics.setBool("Network State", Utils.isNetworkAvailable(context));
-            Crashlytics.setString("Network Info", Connectivity.getNetworkStatus(context));
-            Crashlytics.setBool("Debug Logging", sharedPref.getBoolean("debug_logging", false));
-            Crashlytics.setBool("Supporter", SupporterHelper.isSupporter());
-            Crashlytics.setBool("Calendar Sync", switchPreferences.getCalendarStatus());
-            Crashlytics.setBool("Notifications", sharedPref.getBoolean("notifications_new_message", true));
-        }).start();
+        // Initialize Fabric with the debug-disabled crashlytics.
+        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+        crashlytics.setCustomKey("Timezone", String.valueOf(TimeZone.getDefault().getDisplayName()));
+        crashlytics.setCustomKey("Language", Locale.getDefault().getDisplayLanguage());
+        crashlytics.setCustomKey("is24", DateFormat.is24HourFormat(context));
+        crashlytics.setCustomKey("Network State", Utils.isNetworkAvailable(context));
+        crashlytics.setCustomKey("Network Info", Connectivity.getNetworkStatus(context));
+        crashlytics.setCustomKey("Debug Logging", sharedPref.getBoolean("debug_logging", false));
+        crashlytics.setCustomKey("Supporter", SupporterHelper.isSupporter());
+        crashlytics.setCustomKey("Calendar Sync", switchPreferences.getCalendarStatus());
+        crashlytics.setCustomKey("Notifications", sharedPref.getBoolean("notifications_new_message", true));
 
     }
 
@@ -229,7 +226,8 @@ public class LaunchApplication extends Application {
                 Realm realm = Realm.getDefaultInstance();
                 realm.executeTransaction(realm1 -> realm1.copyToRealmOrUpdate(product));
                 realm.close();
-                Crashlytics.setBool("Supporter", SupporterHelper.isSupporter());
+                FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+                crashlytics.setCustomKey("Supporter", SupporterHelper.isSupporter());
             }
         }
     }
@@ -528,17 +526,6 @@ public class LaunchApplication extends Application {
 
 
     private void setupCrashlytics() {
-        /*
-         * Init Crashlytics and gather additional device information.
-         * Always leave this at the top so it catches any init failures.
-         * Version 1.3.0-Beta had a bug where starting a service crashed before Crashlytics picked it up.
-         */
-        // Set up Crashlytics, disabled for debug builds
-
-        Crashlytics crashlyticsKit = new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder().build())
-                .build();
-        Fabric.with(context, crashlyticsKit);
         Analytics.create(this);
     }
 

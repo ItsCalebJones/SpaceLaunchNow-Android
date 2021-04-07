@@ -5,9 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import timber.log.Timber;
 
@@ -35,16 +33,7 @@ public class CrashlyticsTree extends Timber.Tree {
         if (!sharedPref.getBoolean("debug_logging", false) && priority == Log.DEBUG) {
             return;
         }
-
-        Crashlytics.log(message);
-
-        if (t != null) {
-            Crashlytics.logException(t);
-        }
-
-        if (priority > Log.WARN) {
-            Crashlytics.logException(new Throwable(message));
-        }
-
+        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+        crashlytics.log(message);
     }
 }
