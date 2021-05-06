@@ -161,8 +161,9 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/update_card"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:background="?cardBackground"
@@ -213,8 +214,9 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/related_card"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/max_width"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_margin="@dimen/material_card_edge_margin"
             android:animateLayoutChanges="true"
             android:padding="@dimen/material_card_edge_margin"

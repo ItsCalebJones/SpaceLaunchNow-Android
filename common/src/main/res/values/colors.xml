@@ -51,4 +51,6 @@
     <color name="slide_four_background">#3f51b5</color>
 
     <color name="black_overlay">#66000000</color>
+    <color name="flightclub">#203956</color>
+    <color name="flightclub_logo">#f5b65b</color>
 </resources>
