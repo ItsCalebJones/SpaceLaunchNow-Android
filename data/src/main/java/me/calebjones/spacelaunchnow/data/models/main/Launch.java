@@ -8,7 +8,6 @@ import java.util.Date;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 
 public class Launch extends RealmObject {
 
@@ -22,6 +21,9 @@ public class Launch extends RealmObject {
     @SerializedName("url")
     @Expose
     public String url;
+    @SerializedName("flightclub_url")
+    @Expose
+    public String flightclub;
     @SerializedName("slug")
     @Expose
     public String slug;
@@ -266,5 +268,13 @@ public class Launch extends RealmObject {
 
     public void setUpdates(RealmList<Update> updates) {
         this.updates = updates;
+    }
+
+    public String getFlightclub() {
+        return flightclub;
+    }
+
+    public void setFlightclub(String flightclub) {
+        this.flightclub = flightclub;
     }
 }

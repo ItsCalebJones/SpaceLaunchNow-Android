@@ -90,8 +90,8 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:singleLine="false"
-                    android:text="@string/unknown_agency_type"
-                    android:textAlignment="textStart"
+                    android:text="@string/unknown"
+                    android:textAlignment="center"
                     android:textAppearance="@style/MaterialTypography.Regular.Title"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="18sp"
@@ -110,13 +110,37 @@
                     android:paddingBottom="@dimen/material_baseline_grid_1x"
                     android:singleLine="false"
                     android:text=""
-                    android:textAlignment="textStart"
+                    android:textAlignment="center"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="@dimen/material_typography_regular_subheading_text_size"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/orbit"
                     tools:text="hjkbjlhbkvbjk " />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/flightclub_infoButton"
+                    style="@style/Base.Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1x"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1x"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="@dimen/material_baseline_grid_1x"
+                    android:gravity="center"
+                    android:text="FlightClub Telemetry"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    app:icon="@drawable/flightclub"
+                    app:iconSize="24dp"
+                    app:iconGravity="start"
+                    app:iconPadding="8dp"
+                    app:iconTint="@color/flightclub_logo"
+                    app:backgroundTint="@color/flightclub"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_description" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/payload_infoButton"
@@ -133,7 +157,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/payload_wikiButton"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/payload_description" />
+                    app:layout_constraintTop_toBottomOf="@+id/flightclub_infoButton" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/payload_wikiButton"
@@ -150,7 +174,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/payload_infoButton"
-                    app:layout_constraintTop_toBottomOf="@+id/payload_description" />
+                    app:layout_constraintTop_toBottomOf="@+id/flightclub_infoButton" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -222,6 +246,7 @@
                     android:textColor="@color/dark_primary_text_color_selector"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/spacecraft_title" />
 
@@ -261,6 +286,7 @@
                     android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                     android:textAppearance="@style/MaterialTypography.Regular.Body1"
                     android:textColor="?android:textColorSecondary"
+                    app:layout_constraintBottom_toBottomOf="@+id/destination_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/spacecraft_guideline"
                     app:layout_constraintTop_toTopOf="@+id/destination_title"
@@ -272,6 +298,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="Serial Number:"
                     android:textAppearance="@style/MaterialTypography.Regular.Title"
                     android:textColor="?android:textColorSecondary"
@@ -279,7 +306,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/spacecraft_guideline"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/destination_text" />
+                    app:layout_constraintTop_toBottomOf="@+id/destination_title" />
 
                 <TextView
                     android:id="@+id/serial_number_text"
@@ -294,6 +321,7 @@
                     android:paddingBottom="@dimen/material_baseline_grid_0.5x"
                     android:textAppearance="@style/MaterialTypography.Regular.Body1"
                     android:textColor="?android:textColorSecondary"
+                    app:layout_constraintBottom_toBottomOf="@+id/serial_number_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/spacecraft_guideline"
                     app:layout_constraintTop_toTopOf="@+id/serial_number_title"
@@ -303,8 +331,8 @@
                     android:id="@+id/status_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
                     android:text="Status:"
                     android:textAppearance="@style/MaterialTypography.Regular.Title"
                     android:textColor="?android:textColorSecondary"
@@ -313,7 +341,7 @@
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/serial_number_title"
-                    app:layout_constraintTop_toBottomOf="@+id/serial_number_text" />
+                    app:layout_constraintTop_toBottomOf="@+id/serial_number_title" />
 
                 <TextView
                     android:id="@+id/status_text"
@@ -401,9 +429,7 @@
                     android:background="?attr/colorAccent"
                     android:gravity="center"
                     android:lines="1"
-                    android:paddingLeft="8dp"
                     android:paddingTop="8dp"
-                    android:paddingRight="8dp"
                     android:text="@string/launch_vehicle_summary"
                     android:textAlignment="center"
                     android:textColor="@color/dark_primary_text_color_selector"
@@ -421,9 +447,7 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:lines="1"
-                    android:paddingLeft="8dp"
                     android:paddingTop="4dp"
-                    android:paddingRight="8dp"
                     android:paddingBottom="8dp"
                     android:singleLine="false"
                     android:text="@string/unknown_launch_vehicle"
@@ -457,21 +481,18 @@
                     android:id="@+id/launch_family"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:ellipsize="end"
-                    android:gravity="start"
                     android:maxLines="2"
                     android:paddingLeft="4dp"
-                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                    android:textAlignment="center"
                     android:textAppearance="@style/MaterialTypography.Regular.Body1"
                     android:textColor="?android:textColorSecondary"
                     app:layout_constraintBottom_toBottomOf="@+id/family_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/family_title"
-                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle"
-                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintTop_toTopOf="@+id/family_title"
                     tools:text="Falcon" />
 
 
@@ -500,16 +521,55 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:ellipsize="end"
-                    android:gravity="start"
                     android:maxLines="2"
                     android:paddingLeft="4dp"
                     android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                    android:textAlignment="center"
                     android:textAppearance="@style/MaterialTypography.Regular.Body1"
                     android:textColor="?android:textColorSecondary"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/configuration_title"
+                    app:layout_constraintBottom_toBottomOf="@+id/configuration_title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/configuration_title"
+                    app:layout_constraintTop_toTopOf="@+id/configuration_title"
+                    tools:text="Block 5" />
+
+                <TextView
+                    android:id="@+id/maiden_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:gravity="start"
+                    android:maxLines="2"
+                    android:text="Maiden Flight"
+                    android:textAppearance="@style/MaterialTypography.Regular.Title"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/maiden_value"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/configuration_title" />
+
+                <TextView
+                    android:id="@+id/maiden_value"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:paddingLeft="4dp"
+                    android:paddingBottom="@dimen/material_baseline_grid_0.5x"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/MaterialTypography.Regular.Body1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintBottom_toBottomOf="@+id/maiden_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/maiden_title"
+                    app:layout_constraintTop_toTopOf="@+id/maiden_title"
                     tools:text="Block 5" />
 
                 <TextView
@@ -519,13 +579,13 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:ellipsize="end"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:textAppearance="@style/MaterialTypography.Regular.Body1"
                     android:textColor="?android:textColorSecondary"
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/configuration_title"
-                    app:layout_constraintTop_toBottomOf="@+id/configuration_title"
+                    app:layout_constraintStart_toStartOf="@+id/maiden_title"
+                    app:layout_constraintTop_toBottomOf="@+id/maiden_title"
                     tools:text="test sets set setsetse set set set set set " />
 
                 <TextView
@@ -536,9 +596,10 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
                     android:ellipsize="end"
-                    android:gravity="start"
                     android:lines="1"
                     android:text="@string/vehicle_specifications"
+                    android:textAlignment="center"
+                    android:textStyle="bold"
                     android:textAppearance="@style/MaterialTypography.Regular.Subheading"
                     android:textColor="?android:textColorSecondary"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -549,117 +610,372 @@
                     android:id="@+id/launch_vehicle_specs_height"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:lines="1"
                     android:singleLine="false"
                     android:text="@string/height"
                     android:textColor="?android:textColorSecondary"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_vehicle_specs_height_value"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_title" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_height_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textColor="?android:textColorSecondary"
+                    android:textAlignment="textEnd"
+                    tools:text="1600"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline"
+                    app:layout_constraintStart_toEndOf="@+id/launch_vehicle_specs_height"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_title" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_diameter"
                     android:layout_width="0dp"
-                    android:layout_height="18dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:lines="1"
                     android:singleLine="false"
                     android:text="@string/diameter"
                     android:textColor="?android:textColorSecondary"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_vehicle_specs_diameter_value"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_height" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_diameter_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    tools:text="9.00 M"
+                    android:textAlignment="textEnd"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline"
+                    app:layout_constraintStart_toEndOf="@+id/launch_vehicle_specs_diameter"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_height" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_stages"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:lines="1"
                     android:singleLine="false"
                     android:text="@string/stages"
                     android:textColor="?android:textColorSecondary"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_vehicle_specs_stages_value"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_diameter" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_stages_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline"
+                    app:layout_constraintStart_toEndOf="@+id/launch_vehicle_specs_stages"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_diameter" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_leo"
                     android:layout_width="0dp"
-                    android:layout_height="22dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:lines="1"
                     android:singleLine="false"
                     android:text="@string/mass_to_leo"
                     android:textColor="?android:textColorSecondary"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_vehicle_specs_leo_value"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_title" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_leo_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1000 T"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/launch_vehicle_specs_leo"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_leo" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_gto"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:lines="1"
                     android:singleLine="false"
                     android:text="@string/mass_to_gto"
                     android:textColor="?android:textColorSecondary"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_vehicle_specs_leo_value"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_leo" />
+
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_gto_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1000 T"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/launch_vehicle_specs_gto"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_gto" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_launch_mass"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
                     android:ellipsize="end"
-                    android:gravity="left"
+                    android:gravity="start"
                     android:lines="1"
                     android:singleLine="false"
                     android:text="@string/mass_at_launch"
                     android:textColor="?android:textColorSecondary"
-                    app:layout_constraintEnd_toEndOf="@+id/launch_vehicle_specs_thrust"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_vehicle_specs_launch_mass_value"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_gto" />
+
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_launch_mass_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="2900kg"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/launch_vehicle_specs_launch_mass"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_launch_mass" />
 
                 <TextView
                     android:id="@+id/launch_vehicle_specs_thrust"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
                     android:ellipsize="end"
                     android:gravity="left"
                     android:lines="1"
                     android:singleLine="false"
                     android:text="@string/thrust_at_launch"
                     android:textColor="?android:textColorSecondary"
-                    app:layout_constraintBottom_toTopOf="@+id/launcher_launches"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_vehicle_specs_thrust_value"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_launch_mass"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_launch_mass" />
+
+                <TextView
+                    android:id="@+id/launch_vehicle_specs_thrust_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="2900kg"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/launch_vehicle_specs_thrust"
+                    app:layout_constraintTop_toTopOf="@+id/launch_vehicle_specs_thrust" />
+
+
+                <TextView
+                    android:id="@+id/stats_seperator_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="center"
+                    android:text="Launch Statistics"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
+
+                <TextView
+                    android:id="@+id/launch_success_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginTop="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textStart"
+                    android:text="Successful"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_success_value"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/stats_seperator_title" />
+
+                <TextView
+                    android:id="@+id/launch_success_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/guideline"
+                    app:layout_constraintStart_toEndOf="@+id/launch_success_title"
+                    app:layout_constraintTop_toBottomOf="@+id/stats_seperator_title" />
+
+                <TextView
+                    android:id="@+id/consecutive_success_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textStart"
+                    android:text="Consecutive"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/consecutive_success_value"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_success_title" />
+
+                <TextView
+                    android:id="@+id/consecutive_success_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+
+                    app:layout_constraintEnd_toEndOf="@+id/guideline"
+                    app:layout_constraintStart_toEndOf="@+id/consecutive_success_title"
+                    app:layout_constraintTop_toTopOf="@+id/consecutive_success_title" />
+
+                <TextView
+                    android:id="@+id/launch_total_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:textAlignment="textStart"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="Total"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_total_value"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/stats_seperator_title" />
+
+                <TextView
+                    android:id="@+id/launch_total_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/launch_total_title"
+                    app:layout_constraintTop_toBottomOf="@+id/stats_seperator_title" />
+
+                <TextView
+                    android:id="@+id/launch_failure_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:textAlignment="textStart"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="Failures"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_failure_value"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_total_title" />
+
+                <TextView
+                    android:id="@+id/launch_failure_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/launch_failure_title"
+                    app:layout_constraintTop_toTopOf="@+id/launch_failure_title" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/vehicle_infoButton"
@@ -667,7 +983,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_baseline_grid_1x"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginBottom="@dimen/material_baseline_grid_7x"
                     android:gravity="center"
                     android:text="@string/info"
@@ -677,7 +993,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/vehicle_wikiButton"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
+                    app:layout_constraintTop_toBottomOf="@+id/consecutive_success_title" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/vehicle_wikiButton"
@@ -685,7 +1001,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_baseline_grid_1x"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="@dimen/material_baseline_grid_7x"
                     android:gravity="center"
@@ -696,21 +1011,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/vehicle_infoButton"
-                    app:layout_constraintTop_toBottomOf="@+id/launch_vehicle_specs_thrust" />
+                    app:layout_constraintTop_toTopOf="@+id/vehicle_infoButton" />
 
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/vehicle_spec_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    app:constraint_referenced_ids="launch_vehicle_specs_title,launch_vehicle_specs_height,launch_vehicle_specs_diameter, launch_vehicle_specs_stages, launch_vehicle_specs_leo, launch_vehicle_specs_gto, launch_vehicle_specs_launch_mass, launch_vehicle_specs_thrust" />
-
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/core_information_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    app:constraint_referenced_ids="" />
 
                 <Button
                     android:id="@+id/launcher_launches"

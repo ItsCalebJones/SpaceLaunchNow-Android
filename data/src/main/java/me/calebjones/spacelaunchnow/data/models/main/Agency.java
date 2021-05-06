@@ -64,6 +64,33 @@ public class Agency extends RealmObject {
     @SerializedName("type")
     @Expose
     public String type;
+    @SerializedName("total_launch_count")
+    @Expose
+    public Integer totalLaunchCount;
+    @SerializedName("consecutive_successful_launches")
+    @Expose
+    public Integer consecutiveSuccessfulLaunches;
+    @SerializedName("successful_launches")
+    @Expose
+    public Integer successfulLaunches;
+    @SerializedName("failed_launches")
+    @Expose
+    public Integer failedLaunches;
+    @SerializedName("pending_launches")
+    @Expose
+    public Integer pendingLaunches;
+    @SerializedName("consecutive_successful_landings")
+    @Expose
+    public Integer consecutiveSuccessfulLandings;
+    @SerializedName("successful_landings")
+    @Expose
+    public Integer successfulLandings;
+    @SerializedName("failed_landings")
+    @Expose
+    public Integer failedLandings;
+    @SerializedName("attempted_landings")
+    @Expose
+    public Integer attemptedLandings;
     @SerializedName("launcher_list")
     @Expose
     public RealmList<LauncherConfig> launcherConfigs;
@@ -222,5 +249,77 @@ public class Agency extends RealmObject {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Integer getTotalLaunchCount() {
+        return totalLaunchCount;
+    }
+
+    public void setTotalLaunchCount(Integer totalLaunchCount) {
+        this.totalLaunchCount = totalLaunchCount;
+    }
+
+    public Integer getConsecutiveSuccessfulLaunches() {
+        return consecutiveSuccessfulLaunches;
+    }
+
+    public void setConsecutiveSuccessfulLaunches(Integer consecutiveSuccessfulLaunches) {
+        this.consecutiveSuccessfulLaunches = consecutiveSuccessfulLaunches;
+    }
+
+    public Integer getSuccessfulLaunches() {
+        return successfulLaunches;
+    }
+
+    public void setSuccessfulLaunches(Integer successfulLaunches) {
+        this.successfulLaunches = successfulLaunches;
+    }
+
+    public Integer getFailedLaunches() {
+        return failedLaunches;
+    }
+
+    public void setFailedLaunches(Integer failedLaunches) {
+        this.failedLaunches = failedLaunches;
+    }
+
+    public Integer getPendingLaunches() {
+        return pendingLaunches;
+    }
+
+    public void setPendingLaunches(Integer pendingLaunches) {
+        this.pendingLaunches = pendingLaunches;
+    }
+
+    public Integer getConsecutiveSuccessfulLandings() {
+        return consecutiveSuccessfulLandings;
+    }
+
+    public void setConsecutiveSuccessfulLandings(Integer consecutiveSuccessfulLandings) {
+        this.consecutiveSuccessfulLandings = consecutiveSuccessfulLandings;
+    }
+
+    public Integer getSuccessfulLandings() {
+        return successfulLandings;
+    }
+
+    public void setSuccessfulLandings(Integer successfulLandings) {
+        this.successfulLandings = successfulLandings;
+    }
+
+    public Integer getFailedLandings() {
+        return failedLandings;
+    }
+
+    public void setFailedLandings(Integer failedLandings) {
+        this.failedLandings = failedLandings;
+    }
+
+    public Integer getAttemptedLandings() {
+        return attemptedLandings;
+    }
+
+    public void setAttemptedLandings(Integer attemptedLandings) {
+        this.attemptedLandings = attemptedLandings;
     }
 }

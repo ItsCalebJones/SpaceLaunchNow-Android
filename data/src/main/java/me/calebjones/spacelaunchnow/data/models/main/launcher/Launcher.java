@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow.data.models.main.launcher;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -15,6 +17,12 @@ public class Launcher extends RealmObject {
     @SerializedName("flights")
     @Expose
     public Integer previousFlights;
+    @SerializedName("successful_landings")
+    @Expose
+    public Integer successfulLandings;
+    @SerializedName("attempted_landings")
+    @Expose
+    public Integer attemptedLandings;
     @SerializedName("flight_proven")
     @Expose
     public Boolean flightProven;
@@ -30,6 +38,12 @@ public class Launcher extends RealmObject {
     @SerializedName("image_url")
     @Expose
     public String imageUrl;
+    @SerializedName("last_launch_date")
+    @Expose
+    public Date lastLaunchDate;
+    @SerializedName("first_launch_date")
+    @Expose
+    public Date firstLaunchDate;
 
     public LauncherConfig getLauncherConfig() {
         return launcherConfig;
@@ -97,5 +111,37 @@ public class Launcher extends RealmObject {
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+    }
+
+    public Integer getSuccessfulLandings() {
+        return successfulLandings;
+    }
+
+    public void setSuccessfulLandings(Integer successfulLandings) {
+        this.successfulLandings = successfulLandings;
+    }
+
+    public Integer getAttemptedLandings() {
+        return attemptedLandings;
+    }
+
+    public void setAttemptedLandings(Integer attemptedLandings) {
+        this.attemptedLandings = attemptedLandings;
+    }
+
+    public Date getLastLaunchDate() {
+        return lastLaunchDate;
+    }
+
+    public void setLastLaunchDate(Date lastLaunchDate) {
+        this.lastLaunchDate = lastLaunchDate;
+    }
+
+    public Date getFirstLaunchDate() {
+        return firstLaunchDate;
+    }
+
+    public void setFirstLaunchDate(Date firstLaunchDate) {
+        this.firstLaunchDate = firstLaunchDate;
     }
 }

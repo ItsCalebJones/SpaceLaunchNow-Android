@@ -14,12 +14,16 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.Group;
 import androidx.constraintlayout.widget.Guideline;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.text.SimpleDateFormat;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -41,8 +45,6 @@ public class MissionDetailFragment extends RetroFitFragment {
 
     @BindView(R2.id.coreRecyclerView)
     RecyclerView coreRecyclerView;
-    @BindView(R2.id.vehicle_spec_view)
-    Group vehicleSpecView;
     @BindView(R2.id.payload_type)
     TextView payloadType;
     @BindView(R2.id.payload_description)
@@ -61,26 +63,43 @@ public class MissionDetailFragment extends RetroFitFragment {
     TextView launchConfiguration;
     @BindView(R2.id.launch_family)
     TextView launchFamily;
-    @BindView(R2.id.launch_vehicle_specs_height)
+    @BindView(R2.id.maiden_value)
+    TextView maidenLaunch;
+
+    @BindView(R2.id.launch_vehicle_specs_height_value)
     TextView launchVehicleSpecsHeight;
-    @BindView(R2.id.launch_vehicle_specs_diameter)
+    @BindView(R2.id.launch_vehicle_specs_diameter_value)
     TextView launchVehicleSpecsDiameter;
-    @BindView(R2.id.launch_vehicle_specs_stages)
+    @BindView(R2.id.launch_vehicle_specs_stages_value)
     TextView launchVehicleSpecsStages;
-    @BindView(R2.id.launch_vehicle_specs_leo)
+    @BindView(R2.id.launch_vehicle_specs_leo_value)
     TextView launchVehicleSpecsLeo;
-    @BindView(R2.id.launch_vehicle_specs_gto)
+    @BindView(R2.id.launch_vehicle_specs_gto_value)
     TextView launchVehicleSpecsGto;
-    @BindView(R2.id.launch_vehicle_specs_launch_mass)
+    @BindView(R2.id.launch_vehicle_specs_launch_mass_value)
     TextView launchVehicleSpecsLaunchMass;
-    @BindView(R2.id.launch_vehicle_specs_thrust)
+    @BindView(R2.id.launch_vehicle_specs_thrust_value)
     TextView launchVehicleSpecsThrust;
+
+
+    @BindView(R2.id.launch_success_value)
+    TextView launchSuccess;
+    @BindView(R2.id.consecutive_success_value)
+    TextView consecutiveSuccess;
+    @BindView(R2.id.launch_total_value)
+    TextView launchTotal;
+    @BindView(R2.id.launch_failure_value)
+    TextView launchFailure;
+
+
     @BindView(R2.id.launch_vehicle_description)
     TextView launchVehicleDescription;
     @BindView(R2.id.vehicle_infoButton)
     Button vehicleInfoButton;
     @BindView(R2.id.vehicle_wikiButton)
     Button vehicleWikiButton;
+    @BindView(R2.id.flightclub_infoButton)
+    Button flightclubButton;
     @BindView(R2.id.launcher_launches)
     Button launchesButton;
     @BindView(R2.id.spacecraft_image)
@@ -165,12 +184,24 @@ public class MissionDetailFragment extends RetroFitFragment {
                 }
                 payloadInfoButton.setVisibility(View.GONE);
                 payloadWikiButton.setVisibility(View.GONE);
+
             } else {
                 payloadStatus.setText(R.string.unknown_mission_or_payload);
 
                 payloadInfoButton.setVisibility(View.GONE);
                 payloadWikiButton.setVisibility(View.GONE);
             }
+
+            if(detailLaunch.getFlightclub() != null){
+                flightclubButton.setVisibility(View.VISIBLE);
+                flightclubButton.setOnClickListener(v -> {
+                    Activity activity = (Activity) context;
+                    Utils.openCustomTab(activity, context, detailLaunch.getFlightclub());
+                });
+            } else {
+                flightclubButton.setVisibility(View.GONE);
+            }
+
 
             launchVehicleView.setText(detailLaunch.getRocket().getConfiguration().getFullName());
             launchConfiguration.setText(detailLaunch.getRocket().getConfiguration().getVariant());
@@ -236,48 +267,77 @@ public class MissionDetailFragment extends RetroFitFragment {
 
     private void configureLaunchVehicle(LauncherConfig launchVehicle) {
         if (launchVehicle != null) {
-            vehicleSpecView.setVisibility(View.VISIBLE);
             try {
                 if (launchVehicle.getLength() != null) {
-                    launchVehicleSpecsHeight.setText(String.format(context.getString(R.string.height_full), launchVehicle.getLength()));
+                    launchVehicleSpecsHeight.setText(String.format(context.getString(R.string.height_value), launchVehicle.getLength()));
                 } else {
-                    launchVehicleSpecsHeight.setText(context.getString(R.string.height));
+                    launchVehicleSpecsHeight.setText(" - ");
                 }
 
                 if (launchVehicle.getDiameter() != null) {
-                    launchVehicleSpecsDiameter.setText(String.format(context.getString(R.string.diameter_full), launchVehicle.getDiameter()));
+                    launchVehicleSpecsDiameter.setText(String.format(context.getString(R.string.diameter_value), launchVehicle.getDiameter()));
                 } else {
-                    launchVehicleSpecsDiameter.setText(context.getString(R.string.diameter));
+                    launchVehicleSpecsDiameter.setText(" - ");
                 }
 
                 if (launchVehicle.getMaxStage() != null) {
-                    launchVehicleSpecsStages.setText(String.format(context.getString(R.string.stage_full), launchVehicle.getMaxStage()));
+                    launchVehicleSpecsStages.setText(String.format(context.getString(R.string.stage_value), launchVehicle.getMaxStage()));
                 } else {
-                    launchVehicleSpecsStages.setText(context.getString(R.string.stages));
+                    launchVehicleSpecsStages.setText(" - ");
                 }
 
                 if (launchVehicle.getLeoCapacity() != null) {
-                    launchVehicleSpecsLeo.setText(String.format(context.getString(R.string.mass_leo_full), launchVehicle.getLeoCapacity()));
+                    launchVehicleSpecsLeo.setText(String.format(context.getString(R.string.mass_leo_value), launchVehicle.getLeoCapacity()));
                 } else {
-                    launchVehicleSpecsLeo.setText(context.getString(R.string.mass_to_leo));
+                    launchVehicleSpecsLeo.setText(" - ");
                 }
 
                 if (launchVehicle.getGtoCapacity() != null) {
-                    launchVehicleSpecsGto.setText(String.format(context.getString(R.string.mass_gto_full), launchVehicle.getGtoCapacity()));
+                    launchVehicleSpecsGto.setText(String.format(context.getString(R.string.mass_gto_value), launchVehicle.getGtoCapacity()));
                 } else {
-                    launchVehicleSpecsGto.setText(context.getString(R.string.mass_to_gto));
+                    launchVehicleSpecsGto.setText(" - ");
                 }
 
                 if (launchVehicle.getLaunchMass() != null) {
-                    launchVehicleSpecsLaunchMass.setText(String.format(context.getString(R.string.mass_launch_full), launchVehicle.getLaunchMass()));
+                    launchVehicleSpecsLaunchMass.setText(String.format(context.getString(R.string.mass_launch_value), launchVehicle.getLaunchMass()));
                 } else {
-                    launchVehicleSpecsLaunchMass.setText(context.getString(R.string.mass_at_launch));
+                    launchVehicleSpecsLaunchMass.setText(" - ");
                 }
 
                 if (launchVehicle.getToThrust() != null) {
-                    launchVehicleSpecsThrust.setText(String.format(context.getString(R.string.thrust_full), launchVehicle.getToThrust()));
+                    launchVehicleSpecsThrust.setText(String.format(context.getString(R.string.thrust_value), launchVehicle.getToThrust()));
                 } else {
-                    launchVehicleSpecsThrust.setText(context.getString(R.string.thrust_at_launch));
+                    launchVehicleSpecsThrust.setText(" - ");
+                }
+
+                if (launchVehicle.getConsecutiveSuccessfulLaunches() != null) {
+                    consecutiveSuccess.setText(String.valueOf(launchVehicle.getConsecutiveSuccessfulLaunches()));
+                } else {
+                    consecutiveSuccess.setText(" - ");
+                }
+
+                if (launchVehicle.getSuccessfulLaunches() != null) {
+                    launchSuccess.setText(String.valueOf(launchVehicle.getSuccessfulLaunches()));
+                } else {
+                    launchSuccess.setText(" - ");
+                }
+
+                if (launchVehicle.getTotalLaunchCount() != null) {
+                    launchTotal.setText(String.valueOf(launchVehicle.getTotalLaunchCount()));
+                } else {
+                    launchTotal.setText(" - ");
+                }
+
+                if (launchVehicle.getFailedLaunches() != null) {
+                    launchFailure.setText(String.valueOf(launchVehicle.getFailedLaunches()));
+                } else {
+                    launchFailure.setText(" - ");
+                }
+
+                if (launchVehicle.getMaidenFlight() != null){
+                    //Setup SimpleDateFormat to parse out getNet launchDate.
+                    SimpleDateFormat output = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
+                    maidenLaunch.setText(output.format(launchVehicle.getMaidenFlight()));
                 }
 
                 if (launchVehicle.getDescription() != null && launchVehicle.getDescription().length() > 0) {
@@ -296,8 +356,6 @@ public class MissionDetailFragment extends RetroFitFragment {
             } catch (NullPointerException e) {
                 Timber.e(e);
             }
-        } else {
-            vehicleSpecView.setVisibility(View.GONE);
         }
     }
 
