@@ -83,11 +83,13 @@
                     android:id="@+id/lsp_logo"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
+                    android:layout_marginTop="@dimen/material_card_edge_margin"
                     android:paddingEnd="32dp"
                     android:paddingStart="32dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginEnd="32dp"
                     android:src="@drawable/placeholder"
+                    tools:src="@drawable/ic_splash"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/lsp_type" />
@@ -145,6 +147,308 @@
                     app:layout_constraintTop_toBottomOf="@+id/lsp_founded_year"
                     tools:text="asd asd asd asd asd asd asd" />
 
+                <TextView
+                    android:id="@+id/stats_seperator"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="center"
+                    android:text="Launch Statistics"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lsp_summary" />
+
+                <TextView
+                    android:id="@+id/launch_total_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textStart"
+                    android:text="Total"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_total_value"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/stats_seperator" />
+
+                <TextView
+                    android:id="@+id/launch_total_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/guideline"
+                    app:layout_constraintStart_toEndOf="@+id/launch_total_title"
+                    app:layout_constraintTop_toTopOf="@+id/launch_total_title" />
+
+                <TextView
+                    android:id="@+id/consecutive_success_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textStart"
+                    android:text="Consecutive"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/consecutive_success_value"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_total_title" />
+
+                <TextView
+                    android:id="@+id/consecutive_success_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/guideline"
+                    app:layout_constraintStart_toEndOf="@+id/consecutive_success_title"
+                    app:layout_constraintTop_toTopOf="@+id/consecutive_success_title" />
+
+                <TextView
+                    android:id="@+id/launch_success_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:textAlignment="textStart"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="Success"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_success_value"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/stats_seperator" />
+
+                <TextView
+                    android:id="@+id/launch_success_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/launch_success_title"
+                    app:layout_constraintTop_toTopOf="@+id/launch_success_title" />
+
+                <TextView
+                    android:id="@+id/launch_failure_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:textAlignment="textStart"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="Failures"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/launch_failure_value"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_success_title" />
+
+                <TextView
+                    android:id="@+id/launch_failure_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/launch_failure_title"
+                    app:layout_constraintTop_toTopOf="@+id/launch_failure_title" />
+
+                <TextView
+                    android:id="@+id/landing_seperator"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="center"
+                    android:text="Landing Statistics"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/launch_failure_value" />
+
+                <TextView
+                    android:id="@+id/landing_total_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textStart"
+                    android:text="Total"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/landing_total_value"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/landing_seperator" />
+
+                <TextView
+                    android:id="@+id/landing_total_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/guideline"
+                    app:layout_constraintStart_toEndOf="@+id/landing_total_title"
+                    app:layout_constraintTop_toTopOf="@+id/landing_total_title" />
+
+                <TextView
+                    android:id="@+id/consecutive_landing_success_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textStart"
+                    android:text="Consecutive"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/consecutive_landing_success_value"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/landing_total_title" />
+
+                <TextView
+                    android:id="@+id/consecutive_landing_success_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="@+id/guideline"
+                    app:layout_constraintStart_toEndOf="@+id/consecutive_landing_success_title"
+                    app:layout_constraintTop_toTopOf="@+id/consecutive_landing_success_title" />
+
+                <TextView
+                    android:id="@+id/landing_success_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:textAlignment="textStart"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="Success"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/landing_success_value"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/landing_seperator" />
+
+                <TextView
+                    android:id="@+id/landing_success_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/landing_success_title"
+                    app:layout_constraintTop_toTopOf="@+id/landing_success_title" />
+
+                <TextView
+                    android:id="@+id/landing_failure_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="16dp"
+                    android:ellipsize="end"
+                    android:textAlignment="textStart"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:text="Failures"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toStartOf="@+id/landing_failure_value"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/landing_success_title" />
+
+                <TextView
+                    android:id="@+id/landing_failure_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/material_baseline_grid_1.5x"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:singleLine="false"
+                    android:textAlignment="textEnd"
+                    tools:text="1"
+                    android:textColor="?android:textColorSecondary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/landing_failure_title"
+                    app:layout_constraintTop_toTopOf="@+id/landing_failure_title" />
+
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/lsp_infoButton_one"
@@ -160,7 +464,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/lsp_wikiButton_one"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/lsp_summary" />
+                    app:layout_constraintTop_toBottomOf="@+id/landing_failure_title" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/lsp_wikiButton_one"
@@ -176,7 +480,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/lsp_infoButton_one"
-                    app:layout_constraintTop_toBottomOf="@+id/lsp_summary" />
+                    app:layout_constraintTop_toBottomOf="@+id/landing_failure_title" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/lsp_agency"
@@ -189,6 +493,7 @@
                     android:layout_marginStart="8dp"
                     android:gravity="center"
                     android:padding="@dimen/material_card_edge_margin"
+                    android:paddingBottom="@dimen/material_baseline_grid_4x"
                     android:text="@string/view_upcoming_launches"
                     android:textSize="12sp"
                     android:theme="@style/ExploreButtonTheme"
@@ -197,6 +502,12 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/lsp_infoButton_one" />
 
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.5" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
