@@ -77,7 +77,6 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         if (launchVehicle != null) {
 
             holder.launchesButton.setText(String.format(mContext.getString(R.string.view_rocket_launches), launchVehicle.getFullName()));
-            holder.vehicleSpecView.setVisibility(View.VISIBLE);
             if (launchVehicle.getDescription() != null && launchVehicle.getDescription().length() > 0) {
                 holder.vehicleDescription.setVisibility(View.VISIBLE);
                 holder.vehicleDescription.setText(launchVehicle.getDescription());
@@ -243,8 +242,6 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         AppCompatButton infoButton;
         @BindView(R.id.vehicle_wikiButton)
         AppCompatButton wikiButton;
-        @BindView(R.id.vehicle_spec_view)
-        Group vehicleSpecView;
         @BindView(R.id.launcher_launches)
         AppCompatButton launchesButton;
 
