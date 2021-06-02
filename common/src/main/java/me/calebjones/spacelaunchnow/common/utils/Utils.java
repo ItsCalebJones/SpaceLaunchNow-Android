@@ -466,7 +466,7 @@ public class Utils {
                     elapsedHours, elapsedMinutes));
         } else if (elapsedMinutes > 0) {
             return (String.format(Locale.ENGLISH, "Open for %d minutes.\n",
-                    elapsedHours, elapsedMinutes));
+                    elapsedMinutes));
         } else {
             return "";
         }

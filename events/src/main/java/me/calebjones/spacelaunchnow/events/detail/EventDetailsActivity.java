@@ -414,7 +414,7 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
         ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
                 .setChooserTitle(event.getName())
-                .setText(event.getNewsUrl())
+                .setText("https://spacelaunchnow.me/event/" + event.getId())
                 .startChooser();
     }
 
