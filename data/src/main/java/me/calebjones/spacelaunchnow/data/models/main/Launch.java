@@ -81,6 +81,9 @@ public class Launch extends RealmObject {
     @SerializedName("launch_service_provider")
     @Expose
     public Agency launchServiceProvider;
+    @SerializedName("mission_patches")
+    @Expose
+    public RealmList<MissionPatch> patches = null;
 
     public Long eventID;
     public Date lastUpdate;
@@ -276,5 +279,13 @@ public class Launch extends RealmObject {
 
     public void setFlightclub(String flightclub) {
         this.flightclub = flightclub;
+    }
+
+    public RealmList<MissionPatch> getPatches() {
+        return patches;
+    }
+
+    public void setPatches(RealmList<MissionPatch> patches) {
+        this.patches = patches;
     }
 }

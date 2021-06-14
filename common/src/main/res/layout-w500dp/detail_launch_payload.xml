@@ -54,7 +54,9 @@
                     android:background="?attr/colorAccent"
                     android:ellipsize="end"
                     android:gravity="center"
+                    android:paddingLeft="8dp"
                     android:paddingTop="4dp"
+                    android:paddingRight="8dp"
                     android:paddingBottom="8dp"
                     android:singleLine="false"
                     android:text="@string/unknown_payload"
@@ -65,20 +67,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/payload_status_title" />
 
-                <TextView
-                    android:id="@+id/orbit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:textAlignment="textStart"
-                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
-                    android:textColor="?android:textColorSecondary"
-                    android:textSize="16sp"
+                <ImageView
+                    android:id="@+id/mission_patch"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="@dimen/material_card_edge_margin"
+                    android:paddingEnd="32dp"
+                    android:paddingStart="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:src="@drawable/placeholder"
+                    tools:src="@drawable/ic_splash"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/payload_type"
-                    tools:text="Low Earth Orbit" />
+                    app:layout_constraintTop_toBottomOf="@+id/payload_status" />
 
                 <TextView
                     android:id="@+id/payload_type"
@@ -91,22 +93,38 @@
                     android:gravity="center"
                     android:singleLine="false"
                     android:text="@string/unknown"
-                    android:textAlignment="textStart"
+                    android:textAlignment="center"
                     android:textAppearance="@style/MaterialTypography.Regular.Title"
                     android:textColor="?android:textColorSecondary"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/payload_status" />
+                    app:layout_constraintTop_toBottomOf="@+id/mission_patch" />
+
+                <TextView
+                    android:id="@+id/orbit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/MaterialTypography.Regular.Subheading"
+                    android:textColor="?android:textColorSecondary"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/payload_type"
+                    tools:text="Low Earth Orbit" />
 
                 <TextView
                     android:id="@+id/payload_description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginTop="8dp"
                     android:ellipsize="end"
-                    android:gravity="center"
+                    android:gravity="start"
                     android:paddingBottom="@dimen/material_baseline_grid_1x"
                     android:singleLine="false"
                     android:text=""

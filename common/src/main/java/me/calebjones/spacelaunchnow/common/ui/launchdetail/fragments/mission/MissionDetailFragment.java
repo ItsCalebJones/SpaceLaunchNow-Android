@@ -122,6 +122,8 @@ public class MissionDetailFragment extends RetroFitFragment {
     CardView spacecraftCard;
     @BindView(R2.id.crew_recycler_view)
     RecyclerView crewReycler;
+    @BindView(R2.id.mission_patch)
+    ImageView missionPatch;
 
     private Context context;
     public Launch detailLaunch;
@@ -213,6 +215,16 @@ public class MissionDetailFragment extends RetroFitFragment {
                 });
             } else {
                 vehicleInfoButton.setVisibility(View.GONE);
+            }
+
+            if (detailLaunch.getPatches() != null && detailLaunch.getPatches().size() > 0){
+                missionPatch.setVisibility(View.VISIBLE);
+                GlideApp.with(context)
+                        .load(detailLaunch.getPatches().get(0).getImageUrl())
+                        .centerInside()
+                        .into(missionPatch);
+            } else {
+                missionPatch.setVisibility(View.VISIBLE);
             }
 
             if (detailLaunch.getRocket().getConfiguration().getWikiUrl() != null && detailLaunch.getRocket().getConfiguration().getWikiUrl().length() > 0) {
