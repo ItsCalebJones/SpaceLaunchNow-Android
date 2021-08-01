@@ -10,7 +10,7 @@ import retrofit2.http.Query;
 
 public interface NewsInterface {
 
-    String version = "api/v2";
+    String version = "v3";
 
     @GET(version + "/article/{id}")
     Call<NewsItem> getArticleById(@Path("id") String id);
