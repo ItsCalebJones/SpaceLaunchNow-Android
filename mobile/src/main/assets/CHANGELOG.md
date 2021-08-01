@@ -3,6 +3,12 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
+#### Updated 7-31-2021
+---
+### Version 3.9.5
+#### Changelog
+Update to using SNAPI v3!
+
 #### Updated 6-14-2021
 ---
 ### Version 3.9.3

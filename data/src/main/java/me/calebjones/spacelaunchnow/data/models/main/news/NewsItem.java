@@ -14,7 +14,7 @@ public class NewsItem extends RealmObject {
 
     @PrimaryKey
     @SerializedName("id")
-    private String id;
+    private int id;
     @SerializedName("title")
     private String title;
     @SerializedName("newsSite")
@@ -30,11 +30,11 @@ public class NewsItem extends RealmObject {
     private Date datePublished;
     private Date lastUpdate;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

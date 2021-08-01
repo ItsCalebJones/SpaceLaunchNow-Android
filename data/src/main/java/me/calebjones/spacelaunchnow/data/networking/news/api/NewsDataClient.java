@@ -74,7 +74,7 @@ public class NewsDataClient {
 
     private static Retrofit newsRetrofit() {
 
-        String BASE_URL = "https://spaceflightnewsapi.net";
+        String BASE_URL = "https://api.spaceflightnewsapi.net";
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

@@ -54,12 +54,12 @@ public class NewsDataRepository {
 
     //TODO fix query
     public RealmResults<NewsItem> getNewsFromRealm() {
-        RealmQuery<NewsItem> query = realm.where(NewsItem.class).isNotNull("id");
+        RealmQuery<NewsItem> query = realm.where(NewsItem.class);
         return query.sort("datePublished", Sort.DESCENDING).findAll();
     }
 
     public RealmResults<NewsItem> getRelatedNewsFromRealm(String launchId) {
-        RealmQuery<NewsItem> query = realm.where(NewsItem.class).isNotNull("id").and().contains("launches.id", launchId);
+        RealmQuery<NewsItem> query = realm.where(NewsItem.class).contains("launches.id", launchId);
         return query.sort("datePublished", Sort.DESCENDING).findAll();
     }
 
