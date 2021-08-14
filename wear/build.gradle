@@ -96,9 +96,9 @@ import com.github.triplet.gradle.androidpublisher.ReleaseStatus
 
 play {
     serviceAccountCredentials = rootProject.file("publisher-key.json")
-    track.set("internal")
-    releaseStatus.set(ReleaseStatus.COMPLETED)
-    commit.set(false)
+//    track.set("internal")
+//    releaseStatus.set(ReleaseStatus.COMPLETED)
+//    commit.set(false)
 }
 
 

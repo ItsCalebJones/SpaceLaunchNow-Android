@@ -920,8 +920,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     Once.beenDone("show2021dialog")) {
 
                 if (mInterstitialAd.isLoaded()) {
-                    Timber.d("Showing interstitial ad!");
-                    mInterstitialAd.show();
+                    // Dont show these anymore.
+//                    Timber.d("Showing interstitial ad!");
+//                    mInterstitialAd.show();
                 } else {
                     Timber.d("The interstitial wasn't loaded yet.");
                 }
