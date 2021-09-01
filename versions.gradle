@@ -2,11 +2,9 @@
 ext {
     app = [
             versionMajor: 3,
-            versionMinor: 6,
+            versionMinor: 10,
             versionPatch: 0,
             versionCode: 1
-
-
     ]
 
     // Sdk and tools

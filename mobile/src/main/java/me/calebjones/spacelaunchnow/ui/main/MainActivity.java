@@ -31,7 +31,6 @@ import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -147,7 +146,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private boolean allowsPersonalAds = false;
     private boolean allowAds = false;
     private int adShowCount = 0;
-    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,25 +163,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 becomeSupporter();
             }
         }
-
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-9824528399164059/7019745864");
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                Timber.d("Loading new InterstitialAd.");
-                // Load the next interstitial.
-                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-
-            @Override
-            public void onAdLoaded() {
-                Timber.d("InterstitialAd loaded!");
-            }
-
-        });
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
@@ -913,16 +892,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             if (adShowCount % 5 == 0 && adShowCount != 0) {
                 if (mNavItemId != R.id.menu_launches) {
                     loadAd();
-                }
-            } else if (adShowCount % 7 == 0
-                    && adShowCount != 0 &&
-                    Once.beenDone("show2021dialog")) {
-
-                if (mInterstitialAd.isLoaded()) {
-                    Timber.d("Showing interstitial ad!");
-                    mInterstitialAd.show();
-                } else {
-                    Timber.d("The interstitial wasn't loaded yet.");
                 }
             }
         }
