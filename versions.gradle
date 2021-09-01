@@ -4,7 +4,7 @@ ext {
             versionMajor: 3,
             versionMinor: 9,
             versionPatch: 6,
-            versionCode: 1
+            versionCode: 2
 
 
     ]
