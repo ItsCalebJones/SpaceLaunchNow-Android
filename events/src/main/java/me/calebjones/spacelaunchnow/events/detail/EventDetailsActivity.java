@@ -42,6 +42,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
+import jonathanfinerty.once.Amount;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
@@ -221,7 +223,8 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
         });
         fetchData(mEventId, slug);
 
-        if (!SupporterHelper.isSupporter()) {
+        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
+                Amount.moreThan(3))) {
             AdRequest adRequest = new AdRequest.Builder().build();
             eventAdView.loadAd(adRequest);
             eventAdView.setAdListener(new AdListener() {

@@ -64,6 +64,8 @@ dependencies {
     implementation deps.communityMaterialTypeface
     implementation deps.fontawesomeTypeface
 
+    implementation deps.once
+
     // Iconography
     implementation deps.iconicsCore
     implementation deps.googleMaterialTypeface
