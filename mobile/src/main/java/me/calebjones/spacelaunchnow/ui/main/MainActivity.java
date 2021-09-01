@@ -84,7 +84,6 @@ import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.ui.AboutActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.ui.supporter.BecomeSupporterActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.astronauts.list.AstronautListFragment;
@@ -514,7 +513,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     }
 
     private void becomeSupporter() {
-        Intent becomeSupporter = new Intent(this, BecomeSupporterActivity.class);
+        Intent becomeSupporter = new Intent(this, SupporterActivity.class);
         startActivity(becomeSupporter);
     }
 
@@ -890,7 +889,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         if (adviewEnabled) {
             checkShowAd();
             Timber.v("Ad show count - %s", adShowCount);
-            if (adShowCount % 3 == 0 && adShowCount != 0) {
+            if (adShowCount % 5 == 0 && adShowCount != 0) {
                 if (mNavItemId != R.id.menu_launches) {
                     loadAd();
                 }
@@ -990,24 +989,26 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private void configureAdState(GDPRConsentState consentState) {
         allowsPersonalAds = true;
-        allowAds = true;
-        GDPRConsent consent = consentState.getConsent();
+        if (Once.beenDone("appOpen", Amount.moreThan(3))) {
+            allowAds = true;
+            GDPRConsent consent = consentState.getConsent();
 
-        if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
-                && consent == GDPRConsent.UNKNOWN) {
-            allowAds = false;
-        } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
-                && consent == GDPRConsent.NO_CONSENT
-                || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
-            allowsPersonalAds = false;
-        } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
-            GDPR.getInstance().resetConsent();
-        }
+            if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                    && consent == GDPRConsent.UNKNOWN) {
+                allowAds = false;
+            } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                    && consent == GDPRConsent.NO_CONSENT
+                    || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
+                allowsPersonalAds = false;
+            } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
+                GDPR.getInstance().resetConsent();
+            }
 
-        if (mNavItemId != R.id.menu_launches) {
-            loadAd();
-        } else {
-            checkRefreshAd();
+            if (mNavItemId != R.id.menu_launches) {
+                loadAd();
+            } else {
+                checkRefreshAd();
+            }
         }
     }
 

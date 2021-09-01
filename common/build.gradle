@@ -67,10 +67,11 @@ dependencies {
     implementation deps.materialdrawer
     implementation deps.materialDialogCore
     implementation deps.materialDialogCommons
-    implementation deps.inAppbilling
     implementation deps.workManager
     implementation deps.colorPicker
     implementation deps.firebaseAnalytics
+    implementation deps.crashlytics
+    implementation deps.GDPRDialog
 
     // Iconography
     implementation deps.iconicsCore
@@ -105,6 +106,9 @@ dependencies {
     implementation deps.autoValue
     annotationProcessor deps.autoValueProcessor
     implementation deps.statefulLayout
+    //Twitter
+    implementation deps.twitterCore
+    implementation deps.twitterUi
     // YouTube Player
     implementation deps.androidyoutubeplayer_core
     implementation deps.androidyoutubeplayer_chromecast
@@ -114,6 +118,8 @@ dependencies {
     implementation deps.customtabs
     implementation deps.preferences
     implementation deps.deepLinkDispatch
+
+    implementation deps.checkout
 
     implementation deps.adAdapter
     kapt deps.deepLinkDispatchAnnotation

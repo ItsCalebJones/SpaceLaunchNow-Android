@@ -34,6 +34,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
+import jonathanfinerty.once.Amount;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.astronauts.data.AstronautDataRepository;
 import me.calebjones.spacelaunchnow.astronauts.data.Callbacks;
 import me.calebjones.spacelaunchnow.common.GlideApp;
@@ -149,7 +151,8 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
             }
         });
 
-        if (!SupporterHelper.isSupporter()) {
+        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
+                Amount.moreThan(3))) {
             AdRequest adRequest = new AdRequest.Builder().build();
             astronautAdView.loadAd(adRequest);
             astronautAdView.setAdListener(new AdListener() {
