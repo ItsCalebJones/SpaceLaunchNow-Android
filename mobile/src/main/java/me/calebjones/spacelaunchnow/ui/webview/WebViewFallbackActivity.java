@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.calebjones.spacelaunchnow.R;
 import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
-import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.common.utils.analytics.Analytics;
 
 public class WebViewFallbackActivity extends BaseActivityOld {
     public static final String EXTRA_URL = "extra.url";

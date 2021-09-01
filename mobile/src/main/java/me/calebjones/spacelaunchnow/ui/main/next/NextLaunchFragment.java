@@ -55,7 +55,7 @@ import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.common.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.animator.FabExtensionAnimator;
 import me.calebjones.spacelaunchnow.widgets.launchcard.LaunchCardCompactManager;
 import me.calebjones.spacelaunchnow.widgets.launchcard.LaunchCardCompactWidgetProvider;

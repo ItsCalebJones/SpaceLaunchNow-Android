@@ -85,7 +85,6 @@ import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.ui.AboutActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.ui.supporter.BecomeSupporterActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.astronauts.list.AstronautListFragment;
@@ -535,7 +534,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     }
 
     private void becomeSupporter() {
-        Intent becomeSupporter = new Intent(this, BecomeSupporterActivity.class);
+        Intent becomeSupporter = new Intent(this, SupporterActivity.class);
         startActivity(becomeSupporter);
     }
 

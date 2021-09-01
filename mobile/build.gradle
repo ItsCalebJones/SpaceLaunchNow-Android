@@ -48,6 +48,7 @@ if (keystorePropertiesFile.canRead()) {
 }
 
 
+
 android {
     signingConfigs {
         releaseConfig {
@@ -72,7 +73,6 @@ android {
         versionName computeVersionName()
         versionCode computeVersionCode()
         multiDexEnabled true
-        wearAppUnbundled true
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -162,7 +162,6 @@ dependencies {
     implementation deps.dexter
     implementation deps.statefulLayout
     // Billing
-    implementation deps.inAppbilling
     implementation deps.workManager
     // Views and Animations
     implementation deps.materialDialogCore
@@ -216,6 +215,8 @@ dependencies {
     implementation deps.deepLinkDispatch
     implementation deps.adAdapter
     annotationProcessor deps.deepLinkDispatchAnnotation
+
+    implementation deps.checkout
 }
 
 apply plugin: 'com.google.gms.google-services'

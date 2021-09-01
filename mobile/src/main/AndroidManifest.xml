@@ -17,7 +17,7 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-        android:name=".LaunchApplication"
+        android:name=".common.LaunchApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="${appNameLabel}"
