@@ -2,11 +2,9 @@
 ext {
     app = [
             versionMajor: 3,
-            versionMinor: 9,
-            versionPatch: 6,
+            versionMinor: 10,
+            versionPatch: 0,
             versionCode: 1
-
-
     ]
 
     // Sdk and tools
@@ -31,6 +29,7 @@ ext {
     kotlinVersion = "1.4.20"
     roomVersion = '2.2.3'
     crashlytics = '2.10.1'
+    billing_version = "4.0.0"
 }
 
 // Plugins
@@ -115,7 +114,6 @@ ext.deps = [
         reyclerview                    : "androidx.recyclerview:recyclerview:1.0.0",
 
         //Utility
-        inAppbilling                   : "com.anjlab.android.iab.v3:library:1.0.44",
         evernoteJob                    : "com.evernote:android-job:1.3.0-alpha09",
         forecast                       : "android.zetterstrom.com.forecast:forecast:1.2.0",
         dexter                         : "com.karumi:dexter:4.2.0",
@@ -135,6 +133,7 @@ ext.deps = [
         autoValueProcessor             : "com.google.auto.value:auto-value:1.6.2",
         deepLinkDispatch               : "com.airbnb:deeplinkdispatch:5.1.0",
         deepLinkDispatchAnnotation     : "com.airbnb:deeplinkdispatch-processor:5.1.0",
+        checkout                       : "org.solovyev.android:checkout:1.2.3",
 
         // Iconography
         iconicsCore                    : 'com.mikepenz:iconics-core:3.2.5@aar',
@@ -168,7 +167,7 @@ ext.plugs = [
         androidMavenGradle  : "com.github.dcendents:android-maven-gradle-plugin:2.0",
         googleService       : "com.google.gms:google-services:4.3.5",
         kotlinPlugin        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
-        playPublisher       : "com.github.triplet.gradle:play-publisher:3.2.0",
+        playPublisher       : "com.github.triplet.gradle:play-publisher:3.3.0",
         crashlytics         : "com.google.firebase:firebase-crashlytics-gradle:2.5.2"
 
 ]

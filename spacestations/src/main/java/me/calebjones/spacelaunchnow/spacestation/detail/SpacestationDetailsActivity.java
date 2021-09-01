@@ -31,6 +31,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
+import jonathanfinerty.once.Amount;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
@@ -154,7 +156,8 @@ public class SpacestationDetailsActivity extends BaseActivityOld implements AppB
             }
         });
 
-        if (!SupporterHelper.isSupporter()) {
+        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
+                Amount.moreThan(3))) {
             AdRequest adRequest = new AdRequest.Builder().build();
             spacestationAdView.loadAd(adRequest);
             spacestationAdView.setAdListener(new AdListener() {

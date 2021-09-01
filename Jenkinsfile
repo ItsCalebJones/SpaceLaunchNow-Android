@@ -52,9 +52,6 @@ pipeline {
                 withCredentials([file(credentialsId: 'KeysFile', variable: 'keysFile')]) {
                     sh 'cp $keysFile common/src/main/res/values/api_keys.xml'
                 }
-                withCredentials([file(credentialsId: 'KeysFile', variable: 'keysFile')]) {
-                    sh 'cp $keysFile wear/src/main/res/values/api_keys.xml'
-                }
                 withCredentials([file(credentialsId: 'GoogleServiceJson', variable: 'googleServiceJson')]) {
                     sh 'cp $googleServiceJson mobile/google-services.json'
                 }
@@ -114,7 +111,6 @@ pipeline {
                         thumbnail: "https://i.imgur.com/UZTtsSR.png",
                         notes: "Hey <@&641718676046872588>, new build completed for ${PROJECT_NAME}!"
             sh '''
-               rm wear/src/main/res/values/api_keys.xml
                rm common/src/main/res/values/api_keys.xml
                rm gradle.properties
                rm spacelaunchnow.keystore

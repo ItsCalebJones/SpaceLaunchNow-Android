@@ -42,6 +42,8 @@ dependencies {
     implementation deps.reyclerview
     implementation deps.materialDialogCore
     implementation deps.materialDialogCommons
+    implementation deps.once
+    
     // Iconography
     implementation deps.iconicsCore
     implementation deps.googleMaterialTypeface

@@ -31,7 +31,6 @@ import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -85,7 +84,6 @@ import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.ui.AboutActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.ui.supporter.BecomeSupporterActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.astronauts.list.AstronautListFragment;
@@ -148,7 +146,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private boolean allowsPersonalAds = false;
     private boolean allowAds = false;
     private int adShowCount = 0;
-    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,25 +163,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 becomeSupporter();
             }
         }
-
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-9824528399164059/7019745864");
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
-
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                Timber.d("Loading new InterstitialAd.");
-                // Load the next interstitial.
-                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-
-            @Override
-            public void onAdLoaded() {
-                Timber.d("InterstitialAd loaded!");
-            }
-
-        });
 
         // Get intent, action and MIME type
         Intent intent = getIntent();
@@ -535,7 +513,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     }
 
     private void becomeSupporter() {
-        Intent becomeSupporter = new Intent(this, BecomeSupporterActivity.class);
+        Intent becomeSupporter = new Intent(this, SupporterActivity.class);
         startActivity(becomeSupporter);
     }
 
@@ -911,20 +889,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         if (adviewEnabled) {
             checkShowAd();
             Timber.v("Ad show count - %s", adShowCount);
-            if (adShowCount % 3 == 0 && adShowCount != 0) {
+            if (adShowCount % 5 == 0 && adShowCount != 0) {
                 if (mNavItemId != R.id.menu_launches) {
                     loadAd();
-                }
-            } else if (adShowCount % 7 == 0
-                    && adShowCount != 0 &&
-                    Once.beenDone("show2021dialog")) {
-
-                if (mInterstitialAd.isLoaded()) {
-                    // Dont show these anymore.
-//                    Timber.d("Showing interstitial ad!");
-//                    mInterstitialAd.show();
-                } else {
-                    Timber.d("The interstitial wasn't loaded yet.");
                 }
             }
         }
@@ -1022,24 +989,26 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private void configureAdState(GDPRConsentState consentState) {
         allowsPersonalAds = true;
-        allowAds = true;
-        GDPRConsent consent = consentState.getConsent();
+        if (Once.beenDone("appOpen", Amount.moreThan(3))) {
+            allowAds = true;
+            GDPRConsent consent = consentState.getConsent();
 
-        if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
-                && consent == GDPRConsent.UNKNOWN) {
-            allowAds = false;
-        } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
-                && consent == GDPRConsent.NO_CONSENT
-                || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
-            allowsPersonalAds = false;
-        } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
-            GDPR.getInstance().resetConsent();
-        }
+            if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                    && consent == GDPRConsent.UNKNOWN) {
+                allowAds = false;
+            } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                    && consent == GDPRConsent.NO_CONSENT
+                    || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
+                allowsPersonalAds = false;
+            } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
+                GDPR.getInstance().resetConsent();
+            }
 
-        if (mNavItemId != R.id.menu_launches) {
-            loadAd();
-        } else {
-            checkRefreshAd();
+            if (mNavItemId != R.id.menu_launches) {
+                loadAd();
+            } else {
+                checkRefreshAd();
+            }
         }
     }
 

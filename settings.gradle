@@ -1,4 +1,4 @@
-include ':mobile', ':wear', ':data', ':news', ':common', ':spacestations', ':events', ':astronauts', ':starship'
+include ':mobile', ':data', ':news', ':common', ':spacestations', ':events', ':astronauts', ':starship'
 buildCache {
     local {
         // Set local build cache directory.
