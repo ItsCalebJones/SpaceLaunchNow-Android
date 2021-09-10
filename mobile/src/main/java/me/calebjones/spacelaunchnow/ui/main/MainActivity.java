@@ -867,7 +867,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private void showAd() {
         Timber.v("Showing Ad!");
-        if (adviewEnabled && adView.getVisibility() == View.GONE) {
+        if ((adviewEnabled && adView.getVisibility() == View.GONE) || (adviewEnabled && adView.getVisibility() == View.INVISIBLE)) {
             adView.setVisibility(View.VISIBLE);
         }
     }
@@ -889,7 +889,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         if (adviewEnabled) {
             checkShowAd();
             Timber.v("Ad show count - %s", adShowCount);
-            if (adShowCount % 5 == 0 && adShowCount != 0) {
+            if (adShowCount % 9 == 0 && adShowCount != 0) {
                 if (mNavItemId != R.id.menu_launches) {
                     loadAd();
                 }
