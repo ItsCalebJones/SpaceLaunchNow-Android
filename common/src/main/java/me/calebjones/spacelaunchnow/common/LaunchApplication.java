@@ -16,6 +16,9 @@ import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
 
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -163,7 +166,15 @@ public class LaunchApplication extends Application {
 
     private void setupAds() {
         GDPR.getInstance().init(this);
-        new Thread(() -> MobileAds.initialize(context, "ca-app-pub-9824528399164059~9700152528")).start();
+        MobileAds.initialize(this, initializationStatus -> {
+            if (BuildConfig.DEBUG) {
+                List<String> testDeviceIds = Arrays.asList("950298D46A76B633187461C832E37ADC");
+                RequestConfiguration configuration =
+                        new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+                MobileAds.setRequestConfiguration(configuration);
+            }
+        });
+
     }
 
 
