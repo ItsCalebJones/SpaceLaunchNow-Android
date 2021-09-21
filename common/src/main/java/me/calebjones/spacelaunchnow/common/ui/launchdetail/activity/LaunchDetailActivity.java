@@ -176,11 +176,6 @@ public class LaunchDetailActivity extends BaseActivity
                     adView.setVisibility(View.VISIBLE);
                 }
 
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    adView.setVisibility(View.GONE);
-                }
-
             });
         } else {
             adView.setVisibility(View.GONE);

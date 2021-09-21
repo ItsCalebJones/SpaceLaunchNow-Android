@@ -167,11 +167,6 @@ public class SpacestationDetailsActivity extends BaseActivityOld implements AppB
                     spacestationAdView.setVisibility(View.VISIBLE);
                 }
 
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    spacestationAdView.setVisibility(View.GONE);
-                }
-
             });
         } else {
             spacestationAdView.setVisibility(View.GONE);

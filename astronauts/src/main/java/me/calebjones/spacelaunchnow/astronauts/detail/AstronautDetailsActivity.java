@@ -162,11 +162,6 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
                     astronautAdView.setVisibility(View.VISIBLE);
                 }
 
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    astronautAdView.setVisibility(View.GONE);
-                }
-
             });
         } else {
             astronautAdView.setVisibility(View.GONE);

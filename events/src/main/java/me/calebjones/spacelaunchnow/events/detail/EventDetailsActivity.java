@@ -234,11 +234,6 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
                     eventAdView.setVisibility(View.VISIBLE);
                 }
 
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    eventAdView.setVisibility(View.GONE);
-                }
-
             });
         } else {
             eventAdView.setVisibility(View.GONE);

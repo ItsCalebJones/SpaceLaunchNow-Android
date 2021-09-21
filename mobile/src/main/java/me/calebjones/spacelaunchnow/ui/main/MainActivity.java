@@ -1025,12 +1025,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 adView.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
             }
             adView.setAdListener(new AdListener() {
-                @Override
-                public void onAdFailedToLoad(int i) {
-                    Timber.d("Failed to load ads.");
-                    adviewEnabled = false;
-                    super.onAdFailedToLoad(i);
-                }
 
                 @Override
                 public void onAdLoaded() {
