@@ -165,21 +165,23 @@ public class LaunchDetailActivity extends BaseActivity
                 .build();
 
         rate.showRequest();
-        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
-                Amount.moreThan(3))) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            adView.loadAd(adRequest);
-            adView.setAdListener(new AdListener() {
+//        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
+//                Amount.moreThan(3))) {
+//            AdRequest adRequest = new AdRequest.Builder().build();
+//            adView.loadAd(adRequest);
+//            adView.setAdListener(new AdListener() {
+//
+//                @Override
+//                public void onAdLoaded() {
+//                    adView.setVisibility(View.VISIBLE);
+//                }
+//
+//            });
+//        } else {
+//            adView.setVisibility(View.GONE);
+//        }
 
-                @Override
-                public void onAdLoaded() {
-                    adView.setVisibility(View.VISIBLE);
-                }
-
-            });
-        } else {
-            adView.setVisibility(View.GONE);
-        }
+        adView.setVisibility(View.GONE);
 
         appBarLayout.addOnOffsetChangedListener(new CustomOnOffsetChangedListener(statusColor, getWindow()));
         appBarLayout.addOnOffsetChangedListener(this);

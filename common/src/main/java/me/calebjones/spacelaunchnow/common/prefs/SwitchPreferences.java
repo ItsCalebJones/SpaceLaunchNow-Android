@@ -959,7 +959,7 @@ public class SwitchPreferences implements SharedPreferences.OnSharedPreferenceCh
 
     public boolean getNextFABHidden() {
         this.sharedPrefs = this.appContext.getSharedPreferences(PREFS_NAME, 0);
-        return this.sharedPrefs.getBoolean(PREFS_FAB_HIDDEN, false);
+        return this.sharedPrefs.getBoolean(PREFS_FAB_HIDDEN, true);
     }
 
     public void setNextFABHidden(boolean key) {
