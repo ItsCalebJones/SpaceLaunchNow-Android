@@ -4,7 +4,7 @@ ext {
             versionMajor: 3,
             versionMinor: 10,
             versionPatch: 0,
-            versionCode: 5
+            versionCode: 7
     ]
 
     // Sdk and tools
@@ -56,6 +56,7 @@ ext.deps = [
         paging                         : "androidx.paging:paging-runtime-ktx:2.1.1",
         preferences                    : "androidx.preference:preference:1.1.0",
         workManager                    : "androidx.work:work-runtime:2.0.1",
+        remoteConfig                   : "com.google.firebase:firebase-config:21.0.1",
 
         //Google
         material                       : "com.google.android.material:material:1.2.1",

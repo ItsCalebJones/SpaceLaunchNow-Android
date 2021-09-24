@@ -978,27 +978,30 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private void configureAdState(GDPRConsentState consentState) {
         allowsPersonalAds = true;
-        if (Once.beenDone("appOpen", Amount.moreThan(3))) {
-            allowAds = true;
-            GDPRConsent consent = consentState.getConsent();
-
-            if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
-                    && consent == GDPRConsent.UNKNOWN) {
-                allowAds = false;
-            } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
-                    && consent == GDPRConsent.NO_CONSENT
-                    || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
-                allowsPersonalAds = false;
-            } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
-                GDPR.getInstance().resetConsent();
-            }
-
-            if (mNavItemId != R.id.menu_launches) {
-                loadAd();
-            } else {
-                checkShowAd();
-            }
-        }
+//        if (Once.beenDone("appOpen", Amount.moreThan(10))) {
+//            allowAds = true;
+//            GDPRConsent consent = consentState.getConsent();
+//
+//            if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+//                    && consent == GDPRConsent.UNKNOWN) {
+//                allowAds = false;
+//            } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+//                    && consent == GDPRConsent.NO_CONSENT
+//                    || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
+//                allowsPersonalAds = false;
+//            } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
+//                GDPR.getInstance().resetConsent();
+//            }
+//
+//            if (mNavItemId != R.id.menu_launches) {
+//                loadAd();
+//            } else {
+//                checkShowAd();
+//            }
+//        } else {
+//            adView.setVisibility(View.GONE);
+//        }
+        adView.setVisibility(View.GONE);
     }
 
     private void loadAd() {
