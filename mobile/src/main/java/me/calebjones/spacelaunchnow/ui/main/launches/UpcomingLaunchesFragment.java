@@ -108,18 +108,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
 
-        if (!SupporterHelper.isSupporter()) {
-            adapterWrapper = AdmobBannerRecyclerAdapterWrapper.builder(context)
-                    .setSingleAdUnitId("ca-app-pub-9824528399164059/9959827876")
-                    .setFirstAdIndex(10)
-                    .setLimitOfAds(2)
-                    .setNoOfDataBetweenAds(15)
-                    .setAdapter(adapter)
-                    .build();
-            mRecyclerView.setAdapter(adapterWrapper);
-        } else {
-            mRecyclerView.setAdapter(adapter);
-        }
+        mRecyclerView.setAdapter(adapter);
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override

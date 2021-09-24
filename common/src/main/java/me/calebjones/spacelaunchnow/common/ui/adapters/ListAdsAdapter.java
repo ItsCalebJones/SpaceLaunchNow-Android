@@ -174,21 +174,6 @@ public class ListAdsAdapter extends RecyclerView.Adapter {
                         // load the next ad in the items list.
                         loadBannerAd(index + ITEMS_PER_AD);
                     }
-
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError loadAdError) {
-                        // The previous banner ad failed to load. Call this method again to load
-                        // the next ad in the items list.
-                        String error =
-                                String.format(
-                                        "domain: %s, code: %d, message: %s",
-                                        loadAdError.getDomain(), loadAdError.getCode(), loadAdError.getMessage());
-                        Timber.e("The previous banner ad failed to load with error: "
-                                        + error
-                                        + ". Attempting to"
-                                        + " load the next banner ad in the items list.");
-                        loadBannerAd(index + ITEMS_PER_AD);
-                    }
                 });
 
         // Load the banner ad.

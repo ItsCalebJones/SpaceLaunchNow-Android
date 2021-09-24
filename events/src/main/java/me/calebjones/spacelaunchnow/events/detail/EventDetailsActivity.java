@@ -223,26 +223,23 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
         });
         fetchData(mEventId, slug);
 
-        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
-                Amount.moreThan(3))) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            eventAdView.loadAd(adRequest);
-            eventAdView.setAdListener(new AdListener() {
+//        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
+//                Amount.moreThan(3))) {
+//            AdRequest adRequest = new AdRequest.Builder().build();
+//            eventAdView.loadAd(adRequest);
+//            eventAdView.setAdListener(new AdListener() {
+//
+//                @Override
+//                public void onAdLoaded() {
+//                    eventAdView.setVisibility(View.VISIBLE);
+//                }
+//
+//            });
+//        } else {
+//            eventAdView.setVisibility(View.GONE);
+//        }
 
-                @Override
-                public void onAdLoaded() {
-                    eventAdView.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    eventAdView.setVisibility(View.GONE);
-                }
-
-            });
-        } else {
-            eventAdView.setVisibility(View.GONE);
-        }
+        eventAdView.setVisibility(View.GONE);
     }
 
     private void enableDisableSwipeRefresh(boolean enable) {

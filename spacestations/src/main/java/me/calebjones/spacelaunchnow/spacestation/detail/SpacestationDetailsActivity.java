@@ -156,26 +156,23 @@ public class SpacestationDetailsActivity extends BaseActivityOld implements AppB
             }
         });
 
-        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
-                Amount.moreThan(3))) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            spacestationAdView.loadAd(adRequest);
-            spacestationAdView.setAdListener(new AdListener() {
+//        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
+//                Amount.moreThan(3))) {
+//            AdRequest adRequest = new AdRequest.Builder().build();
+//            spacestationAdView.loadAd(adRequest);
+//            spacestationAdView.setAdListener(new AdListener() {
+//
+//                @Override
+//                public void onAdLoaded() {
+//                    spacestationAdView.setVisibility(View.VISIBLE);
+//                }
+//
+//            });
+//        } else {
+//            spacestationAdView.setVisibility(View.GONE);
+//        }
 
-                @Override
-                public void onAdLoaded() {
-                    spacestationAdView.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    spacestationAdView.setVisibility(View.GONE);
-                }
-
-            });
-        } else {
-            spacestationAdView.setVisibility(View.GONE);
-        }
+        spacestationAdView.setVisibility(View.GONE);
     }
 
     private void enableDisableSwipeRefresh(boolean enable) {

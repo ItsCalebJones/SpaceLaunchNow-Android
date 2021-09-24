@@ -151,26 +151,23 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
             }
         });
 
-        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
-                Amount.moreThan(3))) {
-            AdRequest adRequest = new AdRequest.Builder().build();
-            astronautAdView.loadAd(adRequest);
-            astronautAdView.setAdListener(new AdListener() {
+//        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
+//                Amount.moreThan(3))) {
+//            AdRequest adRequest = new AdRequest.Builder().build();
+//            astronautAdView.loadAd(adRequest);
+//            astronautAdView.setAdListener(new AdListener() {
+//
+//                @Override
+//                public void onAdLoaded() {
+//                    astronautAdView.setVisibility(View.VISIBLE);
+//                }
+//
+//            });
+//        } else {
+//            astronautAdView.setVisibility(View.GONE);
+//        }
 
-                @Override
-                public void onAdLoaded() {
-                    astronautAdView.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    astronautAdView.setVisibility(View.GONE);
-                }
-
-            });
-        } else {
-            astronautAdView.setVisibility(View.GONE);
-        }
+        astronautAdView.setVisibility(View.GONE);
     }
 
     private void enableDisableSwipeRefresh(boolean enable) {

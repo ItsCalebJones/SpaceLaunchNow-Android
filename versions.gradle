@@ -4,7 +4,7 @@ ext {
             versionMajor: 3,
             versionMinor: 10,
             versionPatch: 0,
-            versionCode: 3
+            versionCode: 5
     ]
 
     // Sdk and tools
@@ -60,12 +60,12 @@ ext.deps = [
         //Google
         material                       : "com.google.android.material:material:1.2.1",
         playWearable                   : "com.google.android.gms:play-services-wearable:16.0.1",
-        playAds                        : "com.google.android.gms:play-services-ads:19.7.0",
+        playAds                        : "com.google.android.gms:play-services-ads:20.3.0",
         adAdapter                      : "com.github.clockbyte:admobadapter:1.4.6",
 
         //Firebase
         firebaseAnalytics              : "com.google.firebase:firebase-analytics:18.0.2",
-        firebaseAds                    : "com.google.firebase:firebase-ads:19.7.0",
+        firebaseAds                    : "com.google.firebase:firebase-ads:20.3.0",
         firebaseMessaging              : "com.google.firebase:firebase-messaging:20.1.0",
 
         //Kotlin

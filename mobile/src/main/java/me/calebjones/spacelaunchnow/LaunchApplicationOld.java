@@ -138,7 +138,7 @@ public class LaunchApplicationOld extends Application {
 
     private void setupAds() {
         GDPR.getInstance().init(this);
-        new Thread(() -> MobileAds.initialize(context, "ca-app-pub-9824528399164059~9700152528")).start();
+
     }
 
 
