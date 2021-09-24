@@ -61,7 +61,7 @@ android {
 
     flavorDimensions "release"
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion '28.0.3'
+    buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
 
         applicationId "me.calebjones.spacelaunchnow"
