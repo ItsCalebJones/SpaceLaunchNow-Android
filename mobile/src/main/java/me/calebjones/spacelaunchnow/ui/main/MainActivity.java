@@ -146,7 +146,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private boolean allowsPersonalAds = false;
     private boolean allowAds = false;
     private int adShowCount = 0;
-    private boolean adViewLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,7 +186,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         ButterKnife.bind(this);
 
         adviewEnabled = false;
-        adView.setVisibility(View.INVISIBLE);
+        hideAd();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setupWindowAnimations();
@@ -636,7 +635,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-                checkShowAd();
+                checkRefreshAd();
                 break;
             case R.id.menu_launches:
                 setActionBarTitle("Space Launch Now");
@@ -676,7 +675,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-                checkShowAd();
+                checkRefreshAd();
                 break;
             case R.id.menu_iss:
                 setActionBarTitle(getString(R.string.spacestations));
@@ -690,7 +689,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-                checkShowAd();
+                checkRefreshAd();
                 break;
             case R.id.menu_astronauts:
                 setActionBarTitle(getString(R.string.astronauts));
@@ -704,7 +703,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-                checkShowAd();
+                checkRefreshAd();
                 break;
             case R.id.menu_starship:
                 setActionBarTitle("Starship Development");
@@ -718,7 +717,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-                checkShowAd();
+                checkRefreshAd();
                 break;
             case R.id.menu_events:
                 setActionBarTitle(getString(R.string.events));
@@ -732,7 +731,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-                checkShowAd();
+                checkRefreshAd();
                 break;
             case R.id.menu_vehicle:
                 setActionBarTitle(getString(R.string.vehicles));
@@ -745,7 +744,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
-                checkShowAd();
+                checkRefreshAd();
                 break;
             case R.id.menu_launch:
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
@@ -884,7 +883,19 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             showAd();
         }
     }
-    
+
+    public void checkRefreshAd() {
+        adShowCount += 1;
+        if (adviewEnabled) {
+            checkShowAd();
+            Timber.v("Ad show count - %s", adShowCount);
+            if (adShowCount % 9 == 0 && adShowCount != 0) {
+                if (mNavItemId != R.id.menu_launches) {
+                    loadAd();
+                }
+            }
+        }
+    }
 
     public void hideAdIfEnabled() {
         if (adviewEnabled) {
@@ -996,7 +1007,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             if (mNavItemId != R.id.menu_launches) {
                 loadAd();
             } else {
-                checkShowAd();
+                checkRefreshAd();
             }
         }
     }
@@ -1010,6 +1021,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
             } else {
                 Bundle extras = new Bundle();
                 extras.putString("npa", "1");
+
                 adView.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
             }
             adView.setAdListener(new AdListener() {
@@ -1025,7 +1037,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     } else {
                         showAd();
                     }
-                    adViewLoaded = true;
                     super.onAdLoaded();
                 }
             });
