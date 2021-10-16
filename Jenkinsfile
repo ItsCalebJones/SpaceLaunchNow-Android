@@ -87,7 +87,7 @@ pipeline {
             }
             steps {
                 // Build the app in release mode, and sign the APK using the environment variables
-                sh './gradlew publishBundle --track=internal'
+                sh './gradlew publishBundle --track=internal --stacktrace'
             }
         }
         stage("Archive Artifacts") {
