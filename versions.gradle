@@ -4,7 +4,8 @@ ext {
             versionMajor: 3,
             versionMinor: 10,
             versionPatch: 0,
-            versionCode: 13
+            versionCode: 14
+//            versionCode: Integer.valueOf(System.env.BUILD_NUMBER ?: 0)
     ]
 
     // Sdk and tools

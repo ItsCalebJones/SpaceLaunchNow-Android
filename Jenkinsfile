@@ -10,7 +10,9 @@ def projectName() {
 
 pipeline {
     agent any
-
+     tools{
+         jdk 'openjdk-11'
+     }
     options {
     // Stop the build early in case of compile or test failures
     skipStagesAfterUnstable()
