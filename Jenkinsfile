@@ -95,6 +95,25 @@ pipeline {
                 }
             }
         }
+        stage('Run Tests') {
+            steps {
+                echo 'Running Tests'
+                script {
+                    VARIANT = getBuildType()
+                    sh "./gradlew test${VARIANT}UnitTest"
+                }
+            }
+        }
+        stage('Assemble Debug') {
+        when { expression { return isDeployCandidate() } }
+            steps {
+                echo 'Running Tests'
+                script {
+                    VARIANT = getBuildType()
+                    sh "./gradlew assemble${VARIANT}"
+                }
+            }
+        }
         stage('Build Bundle') {
             when { expression { return isDeployCandidate() } }
             steps {
