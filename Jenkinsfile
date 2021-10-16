@@ -52,7 +52,7 @@ def isDeployCandidate() {
 }
 
 pipeline {
-    agent { any }
+    agent any
 
     options {
     // Stop the build early in case of compile or test failures
