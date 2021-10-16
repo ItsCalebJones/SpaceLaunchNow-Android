@@ -37,8 +37,12 @@ def getTrackType() {
     }
 }
 
+def isDeployCandidate() {
+    return ("${env.BRANCH_NAME}" =~ /(dev|master)/)
+}
+
 pipeline {
-    agent any
+    agent { dockerfile true }
 
     options {
     // Stop the build early in case of compile or test failures
@@ -61,6 +65,11 @@ pipeline {
         DISCORD_URL = credentials('DiscordURL')
         COMMIT_MESSAGE = commitMessage()
         PROJECT_NAME = projectName()
+
+        KEY_PASSWORD = credentials('keyPassword')
+        KEY_ALIAS = credentials('keyAlias')
+        KEYSTORE = credentials('Keystore')
+        STORE_PASSWORD = credentials('storePassword')
     }
 
     stages{
@@ -86,37 +95,43 @@ pipeline {
                 }
             }
         }
-        stage('Compile Sources') {
-           when {
-               not {
-                   branch 'master'
-               }
-           }
+        stage('Build Bundle') {
+            when { expression { return isDeployCandidate() } }
             steps {
-                // Compile the app and its dependencies
-                sh './gradlew compileDebugSources'
-            }
-        }
-        stage("Assemble Debug") {
-           when {
-               not {
-                   branch 'master'
-               }
-           }
-           steps {
+                echo 'Building'
                 script {
-                    sh(script: "./gradlew assembleDebug",
-                       returnStdout: true)
+                    VARIANT = getBuildType()
+                    sh "./gradlew -PstorePass=${STORE_PASSWORD} -Pkeystore=${KEYSTORE} -Palias=${KEY_ALIAS} -PkeyPass=${KEY_PASSWORD} bundle${VARIANT}"
                 }
-           }
-        }
-        stage('Build Release and Publish') {
-            when {
-                branch 'master'
             }
+        }
+        stage('Deploy App to Store') {
+            when { expression { return isDeployCandidate() } }
             steps {
-                // Build the app in release mode, and sign the APK using the environment variables
-                sh './gradlew publishBundle --track=internal'
+                echo 'Deploying'
+                script {
+                    VARIANT = getBuildType()
+                    TRACK = getTrackType()
+
+                    if (TRACK == Constants.RELEASE_TRACK) {
+                        timeout(time: 5, unit: 'MINUTES') {
+                            input "Proceed with deployment to ${TRACK}?"
+                        }
+                    }
+
+                    try {
+                        CHANGELOG = readFile(file: 'CHANGELOG.txt')
+                    } catch (err) {
+                        echo "Issue reading CHANGELOG.txt file: ${err.localizedMessage}"
+                        CHANGELOG = ''
+                    }
+
+                    androidApkUpload googleCredentialsId: 'SpaceLaunchNow_Service_Account',
+                            filesPattern: "**/outputs/bundle/${VARIANT.toLowerCase()}/*.aab",
+                            trackName: TRACK,
+                            recentChangeList: [[language: 'en-US', text: CHANGELOG]]
+                            rolloutPercentage: "0"
+                }
             }
         }
         stage("Archive Artifacts") {

@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM openjdk:11
 
 WORKDIR project/
 
@@ -9,7 +9,7 @@ RUN apt-get update \
 # Set Environment Variables
 ENV SDK_URL="https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip" \
     ANDROID_HOME="/usr/local/android-sdk" \
-    ANDROID_VERSION=29
+    ANDROID_VERSION=31
 
 # Download Android SDK
 RUN mkdir "$ANDROID_HOME" .android \
@@ -23,7 +23,7 @@ RUN mkdir "$ANDROID_HOME" .android \
 
 # Install Android Build Tool and Libraries
 RUN $ANDROID_HOME/tools/bin/sdkmanager --update
-RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;29.0.2" \
+RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;29.0.3" \
     "platforms;android-${ANDROID_VERSION}" \
     "platform-tools"
 
