@@ -9,7 +9,7 @@ def commitMessage() {
             message += "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
         }
     }
-    
+
     return "${message}"
 }
 
@@ -52,7 +52,7 @@ def isDeployCandidate() {
 }
 
 pipeline {
-    agent { dockerfile true }
+    agent { any }
 
     options {
     // Stop the build early in case of compile or test failures
