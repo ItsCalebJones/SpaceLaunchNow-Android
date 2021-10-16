@@ -53,7 +53,9 @@ def isDeployCandidate() {
 
 pipeline {
     agent any
-
+     tools{
+         jdk 'JDK 11'
+     }
     options {
     // Stop the build early in case of compile or test failures
     skipStagesAfterUnstable()

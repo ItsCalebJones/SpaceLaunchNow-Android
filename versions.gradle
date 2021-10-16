@@ -5,6 +5,7 @@ ext {
             versionMinor: 10,
             versionPatch: 1,
             versionCode: Integer.valueOf(System.env.BUILD_NUMBER ?: 0)
+
     ]
 
     // Sdk and tools
@@ -101,9 +102,9 @@ ext.deps = [
         androidyoutubeplayer_chromecast: "com.pierfrancescosoffritti.androidyoutubeplayer:chromecast-sender:0.15",
         statefulLayout                 : "cz.kinst.jakub:android-stateful-layout-simple:2.0.7",
         photoView                      : "com.github.chrisbanes:PhotoView:2.0.0",
-        GDPRDialog                     : "com.github.MFlisar:GDPRDialog:1.2.8",
-        materialAbout                  : "com.github.jrvansuita:MaterialAbout:0.2.3",
-        markdownView                   : "com.github.mukeshsolanki:MarkdownView-Android:1.0.4",
+        GDPRDialog                     : "com.github.MFlisar:GDPRDialog:1.3.0",
+        materialAbout                  : "com.github.ItsCalebJones:MaterialAbout:0.2.5.4",
+        markdownView                   : "com.github.mukeshsolanki:MarkdownView-Android:1.0.8",
         onboarding                     : "com.codemybrainsout.onboarding:onboarder:1.0.4",
         materialdaterangepicker        : "com.borax12.materialdaterangepicker:library:1.9",
         recyclerview_fastscroll        : "com.simplecityapps:recyclerview-fastscroll:1.0.20",
