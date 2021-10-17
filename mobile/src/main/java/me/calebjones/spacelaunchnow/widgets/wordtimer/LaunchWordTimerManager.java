@@ -101,7 +101,7 @@ public class LaunchWordTimerManager {
             launchRealms = query.findAll().sort("net", Sort.ASCENDING);
             Timber.v("loadLaunches - Realm query created.");
         } else {
-            launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
+            launchRealms = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm, false);
             Timber.v("loadLaunches - Filtered Realm query created.");
         }
 

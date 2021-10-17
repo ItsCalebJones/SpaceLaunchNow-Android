@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="me.calebjones.spacelaunchnow">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -16,7 +17,7 @@
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
-        android:name=".LaunchApplication"
+        android:name=".common.LaunchApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="${appNameLabel}"

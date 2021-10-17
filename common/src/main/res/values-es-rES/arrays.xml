@@ -43,8 +43,19 @@
         <item>Formato 12 horas AM/PM</item>
         <item>Formato 24 h</item>
     </string-array>
-    <string-array name="theme_list_array" tools:ignore="InconsistentArrays">
+    <string-array name="time_format_array_entries" translatable="false">
+        <item>Por defecto</item>
+        <item>Formato 12 horas AM/PM</item>
+        <item>Formato 24 h</item>
+    </string-array>
+    <string-array name="theme_list_array" translatable="false">
         <item>Claro</item>
         <item>Oscuro</item>
+        <item>Por defecto</item>
+    </string-array>
+    <string-array name="theme_entry_array" translatable="false">
+        <item>claro</item>
+        <item>oscuro</item>
+        <item>por defecto</item>
     </string-array>
 </resources>

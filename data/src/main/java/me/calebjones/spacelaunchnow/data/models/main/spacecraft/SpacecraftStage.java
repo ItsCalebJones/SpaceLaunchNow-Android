@@ -39,9 +39,6 @@ public class SpacecraftStage extends RealmObject {
     @SerializedName("spacecraft")
     @Expose
     public Spacecraft spacecraft;
-    @SerializedName("launch")
-    @Expose
-    public LaunchList launch;
     @SerializedName("docking_events")
     @Expose
     public RealmList<DockingEvent> dockingEvents = null;
@@ -108,14 +105,6 @@ public class SpacecraftStage extends RealmObject {
 
     public void setSpacecraft(Spacecraft spacecraft) {
         this.spacecraft = spacecraft;
-    }
-
-    public LaunchList getLaunch() {
-        return launch;
-    }
-
-    public void setLaunch(LaunchList launch) {
-        this.launch = launch;
     }
 
     public RealmList<DockingEvent> getDockingEvents() {

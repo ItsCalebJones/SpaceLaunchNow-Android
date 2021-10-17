@@ -140,7 +140,7 @@
                         app:buttonTint="@color/white" />
 
                     <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/casc_switch"
+                        android:id="@+id/fg_switch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="6dp"
@@ -150,7 +150,7 @@
                         app:buttonTint="@color/white" />
 
                     <androidx.appcompat.widget.AppCompatCheckBox
-                        android:id="@+id/isro_switch"
+                        android:id="@+id/texas_switch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="6dp"

@@ -2,8 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion 28
-
+    compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
@@ -24,6 +23,8 @@ android {
 
 }
 
+
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':data')
@@ -41,6 +42,8 @@ dependencies {
     implementation deps.reyclerview
     implementation deps.materialDialogCore
     implementation deps.materialDialogCommons
+    implementation deps.once
+    
     // Iconography
     implementation deps.iconicsCore
     implementation deps.googleMaterialTypeface

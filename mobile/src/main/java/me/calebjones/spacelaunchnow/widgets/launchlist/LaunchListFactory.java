@@ -68,7 +68,7 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
             launchRealms = query.sort("net", Sort.ASCENDING).findAll();
             Timber.v("loadLaunches - Realm query created.");
         } else {
-            launchRealms = QueryBuilder.buildSwitchQuery(context, mRealm);
+            launchRealms = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm, false);
             Timber.v("loadLaunches - Filtered Realm query created - size: %s", launchRealms.size());
         }
 
@@ -155,23 +155,13 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
         }
 
         if (launch.getName() != null) {
-            title = launch.getName().split("\\|");
-            try {
-                if (title.length > 0) {
-                    row.setTextViewText(R.id.launch_rocket, title[1].trim());
-                    row.setTextViewText(R.id.mission, title[0].trim());
-                } else {
-                    row.setTextViewText(R.id.launch_rocket, launch.getName());
-                    if (launch.getMission() != null) {
-                        row.setTextViewText(R.id.mission, launch.getMission().getName());
-                    }
-                }
-            } catch (ArrayIndexOutOfBoundsException exception) {
-                row.setTextViewText(R.id.launch_rocket, launch.getName());
-                if (launch.getMission() != null) {
-                    row.setTextViewText(R.id.mission, launch.getMission().getName());
-                }
-
+            row.setTextViewText(R.id.launch_rocket, launch.getName());
+            if (launch.getMission() != null) {
+                row.setTextViewText(R.id.mission, launch.getMission().getName());
+            } else if (launch.getLaunchServiceProvider() != null) {
+                row.setTextViewText(R.id.mission, launch.getLaunchServiceProvider().getName());
+            } else {
+                row.setTextViewText(R.id.mission, "");
             }
         }
 

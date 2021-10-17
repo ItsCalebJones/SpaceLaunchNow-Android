@@ -20,7 +20,7 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
-            app:tabTextColor="@color/material_color_white"
+            style="@style/BaseAppTheme.TabBarOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

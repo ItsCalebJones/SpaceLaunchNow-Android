@@ -27,7 +27,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.airbnb.deeplinkdispatch.DeepLink;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.crashlytics.android.Crashlytics;
 import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -63,11 +62,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.events.list.EventListFragment;
@@ -76,6 +75,7 @@ import me.calebjones.spacelaunchnow.common.ui.generate.Rate;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.news.ui.NewsViewPager;
+import me.calebjones.spacelaunchnow.starship.ui.StarshipViewPager;
 import me.calebjones.spacelaunchnow.ui.changelog.ChangelogActivity;
 import me.calebjones.spacelaunchnow.ui.intro.OnboardingActivity;
 import me.calebjones.spacelaunchnow.ui.main.launches.LaunchesViewPager;
@@ -84,13 +84,18 @@ import me.calebjones.spacelaunchnow.ui.main.vehicles.VehiclesViewPager;
 import me.calebjones.spacelaunchnow.ui.AboutActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.ui.supporter.BecomeSupporterActivity;
 import me.calebjones.spacelaunchnow.utils.Utils;
 import me.calebjones.spacelaunchnow.utils.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.astronauts.list.AstronautListFragment;
 import timber.log.Timber;
 
-@DeepLink("https://spacelaunchnow.me/")
+@DeepLink({
+        "https://spacelaunchnow.me/",
+        "https://spacelaunchnow.me/launch/upcoming",
+        "https://spacelaunchnow.me/launch/upcoming/",
+        "https://spacelaunchnow.me/launch/previous",
+        "https://spacelaunchnow.me/launch/previous/"
+})
 public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, NextLaunchFragment.CallBackListener {
 
     private static final String NAV_ITEM_ID = "navItemId";
@@ -112,6 +117,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private SpacestationListFragment mSpacestationListFragment;
     private EventListFragment mEventsFragment;
     private AstronautListFragment mAstronautsListFragment;
+    private StarshipViewPager mStarshipDashboardFragment;
     private Drawer drawer = null;
     private SharedPreferences sharedPref;
     private SwitchPreferences switchPreferences;
@@ -126,6 +132,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private static final String VEHICLE_TAG = "VEHICLE_VIEWPAGER";
     private static final String ISS_TAG = "ISS_TAG";
     private static final String ASTRONAUT_TAG = "ASTRONAUT_TAG";
+    private static final String STARSHIP_TAG = "STARSHIP_TAG";
     private static final String EVENTS_TAG = "EVENTS_TAG";
     private static final String ASTRONAUT_DETAIL_TAG = "ASTRONAUT_DETAIL_TAG";
 
@@ -136,23 +143,25 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     private String action;
     private boolean showFilter = false;
     private String newsUrl;
+    private boolean allowsPersonalAds = false;
+    private boolean allowAds = false;
+    private int adShowCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Timber.d("onCreate");
-        if (!Fabric.isInitialized()) {
-            Fabric.with(this, new Crashlytics());
-        }
 
         int m_theme = R.style.BaseAppTheme;
 
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
             showFilter = true;
             startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
-        } else if (!Once.beenDone("show2020dialog") &&
+        } else if (!Once.beenDone("show2021dialog") &&
                 Once.beenDone("appOpen", Amount.moreThan(5))) {
-            Once.markDone("show2020dialog");
-            becomeSupporter();
+            Once.markDone("show2021dialog");
+            if (!SupporterHelper.is2021Supporter()) {
+                becomeSupporter();
+            }
         }
 
         // Get intent, action and MIME type
@@ -244,6 +253,11 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                                 .withIcon(FontAwesome.Icon.faw_user_astronaut)
                                 .withName(getString(R.string.astronauts))
                                 .withIdentifier(R.id.menu_astronauts)
+                                .withSelectable(true),
+                        new PrimaryDrawerItem()
+                                .withIcon(this.getDrawable(R.drawable.ic_starship))
+                                .withName(getString(R.string.starship))
+                                .withIdentifier(R.id.menu_starship)
                                 .withSelectable(true),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem()
@@ -381,7 +395,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         super.onResume();
         Timber.v("onResume");
 
-
         if ("SHOW_FILTERS".equals(action)) {
             getIntent().setAction("");
             showFilter = true;
@@ -412,7 +425,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 final Handler handler = new Handler();
                 handler.postDelayed(() -> showChangelogSnackbar(), 1000);
 
-            } else  if (!SupporterHelper.isSupporter()) {
+            } else if (!SupporterHelper.isSupporter()) {
                 if (!Once.beenDone("userCheckedSupporter")) {
                     if (Once.beenDone("appOpen", Amount.exactly(3))) {
                         if (!Once.beenDone("showRemoveAdThree") && !SupporterHelper.isSupporter()) {
@@ -500,7 +513,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     }
 
     private void becomeSupporter() {
-        Intent becomeSupporter = new Intent(this, BecomeSupporterActivity.class);
+        Intent becomeSupporter = new Intent(this, SupporterActivity.class);
         startActivity(becomeSupporter);
     }
 
@@ -622,6 +635,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_launches:
                 setActionBarTitle("Space Launch Now");
@@ -634,6 +648,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkHideAd();
                 break;
             case R.id.menu_news:
                 setActionBarTitle(getString(R.string.space_launch_news));
@@ -660,6 +675,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_iss:
                 setActionBarTitle(getString(R.string.spacestations));
@@ -673,6 +689,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_astronauts:
                 setActionBarTitle(getString(R.string.astronauts));
@@ -686,6 +703,21 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
+                break;
+            case R.id.menu_starship:
+                setActionBarTitle("Starship Development");
+                mNavItemId = R.id.menu_starship;
+                drawer.setSelection(mNavItemId, false);
+                removeAppBarElevation();
+                if (mStarshipDashboardFragment == null)
+                    mStarshipDashboardFragment = StarshipViewPager.newInstance();
+                navigateToFragment(mStarshipDashboardFragment, STARSHIP_TAG);
+
+                if (rate != null) {
+                    rate.showRequest();
+                }
+                checkRefreshAd();
                 break;
             case R.id.menu_events:
                 setActionBarTitle(getString(R.string.events));
@@ -699,6 +731,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_vehicle:
                 setActionBarTitle(getString(R.string.vehicles));
@@ -711,6 +744,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 if (rate != null) {
                     rate.showRequest();
                 }
+                checkRefreshAd();
                 break;
             case R.id.menu_launch:
                 Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
@@ -833,18 +867,39 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
 
     private void showAd() {
         Timber.v("Showing Ad!");
-        if (adviewEnabled && adView.getVisibility() == View.GONE) {
+        if ((adviewEnabled && adView.getVisibility() == View.GONE) || (adviewEnabled && adView.getVisibility() == View.INVISIBLE)) {
             adView.setVisibility(View.VISIBLE);
         }
     }
+
 
     public void checkHideAd() {
         hideAd();
     }
 
     public void checkShowAd() {
-        if (adviewEnabled) {
+        Timber.v("Checking if Ads are showing!");
+        if (adviewEnabled && mNavItemId != R.id.menu_launches) {
             showAd();
+        }
+    }
+
+    public void checkRefreshAd() {
+        adShowCount += 1;
+        if (adviewEnabled) {
+            checkShowAd();
+            Timber.v("Ad show count - %s", adShowCount);
+            if (adShowCount % 9 == 0 && adShowCount != 0) {
+                if (mNavItemId != R.id.menu_launches) {
+                    loadAd();
+                }
+            }
+        }
+    }
+
+    public void hideAdIfEnabled() {
+        if (adviewEnabled) {
+            hideAd();
         }
     }
 
@@ -933,22 +988,32 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
     }
 
     private void configureAdState(GDPRConsentState consentState) {
-        boolean allowsPersonalAds = true;
-        boolean allowAds = true;
-        GDPRConsent consent = consentState.getConsent();
+        allowsPersonalAds = true;
+        if (Once.beenDone("appOpen", Amount.moreThan(3))) {
+            allowAds = true;
+            GDPRConsent consent = consentState.getConsent();
 
-        if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
-                && consent == GDPRConsent.UNKNOWN) {
-            allowAds = false;
-        } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
-                && consent == GDPRConsent.NO_CONSENT
-                || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
-            allowsPersonalAds = false;
-        } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
-            GDPR.getInstance().resetConsent();
+            if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                    && consent == GDPRConsent.UNKNOWN) {
+                allowAds = false;
+            } else if (consentState.getLocation() == GDPRLocation.IN_EAA_OR_UNKNOWN
+                    && consent == GDPRConsent.NO_CONSENT
+                    || consent == GDPRConsent.NON_PERSONAL_CONSENT_ONLY) {
+                allowsPersonalAds = false;
+            } else if (consentState.getLocation() == GDPRLocation.NOT_IN_EAA) {
+                GDPR.getInstance().resetConsent();
+            }
+
+            if (mNavItemId != R.id.menu_launches) {
+                loadAd();
+            } else {
+                checkRefreshAd();
+            }
         }
+    }
 
-        Timber.v("Load Ads");
+    private void loadAd() {
+        Timber.v("Checking supporter or not.");
         if (!SupporterHelper.isSupporter() && allowAds) {
             Timber.d("Loading ads.");
             if (allowsPersonalAds) {
@@ -960,12 +1025,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 adView.loadAd(new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class, extras).build());
             }
             adView.setAdListener(new AdListener() {
-                @Override
-                public void onAdFailedToLoad(int i) {
-                    Timber.d("Failed to load ads.");
-                    adviewEnabled = false;
-                    super.onAdFailedToLoad(i);
-                }
 
                 @Override
                 public void onAdLoaded() {

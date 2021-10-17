@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.R;
+import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.launches.launcher.LauncherLaunchActivity;
@@ -76,7 +77,6 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         if (launchVehicle != null) {
 
             holder.launchesButton.setText(String.format(mContext.getString(R.string.view_rocket_launches), launchVehicle.getFullName()));
-            holder.vehicleSpecView.setVisibility(View.VISIBLE);
             if (launchVehicle.getDescription() != null && launchVehicle.getDescription().length() > 0) {
                 holder.vehicleDescription.setVisibility(View.VISIBLE);
                 holder.vehicleDescription.setText(launchVehicle.getDescription());
@@ -85,45 +85,69 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
             }
 
             if (launchVehicle.getLength() != null) {
-                holder.vehicleSpecsHeight.setText(String.format(mContext.getString(R.string.height_full), launchVehicle.getLength()));
+                holder.launchVehicleSpecsHeight.setText(String.format(mContext.getString(me.calebjones.spacelaunchnow.common.R.string.height_value), launchVehicle.getLength()));
             } else {
-                holder.vehicleSpecsHeight.setText(mContext.getString(R.string.height));
+                holder.launchVehicleSpecsHeight.setText(" - ");
             }
 
             if (launchVehicle.getDiameter() != null) {
-                holder.vehicleSpecsDiameter.setText(String.format(mContext.getString(R.string.diameter_full), launchVehicle.getDiameter()));
+                holder.launchVehicleSpecsDiameter.setText(String.format(mContext.getString(me.calebjones.spacelaunchnow.common.R.string.diameter_value), launchVehicle.getDiameter()));
             } else {
-                holder.vehicleSpecsDiameter.setText(mContext.getString(R.string.diameter));
+                holder.launchVehicleSpecsDiameter.setText(" - ");
             }
 
             if (launchVehicle.getMaxStage() != null) {
-                holder.vehicleSpecsStages.setText(String.format(mContext.getString(R.string.stage_full), launchVehicle.getMaxStage()));
+                holder.launchVehicleSpecsStages.setText(String.format(mContext.getString(me.calebjones.spacelaunchnow.common.R.string.stage_value), launchVehicle.getMaxStage()));
             } else {
-                holder.vehicleSpecsStages.setText(mContext.getString(R.string.stages));
+                holder.launchVehicleSpecsStages.setText(" - ");
             }
 
             if (launchVehicle.getLeoCapacity() != null) {
-                holder.vehicleSpecsLeo.setText(String.format(mContext.getString(R.string.mass_leo_full), launchVehicle.getLeoCapacity()));
+                holder.launchVehicleSpecsLeo.setText(String.format(mContext.getString(me.calebjones.spacelaunchnow.common.R.string.mass_leo_value), launchVehicle.getLeoCapacity()));
             } else {
-                holder.vehicleSpecsLeo.setText(mContext.getString(R.string.mass_to_leo));
+                holder.launchVehicleSpecsLeo.setText(" - ");
             }
 
             if (launchVehicle.getGtoCapacity() != null) {
-                holder.vehicleSpecsGto.setText(String.format(mContext.getString(R.string.mass_gto_full), launchVehicle.getGtoCapacity()));
+                holder.launchVehicleSpecsGto.setText(String.format(mContext.getString(me.calebjones.spacelaunchnow.common.R.string.mass_gto_value), launchVehicle.getGtoCapacity()));
             } else {
-                holder.vehicleSpecsGto.setText(mContext.getString(R.string.mass_to_gto));
+                holder.launchVehicleSpecsGto.setText(" - ");
             }
 
             if (launchVehicle.getLaunchMass() != null) {
-                holder.vehicleSpecsLaunchMass.setText(String.format(mContext.getString(R.string.mass_launch_full), launchVehicle.getLaunchMass()));
+                holder.launchVehicleSpecsLaunchMass.setText(String.format(mContext.getString(me.calebjones.spacelaunchnow.common.R.string.mass_launch_value), launchVehicle.getLaunchMass()));
             } else {
-                holder.vehicleSpecsLaunchMass.setText(mContext.getString(R.string.mass_at_launch));
+                holder.launchVehicleSpecsLaunchMass.setText(" - ");
             }
 
             if (launchVehicle.getToThrust() != null) {
-                holder.vehicleSpecsThrust.setText(String.format(mContext.getString(R.string.thrust_full), launchVehicle.getToThrust()));
+                holder.launchVehicleSpecsThrust.setText(String.format(mContext.getString(me.calebjones.spacelaunchnow.common.R.string.thrust_value), launchVehicle.getToThrust()));
             } else {
-                holder.vehicleSpecsThrust.setText(mContext.getString(R.string.thrust));
+                holder.launchVehicleSpecsThrust.setText(" - ");
+            }
+
+            if (launchVehicle.getConsecutiveSuccessfulLaunches() != null) {
+                holder.consecutiveSuccess.setText(String.valueOf(launchVehicle.getConsecutiveSuccessfulLaunches()));
+            } else {
+                holder.consecutiveSuccess.setText(" - ");
+            }
+
+            if (launchVehicle.getSuccessfulLaunches() != null) {
+                holder.launchSuccess.setText(String.valueOf(launchVehicle.getSuccessfulLaunches()));
+            } else {
+                holder.launchSuccess.setText(" - ");
+            }
+
+            if (launchVehicle.getTotalLaunchCount() != null) {
+                holder.launchTotal.setText(String.valueOf(launchVehicle.getTotalLaunchCount()));
+            } else {
+                holder.launchTotal.setText(" - ");
+            }
+
+            if (launchVehicle.getFailedLaunches() != null) {
+                holder.launchFailure.setText(String.valueOf(launchVehicle.getFailedLaunches()));
+            } else {
+                holder.launchFailure.setText(" - ");
             }
 
 
@@ -188,26 +212,36 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         @BindView(R.id.launch_vehicle_description)
         TextView vehicleDescription;
 
-        @BindView(R.id.launch_vehicle_specs_height)
-        TextView vehicleSpecsHeight;
-        @BindView(R.id.launch_vehicle_specs_diameter)
-        TextView vehicleSpecsDiameter;
-        @BindView(R.id.launch_vehicle_specs_stages)
-        TextView vehicleSpecsStages;
-        @BindView(R.id.launch_vehicle_specs_leo)
-        TextView vehicleSpecsLeo;
-        @BindView(R.id.launch_vehicle_specs_gto)
-        TextView vehicleSpecsGto;
-        @BindView(R.id.launch_vehicle_specs_launch_mass)
-        TextView vehicleSpecsLaunchMass;
-        @BindView(R.id.launch_vehicle_specs_thrust)
-        TextView vehicleSpecsThrust;
+        @BindView(R2.id.launch_vehicle_specs_height_value)
+        TextView launchVehicleSpecsHeight;
+        @BindView(R2.id.launch_vehicle_specs_diameter_value)
+        TextView launchVehicleSpecsDiameter;
+        @BindView(R2.id.launch_vehicle_specs_stages_value)
+        TextView launchVehicleSpecsStages;
+        @BindView(R2.id.launch_vehicle_specs_leo_value)
+        TextView launchVehicleSpecsLeo;
+        @BindView(R2.id.launch_vehicle_specs_gto_value)
+        TextView launchVehicleSpecsGto;
+        @BindView(R2.id.launch_vehicle_specs_launch_mass_value)
+        TextView launchVehicleSpecsLaunchMass;
+        @BindView(R2.id.launch_vehicle_specs_thrust_value)
+        TextView launchVehicleSpecsThrust;
+
+
+        @BindView(R2.id.launch_success_value)
+        TextView launchSuccess;
+        @BindView(R2.id.consecutive_success_value)
+        TextView consecutiveSuccess;
+        @BindView(R2.id.launch_total_value)
+        TextView launchTotal;
+        @BindView(R2.id.launch_failure_value)
+        TextView launchFailure;
+
+
         @BindView(R.id.vehicle_infoButton)
         AppCompatButton infoButton;
         @BindView(R.id.vehicle_wikiButton)
         AppCompatButton wikiButton;
-        @BindView(R.id.vehicle_spec_view)
-        Group vehicleSpecView;
         @BindView(R.id.launcher_launches)
         AppCompatButton launchesButton;
 

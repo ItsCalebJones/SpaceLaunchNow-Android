@@ -57,6 +57,7 @@ import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.NewsListAdapter;
+import me.calebjones.spacelaunchnow.common.ui.adapters.UpdateAdapter;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.common.ui.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.common.ui.views.DialogAdapter;
@@ -68,6 +69,7 @@ import me.calebjones.spacelaunchnow.common.youtube.models.VideoListItem;
 import me.calebjones.spacelaunchnow.common.youtube.models.VideoResponse;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.Pad;
+import me.calebjones.spacelaunchnow.data.models.main.VidURL;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 
@@ -107,6 +109,10 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     YouTubePlayerView youTubePlayerView;
     @BindView(R2.id.related_card)
     View relatedCard;
+    @BindView(R2.id.update_card)
+    View updateCard;
+    @BindView(R2.id.update_recycler_view)
+    RecyclerView updateRecyclerView;
 
     private SharedPreferences sharedPref;
     private ListPreferences sharedPreference;
@@ -126,6 +132,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private NewsDataRepository dataRepository;
     private NewsListAdapter listAdapter;
     boolean isYouTubePlaying = false;
+    private UpdateAdapter updateAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -179,91 +186,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
         setUpViews(launch);
     }
 
-    private void fetchPastWeather() {
-        future = false;
-        weatherCard.setTitle(getString(R.string.launch_day_weather));
-        if (detailLaunch.getPad() != null) {
-
-            Pad pad = detailLaunch.getPad();
-
-            double latitude = Double.parseDouble(pad.getLatitude());
-            double longitude = Double.parseDouble(pad.getLongitude());
-
-            Unit unit;
-
-            if (sharedPref.getBoolean("weather_US_SI", true)) {
-                unit = Unit.US;
-            } else {
-                unit = Unit.SI;
-            }
-
-            long longTime = detailLaunch.getNet().getTime() / 1000;
-            int time = (int) longTime;
-            ForecastClient.getInstance().getForecast(latitude, longitude, time, null, unit, null, false, new Callback<Forecast>() {
-                @Override
-                public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
-                    if (response.isSuccessful()) {
-                        Forecast forecast = response.body();
-                        if (SummaryDetailFragment.this.isVisible()) {
-                            updateWeatherView(forecast);
-                        }
-                    } else {
-                        Timber.e("Error: %s", response.errorBody());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Forecast> forecastCall, Throwable t) {
-                    Timber.e("ERROR: %s", t.getLocalizedMessage());
-                }
-            });
-        }
-    }
-
-    private void updateWeatherView(Forecast forecast) {
-        weatherCard.setWeather(forecast, detailLaunch.getPad().getLocation().getName(), future, nightMode);
-        weatherCard.setVisibility(View.VISIBLE);
-    }
-
-    private void fetchCurrentWeather() {
-        future = true;
-        // Sample WeatherLib client init
-        if (detailLaunch.getPad() != null) {
-
-            Pad pad = detailLaunch.getPad();
-
-            double latitude = Double.parseDouble(pad.getLatitude());
-            double longitude = Double.parseDouble(pad.getLongitude());
-
-            Unit unit;
-
-            if (sharedPref.getBoolean("weather_US_SI", true)) {
-                unit = Unit.US;
-            } else {
-                unit = Unit.SI;
-            }
-
-            ForecastClient.getInstance()
-                    .getForecast(latitude, longitude, null, null, unit, null, false, new Callback<Forecast>() {
-                        @Override
-                        public void onResponse(Call<Forecast> forecastCall, Response<Forecast> response) {
-                            if (response.isSuccessful()) {
-                                Forecast forecast = response.body();
-                                if (SummaryDetailFragment.this.isVisible()) {
-                                    updateWeatherView(forecast);
-                                }
-                            } else {
-                                Timber.e("Error: %s", response.errorBody());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Forecast> forecastCall, Throwable t) {
-                            Timber.e("ERROR: %s", t.getLocalizedMessage());
-                        }
-                    });
-        }
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -282,18 +204,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
     private void setUpViews(Launch launch) {
         try {
             getLifecycle().addObserver(youTubePlayerView);
-            weatherCard.setVisibility(View.GONE);
             videosEmpty.setVisibility(View.GONE);
             detailLaunch = launch;
-
-            // Check if Weather card is enabled, defaults to false if null.
-            if (sharedPref.getBoolean("weather", false)) {
-                if (detailLaunch.getNet().after(Calendar.getInstance().getTime())) {
-                    fetchCurrentWeather();
-                } else {
-                    fetchPastWeather();
-                }
-            }
 
             fetchRelatedNews(launch.getId());
 
@@ -309,8 +221,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
             if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
 
-                for (RealmStr url : detailLaunch.getVidURLs()) {
-                    youTubeURL = getYouTubeID(url.getVal());
+                for (VidURL url : detailLaunch.getVidURLs()) {
+                    youTubeURL = Utils.getYouTubeID(url.getUrl());
                     if (youTubeURL != null) break;
                 }
 
@@ -343,7 +255,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                                 context.startActivity(sendIntent);
                             } else {
                                 String url = item.getVideoURL().toString();
-                                String youTubeID = getYouTubeID(url);
+                                String youTubeID = Utils.getYouTubeID(url);
                                 if (youTubePlayer != null && youTubeID != null) {
                                     youTubeURL = youTubeID;
                                     if (dialog != null && dialog.isShowing())
@@ -358,80 +270,12 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                             }
                         });
 
-                        for (RealmStr s : detailLaunch.getVidURLs()) {
+                        for (VidURL s : detailLaunch.getVidURLs()) {
                             //Do your stuff here
-                            try {
-                                URI uri = new URI(s.getVal());
-                                String name;
-                                YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context, context.getResources().getString(R.string.GoogleMapsKey));
-                                if (uri.getHost().contains("youtube")) {
-                                    name = "YouTube";
-                                    String youTubeURL = getYouTubeID(s.getVal());
-                                    if (youTubeURL.contains("spacex/live")){
-                                        adapter.add(new VideoListItem.Builder(context)
-                                                .content("YouTube - SpaceX Livestream")
-                                                .videoURL(s.getVal())
-                                                .build());
-                                    } else {
-                                        youTubeAPIHelper.getVideoById(youTubeURL,
-                                                new Callback<VideoResponse>() {
-                                                    @Override
-                                                    public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                                                        if (response.isSuccessful()) {
-                                                            if (response.body() != null) {
-                                                                List<Video> videos = response.body().getVideos();
-                                                                if (videos.size() > 0) {
-                                                                    try {
-                                                                        adapter.add(new VideoListItem.Builder(context)
-                                                                                .content(videos.get(0).getSnippet().getTitle())
-                                                                                .videoURL(s.getVal())
-                                                                                .build());
-                                                                    } catch (Exception e) {
-                                                                        adapter.add(new VideoListItem.Builder(context)
-                                                                                .content(name)
-                                                                                .videoURL(s.getVal())
-                                                                                .build());
-                                                                    }
-                                                                } else {
-                                                                    adapter.add(new VideoListItem.Builder(context)
-                                                                            .content(name)
-                                                                            .videoURL(s.getVal())
-                                                                            .build());
-                                                                }
-                                                            } else {
-                                                                adapter.add(new VideoListItem.Builder(context)
-                                                                        .content(name)
-                                                                        .videoURL(s.getVal())
-                                                                        .build());
-                                                            }
-                                                        } else {
-                                                            adapter.add(new VideoListItem.Builder(context)
-                                                                    .content(name)
-                                                                    .videoURL(s.getVal())
-                                                                    .build());
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onFailure(Call<VideoResponse> call, Throwable t) {
-                                                        adapter.add(new VideoListItem.Builder(context)
-                                                                .content(name)
-                                                                .videoURL(s.getVal())
-                                                                .build());
-                                                    }
-                                                });
-                                    }
-                                } else {
-                                    name = uri.getHost();
-                                    adapter.add(new VideoListItem.Builder(context)
-                                            .content(name)
-                                            .videoURL(s.getVal())
-                                            .build());
-                                }
-
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                            }
+                            adapter.add(new VideoListItem.Builder(context)
+                                    .content(s.getName())
+                                    .videoURL(s.getUrl())
+                                    .build());
                         }
 
                         MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
@@ -442,6 +286,7 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                         dialog = builder.show();
                     }
                 });
+
             } else {
                 if (future) {
                     videosEmpty.setVisibility(View.VISIBLE);
@@ -449,6 +294,16 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 watchButton.setVisibility(View.GONE);
                 errorMessage.setText(getString(R.string.video_source_unavailable));
                 errorMessage.setVisibility(View.VISIBLE);
+            }
+
+            if (detailLaunch.getUpdates() != null && detailLaunch.getUpdates().size() > 0){
+                updateAdapter = new UpdateAdapter(context);
+                updateRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+                updateRecyclerView.setAdapter(updateAdapter);
+                updateAdapter.addItems(detailLaunch.getUpdates());
+                updateCard.setVisibility(View.VISIBLE);
+            } else {
+                updateCard.setVisibility(View.GONE);
             }
 
             //Try to convert to Month day, Year.
@@ -512,19 +367,6 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             youTubePlayer.cueVideo(videoId, 0);
         else
             youTubePlayer.cueVideo(videoId, 0);
-    }
-
-
-    private String getYouTubeID(String vidURL) {
-        final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([a-zA-Z0-9_-]{11}|[a-zA-Z].*)";
-        final Pattern pattern = Pattern.compile(regex);
-
-        Matcher matcher = pattern.matcher(vidURL);
-        Timber.v("Checking for match of %s", vidURL);
-        if (matcher.find() && (matcher.group(1) != null || matcher.group(2) != null) && matcher.group(5) != null) {
-            return matcher.group(5);
-        }
-        return null;
     }
 
     private void setupCountdownTimer(Launch launch) {

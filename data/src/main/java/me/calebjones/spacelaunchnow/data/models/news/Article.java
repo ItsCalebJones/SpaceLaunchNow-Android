@@ -17,7 +17,7 @@ public class Article {
     @SerializedName("categories")
     @Expose
     public List<String> categories = null;
-    @SerializedName("news_site_long")
+    @SerializedName("newsSite")
     @Expose
     public String newsSite;
     @SerializedName("title")
@@ -32,13 +32,10 @@ public class Article {
     @SerializedName("launches")
     @Expose
     public RealmList<RealmStr> launches = null;
-    @SerializedName("date_published")
+    @SerializedName("publishedAt")
     @Expose
     public Date datePublished;
-    @SerializedName("date_Added")
-    @Expose
-    public Date dateAdded;
-    @SerializedName("featured_image")
+    @SerializedName("imageUrl")
     @Expose
     public String featuredImage;
 
@@ -96,14 +93,6 @@ public class Article {
 
     public void setDatePublished(Date datePublished) {
         this.datePublished = datePublished;
-    }
-
-    public Date getDateAdded() {
-        return dateAdded;
-    }
-
-    public void setDateAdded(Date dateAdded) {
-        this.dateAdded = dateAdded;
     }
 
     public String getFeaturedImage() {

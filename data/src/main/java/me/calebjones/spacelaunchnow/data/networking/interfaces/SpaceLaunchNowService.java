@@ -4,6 +4,7 @@ import me.calebjones.spacelaunchnow.data.BuildConfig;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
+import me.calebjones.spacelaunchnow.data.models.main.dashboards.Starship;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.Spacecraft;
@@ -31,11 +32,11 @@ import retrofit2.http.Query;
 
 public interface SpaceLaunchNowService {
 
-    String version = "api/3.4.0";
+    String version = "api/ll/2.2.0";
 
     // Spacecraft Configs
     // GET: /config/spacecraft
-    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_CODE})
     @GET(version + "/config/spacecraft")
     Call<SpacecraftConfigResponse> getSpacecraftConfigs(@Query("limit") int amount, @Query("offset") int offset,
                                                         @Query("search") String search, @Query("launch_agency") int status,
@@ -64,11 +65,14 @@ public interface SpaceLaunchNowService {
     // GET: /agencies/
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/agencies/")
-    Call<AgencyResponse> getAgencies(@Query("featured") Boolean featured, @Query("mode") String mode);
+    Call<AgencyResponse> getAgencies(@Query("featured") Boolean featured,
+                                     @Query("mode") String mode,
+                                     @Query("limit") int limit);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/agencies/")
-    Call<AgencyResponse> getAgenciesWithOrbiters(@Query("spacecraft") boolean orbiters);
+    Call<AgencyResponse> getAgenciesWithOrbiters(@Query("spacecraft") boolean orbiters,
+                                                 @Query("limit") int limit);
 
 
     // Launches
@@ -178,7 +182,7 @@ public interface SpaceLaunchNowService {
     // Astronaut
     // GET: /astronaut/
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
-    @GET(version + "/astronaut/{id}/?mode=launch_list")
+    @GET(version + "/astronaut/{id}/?mode=launchlist")
     Call<Astronaut> getAstronautsById(@Path("id") int id);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
@@ -249,20 +253,25 @@ public interface SpaceLaunchNowService {
                                              @Query("serial_number") String serialNumber,
                                              @Query("flight_proven") Boolean flightProven,
                                              @Query("launcher_config") Integer launcherConfig,
-                                             @Query("launcher_config__launch_agency") Integer agency);
+                                             @Query("launcher_config__launch_agency") Integer agency,
+                                             @Query("mode") String mode);
 
 
     // Events
     // GET: /event
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/event/upcoming/")
-    Call<EventResponse> getUpcomingEvents(@Query("limit") int amount, @Query("offset") int offset);
+    Call<EventResponse> getUpcomingEvents(@Query("limit") int amount, @Query("offset") int offset, @Query("mode") String mode);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/event/{id}/")
-    Call<Event> getEventById(@Path("id") int id);
+    Call<Event> getEventById(@Path("id") int id, @Query("mode") String mode);
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/event/")
-    Call<EventResponse> getEventBySlug(@Query("slug") String slug);
+    Call<EventResponse> getEventBySlug(@Query("slug") String slug, @Query("mode") String mode);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/dashboard/starship/")
+    Call<Starship> getStarshipDashboard(@Query("mode") String mode);
 }

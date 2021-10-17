@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <include layout="@layout/starship_dashboard_livestream_card" />
+
+    <include layout="@layout/starship_dashboard_upnext" />
+
+    <include layout="@layout/starship_dashboard_roadclosure_card" />
+
+    <include layout="@layout/starship_dashboard_notices_card" />
+
+</LinearLayout>

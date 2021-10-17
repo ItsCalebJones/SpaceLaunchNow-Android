@@ -5,6 +5,7 @@ import java.io.IOException;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
+import me.calebjones.spacelaunchnow.data.models.main.dashboards.Starship;
 import me.calebjones.spacelaunchnow.data.models.main.spacecraft.Spacecraft;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
@@ -80,6 +81,16 @@ public class DataClient {
         return call;
     }
 
+    public Call<Starship> getStarshipDashboard(Callback<Starship> callback) {
+        Call<Starship> call;
+
+        call = spaceLaunchNowService.getStarshipDashboard("list");
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
     public Call<LaunchResponse> getNextUpcomingLaunchesForWidgets(int limit, int offset) {
         Call<LaunchResponse> call = spaceLaunchNowService.getUpcomingLaunches(limit, offset, "detailed", null, null, null, null, null);
         return call;
@@ -146,8 +157,8 @@ public class DataClient {
         return call;
     }
 
-    public Call<AgencyResponse> getFeaturedAgencies(Callback<AgencyResponse> callback) {
-        Call<AgencyResponse> call = spaceLaunchNowService.getAgencies(true, "list");
+    public Call<AgencyResponse> getFeaturedAgencies(Callback<AgencyResponse> callback, int limit) {
+        Call<AgencyResponse> call = spaceLaunchNowService.getAgencies(true, "list", limit);
 
         call.enqueue(callback);
 
@@ -220,7 +231,7 @@ public class DataClient {
     }
 
     public Call<EventResponse> getUpcomingEvents(int limit, int offset, Callback<EventResponse> callback) {
-        Call<EventResponse> call = spaceLaunchNowService.getUpcomingEvents(limit, offset);
+        Call<EventResponse> call = spaceLaunchNowService.getUpcomingEvents(limit, offset, "list");
 
         call.enqueue(callback);
 
@@ -228,7 +239,15 @@ public class DataClient {
     }
 
     public Call<Event> getEventById(int id, Callback<Event> callback) {
-        Call<Event> call = spaceLaunchNowService.getEventById(id);
+        Call<Event> call = spaceLaunchNowService.getEventById(id, "list");
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<EventResponse> getEventBySlug(String slug, Callback<EventResponse> callback) {
+        Call<EventResponse> call = spaceLaunchNowService.getEventBySlug(slug, "list");
 
         call.enqueue(callback);
 

@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.crashlytics.android.Crashlytics;
+import com.clockbyte.admobadapter.bannerads.AdmobBannerRecyclerAdapterWrapper;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -41,7 +41,6 @@ import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 
 import me.calebjones.spacelaunchnow.common.content.data.Callbacks;
 import me.calebjones.spacelaunchnow.common.content.data.upcoming.UpcomingDataRepository;
-import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.utils.views.filter.LaunchFilterDialog;
@@ -55,6 +54,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
 
     private View view;
     private ListAdapter adapter;
+    private AdmobBannerRecyclerAdapterWrapper adapterWrapper;
     private LinearLayoutManager layoutManager;
     private Context context;
     private UpcomingDataRepository upcomingDataRepository;
@@ -107,6 +107,7 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
         layoutManager.getInitialPrefetchItemCount();
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
+
         mRecyclerView.setAdapter(adapter);
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -254,26 +255,12 @@ public class UpcomingLaunchesFragment extends BaseFragment implements SearchView
             f = Fragment.class.getDeclaredField("mChildFragmentManager");
             f.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            Crashlytics.logException(e);
             Timber.e("Error getting mChildFragmentManager field %s", e);
         }
         sChildFragmentManagerField = f;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
 
-        if (sChildFragmentManagerField != null) {
-            try {
-                sChildFragmentManagerField.set(this, null);
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                e.getLocalizedMessage();
-                Timber.e("Error setting mChildFragmentManager field %s ", e);
-            }
-        }
-    }
 
     @Override
     public void onDestroyView() {

@@ -90,6 +90,19 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
                 holder.flightProven.setImageResource(R.drawable.ic_failed);
             }
             holder.previousText.setText(String.format("%d", stage.getLauncher().getPreviousFlights()));
+
+            if (launcher.getAttemptedLandings() != null) {
+                holder.landingTotal.setText(String.valueOf(launcher.getAttemptedLandings()));
+            } else {
+                holder.landingTotal.setText(" - ");
+            }
+
+            if (launcher.getSuccessfulLandings() != null) {
+                holder.landingSuccess.setText(String.valueOf(launcher.getSuccessfulLandings()));
+            } else {
+                holder.landingSuccess.setText(" - ");
+            }
+
         } else {
             holder.viewCoreLaunches.setVisibility(View.GONE);
         }
@@ -247,6 +260,11 @@ public class StageInformationAdapter extends RecyclerView.Adapter<StageInformati
         TextView landingInformationTitle;
         @BindView(R2.id.coreImage)
         ImageView coreImage;
+
+        @BindView(R2.id.landing_success_count_value)
+        TextView landingSuccess;
+        @BindView(R2.id.landing_total_value)
+        TextView landingTotal;
 
 
         //Add content to the card

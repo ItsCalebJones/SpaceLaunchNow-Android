@@ -8,7 +8,6 @@ import java.util.Date;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 
 public class Launch extends RealmObject {
 
@@ -22,13 +21,16 @@ public class Launch extends RealmObject {
     @SerializedName("url")
     @Expose
     public String url;
+    @SerializedName("flightclub_url")
+    @Expose
+    public String flightclub;
     @SerializedName("slug")
     @Expose
     public String slug;
     @SerializedName("name")
     @Expose
     public String name;
-    @SerializedName("img_url")
+    @SerializedName("image")
     @Expose
     public String imgUrl;
     @SerializedName("status")
@@ -46,12 +48,6 @@ public class Launch extends RealmObject {
     @SerializedName("inhold")
     @Expose
     public Boolean inhold;
-    @SerializedName("tbdtime")
-    @Expose
-    public Boolean tbdtime;
-    @SerializedName("tbddate")
-    @Expose
-    public Boolean tbddate;
     @SerializedName("probability")
     @Expose
     public Integer probability;
@@ -72,22 +68,29 @@ public class Launch extends RealmObject {
     public Pad pad;
     @SerializedName("infoURLs")
     @Expose
-    public RealmList<RealmStr> infoURLs = null;
+    public RealmList<InfoURL> infoURLs = null;
     @SerializedName("vidURLs")
     @Expose
-    public RealmList<RealmStr> vidURLs = null;
+    public RealmList<VidURL> vidURLs = null;
+    @SerializedName("updates")
+    @Expose
+    public RealmList<Update> updates = null;
     @SerializedName("rocket")
     @Expose
     public Rocket rocket;
     @SerializedName("launch_service_provider")
     @Expose
     public Agency launchServiceProvider;
+    @SerializedName("mission_patches")
+    @Expose
+    public RealmList<MissionPatch> patches = null;
 
     public Long eventID;
     public Date lastUpdate;
 
     public String getSlug() {
-        return slug;
+        String baseUrl = "https://spacelaunchnow.me/launch/";
+        return baseUrl + slug;
     }
 
     public void setSlug(String slug) {
@@ -190,22 +193,6 @@ public class Launch extends RealmObject {
         this.inhold = inhold;
     }
 
-    public Boolean getTbdtime() {
-        return tbdtime;
-    }
-
-    public void setTbdtime(Boolean tbdtime) {
-        this.tbdtime = tbdtime;
-    }
-
-    public Boolean getTbddate() {
-        return tbddate;
-    }
-
-    public void setTbddate(Boolean tbddate) {
-        this.tbddate = tbddate;
-    }
-
     public Integer getProbability() {
         return probability;
     }
@@ -254,19 +241,19 @@ public class Launch extends RealmObject {
         this.pad = pad;
     }
 
-    public RealmList<RealmStr> getInfoURLs() {
+    public RealmList<InfoURL> getInfoURLs() {
         return infoURLs;
     }
 
-    public void setInfoURLs(RealmList<RealmStr> infoURLs) {
+    public void setInfoURLs(RealmList<InfoURL> infoURLs) {
         this.infoURLs = infoURLs;
     }
 
-    public RealmList<RealmStr> getVidURLs() {
+    public RealmList<VidURL> getVidURLs() {
         return vidURLs;
     }
 
-    public void setVidURLs(RealmList<RealmStr> vidURLs) {
+    public void setVidURLs(RealmList<VidURL> vidURLs) {
         this.vidURLs = vidURLs;
     }
 
@@ -276,5 +263,29 @@ public class Launch extends RealmObject {
 
     public void setLaunchServiceProvider(Agency launchServiceProvider) {
         this.launchServiceProvider = launchServiceProvider;
+    }
+
+    public RealmList<Update> getUpdates() {
+        return updates;
+    }
+
+    public void setUpdates(RealmList<Update> updates) {
+        this.updates = updates;
+    }
+
+    public String getFlightclub() {
+        return flightclub;
+    }
+
+    public void setFlightclub(String flightclub) {
+        this.flightclub = flightclub;
+    }
+
+    public RealmList<MissionPatch> getPatches() {
+        return patches;
+    }
+
+    public void setPatches(RealmList<MissionPatch> patches) {
+        this.patches = patches;
     }
 }

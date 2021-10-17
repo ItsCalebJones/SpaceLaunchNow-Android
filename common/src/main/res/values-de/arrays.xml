@@ -43,8 +43,19 @@
         <item>12-Stunden AM/PM Format</item>
         <item>24-Stunden Format</item>
     </string-array>
-    <string-array name="theme_list_array" tools:ignore="InconsistentArrays">
+    <string-array name="time_format_array_entries" translatable="false">
+        <item>Standard</item>
+        <item>12-Stunden Zeit Format (AM/PM)</item>
+        <item>24-Stunden Zeit Format</item>
+    </string-array>
+    <string-array name="theme_list_array" translatable="false">
         <item>Hell</item>
         <item>Dunkel</item>
+        <item>Standard</item>
+    </string-array>
+    <string-array name="theme_entry_array" translatable="false">
+        <item>Hell</item>
+        <item>Dunkel</item>
+        <item>Standard</item>
     </string-array>
 </resources>

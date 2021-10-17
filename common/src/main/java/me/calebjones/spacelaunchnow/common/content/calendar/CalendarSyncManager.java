@@ -90,7 +90,7 @@ public class CalendarSyncManager extends BaseManager {
 
     private void handleActionSyncAll() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        launches = QueryBuilder.buildUpcomingSwitchQueryForCalendar(context, mRealm);
+        launches = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm, true);
 
         RealmList<Launch> launchResults = new RealmList<>();
 
@@ -132,7 +132,7 @@ public class CalendarSyncManager extends BaseManager {
                         mRealm.executeTransaction((Realm mRealm1) -> mRealm1.copyToRealmOrUpdate(launchResponse.getLaunches()));
                         mRealm.close();
                         RealmList<Launch> launchResults = new RealmList<>();
-                        launches = QueryBuilder.buildUpcomingSwitchQueryForCalendar(context, mRealm);
+                        launches = QueryBuilder.buildUpcomingSwitchQuery(context, mRealm, true);
                         if (launches.size() > 10) {
                             launchResults.addAll(launches.subList(0, 10));
                         } else if (launches.size() > 0)  {

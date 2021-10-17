@@ -184,11 +184,6 @@ public class NewsListFragment extends BaseFragment implements SwipeRefreshLayout
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
     public void onRefresh() {
         if (searchTerm != null || statusIDs != null) {
             statusIDs = null;

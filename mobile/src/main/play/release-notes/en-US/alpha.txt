@@ -1,3 +1,1 @@
 Changelog
-* Add 'Related News' to launches via the Spaceflight News API.
-* Update in-app translations.

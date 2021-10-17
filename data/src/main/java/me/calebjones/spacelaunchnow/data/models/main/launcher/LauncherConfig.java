@@ -3,6 +3,8 @@ package me.calebjones.spacelaunchnow.data.models.main.launcher;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
@@ -76,6 +78,24 @@ public class LauncherConfig extends RealmObject {
     @SerializedName("wiki_url")
     @Expose
     public String wikiUrl;
+    @SerializedName("maiden_flight")
+    @Expose
+    public Date maidenFlight;
+    @SerializedName("total_launch_count")
+    @Expose
+    public Integer totalLaunchCount;
+    @SerializedName("consecutive_successful_launches")
+    @Expose
+    public Integer consecutiveSuccessfulLaunches;
+    @SerializedName("successful_launches")
+    @Expose
+    public Integer successfulLaunches;
+    @SerializedName("failed_launches")
+    @Expose
+    public Integer failedLaunches;
+    @SerializedName("pending_launches")
+    @Expose
+    public Integer pendingLaunches;
 
     public Agency getManufacturer() {
         return manufacturer;
@@ -251,5 +271,53 @@ public class LauncherConfig extends RealmObject {
 
     public void setWikiUrl(String wikiUrl) {
         this.wikiUrl = wikiUrl;
+    }
+
+    public Integer getTotalLaunchCount() {
+        return totalLaunchCount;
+    }
+
+    public void setTotalLaunchCount(Integer totalLaunchCount) {
+        this.totalLaunchCount = totalLaunchCount;
+    }
+
+    public Integer getConsecutiveSuccessfulLaunches() {
+        return consecutiveSuccessfulLaunches;
+    }
+
+    public void setConsecutiveSuccessfulLaunches(Integer consecutiveSuccessfulLaunches) {
+        this.consecutiveSuccessfulLaunches = consecutiveSuccessfulLaunches;
+    }
+
+    public Integer getSuccessfulLaunches() {
+        return successfulLaunches;
+    }
+
+    public void setSuccessfulLaunches(Integer successfulLaunches) {
+        this.successfulLaunches = successfulLaunches;
+    }
+
+    public Integer getFailedLaunches() {
+        return failedLaunches;
+    }
+
+    public void setFailedLaunches(Integer failedLaunches) {
+        this.failedLaunches = failedLaunches;
+    }
+
+    public Integer getPendingLaunches() {
+        return pendingLaunches;
+    }
+
+    public void setPendingLaunches(Integer pendingLaunches) {
+        this.pendingLaunches = pendingLaunches;
+    }
+
+    public Date getMaidenFlight() {
+        return maidenFlight;
+    }
+
+    public void setMaidenFlight(Date maidenFlight) {
+        this.maidenFlight = maidenFlight;
     }
 }

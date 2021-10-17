@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NavUtils;
 import androidx.core.app.TaskStackBuilder;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,12 +39,15 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
+import jonathanfinerty.once.Amount;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
@@ -161,8 +165,8 @@ public class LaunchDetailActivity extends BaseActivity
                 .build();
 
         rate.showRequest();
-
-        if (!SupporterHelper.isSupporter()) {
+        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
+                Amount.moreThan(3))) {
             AdRequest adRequest = new AdRequest.Builder().build();
             adView.loadAd(adRequest);
             adView.setAdListener(new AdListener() {
@@ -170,11 +174,6 @@ public class LaunchDetailActivity extends BaseActivity
                 @Override
                 public void onAdLoaded() {
                     adView.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    adView.setVisibility(View.GONE);
                 }
 
             });
@@ -189,20 +188,20 @@ public class LaunchDetailActivity extends BaseActivity
         tabAdapter = new TabsAdapter(this);
         viewPager.setAdapter(tabAdapter);
         viewPager.setOffscreenPageLimit(3);
-        viewPager.addOnPageChangeListener( new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled( int position, float v, int i1 ) {
+            public void onPageScrolled(int position, float v, int i1) {
             }
 
             @Override
-            public void onPageSelected( int position ) {
+            public void onPageSelected(int position) {
             }
 
             @Override
-            public void onPageScrollStateChanged( int state ) {
-                enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+            public void onPageScrollStateChanged(int state) {
+                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE);
             }
-        } );
+        });
 
         tabLayout.setupWithViewPager(viewPager);
 
@@ -266,7 +265,7 @@ public class LaunchDetailActivity extends BaseActivity
                     Timber.e(message);
                     SnackbarHandler.showErrorSnackbar(context, coordinatorLayout, message);
                 }
-                if (fromLink){
+                if (fromLink) {
                     Toast.makeText(context, message, Toast.LENGTH_LONG).show();
                     navigateHome();
                 } else {
@@ -469,7 +468,7 @@ public class LaunchDetailActivity extends BaseActivity
                     }
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             Timber.e(e);
         }
     }
@@ -586,7 +585,7 @@ public class LaunchDetailActivity extends BaseActivity
             ShareCompat.IntentBuilder.from(this)
                     .setType("text/plain")
                     .setChooserTitle("Share: " + launch.getName())
-                    .setText(String.format("%s\n\nWatch Live: %s", message, launch.getSlug()))
+                    .setText(launch.getSlug())
                     .startChooser();
         } else {
             SnackbarHandler.showErrorSnackbar(this, coordinatorLayout, "Error - unable to share this launch.");
@@ -619,7 +618,7 @@ public class LaunchDetailActivity extends BaseActivity
         }
         if (id == android.R.id.home) {
             // IF activity is opened from notification - go to home screen directly.
-            if (fromNotification != null && fromNotification){
+            if (fromNotification != null && fromNotification) {
                 navigateHome();
 
             } else {
@@ -631,7 +630,7 @@ public class LaunchDetailActivity extends BaseActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void navigateHome(){
+    private void navigateHome() {
         Intent mainIntent;
         try {
             mainIntent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.ui.main.MainActivity"));

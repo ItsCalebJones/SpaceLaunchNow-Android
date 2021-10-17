@@ -28,7 +28,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.MenuItemCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,12 +51,11 @@ import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
-import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.content.data.next.NextLaunchDataRepository;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.ui.debug.DebugActivity;
 import me.calebjones.spacelaunchnow.ui.main.MainActivity;
-import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.common.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.utils.views.animator.FabExtensionAnimator;
 import me.calebjones.spacelaunchnow.widgets.launchcard.LaunchCardCompactManager;
 import me.calebjones.spacelaunchnow.widgets.launchcard.LaunchCardCompactWidgetProvider;
@@ -72,6 +70,14 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     private static final int FAB_MODE_FILTER = 1;
     private static final int FAB_MODE_CLOSE = 2;
     private static final int FAB_MODE_APPLY = 3;
+    @BindView(R.id.strict_switch)
+    SwitchCompat strictSwitch;
+    @BindView(R.id.misc_switch)
+    AppCompatCheckBox miscSwitch;
+    @BindView(R.id.texas_switch)
+    AppCompatCheckBox texasSwitch;
+    @BindView(R.id.kodiak_switch)
+    AppCompatCheckBox kodiakSwitch;
     @BindView(R.id.van_switch)
     AppCompatCheckBox vanSwitch;
     @BindView(R.id.ples_switch)
@@ -92,10 +98,20 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     AppCompatCheckBox ulaSwitch;
     @BindView(R.id.arianespace_switch)
     AppCompatCheckBox arianespaceSwitch;
-    @BindView(R.id.casc_switch)
+    @BindView(R.id.china_switch)
     AppCompatCheckBox cascSwitch;
-    @BindView(R.id.isro_switch)
+    @BindView(R.id.india_switch)
     AppCompatCheckBox isroSwitch;
+    @BindView(R.id.northrop_switch)
+    AppCompatCheckBox northropSwitch;
+    @BindView(R.id.wallops_switch)
+    AppCompatCheckBox wallopsSwitch;
+    @BindView(R.id.new_zealand_switch)
+    AppCompatCheckBox newZealandSwitch;
+    @BindView(R.id.japan_switch)
+    AppCompatCheckBox japanSwitch;
+    @BindView(R.id.fg_switch)
+    AppCompatCheckBox frenchGuianaSwitch;
     @BindView(R.id.all_switch)
     SwitchCompat allSwitch;
     @BindView(R.id.all_info)
@@ -126,16 +142,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.color_reveal)
     CoordinatorLayout colorReveal;
-    @BindView(R.id.northrop_switch)
-    AppCompatCheckBox northropSwitch;
-    @BindView(R.id.wallops_switch)
-    AppCompatCheckBox wallopsSwitch;
-    @BindView(R.id.new_zealand_switch)
-    AppCompatCheckBox newZealandSwitch;
-    @BindView(R.id.japan_switch)
-    AppCompatCheckBox japanSwitch;
-    @BindView(R.id.french_guiana_switch)
-    AppCompatCheckBox frenchGuianaSwitch;
 
     private View view;
     private CardAdapter adapter;
@@ -303,6 +309,10 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         frenchGuianaSwitch.setChecked(switchPreferences.getSwitchFG());
         japanSwitch.setChecked(switchPreferences.getSwitchJapan());
         persistLastSwitch.setChecked(switchPreferences.getPersistSwitch());
+        texasSwitch.setChecked(switchPreferences.getSwitchTexas());
+        kodiakSwitch.setChecked(switchPreferences.getSwitchKodiak());
+        miscSwitch.setChecked(switchPreferences.getSwitchOtherLocations());
+        strictSwitch.setChecked(switchPreferences.getSwitchStrictMatching());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -375,7 +385,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
 
     public void fetchData(boolean forceRefresh) {
         Timber.v("Sending GET_UP_LAUNCHES");
-        preferredCount = 5;
+        preferredCount = 20;
         nextLaunchDataRepository.getNextUpcomingLaunches(preferredCount, forceRefresh, new Callbacks.NextLaunchesCallback() {
             @Override
             public void onLaunchesLoaded(RealmResults<Launch> launches) {
@@ -666,7 +676,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         checkAll();
     }
 
-    @OnClick(R.id.french_guiana_switch)
+    @OnClick(R.id.fg_switch)
     public void french_guiana_switch() {
         confirm();
         switchPreferences.setSwitchFG(!switchPreferences.getSwitchFG());
@@ -687,15 +697,15 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         checkAll();
     }
 
-    @OnClick(R.id.casc_switch)
-    public void casc_switch() {
+    @OnClick(R.id.china_switch)
+    public void china_switch() {
         confirm();
         switchPreferences.setSwitchCASC(!switchPreferences.getSwitchCASC());
         checkAll();
     }
 
-    @OnClick(R.id.isro_switch)
-    public void isro_switch() {
+    @OnClick(R.id.india_switch)
+    public void india_switch() {
         confirm();
         switchPreferences.setSwitchISRO(!switchPreferences.getSwitchISRO());
         checkAll();
@@ -750,6 +760,34 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         checkAll();
     }
 
+    @OnClick(R.id.kodiak_switch)
+    public void kodiak_switch() {
+        confirm();
+        switchPreferences.setSwitchKodiak(!switchPreferences.getSwitchKodiak());
+        checkAll();
+    }
+    
+    @OnClick(R.id.texas_switch)
+    public void texas_switch() {
+        confirm();
+        switchPreferences.setSwitchTexas(!switchPreferences.getSwitchTexas());
+        checkAll();
+    }
+
+    @OnClick(R.id.misc_switch)
+    public void miscSwitch() {
+        confirm();
+        switchPreferences.setSwitchOtherLocation(!switchPreferences.getSwitchOtherLocations());
+        checkAll();
+    }
+
+    @OnClick(R.id.strict_switch)
+    public void strict_switch() {
+        confirm();
+        switchPreferences.setSwitchStrictMatching(!switchPreferences.getSwitchStrictMatching());
+        setUpSwitches();
+    }
+
     @OnClick(R.id.all_switch)
     public void all_switch() {
         confirm();
@@ -775,7 +813,7 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
         startActivity(intent);
     }
 
-    @OnClick({R.id.tbd_info, R.id.last_launch_info, R.id.all_info})
+    @OnClick({R.id.tbd_info, R.id.last_launch_info, R.id.all_info, R.id.other_info})
     public void onViewClicked(View view) {
         MaterialDialog.Builder dialog = new MaterialDialog.Builder(context);
         dialog.positiveText("Ok");
@@ -788,6 +826,9 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
                 break;
             case R.id.all_info:
                 dialog.title("Follow All Launches").content("This option follows all launches available, some of which do not fit neatly into a category listed above.").show();
+                break;
+            case R.id.other_info:
+                dialog.title(R.string.strict_matching_title).content(R.string.strict_matching).show();
                 break;
         }
     }

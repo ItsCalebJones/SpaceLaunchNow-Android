@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -19,6 +20,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +34,7 @@ import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.content.LaunchStatusUtil;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
+import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
 
@@ -40,7 +43,7 @@ import timber.log.Timber;
 /**
  * This adapter takes data from ListPreferences/LoaderService and applies it to RecyclerView
  */
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
+public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int position;
     private RealmList<LaunchList> launchList;
     private Context mContext;
@@ -104,14 +107,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         return new ViewHolder(v);
     }
 
+
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int i) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder rHolder, int i) {
         final LaunchList launchItem = launchList.get(i);
 
         String[] title;
         String launchDate;
 
         position = i;
+
+        ListAdapter.ViewHolder holder = (ListAdapter.ViewHolder) rHolder;
 
         //Retrieve missionType
         if (launchItem.getImage() != null) {
@@ -144,7 +150,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             //Get launch date
             launchDate = sdf.format(launchItem.getNet());
 
-            holder.launch_date.setText(String.format(mContext.getString(R.string.to_be_determined_with_value), launchDate));
+            holder.launch_date.setText(launchDate);
         } else {
             launchDate = sdf.format(launchItem.getNet());
             holder.launch_date.setText(launchDate);
@@ -193,9 +199,17 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             holder.orbitCard.setVisibility(View.GONE);
         }
 
-        holder.status.setText(launchItem.getStatus().getName());
+        holder.status.setText(launchItem.getStatus().getAbbrev());
+        holder.status.setOnClickListener(v -> {
+            Toast.makeText(mContext, launchItem.getStatus().getDescription(), Toast.LENGTH_LONG).show();
+        });
         holder.statusCard.setCardBackgroundColor(LaunchStatusUtil.getLaunchStatusColor(mContext, launchItem.getStatus().getId()));
-
+        holder.rootView.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, LaunchDetailActivity.class);
+            intent.putExtra("TYPE", "launch");
+            intent.putExtra("launchID", launchItem.getId());
+            mContext.startActivity(intent);
+        });
     }
 
     @Override
@@ -203,7 +217,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         return launchList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R2.id.status)
         TextView status;
         @BindView(R2.id.status_pill_mini)
@@ -226,6 +240,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         TextView mission;
         @BindView(R2.id.categoryIcon)
         ImageView categoryIcon;
+        @BindView(R2.id.rootview)
+        View rootView;
 
 
         //Add content to the card
@@ -233,23 +249,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
             super(view);
             ButterKnife.bind(this, view);
 
-            categoryIcon.setOnClickListener(this);
-            title.setOnClickListener(this);
-            location.setOnClickListener(this);
-            launch_date.setOnClickListener(this);
-            mission.setOnClickListener(this);
         }
 
-        //React to click events.
-        @Override
-        public void onClick(View v) {
-            final LaunchList launch = launchList.get(getAdapterPosition());
-
-            Intent intent = new Intent(mContext, LaunchDetailActivity.class);
-            intent.putExtra("TYPE", "launch");
-            intent.putExtra("launchID", launch.getId());
-            mContext.startActivity(intent);
-        }
     }
 
 }

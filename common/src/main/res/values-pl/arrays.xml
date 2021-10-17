@@ -43,8 +43,19 @@
         <item>Dwunastogodzinny format czasu (AM/PM)</item>
         <item>Dwudziestoczterogodzinny format czasu</item>
     </string-array>
-    <string-array name="theme_list_array" tools:ignore="InconsistentArrays">
+    <string-array name="time_format_array_entries" translatable="false">
+        <item>Domyślny</item>
+        <item>Format 12-godzinny</item>
+        <item>Format 24-godzinny</item>
+    </string-array>
+    <string-array name="theme_list_array" translatable="false">
         <item>Jasny</item>
         <item>Ciemny</item>
+        <item>Domyślny</item>
+    </string-array>
+    <string-array name="theme_entry_array" translatable="false">
+        <item>jasny</item>
+        <item>ciemny</item>
+        <item>domyślny</item>
     </string-array>
 </resources>

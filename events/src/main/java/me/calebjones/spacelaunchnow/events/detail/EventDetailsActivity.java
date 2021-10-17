@@ -42,12 +42,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.kinst.jakub.view.SimpleStatefulLayout;
 import de.hdodenhof.circleimageview.CircleImageView;
+import jonathanfinerty.once.Amount;
+import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseActivityOld;
 import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ExpeditionAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.SpacestationAdapter;
+import me.calebjones.spacelaunchnow.common.ui.adapters.UpdateAdapter;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
@@ -119,6 +122,10 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
     AppCompatButton eventWebButton;
     @BindView(R2.id.event_watch_button)
     AppCompatButton eventWatchButton;
+    @BindView(R2.id.update_card)
+    View updateCard;
+    @BindView(R2.id.update_recycler_view)
+    RecyclerView updateRecyclerView;
 
 
 
@@ -143,6 +150,7 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
     private ListAdapter adapter;
     private ExpeditionAdapter expeditionAdapter;
     private SpacestationAdapter spacestationAdapter;
+    private UpdateAdapter updateAdapter;
     private boolean fromDeepLink = false;
     private static final String ACTION_DEEP_LINK = "deep_link";
 
@@ -215,7 +223,8 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
         });
         fetchData(mEventId, slug);
 
-        if (!SupporterHelper.isSupporter()) {
+        if (!SupporterHelper.isSupporter() && Once.beenDone("appOpen",
+                Amount.moreThan(3))) {
             AdRequest adRequest = new AdRequest.Builder().build();
             eventAdView.loadAd(adRequest);
             eventAdView.setAdListener(new AdListener() {
@@ -223,11 +232,6 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
                 @Override
                 public void onAdLoaded() {
                     eventAdView.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAdFailedToLoad(int error) {
-                    eventAdView.setVisibility(View.GONE);
                 }
 
             });
@@ -325,6 +329,16 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
         } else {
             spacestationCard.setVisibility(View.GONE);
         }
+
+        if (event.getUpdates() != null && event.getUpdates().size() > 0){
+            updateAdapter = new UpdateAdapter(this);
+            updateRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            updateRecyclerView.setAdapter(updateAdapter);
+            updateAdapter.addItems(event.getUpdates());
+            updateCard.setVisibility(View.VISIBLE);
+        } else {
+            updateCard.setVisibility(View.GONE);
+        }
     }
 
     private void updateViewModel(Event event) {
@@ -398,7 +412,7 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
         ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
                 .setChooserTitle(event.getName())
-                .setText(event.getNewsUrl())
+                .setText("https://spacelaunchnow.me/event/" + event.getId())
                 .startChooser();
     }
 

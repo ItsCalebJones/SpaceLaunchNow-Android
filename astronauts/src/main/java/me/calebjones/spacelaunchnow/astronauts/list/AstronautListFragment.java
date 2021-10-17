@@ -253,10 +253,6 @@ public class AstronautListFragment extends BaseFragment implements SwipeRefreshL
         super.onAttach(context);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 
     @Override
     public void onRefresh() {

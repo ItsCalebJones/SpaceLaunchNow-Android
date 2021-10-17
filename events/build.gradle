@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
@@ -63,6 +63,8 @@ dependencies {
     implementation deps.googleMaterialTypeface
     implementation deps.communityMaterialTypeface
     implementation deps.fontawesomeTypeface
+
+    implementation deps.once
 
     // Iconography
     implementation deps.iconicsCore

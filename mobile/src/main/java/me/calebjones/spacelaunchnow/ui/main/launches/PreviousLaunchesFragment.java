@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.crashlytics.android.Crashlytics;
+import com.clockbyte.admobadapter.bannerads.AdmobBannerRecyclerAdapterWrapper;
 
 import java.util.List;
 
@@ -48,6 +48,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
 
     private View view;
     private ListAdapter adapter;
+    private AdmobBannerRecyclerAdapterWrapper adapterWrapper;
     private LinearLayoutManager layoutManager;
     private Context context;
     private PreviousDataRepository previousDataRepository;
@@ -96,6 +97,7 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
         layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
+
         mRecyclerView.setAdapter(adapter);
 
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
@@ -243,26 +245,12 @@ public class PreviousLaunchesFragment extends BaseFragment implements SearchView
             f = Fragment.class.getDeclaredField("mChildFragmentManager");
             f.setAccessible(true);
         } catch (NoSuchFieldException e) {
-            Crashlytics.logException(e);
             Timber.e("Error getting mChildFragmentManager field %s", e);
         }
         sChildFragmentManagerField = f;
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
 
-        if (sChildFragmentManagerField != null) {
-            try {
-                sChildFragmentManagerField.set(this, null);
-            } catch (Exception e) {
-                Crashlytics.logException(e);
-                e.getLocalizedMessage();
-                Timber.e("Error setting mChildFragmentManager field %s ", e);
-            }
-        }
-    }
 
     @Override
     public void onDestroyView() {

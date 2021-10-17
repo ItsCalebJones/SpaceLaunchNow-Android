@@ -9,7 +9,7 @@
         <item>Quattro ore</item>
         <item>Un giorno</item>
     </string-array>
-    <string-array name="multi_calendar_reminder_values">
+    <string-array name="multi_calendar_reminder_values" translatable="false">
         <item>1</item>
         <item>5</item>
         <item>30</item>
@@ -18,7 +18,7 @@
         <item>480</item>
         <item>1440</item>
     </string-array>
-    <string-array name="multi_calendar_reminder_default">
+    <string-array name="multi_calendar_reminder_default" translatable="false">
         <item>5</item>
         <item>1440</item>
     </string-array>

@@ -72,7 +72,7 @@ public class AboutActivity extends BaseActivityOld {
                         "Discord",
                         "https://discord.gg/WVfzEDW")
                 .addAction(new IconicsDrawable(this)
-                                .icon(CommunityMaterial.Icon.cmd_rocket)
+                                .icon(CommunityMaterial.Icon2.cmd_rocket)
                                 .sizeDp(24).toBitmap(),
                         "Launch Library",
                         "https://launchlibrary.net")

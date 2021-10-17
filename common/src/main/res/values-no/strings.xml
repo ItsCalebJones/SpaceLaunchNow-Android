@@ -8,9 +8,6 @@
     <string name="status_nogo">Oppskytningsdato ubekreftet</string>
     <string name="status_success">"Vellykket oppskytning"</string>
     <string name="status_failure">"Oppskytningsfeil oppstod"</string>
-    <string name="spacex_summary">SpaceX designer, produserer, og skyter opp avanserte raketter og romfartøy. Selskapet ble grunnlagt i 2002 for å revolusjonere rom-teknologi, med et mål om å la folk bo på andre planeter.</string>
-    <string name="usaf_summary">The United States Air Force er luftvåpenet til The United States Armed Forces og er en av syv amerikanske tjenester.</string>
-    <string name="nasa_summary">The National Aeronautics and Space Administration (NASA) er regjeringsbyrået ansvarlig for det sivile romprogrammet samt luftfarts- og romfartsforskning i USA.</string>
     <string name="general_settings">Generelle innstillinger for sporing av oppskytninger, og oppførselen til applikasjonen</string>
     <string name="supporter_title">Bli en Supporter</string>
     <string name="supporter_description">Hjelp til å sikre fortsatt støtte, feilrettinger, og nye funksjoner.</string>

@@ -121,9 +121,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mRealm.close();
         Timber.d("onDestroy");
+        super.onDestroy();
     }
 
     @Override
@@ -167,38 +167,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             case "widget_icon_color":
             case "widget_title_text_color":
             case "widget_list_accent_color":
-            case "widget_refresh_enabled": {
-                Intent intent = null;
-                try {
-                    intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.widgets.WidgetBroadcastReceiver"));
-                    intent.putExtra("updateUIOnly", true);
-                    context.sendBroadcast(intent);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
-            case "widget_theme_round_corner": {
-                Intent intent = null;
-                try {
-                    intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.widgets.WidgetBroadcastReceiver"));
-                    intent.putExtra("updateUIOnly", true);
-                    context.sendBroadcast(intent);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
+            case "widget_refresh_enabled":
+            case "widget_theme_round_corner":
             case "widget_presets": {
-                checkWidgetPreset(Integer.parseInt(sharedPreferences.getString("widget_presets", "2")));
-                Intent intent = null;
-                try {
-                    intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.widgets.WidgetBroadcastReceiver"));
-                    intent.putExtra("updateUIOnly", true);
-                    context.sendBroadcast(intent);
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+                updateWidgetPresets(Integer.parseInt(sharedPreferences.getString("widget_presets", "2")));
                 break;
             }
             case "eventNotifications":
@@ -220,7 +192,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 }
                 break;
             case "netstampChanged":
-                if (Prefs.getBoolean(key, true)) {
+                if (Prefs.getBoolean(key, false)) {
                     firebaseMessaging.subscribeToTopic("netstampChanged");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("netstampChanged");
@@ -234,14 +206,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 }
                 break;
             case "twentyFourHour":
-                if (Prefs.getBoolean(key, true)) {
+                if (Prefs.getBoolean(key, false)) {
                     firebaseMessaging.subscribeToTopic("twentyFourHour");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
                 }
                 break;
             case "oneHour":
-                if (Prefs.getBoolean(key, true)) {
+                if (Prefs.getBoolean(key, false)) {
                     firebaseMessaging.subscribeToTopic("oneHour");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("oneHour");
@@ -255,14 +227,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 }
                 break;
             case "oneMinute":
-                if (Prefs.getBoolean(key, true)) {
+                if (Prefs.getBoolean(key, false)) {
                     firebaseMessaging.subscribeToTopic("oneMinute");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("oneMinute");
                 }
                 break;
             case "inFlight":
-                if (Prefs.getBoolean(key, true)) {
+                if (Prefs.getBoolean(key, false)) {
                     firebaseMessaging.subscribeToTopic("inFlight");
                 } else {
                     firebaseMessaging.unsubscribeFromTopic("inFlight");
@@ -417,6 +389,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             widgetHideSettings.setEnabled(false);
             widgetHideSettings.setSelectable(false);
         }
+        setWidgetPresetsListener();
         Preference localTime = findPreference("local_time");
         localTime.setOnPreferenceChangeListener(createLocalTimeListener());
     }
@@ -452,6 +425,28 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     token.continuePermissionRequest();
                 }
             }).check();
+        }
+    }
+
+    private void setWidgetPresetsListener(){
+        ListPreference widgetPreset = findPreference("widget_presets");
+        if (widgetPreset != null) {
+            widgetPreset.setOnPreferenceChangeListener((preference, newValue) -> {
+                updateWidgetPresets(Integer.parseInt((String) newValue));
+                return true;
+            });
+        }
+    }
+
+    private void updateWidgetPresets(int widgetPosition){
+        checkWidgetPreset(widgetPosition);
+        Intent intent = null;
+        try {
+            intent = new Intent(context, Class.forName("me.calebjones.spacelaunchnow.widgets.WidgetBroadcastReceiver"));
+            intent.putExtra("updateUIOnly", true);
+            context.sendBroadcast(intent);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

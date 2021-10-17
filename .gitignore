@@ -19,3 +19,4 @@ common/src/main/res/values/api_keys.xml
 publisher-key.json
 spacelaunchnow.keystore
 wear/release/output.json
+mobile/google-services.json

@@ -6,7 +6,7 @@ apply plugin: 'realm-android'
 apply plugin: 'com.jakewharton.butterknife'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
@@ -32,13 +32,20 @@ android {
         disable 'RtlCompat'
     }
     buildTypes {
-        debug {}
+        debug{
+            buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+            buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
+
+            //..
+        }
         release {
+            buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+            buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    buildToolsVersion '28.0.3'
+    buildToolsVersion rootProject.buildToolsVersion
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -60,10 +67,11 @@ dependencies {
     implementation deps.materialdrawer
     implementation deps.materialDialogCore
     implementation deps.materialDialogCommons
-    implementation deps.inAppbilling
     implementation deps.workManager
     implementation deps.colorPicker
     implementation deps.firebaseAnalytics
+    implementation deps.crashlytics
+    implementation deps.GDPRDialog
 
     // Iconography
     implementation deps.iconicsCore
@@ -86,9 +94,9 @@ dependencies {
     implementation deps.retrofit
     implementation deps.converter_gson
     implementation deps.gson
-    implementation deps.glide
     implementation deps.legacySupportv4
     implementation deps.vectordrawable
+    implementation deps.glide
     kapt deps.glideCompiler
     implementation deps.glideTransformation
     implementation deps.timber
@@ -98,6 +106,9 @@ dependencies {
     implementation deps.autoValue
     annotationProcessor deps.autoValueProcessor
     implementation deps.statefulLayout
+    //Twitter
+    implementation deps.twitterCore
+    implementation deps.twitterUi
     // YouTube Player
     implementation deps.androidyoutubeplayer_core
     implementation deps.androidyoutubeplayer_chromecast
@@ -107,5 +118,9 @@ dependencies {
     implementation deps.customtabs
     implementation deps.preferences
     implementation deps.deepLinkDispatch
+
+    implementation deps.checkout
+
+    implementation deps.adAdapter
     kapt deps.deepLinkDispatchAnnotation
 }

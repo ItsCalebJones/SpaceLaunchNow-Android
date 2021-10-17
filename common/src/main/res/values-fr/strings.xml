@@ -8,18 +8,6 @@
     <string name="status_nogo">Date de lancement non confirmée</string>
     <string name="status_success">"Lancement Réussi"</string>
     <string name="status_failure">"Échec du Lancement"</string>
-    <string name="spacex_summary">SpaceX conçoit, fabrique et lance des fusées et véhicules spatiaux sophistiqués. L\'entreprise a été fondée en 2002 avec l\'objectif de révolutionner les technologies spatiales, leur but ultime étant de permettre aux humains de vivre sur d\'autres planètes.</string>
-    <string name="usaf_summary">La United States Air Force est l\'armée de l\'air des États-Unis et une des sept branches militaires américaines.</string>
-    <string name="casc_summary">La China Aerospace Science and Technology Corporation (CASC) est le contractant principal du programme spatial chinois. Elle est possédée par l\'Etat et est composée de plusieurs entités qui conçoivent, développent et construisent une variété de véhicules spatiaux, lanceurs, systèmes de missiles stratégiques et tactiques ainsi que de l\'équipement de sol.</string>
-    <string name="cnsa_summary">La China National Space Administration (CNSA) est l\'agence spatiale nationale de la République populaire de Chine. Elle est responsable du programme spatial chinois ainsi que de la planification et du développement des activités spatiales.</string>
-    <string name="isro_summary">La Indian Space Research Organisation (ISRO) est l\'agence spatiale du gouvernement indien basée dans la ville de Bangalore. Sa vision est de \"maîtriser les technologies spatiales pour le développement national, tout en poursuivant la recherche scientifique et l\'exploration spatiale\".</string>
-    <string name="vko_summary">"La Russian Aerospace Defence Forces (VKO) était la branche des forces armées de la Fédération de Russie responsable des défenses antiaériennes et anti-missiles, ainsi que de la gestion des satellites militaires russes et du cosmodrome de Plessetsk. "</string>
-    <string name="roscosmos_summary">La Roscomos State Corporation for Space Activities, plus connue sous le nom de Roscomos, est l\'entité gouvernementale en charge du programme spatial scientifique russe et de la recherche aérospatiale.</string>
-    <string name="ula_summary"><![CDATA[United Launch Allience (ULA) est une coentreprise formée de Lockheed Martin Space Systems et Boeing Defense, Space & Security. ULA a été formée en décembre 2006 en regroupant les équipes de ces deux compagnies fournissant des services de lancement de véhicules spatiaux au gouvernement des États-Unis.]]></string>
-    <string name="gd_summary">General Dynamics Corporation est une entreprise américaine d\'aérospatiale et de défense formée par fusions et séparations. Il s\'agit du cinquième plus grand contractant de défense au monde d\'après les revenus de 2012.</string>
-    <string name="asa_summary">Arianespace SA est une multinationale française fondée en 1980 en tant que le premier fournisseur commercial de lancements spatiaux.</string>
-    <string name="TsSKB_summary">La Progress State Research and Production Space Centre, aussi connu sous le nom de TsSKB-Progress, est une \"Entreprise Unitaire Fédérale d\'État\" russe sous la juridiction de Roscosmos, l\'agence spatiale fédérale russe en charge de la recherche scientifique et aérospatiale. Il s\'agit du concepteur de la fameuse fusée Soyuz-FG utilisée pour des vols habités ainsi que de Soyuz-U, utilisée pour lancer des sondes.</string>
-    <string name="nasa_summary">La National Aeronautics and Space Administration (NASA) est l\'agence spatiale gouvernementale des États-Unis en charge du programme spatiale civil ainsi que de la recherche aéronautique et aérospatiale.</string>
     <string name="general_settings">Paramètres généraux du suivi des lancements et du comportement de l\'application.</string>
     <string name="supporter_title">Devenez un Supporter</string>
     <string name="supporter_description">Aidez à assurer un support constant, des corrections de bugs régulières et l\'implémentation de nouvelles fonctionnalités.</string>
@@ -137,7 +125,7 @@
     <string name="vandenberg_afb">Vandenberg AFB</string>
     <string name="arianespace">Arianespace</string>
     <string name="casc">CASC</string>
-    <string name="isro">ISRO</string>
+    <string name="isro">Inde</string>
     <string name="cape_canaveral">Cape Canaveral</string>
     <string name="plesetsk_cosmodrome">Cosmodrome de Plessetsk</string>
     <string name="all">Tous</string>
@@ -478,6 +466,7 @@
     <string name="spacestations">Stations Spatiales</string>
     <string name="spacestation">Station Spatiale</string>
     <string name="astronauts">Astronautes</string>
+    <string name="starship">Starship</string>
     <string name="events">Événements</string>
     <string name="favorites">Favoris</string>
     <string name="show_me">Montrez Moi</string>
@@ -503,7 +492,7 @@
     <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Russie et Kazakhstan</string>
     <string name="china">Chine</string>
-    <string name="kennedy_space_center_cape_canaveral">Centre Spatial Kennedy / Cap Canaveral</string>
+    <string name="kennedy_space_center_cape_canaveral">Cap Canaveral</string>
     <string name="wallops_island">Île de Wallops</string>
     <string name="new_zealand">Nouvelle Zélande</string>
     <string name="japan">Japon</string>
@@ -564,4 +553,15 @@
     <string name="event_and_news">Notifications d\'événements et de news</string>
     <string name="event_and_news_description">Recevoir des notifications pour les événements \"après lancement\" et articles de presse.</string>
     <string name="choose_theme_mode">Choisir le mode du thème</string>
+    <string name="air_sea_launch">Lancement aérien / maritime</string>
+    <string name="strict_matching">Affiche uniquement les lancements qui correspondent aux agences sélectionnées pour les sites de lancement utilisés par plusieurs agences.\n\n\n\nSi vous voulez uniquement les lancements SpaceX depuis le centre spatial Kennedy, activez le filtrage strict et sélectionnez uniquement CSK et SpaceX.\n\n\nSans le filtrage strict, tous les lancements SpaceX ainsi que tous les lancements depuis le CSK seraient affichés.</string>
+    <string name="strict_matching_title">Filtrage strict</string>
+    <string name="texas">Texas</string>
+    <string name="pacific_spaceport">Pacific Spaceport</string>
+    <string name="include_other_misc_locations">Inclure les autres sites de lancement</string>
+    <string name="view_more_livestreams">Voir plus de directs</string>
+    <string name="notices">Annonces</string>
+    <string name="road_closures">Fermetures de route</string>
+    <string name="up_next">Prochain</string>
+    <string name="overview">Vue d\'ensemble</string>
 </resources>

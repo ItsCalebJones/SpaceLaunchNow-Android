@@ -1,0 +1,72 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':data')
+    implementation project(':common')
+    //Networking
+    implementation deps.retrofit
+    implementation deps.converter_gson
+    implementation deps.gson
+    //Utils
+    implementation deps.timber
+    implementation deps.constraintLayout
+    implementation deps.appcompat
+    implementation deps.legacySupportv4
+    implementation deps.lifecycleExtensions
+    implementation deps.reyclerview
+    implementation deps.materialDialogCore
+    implementation deps.materialDialogCommons
+    // Iconography
+    implementation deps.iconicsCore
+    implementation deps.googleMaterialTypeface
+    implementation deps.communityMaterialTypeface
+    implementation deps.weathericon
+    implementation deps.fontawesomeTypeface
+    //Views
+    implementation deps.statefulLayout
+    implementation deps.butterknife
+    implementation project(path: ':events')
+    implementation deps.glide
+    annotationProcessor deps.glideCompiler
+    implementation deps.playAds
+    implementation deps.material
+    implementation deps.circleImageView
+    implementation deps.materialValue
+
+    // YouTube Player
+    implementation deps.androidyoutubeplayer_core
+    implementation deps.androidyoutubeplayer_chromecast
+
+    implementation deps.glide
+    kapt deps.glideCompiler
+    implementation deps.glideTransformation
+    kapt 'com.jakewharton:butterknife-compiler:10.2.1'
+}

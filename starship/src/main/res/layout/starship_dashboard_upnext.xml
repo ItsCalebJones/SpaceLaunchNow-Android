@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/upnext_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:padding="@dimen/material_baseline_grid_1x"
+        android:text="@string/up_next"
+        android:textAppearance="@style/MaterialTypography.Regular.Title"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <cz.kinst.jakub.view.SimpleStatefulLayout
+        android:id="@+id/upnext_stateful_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:emptyLayout="@layout/empty_generic"
+        app:layout_constraintBottom_toTopOf="@+id/updates_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upnext_title">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/upnext_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </cz.kinst.jakub.view.SimpleStatefulLayout>
+
+    <TextView
+        android:id="@+id/updates_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:padding="@dimen/material_baseline_grid_1x"
+        android:text="@string/status_updates"
+        android:textAppearance="@style/MaterialTypography.Regular.Title"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/upnext_stateful_layout" />
+
+    <cz.kinst.jakub.view.SimpleStatefulLayout
+        android:id="@+id/update_stateful_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:emptyLayout="@layout/empty_generic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/updates_title">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/update_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </cz.kinst.jakub.view.SimpleStatefulLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

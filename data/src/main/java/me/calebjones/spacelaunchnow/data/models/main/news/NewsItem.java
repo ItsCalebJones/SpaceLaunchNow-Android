@@ -13,30 +13,28 @@ import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 public class NewsItem extends RealmObject {
 
     @PrimaryKey
-    @SerializedName("_id")
-    private String id;
+    @SerializedName("id")
+    private int id;
     @SerializedName("title")
     private String title;
-    @SerializedName("news_site_long")
-    private String newsSiteLong;
-    @SerializedName("news_site")
+    @SerializedName("newsSite")
     private String newsSite;
-    @SerializedName("featured_image")
+    @SerializedName("imageUrl")
     private String featured_image;
     @SerializedName("url")
     private String url;
     @SerializedName("launches")
     @Expose
-    public RealmList<RealmStr> launches = null;
-    @SerializedName("date_published")
-    private int datePublished;
+    public RealmList<NewsItemLaunch> launches = null;
+    @SerializedName("publishedAt")
+    private Date datePublished;
     private Date lastUpdate;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -46,14 +44,6 @@ public class NewsItem extends RealmObject {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getNewsSiteLong() {
-        return newsSiteLong;
-    }
-
-    public void setNewsSiteLong(String newsSiteLong) {
-        this.newsSiteLong = newsSiteLong;
     }
 
     public String getNewsSite() {
@@ -80,11 +70,11 @@ public class NewsItem extends RealmObject {
         this.url = url;
     }
 
-    public int getDatePublished() {
+    public Date getDatePublished() {
         return datePublished;
     }
 
-    public void setDatePublished(int datePublished) {
+    public void setDatePublished(Date datePublished) {
         this.datePublished = datePublished;
     }
 
@@ -97,11 +87,11 @@ public class NewsItem extends RealmObject {
     }
 
 
-    public RealmList<RealmStr> getLaunches() {
+    public RealmList<NewsItemLaunch> getLaunches() {
         return launches;
     }
 
-    public void setLaunches(RealmList<RealmStr> launches) {
+    public void setLaunches(RealmList<NewsItemLaunch> launches) {
         this.launches = launches;
     }
 }

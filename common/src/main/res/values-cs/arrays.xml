@@ -43,4 +43,19 @@
         <item>12 hodinový AM/PM formát</item>
         <item>24 hodinový formát</item>
     </string-array>
+    <string-array name="time_format_array_entries" translatable="false">
+        <item>základní</item>
+        <item>12h formát</item>
+        <item>24 hodinový formát</item>
+    </string-array>
+    <string-array name="theme_list_array" translatable="false">
+        <item>světlý</item>
+        <item>tmavý</item>
+        <item>základní</item>
+    </string-array>
+    <string-array name="theme_entry_array" translatable="false">
+        <item>světlý</item>
+        <item>tmavý</item>
+        <item>základní</item>
+    </string-array>
 </resources>

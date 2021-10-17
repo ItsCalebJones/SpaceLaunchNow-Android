@@ -10,7 +10,9 @@ def projectName() {
 
 pipeline {
     agent any
-
+     tools{
+         jdk 'JDK 11'
+     }
     options {
     // Stop the build early in case of compile or test failures
     skipStagesAfterUnstable()
@@ -52,8 +54,8 @@ pipeline {
                 withCredentials([file(credentialsId: 'KeysFile', variable: 'keysFile')]) {
                     sh 'cp $keysFile common/src/main/res/values/api_keys.xml'
                 }
-                withCredentials([file(credentialsId: 'KeysFile', variable: 'keysFile')]) {
-                    sh 'cp $keysFile wear/src/main/res/values/api_keys.xml'
+                withCredentials([file(credentialsId: 'GoogleServiceJson', variable: 'googleServiceJson')]) {
+                    sh 'cp $googleServiceJson mobile/google-services.json'
                 }
             }
         }
@@ -87,7 +89,7 @@ pipeline {
             }
             steps {
                 // Build the app in release mode, and sign the APK using the environment variables
-                sh './gradlew publishBundle --track=internal'
+                sh './gradlew publishBundle --track=internal --stacktrace'
             }
         }
         stage("Archive Artifacts") {
@@ -111,7 +113,6 @@ pipeline {
                         thumbnail: "https://i.imgur.com/UZTtsSR.png",
                         notes: "Hey <@&641718676046872588>, new build completed for ${PROJECT_NAME}!"
             sh '''
-               rm wear/src/main/res/values/api_keys.xml
                rm common/src/main/res/values/api_keys.xml
                rm gradle.properties
                rm spacelaunchnow.keystore

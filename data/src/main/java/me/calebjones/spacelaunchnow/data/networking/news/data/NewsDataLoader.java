@@ -3,6 +3,7 @@ package me.calebjones.spacelaunchnow.data.networking.news.data;
 
 import android.content.Context;
 
+import io.realm.RealmList;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItemResponse;
 import me.calebjones.spacelaunchnow.data.networking.news.api.NewsDataClient;
@@ -22,13 +23,13 @@ public class NewsDataLoader {
     }
 
     public void getNewsList(int limit, final Callbacks.NewsListNetworkCallback networkCallback) {
-        Timber.i("Running getUpcomingLaunchesList");
+        Timber.i("Running get news list");
 
-        newsDataClient.getArticles(limit, new Callback<NewsItemResponse>() {
+        newsDataClient.getArticles(limit, new Callback<RealmList<NewsItem>>() {
             @Override
-            public void onResponse(Call<NewsItemResponse> call, Response<NewsItemResponse> response) {
+            public void onResponse(Call<RealmList<NewsItem>> call, Response<RealmList<NewsItem>> response) {
                 if (response.isSuccessful()) {
-                    NewsItemResponse responseBody = response.body();
+                    RealmList<NewsItem> responseBody = response.body();
                     networkCallback.onSuccess(responseBody);
                 } else {
                     networkCallback.onNetworkFailure(response.code());
@@ -36,14 +37,14 @@ public class NewsDataLoader {
             }
 
             @Override
-            public void onFailure(Call<NewsItemResponse> call, Throwable t) {
+            public void onFailure(Call<RealmList<NewsItem>> call, Throwable t) {
                 networkCallback.onFailure(t);
             }
         });
     }
 
     public void getNewsById(String id, final Callbacks.NewsNetworkCallback networkCallback) {
-        Timber.i("Running getUpcomingLaunchesList");
+        Timber.i("Running get news by id");
         newsDataClient.getNewsById(id, new Callback<NewsItem>() {
             @Override
             public void onResponse(Call<NewsItem> call, Response<NewsItem> response) {
@@ -66,12 +67,12 @@ public class NewsDataLoader {
 
 
     public void getNewsByLaunch(int limit, String launchId, final Callbacks.NewsListNetworkCallback networkCallback) {
-        Timber.i("Running getUpcomingLaunchesList");
-        newsDataClient.getArticlesByLaunch(limit, launchId, new Callback<NewsItemResponse>() {
+        Timber.i("Running get news by launch");
+        newsDataClient.getArticlesByLaunch(limit, launchId, new Callback<RealmList<NewsItem>>() {
             @Override
-            public void onResponse(Call<NewsItemResponse> call, Response<NewsItemResponse> response) {
+            public void onResponse(Call<RealmList<NewsItem>> call, Response<RealmList<NewsItem>> response) {
                 if (response.isSuccessful()) {
-                    NewsItemResponse news = response.body();
+                    RealmList<NewsItem> news = response.body();
                     networkCallback.onSuccess(news);
 
                 } else {
@@ -81,7 +82,7 @@ public class NewsDataLoader {
             }
 
             @Override
-            public void onFailure(Call<NewsItemResponse> call, Throwable t) {
+            public void onFailure(Call<RealmList<NewsItem>> call, Throwable t) {
                 networkCallback.onFailure(t);
             }
         });

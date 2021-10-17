@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+
+import org.w3c.dom.Text;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -25,6 +28,7 @@ import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.common.GlideApp;
@@ -53,6 +57,27 @@ public class AgencyDetailFragment extends BaseFragment {
     TextView lspFoundedYear;
     @BindView(R2.id.lsp_agency)
     AppCompatButton lspAgency;
+
+    @BindView(R2.id.launch_total_value)
+    TextView launchTotal;
+    @BindView(R2.id.consecutive_success_value)
+    TextView consecutiveTotal;
+    @BindView(R2.id.launch_success_value)
+    TextView successTotal;
+    @BindView(R2.id.launch_failure_value)
+    TextView failureTotal;
+
+    @BindView(R2.id.landing_total_value)
+    TextView landingTotal;
+    @BindView(R2.id.consecutive_landing_success_value)
+    TextView consecutiveLandingTotal;
+    @BindView(R2.id.landing_success_value)
+    TextView landingSuccessTotal;
+    @BindView(R2.id.landing_failure_value)
+    TextView landingFailureTotal;
+
+
+
     private SharedPreferences sharedPref;
     private static ListPreferences sharedPreference;
     private Context context;
@@ -144,6 +169,59 @@ public class AgencyDetailFragment extends BaseFragment {
             }
             lspAgency.setVisibility(View.VISIBLE);
 
+            if (detailLaunch.getRocket().getConfiguration().getManufacturer() != null) {
+                Agency agency = detailLaunch.getRocket().getConfiguration().getManufacturer();
+
+                if (agency.getTotalLaunchCount() != null) {
+                    launchTotal.setText(String.valueOf(agency.getTotalLaunchCount()));
+                } else {
+                    launchTotal.setText(" - ");
+                }
+
+                if (agency.getSuccessfulLaunches() != null) {
+                    successTotal.setText(String.valueOf(agency.getSuccessfulLaunches()));
+                } else {
+                    successTotal.setText(" - ");
+                }
+
+                if (agency.getConsecutiveSuccessfulLaunches() != null) {
+                    consecutiveTotal.setText(String.valueOf(agency.getConsecutiveSuccessfulLaunches()));
+                } else {
+                    consecutiveTotal.setText(" - ");
+                }
+
+                if (agency.getFailedLaunches() != null) {
+                    failureTotal.setText(String.valueOf(agency.getFailedLaunches()));
+                } else {
+                    failureTotal.setText(" - ");
+                }
+
+                if (agency.getAttemptedLandings() != null) {
+                    landingTotal.setText(String.valueOf(agency.getAttemptedLandings()));
+                } else {
+                    launchTotal.setText(" - ");
+                }
+
+                if (agency.getSuccessfulLandings() != null) {
+                    landingSuccessTotal.setText(String.valueOf(agency.getSuccessfulLandings()));
+                } else {
+                    landingSuccessTotal.setText(" - ");
+                }
+
+                if (agency.getConsecutiveSuccessfulLandings() != null) {
+                    consecutiveLandingTotal.setText(String.valueOf(agency.getConsecutiveSuccessfulLandings()));
+                } else {
+                    consecutiveLandingTotal.setText(" - ");
+                }
+
+                if (agency.getFailedLandings() != null) {
+                    landingFailureTotal.setText(String.valueOf(agency.getFailedLandings()));
+                } else {
+                    landingFailureTotal.setText(" - ");
+                }
+
+            }
+
         } catch (NullPointerException e) {
             Timber.e(e);
         }
@@ -181,8 +259,5 @@ public class AgencyDetailFragment extends BaseFragment {
         startActivity(intent);
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
+
 }

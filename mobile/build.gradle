@@ -10,16 +10,18 @@ buildscript {
             url 'https://oss.sonatype.org/content/repositories/snapshots/'
         }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        google()
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.25.4'
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.2'
+        classpath 'com.google.gms:google-services:4.3.5'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:2.0.0'
     }
 }
 
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'realm-android'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'com.github.triplet.play'
@@ -46,6 +48,7 @@ if (keystorePropertiesFile.canRead()) {
 }
 
 
+
 android {
     signingConfigs {
         releaseConfig {
@@ -58,7 +61,7 @@ android {
 
     flavorDimensions "release"
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion '28.0.3'
+    buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
 
         applicationId "me.calebjones.spacelaunchnow"
@@ -70,7 +73,6 @@ android {
         versionName computeVersionName()
         versionCode computeVersionCode()
         multiDexEnabled true
-        wearAppUnbundled true
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -121,11 +123,13 @@ def computeVersionCode() {
     return 1000000 + app.versionMajor * 10000 + app.versionMinor * 1000 + app.versionPatch * 100 + app.versionCode
 }
 
+import com.github.triplet.gradle.androidpublisher.ReleaseStatus
+
 play {
     serviceAccountCredentials = rootProject.file("publisher-key.json")
-    track = "internal"
-    releaseStatus = "completed"
-    commit = true
+    track.set("internal")
+    releaseStatus.set(ReleaseStatus.DRAFT)
+    commit.set(true)
 }
 
 dependencies {
@@ -135,6 +139,7 @@ dependencies {
     implementation project(':news')
     implementation project(':spacestations')
     implementation project(':events')
+    implementation project(':starship')
     // Android Official Libraries
     implementation deps.archcore_coreRuntime
     implementation deps.appcompat
@@ -150,14 +155,13 @@ dependencies {
     implementation deps.playAds
     implementation deps.constraintLayout
     implementation deps.easyprefs
-    implementation deps.firebaseAnalytics
     // Architecture and Tools
     implementation deps.once
+    implementation deps.firebaseAnalytics
     implementation deps.crashlytics
     implementation deps.dexter
     implementation deps.statefulLayout
     // Billing
-    implementation deps.inAppbilling
     implementation deps.workManager
     // Views and Animations
     implementation deps.materialDialogCore
@@ -209,7 +213,10 @@ dependencies {
     implementation deps.bottomNavigation
     implementation deps.preferences
     implementation deps.deepLinkDispatch
+    implementation deps.adAdapter
     annotationProcessor deps.deepLinkDispatchAnnotation
+
+    implementation deps.checkout
 }
 
 apply plugin: 'com.google.gms.google-services'

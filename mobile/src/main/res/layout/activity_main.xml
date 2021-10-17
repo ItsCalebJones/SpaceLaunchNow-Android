@@ -74,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:adSize="SMART_BANNER"
                 app:adUnitId="ca-app-pub-9824528399164059/9713798255"
                 app:layout_constraintBottom_toTopOf="@+id/navigation_view"

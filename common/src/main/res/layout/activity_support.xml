@@ -77,7 +77,7 @@
                 android:textSize="26sp" />
 
             <TextView
-                android:id="@+id/detail_mission_location"
+                android:id="@+id/detail_sub_title"
                 style="@style/MaterialTypography.Regular.Subheading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -295,61 +295,61 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/material_baseline_grid_1x"
-                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                android:background="?cardBackground">
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="@dimen/material_baseline_grid_1x"-->
+<!--                android:layout_marginTop="@dimen/material_baseline_grid_0.5x"-->
+<!--                android:layout_marginRight="@dimen/material_baseline_grid_1x"-->
+<!--                android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"-->
+<!--                android:background="?cardBackground">-->
 
-                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
+<!--                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--                    android:layout_width="fill_parent"-->
+<!--                    android:layout_height="fill_parent"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:padding="10dp">-->
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:layout_width="64dp"
-                        android:layout_height="fill_parent"
-                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                        android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                        android:gravity="center_vertical"
-                        android:src="@drawable/ic_earth_96dp"
-                        app:civ_border_color="@color/primary"
-                        app:civ_border_width="4dp"
-                        app:civ_fill_color="@color/primary" />
+<!--                    <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                        android:layout_width="64dp"-->
+<!--                        android:layout_height="fill_parent"-->
+<!--                        android:layout_marginTop="@dimen/material_baseline_grid_0.5x"-->
+<!--                        android:layout_marginRight="@dimen/material_baseline_grid_1x"-->
+<!--                        android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"-->
+<!--                        android:gravity="center_vertical"-->
+<!--                        android:src="@drawable/ic_earth_96dp"-->
+<!--                        app:civ_border_color="@color/primary"-->
+<!--                        app:civ_border_width="4dp"-->
+<!--                        app:civ_fill_color="@color/primary" />-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:textAppearance="@style/MaterialTypography.Regular.Title"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/material_baseline_grid_0.5x"
-                            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"
-                            android:gravity="center_vertical"
-                            android:text="@string/weather_forecast"
-                            android:textColor="?android:textColorPrimary"
-                            android:textSize="20sp" />
+<!--                        <TextView-->
+<!--                            android:textAppearance="@style/MaterialTypography.Regular.Title"-->
+<!--                            android:layout_width="fill_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="@dimen/material_baseline_grid_0.5x"-->
+<!--                            android:layout_marginBottom="@dimen/material_baseline_grid_0.5x"-->
+<!--                            android:gravity="center_vertical"-->
+<!--                            android:text="@string/weather_forecast"-->
+<!--                            android:textColor="?android:textColorPrimary"-->
+<!--                            android:textSize="20sp" />-->
 
-                        <TextView
-                            android:textAppearance="@style/MaterialTypography.Regular.Body1"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:lines="2"
-                            android:text="@string/weather_description"
-                            android:textColor="?android:textColorSecondary" />
+<!--                        <TextView-->
+<!--                            android:textAppearance="@style/MaterialTypography.Regular.Body1"-->
+<!--                            android:layout_width="fill_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:lines="2"-->
+<!--                            android:text="@string/weather_description"-->
+<!--                            android:textColor="?android:textColorSecondary" />-->
 
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
 
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+<!--                </LinearLayout>-->
+<!--            </androidx.cardview.widget.CardView>-->
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"

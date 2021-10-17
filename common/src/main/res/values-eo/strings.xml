@@ -5,15 +5,6 @@
     <string name="status_nogo">Lanĉdato malkonfirmata</string>
     <string name="status_success">"Lanĉo Sukcesa"</string>
     <string name="status_failure">"Lanĉo Malsukcesa"</string>
-    <string name="spacex_summary">SpaceX dezajnas, fabrikas kaj lanĉas raketojn kaj kompleksajn kosmoŝipojn. Elon Musk trovitis la negoco SpaceX en 2002 kun la celo de revolucii la kosmaj teknikaj, ilia ultima celo esti de permesi homojn vivi en aliaj planedoj.</string>
-    <string name="usaf_summary">La United States Air Force estas la aera militistaro de Usonaj-Ŝtatoj kaj unu el la sep branĉoj militistara amerika</string>
-    <string name="casc_summary">La China Aerospace Science and Technology Corporation (CASC) estas la primara kontraktisto de la  ĉinkosma programo. Ŝi estas la posedo de la ĉinŝtato kaj estas kompon de multe entojn ke dezajnas, evoluigas kaj konstruas multen kosmoŝipojn, lanĉistojn, sistemojn de misilojn strategiaj kaj taktikojn same kiel terekipaĵo.</string>
-    <string name="cnsa_summary">La China National Space Administration (CNSA) estas la ĉinkosma agentejo. Ŝi estas respondeca de la ĉinkosma programo same kiel de la planado kaj de la evoluigo de la kosmaj activecoj.</string>
-    <string name="isro_summary">La Indian Space Research Organisation (ISRO) estas la indikosma agentejo bazita en la urbo de Bangalore. Ŝia vizion estas de \"mastri la kosmaj teknologioj por la nacievoluigo, sen halti la sciencserĉo kaj la kosma esplorado.</string>
-    <string name="vko_summary">"La Russian Aerospace Defence Forces (VKO) estis la branĉo de la militistaraj fortoj de la Federacio de Ruso respondeca de la kontraŭaviadaj defendoj kaj kontraŭmisiloj, same kiel de la mastrumado de la rusmilitsatelitoj kaj de la lanĉbazo de Plessetsk."</string>
-    <string name="roscosmos_summary">La Roscomos State Corporation for Space Activities, pli konata sub la nomo de Roscosmos, estas la naciento por la scienckosma rusprogramo kaj de la aerospacialserĉo.</string>
-    <string name="ula_summary"><![CDATA[United Launch Allience (ULA) estas unu duoblnegoco formis de Lockheed Martin Space Systems kaj Boeing Defense, Space & Security. ULA formis en decembron 2006 en reorganizanten lan teamojn de tiujn nogocojn provizante lanĉservicoj de kosmoŝipojn al amerikregistaro.]]></string>
-    <string name="gd_summary">General Dynamics Corporation estas aerokosmkompanio america kaj defenda formiti de fandadoj kaj disiĝoj. Ĝi estas la kvina pli granda defendkontraktisto en la mondo laŭ la enspezoj de 2012.</string>
     <string name="wear_complications">Wear OS Komplikaĵoj</string>
     <string name="wear_complications_description">Akiri Space Launch Now komplikaĵoj en via Wear OS horloĝo!</string>
     <string name="height">Alteco:</string>

@@ -3,6 +3,64 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
+#### Updated 7-31-2021
+---
+### Version 3.9.5
+#### Changelog
+Update to using SNAPI v3!
+
+#### Updated 6-14-2021
+---
+### Version 3.9.3
+#### Changelog
+Add mission patches to detailed view.
+
+---
+### Version 3.9.0
+#### Changelog
+Add launch and landing statistics to agencies, launchers and cores.
+Add links to FlightClub.io
+
+## Changelog
+#### Updated 3-8-2021
+---
+### Version 3.8.0
+#### Changelog
+Add updates from The Space Dev staff right into the app!
+Find these updates on the Starship dashboard and in the launch and events details.
+
+## Changelog
+---
+### Version 3.7.2
+#### Changelog
+Cleanup some style issues in Launcher details page.
+Improve UX contrast on tab views.
+Make default notification settings less spammy - by default only ten minute notifications.
+
+## Changelog
+#### Updated 2-3-2021
+---
+### Version 3.7.1
+#### Changelog
+Updated in-app-purchases for 2021.
+Updated translations.
+
+
+## Changelog
+#### Updated 12-3-2020
+---
+### Version 3.6.6
+#### Changelog
+Various bug fixes and improvements.
+
+## Changelog
+#### Updated 8-25-2020
+---
+### Version 3.6.0
+#### Changelog
+Add Starship development tracking page - follow along with livestreams, view Road Closures and testing events.
+
+## Changelog
 #### Updated 1-20-2020
 ---
 ### Version 3.3.6

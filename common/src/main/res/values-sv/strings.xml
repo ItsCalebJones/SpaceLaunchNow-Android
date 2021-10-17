@@ -5,7 +5,6 @@
     <string name="status_nogo">Starten är uppskjuten</string>
     <string name="status_success">"Uppskjutningen lyckades"</string>
     <string name="status_failure">"Uppskjutningsfel inträffade"</string>
-    <string name="spacex_summary">SpaceX designar, tillverkar och skjuter upp avancerade raketer and rymdfarkoster. Företaget grundades 2002 för att revolutionera rymdteknologi, med det slutgiltiga målet att göra det möjligt för människor att leva på andra planeter.</string>
     <string name="slide_two_description">Få notifikationer om kommande uppskjutningar och lär dig om rymdfartens historia</string>
     <string name="player_error">Fel vid start av YouTube: %s</string>
     <string name="button_yes">Betygsätt!</string>

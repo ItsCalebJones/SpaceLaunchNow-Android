@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.crashlytics.android.Crashlytics;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,11 +41,12 @@ import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.common.youtube.models.VideoListItem;
 import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.VidURL;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
 import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.GlideApp;
-import me.calebjones.spacelaunchnow.utils.analytics.Analytics;
+import me.calebjones.spacelaunchnow.common.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.common.ui.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView;
 import me.calebjones.spacelaunchnow.common.youtube.YouTubeAPIHelper;
@@ -213,9 +213,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                             Date date = launchItem.getNet();
                             String launchTime = shortDate.format(date);
-                            if (launchItem.getTbddate()) {
-                                launchTime = launchTime + " " + context.getString(R.string.unconfirmed);
-                            }
                             holder.launchDateCompact.setText(launchTime);
                         }
                     } else {
@@ -262,7 +259,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
             } catch (NullPointerException e) {
                 Timber.e(e);
-                Crashlytics.logException(e);
             }
         }
     }
@@ -365,95 +361,22 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                         sendIntent1.putExtra(Intent.EXTRA_TEXT, item.getVideoURL().toString()); // Simple text and URL to share
                                         sendIntent1.setType("text/plain");
                                         context.startActivity(sendIntent1);
-                                        Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL Long Clicked", launch.getVidURLs().get(index).getVal());
                                     } else {
                                         Uri watchUri = Uri.parse(item.getVideoURL().toString());
                                         Intent i = new Intent(Intent.ACTION_VIEW, watchUri);
                                         context.startActivity(i);
-                                        Analytics.getInstance().sendButtonClickedWithURL("Watch Button - URL", launch.getVidURLs().get(index).getVal());
                                     }
                                 } catch (ArrayIndexOutOfBoundsException e) {
                                     Timber.e(e);
                                     Toast.makeText(context, "Ops, an error occurred.", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                            for (RealmStr s : launch.getVidURLs()) {
+                            for (VidURL s : launch.getVidURLs()) {
                                 //Do your stuff here
-                                try {
-                                    URI uri = new URI(s.getVal());
-
-                                    String name;
-                                    YouTubeAPIHelper youTubeAPIHelper = new YouTubeAPIHelper(context, context.getResources().getString(R.string.GoogleMapsKey));
-                                    if (uri.getHost().contains("youtube")) {
-                                        name = "YouTube";
-                                        String youTubeURL = getYouTubeID(s.getVal());
-                                        if (youTubeURL != null) {
-                                            if (youTubeURL.contains("spacex/live")) {
-                                                adapter.add(new VideoListItem.Builder(context)
-                                                        .content("YouTube - SpaceX Livestream")
-                                                        .videoURL(s.getVal())
-                                                        .build());
-                                            } else {
-                                                youTubeAPIHelper.getVideoById(youTubeURL,
-                                                        new Callback<VideoResponse>() {
-                                                            @Override
-                                                            public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
-                                                                if (response.isSuccessful()) {
-                                                                    if (response.body() != null) {
-                                                                        List<Video> videos = response.body().getVideos();
-                                                                        if (videos.size() > 0) {
-                                                                            try {
-                                                                                adapter.add(new VideoListItem.Builder(context)
-                                                                                        .content(videos.get(0).getSnippet().getTitle())
-                                                                                        .videoURL(s.getVal())
-                                                                                        .build());
-                                                                            } catch (Exception e) {
-                                                                                adapter.add(new VideoListItem.Builder(context)
-                                                                                        .content(name)
-                                                                                        .videoURL(s.getVal())
-                                                                                        .build());
-                                                                            }
-                                                                        } else {
-                                                                            adapter.add(new VideoListItem.Builder(context)
-                                                                                    .content(name)
-                                                                                    .videoURL(s.getVal())
-                                                                                    .build());
-                                                                        }
-                                                                    } else {
-                                                                        adapter.add(new VideoListItem.Builder(context)
-                                                                                .content(name)
-                                                                                .videoURL(s.getVal())
-                                                                                .build());
-                                                                    }
-                                                                } else {
-                                                                    adapter.add(new VideoListItem.Builder(context)
-                                                                            .content(name)
-                                                                            .videoURL(s.getVal())
-                                                                            .build());
-                                                                }
-                                                            }
-
-                                                            @Override
-                                                            public void onFailure(Call<VideoResponse> call, Throwable t) {
-                                                                adapter.add(new VideoListItem.Builder(context)
-                                                                        .content(name)
-                                                                        .videoURL(s.getVal())
-                                                                        .build());
-                                                            }
-                                                        });
-                                            }
-                                        }
-                                    } else {
-                                        name = uri.getHost();
-                                        adapter.add(new VideoListItem.Builder(context)
-                                                .content(name)
-                                                .videoURL(s.getVal())
-                                                .build());
-                                    }
-
-                                } catch (URISyntaxException e) {
-                                    e.printStackTrace();
-                                }
+                                adapter.add(new VideoListItem.Builder(context)
+                                        .content(s.getName())
+                                        .videoURL(s.getUrl())
+                                        .build());
                             }
 
                             MaterialDialog.Builder builder = new MaterialDialog.Builder(context)
@@ -509,7 +432,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         ShareCompat.IntentBuilder.from((Activity) context)
                                 .setType("text/plain")
                                 .setChooserTitle("Share: " + launch.getName())
-                                .setText(String.format("%s\n\nWatch Live: %s", message, launch.getSlug()))
+                                .setText(launch.getSlug())
                                 .startChooser();
                         Analytics.getInstance().sendLaunchShared("Explore Button", launch.getName() + "-" + launch.getId().toString());
                         break;
