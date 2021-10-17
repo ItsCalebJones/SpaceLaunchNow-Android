@@ -253,12 +253,4 @@ public class DataClient {
 
         return call;
     }
-
-    public Call<EventResponse> getEventBySlug(String slug, Callback<EventResponse> callback) {
-        Call<EventResponse> call = spaceLaunchNowService.getEventBySlug(slug);
-
-        call.enqueue(callback);
-
-        return call;
-    }
 }
