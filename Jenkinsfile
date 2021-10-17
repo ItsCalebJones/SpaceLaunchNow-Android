@@ -1,11 +1,54 @@
 def commitMessage() {
-    def message = sh(returnStdout: true, script: "git log --format='medium' -1 ${GIT_COMMIT}").trim()
+    def message = ""
+
+    def changeLogSets = currentBuild.changeSets
+    for (int i = 0; i < changeLogSets.size(); i++) {
+        def entries = changeLogSets[i].items
+        for (int j = 0; j < entries.length; j++) {
+            def entry = entries[j]
+            message += "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
+        }
+    }
+
     return "${message}"
 }
 
 def projectName() {
   def jobNameParts = env.JOB_NAME.tokenize('/') as String[]
   return jobNameParts.length < 2 ? env.JOB_NAME : jobNameParts[jobNameParts.length - 2]
+}
+
+class Constants {
+
+    static final String MASTER_BRANCH = 'master'
+
+    static final String QA_BUILD = 'Debug'
+    static final String RELEASE_BUILD = 'Release'
+
+    static final String INTERNAL_TRACK = 'internal'
+    static final String RELEASE_TRACK = 'alpha'
+}
+
+def getBuildType() {
+    switch (env.BRANCH_NAME) {
+        case Constants.MASTER_BRANCH:
+            return Constants.RELEASE_BUILD
+        default:
+            return Constants.QA_BUILD
+    }
+}
+
+def getTrackType() {
+    switch (env.BRANCH_NAME) {
+        case Constants.MASTER_BRANCH:
+            return Constants.RELEASE_TRACK
+        default:
+            return Constants.INTERNAL_TRACK
+    }
+}
+
+def isDeployCandidate() {
+    return ("${env.BRANCH_NAME}" =~ /(dev|master)/)
 }
 
 pipeline {
@@ -34,6 +77,11 @@ pipeline {
         DISCORD_URL = credentials('DiscordURL')
         COMMIT_MESSAGE = commitMessage()
         PROJECT_NAME = projectName()
+
+        KEY_PASSWORD = credentials('keyPassword')
+        KEY_ALIAS = credentials('keyAlias')
+        KEYSTORE = credentials('Keystore')
+        STORE_PASSWORD = credentials('storePassword')
     }
 
     stages{
@@ -59,37 +107,62 @@ pipeline {
                 }
             }
         }
-        stage('Compile Sources') {
-           when {
-               not {
-                   branch 'master'
-               }
-           }
+        stage('Run Tests') {
             steps {
-                // Compile the app and its dependencies
-                sh './gradlew compileDebugSources'
-            }
-        }
-        stage("Assemble Debug") {
-           when {
-               not {
-                   branch 'master'
-               }
-           }
-           steps {
+                echo 'Running Tests'
                 script {
-                    sh(script: "./gradlew assembleDebug",
-                       returnStdout: true)
+                    VARIANT = getBuildType()
+                    sh "./gradlew test${VARIANT}UnitTest"
                 }
-           }
-        }
-        stage('Build Release and Publish') {
-            when {
-                branch 'master'
             }
+        }
+        stage('Assemble Debug') {
+        when { expression { return isDeployCandidate() } }
             steps {
-                // Build the app in release mode, and sign the APK using the environment variables
-                sh './gradlew publishBundle --track=internal --stacktrace'
+                echo 'Running Tests'
+                script {
+                    VARIANT = getBuildType()
+                    sh "./gradlew assemble${VARIANT}"
+                }
+            }
+        }
+        stage('Build Bundle') {
+            when { expression { return isDeployCandidate() } }
+            steps {
+                echo 'Building'
+                script {
+                    VARIANT = getBuildType()
+                    sh "./gradlew -PstorePass=${STORE_PASSWORD} -Pkeystore=${KEYSTORE} -Palias=${KEY_ALIAS} -PkeyPass=${KEY_PASSWORD} bundle${VARIANT}"
+                }
+            }
+        }
+        stage('Deploy App to Store') {
+            when { expression { return isDeployCandidate() } }
+            steps {
+                echo 'Deploying'
+                script {
+                    VARIANT = getBuildType()
+                    TRACK = getTrackType()
+
+                    if (TRACK == Constants.RELEASE_TRACK) {
+                        timeout(time: 5, unit: 'MINUTES') {
+                            input "Proceed with deployment to ${TRACK}?"
+                        }
+                    }
+
+                    try {
+                        CHANGELOG = readFile(file: 'CHANGELOG.txt')
+                    } catch (err) {
+                        echo "Issue reading CHANGELOG.txt file: ${err.localizedMessage}"
+                        CHANGELOG = ''
+                    }
+
+                    androidApkUpload googleCredentialsId: 'SpaceLaunchNow_Service_Account',
+                            filesPattern: "**/outputs/bundle/${VARIANT.toLowerCase()}/*.aab",
+                            trackName: TRACK,
+                            recentChangeList: [[language: 'en-US', text: CHANGELOG]]
+                            rolloutPercentage: "0"
+                }
             }
         }
         stage("Archive Artifacts") {
