@@ -115,7 +115,10 @@ public class LaunchWordTimerManager {
 
     private void setRefreshIntent(Launch launch) {
         Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
-        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
+        PendingIntent refreshPending = PendingIntent.getBroadcast(context,
+                0,
+                nextIntent,
+                PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPending);
 
         Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
@@ -123,7 +126,10 @@ public class LaunchWordTimerManager {
         exploreIntent.putExtra("launchID", launch.getId());
         exploreIntent.setData(Uri.parse(exploreIntent.toUri(Intent.URI_INTENT_SCHEME)));
         exploreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, UniqueIdentifier.getID(), exploreIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context,
+                UniqueIdentifier.getID(),
+                exploreIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         remoteViews.setOnClickPendingIntent(R.id.widget_countdown_timer_frame, actionPendingIntent);
     }

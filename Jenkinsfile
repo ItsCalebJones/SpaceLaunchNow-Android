@@ -48,7 +48,7 @@ def getTrackType() {
 }
 
 def isDeployCandidate() {
-    return ("${env.BRANCH_NAME}" =~ /(dev|master)/)
+    return ("${env.BRANCH_NAME}" =~ /(master)/)
 }
 
 pipeline {

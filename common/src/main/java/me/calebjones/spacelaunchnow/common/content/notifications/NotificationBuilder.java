@@ -76,7 +76,10 @@ public class NotificationBuilder {
         resultIntent.putExtra("launchID", launch.getId());
         resultIntent.putExtra("notification", true);
 
-        PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pending = PendingIntent.getActivity(context,
+                0,
+                resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         mBuilder.setSubText(launchPad);
 
@@ -97,7 +100,7 @@ public class NotificationBuilder {
             PendingIntent archiveIntent = PendingIntent.getActivity(context,
                     2,
                     intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             NotificationCompat.Action filterSettings =
                     new NotificationCompat.Action.Builder(R.drawable.ic_filter,
@@ -120,7 +123,7 @@ public class NotificationBuilder {
                 PendingIntent channelPendingIntent = PendingIntent.getActivity(context,
                         3,
                         notificationSettings,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
                 NotificationCompat.Action channelSettings =
                         new NotificationCompat.Action.Builder(R.drawable.ic_notifications_white,
@@ -221,7 +224,9 @@ public class NotificationBuilder {
             e.printStackTrace();
         }
 
-        PendingIntent pending = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pending = PendingIntent.getActivity(context,
+                0, resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.WearableExtender wearableExtender =
                 new NotificationCompat.WearableExtender()
@@ -240,7 +245,7 @@ public class NotificationBuilder {
             PendingIntent archiveIntent = PendingIntent.getActivity(context,
                     2,
                     intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             NotificationCompat.Action filterSettings =
                     new NotificationCompat.Action.Builder(R.drawable.ic_filter,
@@ -263,7 +268,7 @@ public class NotificationBuilder {
                 PendingIntent channelPendingIntent = PendingIntent.getActivity(context,
                         3,
                         notificationSettings,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
                 NotificationCompat.Action channelSettings =
                         new NotificationCompat.Action.Builder(R.drawable.ic_notifications_white,
@@ -630,7 +635,7 @@ public class NotificationBuilder {
         PendingIntent eventIntent = PendingIntent.getActivity(context,
                 2,
                 resultIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         mBuilder.setSubText(launchPad);
 
@@ -731,7 +736,7 @@ public class NotificationBuilder {
         PendingIntent eventIntent = PendingIntent.getActivity(context,
                 2,
                 resultIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         mBuilder.setSubText(article.getNewsSite());
         mBuilder.setContentText(expandedText);
