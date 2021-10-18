@@ -5,7 +5,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -34,6 +33,7 @@
             android:name=".ui.debug.DebugActivity"
             android:theme="@style/BaseAppTheme" />
         <activity
+            android:exported="true"
             android:name=".ui.main.MainActivity"
             android:configChanges="keyboardHidden"
             android:launchMode="singleTop"
@@ -72,14 +72,16 @@
             android:name=".ui.launcher.LauncherDetailActivity"
             android:theme="@style/BaseAppTheme" />
 
-        <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver">
+        <receiver android:name=".content.receivers.UpdateUpcomingLaunchesReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="UPDATE_UP_LAUNCHES" />
                 <action android:name="UPDATE_PREV_LAUNCHES" />
                 <action android:name="CHECK_NEXT_LAUNCH_TIMER" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".content.receivers.BootReceiver">
+        <receiver android:name=".content.receivers.BootReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -111,7 +113,8 @@
             android:parentActivityName=".ui.main.MainActivity"
             android:theme="@style/BaseAppTheme" />
 
-        <service android:name=".content.services.ListenerServiceFromWear">
+        <service android:name=".content.services.ListenerServiceFromWear"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
@@ -142,7 +145,8 @@
         <receiver android:name=".widgets.WidgetBroadcastReceiver" />
         <receiver
             android:name=".widgets.launchcard.LaunchCardCompactWidgetProvider"
-            android:label="Compact Card">
+            android:label="Compact Card"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="me.calebjones.spacelaunchnow.widget.LaunchCardCompactWidgetProvider.ACTION_WIDGET_REFRESH" />
@@ -154,7 +158,8 @@
         </receiver>
         <receiver
             android:name=".widgets.wordtimer.LaunchWordTimerWidgetProvider"
-            android:label="Launch Timer">
+            android:label="Launch Timer"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="me.calebjones.spacelaunchnow.ACTION_WIDGET_REFRESH" />
@@ -167,7 +172,8 @@
         </receiver>
         <receiver
             android:name=".widgets.launchlist.LaunchListWidgetProvider"
-            android:label="Launch List (Supporters)">
+            android:label="Launch List (Supporters)"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="me.calebjones.spacelaunchnow.widget.LaunchListWidgetProvider.ACTION_WIDGET_REFRESH" />
@@ -177,7 +183,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_launch_list_info" />
         </receiver>
-        <receiver android:name=".content.receivers.OnUpgradeReceiver">
+        <receiver android:name=".content.receivers.OnUpgradeReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
@@ -191,12 +198,14 @@
             android:name=".ui.supporter.BecomeSupporterActivity"
             android:theme="@style/BaseAppTheme" />
 
-        <service android:name=".content.services.AppFireBaseMessagingService">
+        <service android:name=".content.services.AppFireBaseMessagingService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".content.services.AppFirebaseInstanceIDService">
+        <service android:name=".content.services.AppFirebaseInstanceIDService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -222,7 +231,8 @@
         <activity android:name=".ui.spacecraft.OrbiterDetailActivity" />
         <activity
             android:name="me.calebjones.spacelaunchnow.deeplink.DeepLinkActivity"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:theme="@android:style/Theme.NoDisplay"
+            android:exported="true">
             <intent-filter
                 android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />

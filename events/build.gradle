@@ -38,6 +38,8 @@ dependencies {
     implementation project(path: ':data')
     implementation project(':common')
 
+    testImplementation 'org.testng:testng:6.9.6'
+
     //Views
     implementation deps.statefulLayout
     implementation deps.material

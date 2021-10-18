@@ -85,7 +85,9 @@ public class LaunchListManager {
         remoteViews.setImageViewResource(R.id.widget_refresh_button, R.drawable.ic_refresh_black);
 
         Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
-        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
+        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0,
+                nextIntent,
+                PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPending);
 
         Intent openAppIntent = null;
@@ -95,13 +97,18 @@ public class LaunchListManager {
             e.printStackTrace();
         }
         openAppIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, openAppIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0,
+                openAppIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         remoteViews.setOnClickPendingIntent(R.id.title, actionPendingIntent);
 
         Intent supportIntent = new Intent(context, SupporterActivity.class);
         supportIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent supportPendingIntent = PendingIntent.getActivity(context, 0, supportIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent supportPendingIntent = PendingIntent.getActivity(context,
+                0,
+                supportIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         remoteViews.setOnClickPendingIntent(R.id.supporter_message, supportPendingIntent);
 
@@ -159,7 +166,10 @@ public class LaunchListManager {
         remoteViews.setImageViewResource(R.id.widget_refresh_button, R.drawable.ic_refresh_black);
 
         Intent nextIntent = new Intent(context, WidgetBroadcastReceiver.class);
-        PendingIntent refreshPending = PendingIntent.getBroadcast(context, 0, nextIntent, 0);
+        PendingIntent refreshPending = PendingIntent.getBroadcast(context,
+                0,
+                nextIntent,
+                PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setOnClickPendingIntent(R.id.widget_refresh_button, refreshPending);
 
         if (sharedPref.getBoolean("widget_refresh_enabled", false)) {
@@ -175,7 +185,10 @@ public class LaunchListManager {
             e.printStackTrace();
         }
         openAppIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent actionPendingIntent = PendingIntent.getActivity(context, 0, openAppIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent actionPendingIntent = PendingIntent.getActivity(context,
+                0,
+                openAppIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         remoteViews.setOnClickPendingIntent(R.id.title, actionPendingIntent);
 
@@ -183,7 +196,7 @@ public class LaunchListManager {
         PendingIntent clickPI = PendingIntent
                 .getActivity(context, UniqueIdentifier.getID(),
                         clickIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         remoteViews.setPendingIntentTemplate(R.id.launch_list, clickPI);
 
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.launch_list);

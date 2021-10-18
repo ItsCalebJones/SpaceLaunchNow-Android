@@ -68,6 +68,7 @@ dependencies {
     implementation deps.fontawesomeTypeface
 
     implementation deps.butterknife
+    testImplementation 'org.testng:testng:6.9.6'
     annotationProcessor deps.butterknifeCompiler
 
     implementation deps.glide
