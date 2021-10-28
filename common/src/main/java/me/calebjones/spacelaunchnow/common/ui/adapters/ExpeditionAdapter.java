@@ -98,14 +98,14 @@ public class ExpeditionAdapter extends RecyclerView.Adapter<ExpeditionAdapter.Vi
         holder.title.setText(expedition.getName());
         if (expedition.getStart() != null) {
             holder.start.setVisibility(View.VISIBLE);
-            holder.start.setText(String.format(mContext.getString(R.string.start_fill), DateFormat.getDateInstance(DateFormat.LONG).format(expedition.getStart())));
+            holder.start.setText(String.format(mContext.getString(R.string.start_fill), Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(expedition.getStart())));
         } else {
             holder.start.setVisibility(View.GONE);
         }
 
         if (expedition.getEnd() != null) {
             holder.end.setVisibility(View.VISIBLE);
-            holder.end.setText(String.format(mContext.getString(R.string.end_fill), DateFormat.getDateInstance(DateFormat.LONG).format(expedition.getEnd())));
+            holder.end.setText(String.format(mContext.getString(R.string.end_fill), Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(expedition.getEnd())));
         } else {
             holder.end.setVisibility(View.GONE);
         }

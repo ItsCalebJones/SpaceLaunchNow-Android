@@ -33,6 +33,7 @@ import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.launches.agency.AgencyLaunchActivity;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
@@ -162,10 +163,10 @@ public class AstronautProfileFragment extends BaseFragment {
         String deathDate = null;
 
         if (astronaut.getDateOfBirth() != null) {
-            bornDate = DateFormat.getDateInstance(DateFormat.LONG).format(astronaut.getDateOfBirth());
+            bornDate = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(astronaut.getDateOfBirth());
         }
         if (astronaut.getDateOfDeath() != null) {
-            deathDate = DateFormat.getDateInstance(DateFormat.LONG).format(astronaut.getDateOfDeath());
+            deathDate = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(astronaut.getDateOfDeath());
         }
 
 

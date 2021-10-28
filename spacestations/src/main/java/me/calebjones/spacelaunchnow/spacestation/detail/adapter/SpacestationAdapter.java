@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.DockingEvent;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.DockingLocation;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Expedition;
@@ -192,14 +193,14 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
             title.setText(expedition.getName());
             if (expedition.getStart() != null) {
                 start.setVisibility(View.VISIBLE);
-                start.setText(String.format(context.getString(R.string.start_fill), DateFormat.getDateInstance(DateFormat.LONG).format(expedition.getStart())));
+                start.setText(String.format(context.getString(R.string.start_fill), Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(expedition.getStart())));
             } else {
                 start.setVisibility(View.GONE);
             }
 
             if (expedition.getEnd() != null) {
                 end.setVisibility(View.VISIBLE);
-                end.setText(String.format(context.getString(R.string.end_fill), DateFormat.getDateInstance(DateFormat.LONG).format(expedition.getEnd())));
+                end.setText(String.format(context.getString(R.string.end_fill), Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(expedition.getEnd())));
             } else {
                 end.setVisibility(View.GONE);
             }
@@ -232,10 +233,10 @@ public class SpacestationAdapter extends RecyclerView.Adapter<SpacestationAdapte
             String startDate = "?";
             String endDate = "?";
             if (expedition.getStart() != null) {
-                startDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(expedition.getStart());
+                startDate = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(expedition.getStart());
             }
             if (expedition.getEnd() != null) {
-                endDate = DateFormat.getDateInstance(DateFormat.MEDIUM).format(expedition.getEnd());
+                endDate = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(expedition.getEnd());
             }
             subtitle.setText(String.format("%s - %s", startDate, endDate));
             rootView.setOnClickListener(this);

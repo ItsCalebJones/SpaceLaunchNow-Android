@@ -53,7 +53,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Update update = updates.get(position);
 
-        String date = DateFormat.getDateInstance(DateFormat.LONG).format(update.getCreatedOn());
+        String date = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(update.getCreatedOn());
         holder.title.setText(update.createdBy + " - " + date);
         holder.comment.setText(update.comment);
         holder.source.setText(update.infoUrl);
