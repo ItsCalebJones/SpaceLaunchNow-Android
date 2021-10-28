@@ -261,7 +261,11 @@ public interface SpaceLaunchNowService {
     // GET: /event
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/event/upcoming/")
-    Call<EventResponse> getUpcomingEvents(@Query("limit") int amount, @Query("offset") int offset, @Query("mode") String mode);
+    Call<EventResponse> getUpcomingEvents(
+            @Query("limit") int amount,
+            @Query("offset") int offset,
+            @Query("mode") String mode
+    );
 
     @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
     @GET(version + "/event/{id}/")

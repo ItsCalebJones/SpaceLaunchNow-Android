@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
 import me.calebjones.spacelaunchnow.data.models.main.starship.RoadClosure;
 import me.spacelaunchnow.starship.R;
@@ -50,7 +51,7 @@ public class RoadClosureAdapter extends RecyclerView.Adapter<RoadClosureAdapter.
     public void onBindViewHolder(final ViewHolder holder, int position) {
         RoadClosure roadClosure = roadClosureList.get(position);
 
-        String date = DateFormat.getDateInstance(DateFormat.LONG).format(roadClosure.getWindowStart());
+        String date = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(roadClosure.getWindowStart());
         String status = "Status: " +  roadClosure.getStatus().getName();
         String window = DateFormat.getTimeInstance(DateFormat.SHORT).format(roadClosure.getWindowStart()) + " - " + DateFormat.getTimeInstance(DateFormat.SHORT).format(roadClosure.getWindowEnd());
 

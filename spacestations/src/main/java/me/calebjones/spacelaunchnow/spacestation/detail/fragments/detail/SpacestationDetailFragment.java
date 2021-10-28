@@ -29,6 +29,7 @@ import butterknife.Unbinder;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.prefs.ThemeHelper;
 import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.spacestation.R;
 import me.calebjones.spacelaunchnow.spacestation.R2;
@@ -101,7 +102,7 @@ public class SpacestationDetailFragment extends BaseFragment {
 
         if (spacestation.getDeorbited() != null) {
             deorbitedView.setVisibility(View.VISIBLE);
-            String deorbited = DateFormat.getDateInstance(DateFormat.LONG).format(spacestation.getDeorbited());
+            String deorbited = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(spacestation.getDeorbited());
             deorbitedView.setText(String.format(getString(R.string.deorbited), deorbited));
         } else {
             deorbitedView.setVisibility(View.GONE);
@@ -109,7 +110,7 @@ public class SpacestationDetailFragment extends BaseFragment {
 
         if (spacestation.getFounded() != null) {
             foundedView.setVisibility(View.VISIBLE);
-            String founded = DateFormat.getDateInstance(DateFormat.LONG).format(spacestation.getFounded());
+            String founded = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(spacestation.getFounded());
             foundedView.setText(String.format(getString(R.string.founded), founded));
         } else {
             foundedView.setVisibility(View.GONE);

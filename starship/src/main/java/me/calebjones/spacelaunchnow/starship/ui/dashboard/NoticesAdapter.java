@@ -51,7 +51,7 @@ public class NoticesAdapter extends RecyclerView.Adapter<NoticesAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Notice notice = noticeList.get(position);
 
-        String date = DateFormat.getDateInstance(DateFormat.LONG).format(notice.getDate());
+        String date = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(notice.getDate());
         holder.noticeTitle.setText(notice.getType().getName());
         holder.noticeDate.setText(date);
     }

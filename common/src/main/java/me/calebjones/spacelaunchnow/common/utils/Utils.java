@@ -45,6 +45,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -394,8 +395,12 @@ public class Utils {
     }
 
     public static SimpleDateFormat getSimpleDateFormatForUI(String pattern) {
-        String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), pattern);
-        return new SimpleDateFormat(format, Locale.getDefault());
+        if(Prefs.getBoolean("locale_changer", true)) {
+            String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), pattern);
+            return new SimpleDateFormat(format, Locale.getDefault());
+        } else {
+            return new SimpleDateFormat(pattern, Locale.US);
+        }
     }
 
     public static int sp2px(Context context, float spValue) {

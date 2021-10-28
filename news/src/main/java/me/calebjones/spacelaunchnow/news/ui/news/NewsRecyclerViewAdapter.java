@@ -53,7 +53,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         NewsItem news = newsList.get(position);
         holder.articleTitle.setText(news.getTitle());
         holder.articleSite.setText(news.getNewsSite());
-        holder.articlePublicationDate.setText(DateFormat.getDateInstance(DateFormat.LONG).format(news.getDatePublished()));
+        holder.articlePublicationDate.setText(Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(news.getDatePublished()));
         if (news.getFeaturedImage() != null) {
             GlideApp.with(context)
                     .load(news.getFeaturedImage())

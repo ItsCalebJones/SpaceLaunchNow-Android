@@ -172,7 +172,7 @@ public class CombinedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         .circleCrop()
                         .into(eventIcon);
             }
-            String date = DateFormat.getDateInstance(DateFormat.LONG).format(event.getDate());
+            String date = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(event.getDate());
 
             eventTitle.setText(event.getName());
             eventDate.setText(date);

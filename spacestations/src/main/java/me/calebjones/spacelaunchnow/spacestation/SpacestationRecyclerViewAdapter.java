@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import me.calebjones.spacelaunchnow.common.GlideApp;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.spacestation.Spacestation;
 import me.calebjones.spacelaunchnow.spacestation.detail.SpacestationDetailsActivity;
 
@@ -57,9 +58,9 @@ public class SpacestationRecyclerViewAdapter extends RecyclerView.Adapter<Spaces
         holder.spacestationSubtitle.setText(holder.mItem.getType().getName());
         holder.spacestationDescription.setText(holder.mItem.getDescription());
         holder.orbitlPillText.setText(holder.mItem.getOrbit());
-        holder.founded.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format((holder.mItem.getFounded())));
+        holder.founded.setText(Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format((holder.mItem.getFounded())));
         if (holder.mItem.getDeorbited() != null) {
-            holder.deorbited.setText(DateFormat.getDateInstance(DateFormat.MEDIUM).format((holder.mItem.getDeorbited())));
+            holder.deorbited.setText(Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format((holder.mItem.getDeorbited())));
         } else {
             holder.deorbited.setText("N/A");
         }
