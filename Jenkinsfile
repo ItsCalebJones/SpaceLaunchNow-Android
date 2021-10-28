@@ -26,7 +26,7 @@ class Constants {
     static final String RELEASE_BUILD = 'Release'
 
     static final String INTERNAL_TRACK = 'internal'
-    static final String RELEASE_TRACK = 'alpha'
+    static final String RELEASE_TRACK = 'internal'
 }
 
 def getBuildType() {
