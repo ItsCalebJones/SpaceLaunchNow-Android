@@ -140,18 +140,18 @@ public class SupporterActivity extends BaseActivity {
         ButterKnife.bind(this);
         ownedProducts = new ArrayList<>();
 
-        if (SupporterHelper.is2021Supporter()) {
-            purchaseButton.setText(R.string.support_us_2021);
+        if (SupporterHelper.is2022Supporter()) {
+            purchaseButton.setText(R.string.support_us_2022);
             title.setText("Thank You!");
             subtitle.setText("");
         } else if (SupporterHelper.isSupporter()) {
-            purchaseButton.setText(R.string.support_again_2021);
-            title.setText("Become a 2021 Supporter");
+            purchaseButton.setText(R.string.support_again_2022);
+            title.setText("Become a 2022 Supporter");
             subtitle.setText("Continue Your Support");
         } else {
             title.setText("Become a Supporter");
             subtitle.setText("Get Pro Features");
-            purchaseButton.setText(R.string.supporter_title_2021);
+            purchaseButton.setText(R.string.supporter_title_2022);
         }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
