@@ -26,6 +26,11 @@ public class SupporterHelper {
     public static final String SKU_2021_SILVER = "2021_silver_support";
     public static final String SKU_2021_GOLD = "2021_gold_support";
     public static final String SKU_2021_PLATINUM = "2021_platinum_support";
+    public static final String SKU_2022_BRONZE = "2022_bronze_supporter";
+    public static final String SKU_2022_METAL = "2022_metal_supporter";
+    public static final String SKU_2022_SILVER = "2022_silver_support";
+    public static final String SKU_2022_GOLD = "2022_gold_support";
+    public static final String SKU_2022_PLATINUM = "2022_platinum_support";
     public static final String SKU_OTHER = "beta_supporter";
 
     public static Products getProduct(String productID){
@@ -120,6 +125,31 @@ public class SupporterHelper {
             product.setDescription("This ensures you will always have access to every supporter features.");
             product.setType("Supporter");
             product.setPrice(6);
+        } else if (productID.equals(SKU_2022_PLATINUM)) {
+            product.setName("Supporter 2022 - Platinum");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(30);
+        }  else if (productID.equals(SKU_2022_GOLD)){
+            product.setName("Supporter 2022 - Gold");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(15);
+        } else if (productID.equals(SKU_2022_SILVER)){
+            product.setName("Supporter 2022 - Silver");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(10);
+        } else if (productID.equals(SKU_2022_BRONZE)){
+            product.setName("Supporter 2022 - Bronze");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(3);
+        } else if (productID.equals(SKU_2022_METAL)){
+            product.setName("Supporter 2022 - Metal");
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(6);
         } else if (productID.equals(SKU_OTHER)){
             product.setName("Promotion Supporter");
             product.setDescription("This ensures you will always have access to every supporter features.");
@@ -152,6 +182,25 @@ public class SupporterHelper {
             if (products != null) {
                 for (Products product: products){
                     if (product.getName().contains("2021")){
+                        return true;
+                    }
+                }
+            }
+            realm.close();
+            return false;
+        } catch (Exception e){
+            Timber.e(e);
+            return false;
+        }
+    }
+
+    public static boolean is2022Supporter(){
+        try {
+            Realm realm = Realm.getDefaultInstance();
+            RealmResults<Products> products = realm.where(Products.class).findAll();
+            if (products != null) {
+                for (Products product: products){
+                    if (product.getName().contains("2022")){
                         return true;
                     }
                 }

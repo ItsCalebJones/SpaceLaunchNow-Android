@@ -156,10 +156,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
             showFilter = true;
             startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
-        } else if (!Once.beenDone("show2021dialog") &&
+        } else if (!Once.beenDone("show2022dialog") &&
                 Once.beenDone("appOpen", Amount.moreThan(5))) {
-            Once.markDone("show2021dialog");
-            if (!SupporterHelper.is2021Supporter()) {
+            Once.markDone("show2022dialog");
+            if (!SupporterHelper.is2022Supporter()) {
                 becomeSupporter();
             }
         }
@@ -299,13 +299,20 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                             .withIcon(FontAwesome.Icon.faw_dollar_sign)
                             .withIdentifier(R.id.menu_support)
                             .withSelectable(false));
-        }
-
-        if (SupporterHelper.isSupporter()) {
+        } else if (SupporterHelper.is2022Supporter()) {
             FirebaseAnalytics.getInstance(this).setUserProperty("supporter", "true");
             Timber.d("Show thanks for support.");
             drawer.addStickyFooterItem(
                     new PrimaryDrawerItem().withName(R.string.thank_you_for_support)
+                            .withIcon(GoogleMaterial.Icon.gmd_mood)
+                            .withIdentifier(R.id.menu_support)
+                            .withSelectable(false));
+        } else if (SupporterHelper.isSupporter()) {
+            FirebaseAnalytics.getInstance(this).setUserProperty("supporter", "true");
+            Timber.d("Show thanks for support.");
+            drawer.addStickyFooterItem(
+                    new PrimaryDrawerItem().withName(R.string.thank_you_for_support)
+                            .withDescription(R.string.supporter_again_footer)
                             .withIcon(GoogleMaterial.Icon.gmd_mood)
                             .withIdentifier(R.id.menu_support)
                             .withSelectable(false));

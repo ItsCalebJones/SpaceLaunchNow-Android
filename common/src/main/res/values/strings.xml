@@ -11,6 +11,7 @@
     <string name="general_settings">General settings for launch tracking and application behavior.</string>
     <string name="supporter_title">Become a Supporter</string>
     <string name="supporter_description">Help ensure continued support, timely bug fixes, and new features.</string>
+    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Keep up to date on all your favorite orbital launches, missions, and launch vehicles.</string>
     <string name="slide_two_title">Notification for Launches</string>
@@ -576,7 +577,7 @@
     <string name="up_next">Up Next</string>
     <string name="overview">Overview</string>
     <string translatable="false" name="theme_pref_key">theme_pref</string>
-    <string name="supporter_title_2021" translatable="false">Become a Supporter!</string>
-    <string name="support_again_2021" translatable="false">Become a 2021 Supporter!</string>
-    <string name="support_us_2021" translatable="false">Support us again!</string>
+    <string name="supporter_title_2022" translatable="false">Become a Supporter!</string>
+    <string name="support_again_2022" translatable="false">Become a 2022 Supporter!</string>
+    <string name="support_us_2022" translatable="false">Support us again!</string>
 </resources>
