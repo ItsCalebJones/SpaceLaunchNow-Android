@@ -70,18 +70,18 @@ public class LaunchApplication extends Application {
     private static LaunchApplication sInstance;
 
     public static final String[] INAPP_SKUS = new String[]{
-            SupporterHelper.SKU_2021_BRONZE,
-            SupporterHelper.SKU_2021_SILVER,
-            SupporterHelper.SKU_2021_GOLD,
-            SupporterHelper.SKU_2021_METAL,
-            SupporterHelper.SKU_2021_PLATINUM};
+            SupporterHelper.SKU_2022_BRONZE,
+            SupporterHelper.SKU_2022_SILVER,
+            SupporterHelper.SKU_2022_GOLD,
+            SupporterHelper.SKU_2022_METAL,
+            SupporterHelper.SKU_2022_PLATINUM};
 
     public static final List<String> LIST_INAPP_SKUS = new ArrayList<>(Arrays.asList(
-                SupporterHelper.SKU_2021_BRONZE,
-                SupporterHelper.SKU_2021_SILVER,
-                SupporterHelper.SKU_2021_GOLD,
-                SupporterHelper.SKU_2021_METAL,
-                SupporterHelper.SKU_2021_PLATINUM));
+                SupporterHelper.SKU_2022_BRONZE,
+                SupporterHelper.SKU_2022_SILVER,
+                SupporterHelper.SKU_2022_GOLD,
+                SupporterHelper.SKU_2022_METAL,
+                SupporterHelper.SKU_2022_PLATINUM));
 
 
     private Billing mBilling;
