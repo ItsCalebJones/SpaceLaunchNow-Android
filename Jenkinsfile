@@ -145,12 +145,6 @@ pipeline {
                     VARIANT = getBuildType()
                     TRACK = getTrackType()
 
-                    if (TRACK == Constants.RELEASE_TRACK) {
-                        timeout(time: 5, unit: 'MINUTES') {
-                            input "Proceed with deployment to ${TRACK}?"
-                        }
-                    }
-
                     try {
                         CHANGELOG = readFile(file: 'CHANGELOG.txt')
                     } catch (err) {
