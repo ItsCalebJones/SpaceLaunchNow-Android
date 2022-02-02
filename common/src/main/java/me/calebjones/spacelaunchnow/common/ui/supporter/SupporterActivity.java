@@ -304,35 +304,35 @@ public class SupporterActivity extends BaseActivity {
             List<Purchase> purchases = inapp.getPurchases();
 
             configureProductItem(bronzeButton, bronzeTitle, bronzeDescription, inapp, purchases,
-                    SupporterHelper.SKU_2021_BRONZE,
+                    SupporterHelper.SKU_2022_BRONZE,
                     new IconicsDrawable(this)
                             .icon(FontAwesome.Icon.faw_thumbs_up)
                             .color(Color.WHITE)
                             .sizeDp(24));
 
             configureProductItem(metalButton, metalTitle, metalDescription, inapp, purchases,
-                    SupporterHelper.SKU_2021_METAL,
+                    SupporterHelper.SKU_2022_METAL,
                     new IconicsDrawable(this)
                             .icon(GoogleMaterial.Icon.gmd_local_cafe)
                             .color(Color.WHITE)
                             .sizeDp(24));
 
             configureProductItem(silverButton, silverTitle, silverDescription, inapp, purchases,
-                    SupporterHelper.SKU_2021_SILVER,
+                    SupporterHelper.SKU_2022_SILVER,
                     new IconicsDrawable(this)
                             .icon(FontAwesome.Icon.faw_store)
                             .color(Color.WHITE)
                             .sizeDp(24));
 
             configureProductItem(goldButton, goldTitle, goldDescription, inapp, purchases,
-                    SupporterHelper.SKU_2021_GOLD,
+                    SupporterHelper.SKU_2022_GOLD,
                     new IconicsDrawable(this)
                             .icon(GoogleMaterial.Icon.gmd_local_dining)
                             .color(Color.WHITE)
                             .sizeDp(24));
 
             configureProductItem(platinumButton, platinumTitle, platinumDescription, inapp, purchases,
-                    SupporterHelper.SKU_2021_PLATINUM,
+                    SupporterHelper.SKU_2022_PLATINUM,
                     new IconicsDrawable(this)
                             .icon(FontAwesome.Icon.faw_money_bill_wave)
                             .color(Color.WHITE)
