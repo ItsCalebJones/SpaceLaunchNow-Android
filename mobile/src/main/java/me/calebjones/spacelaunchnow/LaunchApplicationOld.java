@@ -64,11 +64,11 @@ public class LaunchApplicationOld extends Application {
     private FirebaseMessaging firebaseMessaging;
 
     public static final String[] INAPP_SKUS = new String[]{
-            SupporterHelper.SKU_2021_BRONZE,
-            SupporterHelper.SKU_2021_SILVER,
-            SupporterHelper.SKU_2021_GOLD,
-            SupporterHelper.SKU_2021_METAL,
-            SupporterHelper.SKU_2021_PLATINUM};
+            SupporterHelper.SKU_2022_BRONZE,
+            SupporterHelper.SKU_2022_SILVER,
+            SupporterHelper.SKU_2022_GOLD,
+            SupporterHelper.SKU_2022_METAL,
+            SupporterHelper.SKU_2022_PLATINUM};
 
 
     private final Billing mBilling = new Billing(this, new Billing.DefaultConfiguration() {
