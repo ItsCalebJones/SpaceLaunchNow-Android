@@ -128,7 +128,7 @@ public class EventListFragment extends BaseFragment implements SwipeRefreshLayou
                 @Override
                 public void onEventsLoaded(RealmResults<Event> events, int next, int total) {
                     Timber.v("Offset - %s", next);
-                    if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                    if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.CREATED)) {
                         if (events.size() == total) {
                             limitReached = true;
                             canLoadMore = false;
