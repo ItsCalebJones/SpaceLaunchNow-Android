@@ -12,33 +12,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.zetterstrom.com.forecast.ForecastClient;
-import android.zetterstrom.com.forecast.models.Forecast;
-import android.zetterstrom.com.forecast.models.Unit;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.simplelist.MaterialSimpleListItem;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.PlayerConstants;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerListener;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.WindowDecorActionBar;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Lifecycle;
@@ -55,30 +43,25 @@ import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseFragment;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
-import me.calebjones.spacelaunchnow.common.ui.adapters.ListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.NewsListAdapter;
 import me.calebjones.spacelaunchnow.common.ui.adapters.UpdateAdapter;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.DetailsViewModel;
 import me.calebjones.spacelaunchnow.common.ui.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.common.ui.views.DialogAdapter;
-import me.calebjones.spacelaunchnow.common.utils.SimpleDividerItemDecoration;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.common.youtube.YouTubeAPIHelper;
 import me.calebjones.spacelaunchnow.common.youtube.models.Video;
 import me.calebjones.spacelaunchnow.common.youtube.models.VideoListItem;
 import me.calebjones.spacelaunchnow.common.youtube.models.VideoResponse;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.data.models.main.Pad;
 import me.calebjones.spacelaunchnow.data.models.main.VidURL;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
-import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 
 import me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.WeatherCard;
 import me.calebjones.spacelaunchnow.data.networking.news.data.Callbacks;
 import me.calebjones.spacelaunchnow.data.networking.news.data.NewsDataRepository;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
@@ -211,13 +194,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
             setupCountdownTimer(launch);
 
-            //Setup SimpleDateFormat to parse out getNet launchDate.
-            SimpleDateFormat input = new SimpleDateFormat("MMMM dd, yyyy hh:mm:ss zzz");
-            SimpleDateFormat output = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
-            input.toLocalizedPattern();
-
             Date mDate;
-            String dateText = null;
+            String dateText;
 
             if (detailLaunch.getVidURLs() != null && detailLaunch.getVidURLs().size() > 0) {
 
@@ -306,9 +284,10 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
                 updateCard.setVisibility(View.GONE);
             }
 
-            //Try to convert to Month day, Year.
-            mDate = detailLaunch.getNet();
-            dateText = output.format(mDate);
+            Date date = detailLaunch.getNet();
+
+            //Get launch date
+            dateText = Utils.getStatusBasedDateFormat(launch.getNet(), launch.getStatus());
 
             launchDate.setText(Html.fromHtml(String.format(getString(R.string.launch_date), dateText)));
 
@@ -396,10 +375,10 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
         dateFormat.toLocalizedPattern();
 
-        if (!sharedPref.getBoolean("local_time", false)){
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        } else {
+        if (sharedPref.getBoolean("local_time", true)){
             dateFormat.setTimeZone(TimeZone.getDefault());
+        } else {
+            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         }
 
 

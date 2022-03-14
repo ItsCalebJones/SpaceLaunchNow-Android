@@ -6,10 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+
 import androidx.core.app.ShareCompat;
 
 import android.preference.PreferenceManager;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +21,6 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +29,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
@@ -43,18 +42,11 @@ import me.calebjones.spacelaunchnow.data.models.main.Landing;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.VidURL;
 import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherStage;
-import me.calebjones.spacelaunchnow.data.models.realm.RealmStr;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.common.ui.views.CountDownTimer;
 import me.calebjones.spacelaunchnow.common.ui.views.custom.CountDownView;
-import me.calebjones.spacelaunchnow.common.youtube.YouTubeAPIHelper;
-import me.calebjones.spacelaunchnow.common.youtube.models.Video;
-import me.calebjones.spacelaunchnow.common.youtube.models.VideoResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> implements SectionIndexer {
@@ -75,20 +67,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     }
 
     public void setupDates() {
-        if (sharedPref.getString("time_format", "Default").contains("12-Hour")) {
-            fullDate = Utils.getSimpleDateFormatForUI("MMM d, yyyy h:mm a zzz");
-        } else if (sharedPref.getString("time_format", "Default").contains("24-Hour")) {
-            fullDate = Utils.getSimpleDateFormatForUI("MMM d, yyyy HH:mm zzz");
-        } else if (DateFormat.is24HourFormat(context)) {
-            fullDate = Utils.getSimpleDateFormatForUI("MMM d, yyyy HH:mm zzz");
-        } else {
-            fullDate = Utils.getSimpleDateFormatForUI("MMM d, yyyy h:mm a zzz");
-        }
+        fullDate = Utils.getSLNDateTimeFormat(context);
 
         fullDate.toLocalizedPattern();
         shortDate = Utils.getSimpleDateFormatForUI("EEE, MMMM d, yyyy");
 
-        if (!sharedPref.getBoolean("local_time", false)){
+        if (!sharedPref.getBoolean("local_time", false)) {
             fullDate.setTimeZone(TimeZone.getTimeZone("UTC"));
             shortDate.setTimeZone(TimeZone.getTimeZone("UTC"));
         } else {
@@ -204,21 +188,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                     holder.countDownView.setLaunch(launchItem);
 
-                    //Get launch date
-                    if (launchItem.getStatus().getId() == 2) {
-
-                        if (launchItem.getNet() != null) {
-                            //Get launch date
-
-
-                            Date date = launchItem.getNet();
-                            String launchTime = shortDate.format(date);
-                            holder.launchDateCompact.setText(launchTime);
-                        }
-                    } else {
-                        Date date = launchItem.getNet();
-                        holder.launchDateCompact.setText(fullDate.format(date));
-                    }
+                    holder.launchDateCompact.setText(Utils.getStatusBasedDateTimeFormat(launchItem.getNet(),
+                            launchItem.getStatus(),
+                            context));
 
                     if (launchItem.getVidURLs() != null) {
                         if (launchItem.getVidURLs().size() == 0) {
@@ -343,11 +315,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
             final Launch launch = launchList.get(position);
             if (launch != null && launch.isValid()) {
-                Intent sendIntent = new Intent();
-
-                Date date = launch.getNet();
-                String launchDate = fullDate.format(date);
-
                 switch (v.getId()) {
                     case R.id.watchButton:
                         Timber.d("Watch: %s", launch.getVidURLs().size());
@@ -397,38 +364,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                         context.startActivity(exploreIntent);
                         break;
                     case R.id.shareButton:
-                        String message;
-                        if (launch.getVidURLs().size() > 0) {
-                            if (launch.getPad().getLocation() != null) {
-
-                                message = launch.getName() + " launching from "
-                                        + launch.getPad().getLocation().getName() + "\n\n"
-                                        + launchDate;
-                            } else if (launch.getPad().getLocation() != null) {
-                                message = launch.getName() + " launching from "
-                                        + launch.getPad().getLocation().getName() + "\n\n"
-                                        + launchDate;
-                            } else {
-                                message = launch.getName()
-                                        + "\n\n"
-                                        + launchDate;
-                            }
-                        } else {
-                            if (launch.getPad().getLocation() != null) {
-
-                                message = launch.getName() + " launching from "
-                                        + launch.getPad().getLocation().getName() + "\n\n"
-                                        + launchDate;
-                            } else if (launch.getPad().getLocation() != null) {
-                                message = launch.getName() + " launching from "
-                                        + launch.getPad().getLocation().getName() + "\n\n"
-                                        + launchDate;
-                            } else {
-                                message = launch.getName()
-                                        + "\n\n"
-                                        + launchDate;
-                            }
-                        }
                         ShareCompat.IntentBuilder.from((Activity) context)
                                 .setType("text/plain")
                                 .setChooserTitle("Share: " + launch.getName())
@@ -448,17 +383,5 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 }
             }
         }
-    }
-
-    private String getYouTubeID(String vidURL) {
-        final String regex = "(youtu\\.be\\/|youtube\\.com\\/(watch\\?(.*&)?v=|(embed|v)\\/|c\\/))([a-zA-Z0-9_-]{11}|[a-zA-Z].*)";
-        final Pattern pattern = Pattern.compile(regex);
-
-        Matcher matcher = pattern.matcher(vidURL);
-        Timber.v("Checking for match of %s", vidURL);
-        if (matcher.find() && (matcher.group(1) != null || matcher.group(2) != null) && matcher.group(5) != null) {
-            return matcher.group(5);
-        }
-        return null;
     }
 }
