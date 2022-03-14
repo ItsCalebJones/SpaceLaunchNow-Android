@@ -3,66 +3,51 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 7-31-2021
+#### Updated 3-14-2021
 ---
+### Version 3.11.0
+#### Changelog
+Whoopsie - this wasnt getting filled out.
+Better conditional date formatting to help with confusions around dates that are not certain.
+
+
 ### Version 3.9.5
 #### Changelog
 Update to using SNAPI v3!
 
-#### Updated 6-14-2021
----
 ### Version 3.9.3
 #### Changelog
 Add mission patches to detailed view.
 
----
 ### Version 3.9.0
 #### Changelog
 Add launch and landing statistics to agencies, launchers and cores.
 Add links to FlightClub.io
 
-## Changelog
-#### Updated 3-8-2021
----
 ### Version 3.8.0
 #### Changelog
 Add updates from The Space Dev staff right into the app!
 Find these updates on the Starship dashboard and in the launch and events details.
 
-## Changelog
----
 ### Version 3.7.2
 #### Changelog
 Cleanup some style issues in Launcher details page.
 Improve UX contrast on tab views.
 Make default notification settings less spammy - by default only ten minute notifications.
 
-## Changelog
-#### Updated 2-3-2021
----
 ### Version 3.7.1
 #### Changelog
 Updated in-app-purchases for 2021.
 Updated translations.
 
-
-## Changelog
-#### Updated 12-3-2020
----
 ### Version 3.6.6
 #### Changelog
 Various bug fixes and improvements.
 
-## Changelog
-#### Updated 8-25-2020
----
 ### Version 3.6.0
 #### Changelog
 Add Starship development tracking page - follow along with livestreams, view Road Closures and testing events.
 
-## Changelog
-#### Updated 1-20-2020
----
 ### Version 3.3.6
 #### Changelog
 Fix a crash on refreshing launches in the list.
@@ -78,11 +63,9 @@ Fix a few themeing problems.
 
 This is an unfortunate bug that I will have to take more time to figure out a long term solution. 
 
-
 ### Version 3.3.2
 #### Changelog
 * Small patch for bug fixes and 2020 new year changes.
-
 
 ### Version 3.3.0
 #### Changelog
@@ -90,12 +73,10 @@ This is an unfortunate bug that I will have to take more time to figure out a lo
 * Update in-app translations.
 * Fix bug with notification sounds on Android versions prior to 8.0
 
-
 ### Version 3.2.0
 #### Changelog
 * Add 'Related News' to launches via the Spaceflight News API.
 * Update in-app translations.
-
 
 ### Version 3.1.5 
 #### Changelog
@@ -103,13 +84,11 @@ This is an unfortunate bug that I will have to take more time to figure out a lo
 * Translation improvements.
 * Improvements to some UI elements.
 
-
 ### Version 3.1.1
 #### Changelog
 * Updates to translations.
 * Improvements to Calendar sync - should no longer see duplicates.
 * Add on-board crew information to Launch details. Check out the Saturn V launch for details.
-
 
 ### Version 3.1.0
 #### Changelog
@@ -117,12 +96,10 @@ This is an unfortunate bug that I will have to take more time to figure out a lo
 * Added Dark Mode for all users!
 * Fix an issue where launch data for SpaceX cores wasn't loading for some users.
 
-
 ### Version 3.0.4 
 #### Changelog
 * Fixed an issue where the Japanese switch wasn't working properly.
 * Fixed an issue with background workers not respecting schedules.
-
 
 ### Version 3.0.3
 #### Changelog

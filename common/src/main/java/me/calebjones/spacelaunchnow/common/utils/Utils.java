@@ -25,6 +25,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -35,6 +36,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
@@ -60,6 +62,8 @@ import androidx.browser.customtabs.CustomTabsIntent;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.common.customtab.SLNWebViewFallback;
+import me.calebjones.spacelaunchnow.data.models.main.Launch;
+import me.calebjones.spacelaunchnow.data.models.main.LaunchStatus;
 import saschpe.android.customtabs.CustomTabsHelper;
 import saschpe.android.customtabs.WebViewFallback;
 import timber.log.Timber;
@@ -445,11 +449,6 @@ public class Utils {
     public static String printDifference(Date startDate, Date endDate) {
         //milliseconds
         long different = endDate.getTime() - startDate.getTime();
-
-        System.out.println("startDate : " + startDate);
-        System.out.println("endDate : " + endDate);
-        System.out.println("different : " + different);
-
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
         long hoursInMilli = minutesInMilli * 60;
@@ -461,16 +460,26 @@ public class Utils {
         long elapsedHours = different / hoursInMilli;
         different = different % hoursInMilli;
 
-        long elapsedMinutes = different / minutesInMilli;
+        long elapsedMinutes;
+        if (different == 0) {
+            elapsedMinutes = 0;
+        } else {
+            elapsedMinutes = different / minutesInMilli;
+        }
 
         if (elapsedDays > 0) {
-            return (String.format(Locale.ENGLISH, "Open for %d days, %d hours and %d minutes.\n",
+            return (String.format(Locale.ENGLISH, "Open for %d day(s), %d hour(s) and %d minute(s).\n",
                     elapsedDays, elapsedHours, elapsedMinutes));
         } else if (elapsedHours > 0) {
-            return (String.format(Locale.ENGLISH, "Open for %d hours and %d minutes.\n",
-                    elapsedHours, elapsedMinutes));
+            if (elapsedMinutes == 0) {
+                return (String.format(Locale.ENGLISH, "Open for %d hour(s).\n",
+                        elapsedHours));
+            } else {
+                return (String.format(Locale.ENGLISH, "Open for %d hour(s) and %d minute(s).\n",
+                        elapsedHours, elapsedMinutes));
+            }
         } else if (elapsedMinutes > 0) {
-            return (String.format(Locale.ENGLISH, "Open for %d minutes.\n",
+            return (String.format(Locale.ENGLISH, "Open for %d minute(s).\n",
                     elapsedMinutes));
         } else {
             return "";
@@ -536,6 +545,59 @@ public class Utils {
     public static int getUniqueId() {
         return c.incrementAndGet();
     }
+
+    public static SimpleDateFormat getSLNDateTimeFormat(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        SimpleDateFormat fullDate;
+
+        if (sharedPref.getString("time_format", "Default").contains("12-Hour")) {
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, YYYY h:mm a zzz");
+        } else if (sharedPref.getString("time_format", "Default").contains("24-Hour")) {
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, YYYY HH:mm zzz");
+        } else if (DateFormat.is24HourFormat(context)) {
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, YYYY HH:mm zzz");
+        } else {
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, YYYY h:mm a zzz");
+        }
+
+        return fullDate;
+    }
+
+    public static String getStatusBasedDateFormat(Date net, LaunchStatus status) {
+        String launchDate;
+
+        if (status.getId() == 2) {
+            // If launch status is To Be Determined - only show Month and Year.
+            String date = Utils.getSimpleDateFormatForUI("MMMM, yyyy").format(net);
+            launchDate = "NET " + date;
+        } else if (status.getId() == 8) {
+            // If launch status is To Be Confirmed - only show Month, Day, and Year.
+            launchDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy").format(net);
+        } else {
+            launchDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy").format(net);
+        }
+
+        return launchDate;
+    }
+
+    public static String getStatusBasedDateTimeFormat(Date net, LaunchStatus status, Context context) {
+        String launchDate;
+
+        if (status.getId() == 2) {
+            // If launch status is To Be Determined - only show Month and Year.
+            String date = Utils.getSimpleDateFormatForUI("MMMM, yyyy").format(net);
+            launchDate = "NET " + date;
+
+        } else if (status.getId() == 8) {
+            // If launch status is To Be Confirmed - only show Month, Day, and Year.
+            launchDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy").format(net);
+        } else {
+            launchDate = Utils.getSLNDateTimeFormat(context).format(net);
+        }
+
+        return launchDate;
+    }
+
 
 }
 

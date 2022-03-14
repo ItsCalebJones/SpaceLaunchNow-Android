@@ -2,7 +2,6 @@ package me.calebjones.spacelaunchnow.common.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.util.ViewPreloadSizeProvider;
@@ -18,12 +22,7 @@ import com.bumptech.glide.util.ViewPreloadSizeProvider;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.RealmList;
@@ -34,10 +33,8 @@ import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.content.LaunchStatusUtil;
 import me.calebjones.spacelaunchnow.common.prefs.ListPreferences;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
-import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
-
 import timber.log.Timber;
 
 /**
@@ -47,36 +44,13 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int position;
     private RealmList<LaunchList> launchList;
     private Context mContext;
-    private Calendar rightNow;
-    private SharedPreferences sharedPref;
-    private Boolean night;
-    private static ListPreferences sharedPreference;
     private final ListPreloader.PreloadSizeProvider sizeProvider = new ViewPreloadSizeProvider();
-    private SimpleDateFormat sdf;
-    private SimpleDateFormat df;
     private int color;
 
     public ListAdapter(Context context, boolean night) {
-        rightNow = Calendar.getInstance();
         launchList = new RealmList<>();
-        sharedPreference = ListPreferences.getInstance(context);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         mContext = context;
-        if (sharedPref.getBoolean("local_time", true)) {
-            sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy");
-        } else {
-            sdf = Utils.getSimpleDateFormatForUI("MMMM dd, yyyy zzz");
-            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
-        }
 
-        if (sharedPref.getBoolean("24_hour_mode", false)) {
-            df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - HH:mm");
-        } else {
-            df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
-            df.setTimeZone(TimeZone.getTimeZone("UTC"));
-        }
-
-        this.night = night;
         if (night){
             color = ContextCompat.getColor(mContext, R.color.material_color_white);
         } else {
@@ -86,12 +60,10 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void addItems(List<LaunchList> launchList) {
 
-        if (this.launchList != null) {
-            this.launchList.addAll(launchList);
-        } else {
+        if (this.launchList == null) {
             this.launchList = new RealmList<>();
-            this.launchList.addAll(launchList);
         }
+        this.launchList.addAll(launchList);
         this.notifyDataSetChanged();
     }
 
@@ -145,16 +117,7 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .into(holder.categoryIcon);
             }
         }
-
-        if (launchItem.getStatus() != null && launchItem.getStatus().getId() == 2) {
-            //Get launch date
-            launchDate = sdf.format(launchItem.getNet());
-
-            holder.launch_date.setText(launchDate);
-        } else {
-            launchDate = sdf.format(launchItem.getNet());
-            holder.launch_date.setText(launchDate);
-        }
+        holder.launch_date.setText(Utils.getStatusBasedDateFormat(launchItem.getNet(), launchItem.getStatus()));
 
         //If pad and agency exist add it to location, otherwise get whats always available
         if (launchItem.getLocation() != null) {
