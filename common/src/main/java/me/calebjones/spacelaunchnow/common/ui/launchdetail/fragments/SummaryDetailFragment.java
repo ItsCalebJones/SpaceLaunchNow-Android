@@ -288,10 +288,10 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
 
             //Get launch date
             dateText = Utils.getStatusBasedDateFormat(launch.getNet(), launch.getStatus());
-
             launchDate.setText(Html.fromHtml(String.format(getString(R.string.launch_date), dateText)));
 
-            if (detailLaunch.getWindowStart() != null && detailLaunch.getWindowStart() != null) {
+
+            if (detailLaunch.getWindowStart() != null && detailLaunch.getWindowStart() != null && launch.getStatus().getId() != 2) {
                 setWindowStamp();
             } else {
                 launchWindowText.setVisibility(View.GONE);
