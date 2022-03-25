@@ -551,13 +551,13 @@ public class Utils {
         SimpleDateFormat fullDate;
 
         if (sharedPref.getString("time_format", "Default").contains("12-Hour")) {
-            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, YYYY h:mm a zzz");
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
         } else if (sharedPref.getString("time_format", "Default").contains("24-Hour")) {
-            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, YYYY HH:mm zzz");
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
         } else if (DateFormat.is24HourFormat(context)) {
-            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, YYYY HH:mm zzz");
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy HH:mm zzz");
         } else {
-            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, YYYY h:mm a zzz");
+            fullDate = Utils.getSimpleDateFormatForUI("MMMM d, yyyy h:mm a zzz");
         }
 
         return fullDate;
