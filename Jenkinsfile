@@ -156,7 +156,7 @@ pipeline {
                             filesPattern: "**/outputs/bundle/${VARIANT.toLowerCase()}/*.aab",
                             trackName: TRACK,
                             recentChangeList: [[language: 'en-US', text: CHANGELOG]],
-                            rolloutPercentage: '0'
+                            rolloutPercentage: '100'
                 }
             }
         }
