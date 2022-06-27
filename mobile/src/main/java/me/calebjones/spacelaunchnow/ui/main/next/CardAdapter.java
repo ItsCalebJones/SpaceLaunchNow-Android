@@ -116,7 +116,17 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                 if (launchItem.isValid()) {
                     if (launchItem.getRocket().getConfiguration() != null) {
                         if (launchItem.getLaunchServiceProvider() != null) {
-                            title = launchItem.getLaunchServiceProvider().getName() + " | " + (launchItem.getRocket().getConfiguration().getName());
+                            String providerName;
+
+                            // if the name is too long lets use the abbrev name if its useable
+                            if (launchItem.getLaunchServiceProvider().getName().length() > 15
+                                    && launchItem.getLaunchServiceProvider().getAbbrev() != null
+                                    && launchItem.getLaunchServiceProvider().getAbbrev().length() > 0) {
+                                providerName = launchItem.getLaunchServiceProvider().getAbbrev();
+                            } else {
+                                providerName = launchItem.getLaunchServiceProvider().getName();
+                            }
+                            title = providerName + " | " + (launchItem.getRocket().getConfiguration().getName());
                         }  else {
                             title = launchItem.getRocket().getConfiguration().getName();
                         }
