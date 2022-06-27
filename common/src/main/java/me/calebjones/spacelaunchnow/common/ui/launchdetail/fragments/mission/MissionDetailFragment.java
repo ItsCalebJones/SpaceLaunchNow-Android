@@ -224,7 +224,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                         .centerInside()
                         .into(missionPatch);
             } else {
-                missionPatch.setVisibility(View.VISIBLE);
+                missionPatch.setVisibility(View.GONE);
             }
 
             if (detailLaunch.getRocket().getConfiguration().getWikiUrl() != null && detailLaunch.getRocket().getConfiguration().getWikiUrl().length() > 0) {

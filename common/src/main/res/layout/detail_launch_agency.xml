@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:background="?attr/colorAccent"
                     android:gravity="center_horizontal"
-                    android:lines="1"
+                    android:maxLines="2"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="8dp"

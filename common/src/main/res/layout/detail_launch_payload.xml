@@ -999,13 +999,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_baseline_grid_1x"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="@dimen/material_baseline_grid_7x"
+                    android:layout_marginTop="12dp"
                     android:gravity="center"
                     android:text="@string/info"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/vehicle_wikiButton"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -1018,34 +1016,33 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/material_baseline_grid_1x"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="@dimen/material_baseline_grid_7x"
+                    android:layout_marginTop="12dp"
                     android:gravity="center"
                     android:text="@string/wiki"
                     android:textColor="@color/white"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/vehicle_infoButton"
-                    app:layout_constraintTop_toTopOf="@+id/vehicle_infoButton" />
-
+                    app:layout_constraintTop_toBottomOf="@+id/consecutive_success_title" />
 
                 <Button
                     android:id="@+id/launcher_launches"
                     style="@style/Base.Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/material_card_edge_margin"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginTop="60dp"
                     android:gravity="center"
                     android:text="@string/view_more_launches"
+                    android:textColor="@color/white"
                     android:textSize="12sp"
                     android:visibility="visible"
-                    android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="parent" />
+                    app:layout_constraintStart_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/consecutive_success_title" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline"
