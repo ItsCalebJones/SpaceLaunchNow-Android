@@ -438,20 +438,20 @@ public class LaunchDetailActivity extends BaseActivity
     private void findProfileLogo(Launch launch) {
         String locationCountryCode;
         try {
-            if (launch.getRocket().getConfiguration().getManufacturer() != null) {
-                if (launch.getRocket().getConfiguration().getManufacturer().getNationUrl() != null) {
-                    applyProfileLogo(launch.getRocket().getConfiguration().getManufacturer().getNationUrl());
-                } else if (launch.getRocket().getConfiguration().getManufacturer().getAbbrev() != null
-                        && launch.getRocket().getConfiguration().getManufacturer().getCountryCode() != null) {
-                    locationCountryCode = launch.getRocket().getConfiguration().getManufacturer().getCountryCode();
+            if (launch.getLaunchServiceProvider() != null) {
+                if (launch.getLaunchServiceProvider().getNationUrl() != null) {
+                    applyProfileLogo(launch.getLaunchServiceProvider().getNationUrl());
+                } else if (launch.getLaunchServiceProvider().getAbbrev() != null
+                        && launch.getLaunchServiceProvider().getCountryCode() != null) {
+                    locationCountryCode = launch.getLaunchServiceProvider().getCountryCode();
                     //Go through various CountryCodes and assign flag.
-                    if (launch.getRocket().getConfiguration().getManufacturer().getAbbrev().contains("ASA")) {
+                    if (launch.getLaunchServiceProvider().getAbbrev().contains("ASA")) {
                         applyProfileLogo(getString(R.string.ariane_logo));
-                    } else if (launch.getRocket().getConfiguration().getManufacturer().getAbbrev().contains("SpX")) {
+                    } else if (launch.getLaunchServiceProvider().getAbbrev().contains("SpX")) {
                         applyProfileLogo(getString(R.string.spacex_logo));
-                    } else if (launch.getRocket().getConfiguration().getManufacturer().getAbbrev().contains("BA")) {
+                    } else if (launch.getLaunchServiceProvider().getAbbrev().contains("BA")) {
                         applyProfileLogo(getString(R.string.Yuzhnoye_logo));
-                    } else if (launch.getRocket().getConfiguration().getManufacturer().getAbbrev().contains("ULA")) {
+                    } else if (launch.getLaunchServiceProvider().getAbbrev().contains("ULA")) {
                         applyProfileLogo(getString(R.string.ula_logo));
                     } else if (locationCountryCode.length() == 3) {
                         if (locationCountryCode.contains("USA")) {

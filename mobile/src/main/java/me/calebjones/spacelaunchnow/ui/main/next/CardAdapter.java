@@ -115,9 +115,9 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             try {
                 if (launchItem.isValid()) {
                     if (launchItem.getRocket().getConfiguration() != null) {
-                        if (launchItem.getRocket().getConfiguration().getManufacturer() != null) {
-                            title = launchItem.getRocket().getConfiguration().getManufacturer().getName() + " | " + (launchItem.getRocket().getConfiguration().getName());
-                        } else {
+                        if (launchItem.getLaunchServiceProvider() != null) {
+                            title = launchItem.getLaunchServiceProvider().getName() + " | " + (launchItem.getRocket().getConfiguration().getName());
+                        }  else {
                             title = launchItem.getRocket().getConfiguration().getName();
                         }
                     } else if (launchItem.getName() != null) {
@@ -170,16 +170,16 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                                 .load(launchItem.getRocket().getConfiguration().getImageUrl())
                                 .placeholder(R.drawable.placeholder)
                                 .into(holder.launchImage);
-                    } else if (launchItem.getRocket().getConfiguration().getManufacturer() != null && launchItem.getRocket().getConfiguration().getManufacturer().getImageUrl() != null) {
+                    } else if (launchItem.getLaunchServiceProvider() != null && launchItem.getLaunchServiceProvider().getImageUrl() != null) {
                         holder.launchImage.setVisibility(View.VISIBLE);
                         GlideApp.with(context)
-                                .load(launchItem.getRocket().getConfiguration().getManufacturer().getImageUrl())
+                                .load(launchItem.getLaunchServiceProvider().getImageUrl())
                                 .placeholder(R.drawable.placeholder)
                                 .into(holder.launchImage);
-                    } else if (launchItem.getRocket().getConfiguration().getManufacturer() != null && launchItem.getRocket().getConfiguration().getManufacturer().getLogoUrl() != null) {
+                    } else if (launchItem.getLaunchServiceProvider() != null && launchItem.getLaunchServiceProvider().getLogoUrl() != null) {
                         holder.launchImage.setVisibility(View.VISIBLE);
                         GlideApp.with(context)
-                                .load(launchItem.getRocket().getConfiguration().getManufacturer().getLogoUrl())
+                                .load(launchItem.getLaunchServiceProvider().getLogoUrl())
                                 .placeholder(R.drawable.placeholder)
                                 .into(holder.launchImage);
                     } else {
