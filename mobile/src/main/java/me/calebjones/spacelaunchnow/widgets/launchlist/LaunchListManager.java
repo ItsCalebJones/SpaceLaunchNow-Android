@@ -12,10 +12,8 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.common.utils.UniqueIdentifier;
 import me.calebjones.spacelaunchnow.widgets.WidgetBroadcastReceiver;
 import timber.log.Timber;
 
@@ -192,12 +190,34 @@ public class LaunchListManager {
 
         remoteViews.setOnClickPendingIntent(R.id.title, actionPendingIntent);
 
-        Intent clickIntent = new Intent(context, LaunchDetailActivity.class);
-        PendingIntent clickPI = PendingIntent
-                .getActivity(context, UniqueIdentifier.getID(),
-                        clickIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        remoteViews.setPendingIntentTemplate(R.id.launch_list, clickPI);
+
+        // Sets up the intent that points to the StackViewService that will
+        // provide the views for this collection.
+        Intent intent = new Intent(context, LaunchListWidgetProvider.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        // When intents are compared, the extras are ignored, so we need to
+        // embed the extras into the data so that the extras will not be
+        // ignored.
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+
+
+        // This section makes it possible for items to have individualized
+        // behavior. It does this by setting up a pending intent template.
+        // Individuals items of a collection cannot set up their own pending
+        // intents. Instead, the collection as a whole sets up a pending
+        // intent template, and the individual items set a fillInIntent
+        // to create unique behavior on an item-by-item basis.
+        Intent detailIntent = new Intent(context, LaunchListWidgetProvider.class);
+        // Set the action for the intent.
+        // When the user touches a particular view, it will have the effect of
+        // broadcasting TOAST_ACTION.
+        detailIntent.setAction(LaunchListWidgetProvider.DETAIL_ACTION);
+        detailIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+        PendingIntent detailPendingIntent = PendingIntent.getBroadcast(context, 0,
+                detailIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        remoteViews.setPendingIntentTemplate(R.id.launch_list, detailPendingIntent);
 
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.launch_list);
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);

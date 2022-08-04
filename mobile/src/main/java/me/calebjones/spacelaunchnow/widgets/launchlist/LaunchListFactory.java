@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -24,7 +24,6 @@ import me.calebjones.spacelaunchnow.common.prefs.SwitchPreferences;
 import me.calebjones.spacelaunchnow.common.content.util.QueryBuilder;
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
-import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetailActivity;
 import me.calebjones.spacelaunchnow.R;
 import timber.log.Timber;
 
@@ -173,12 +172,13 @@ public class LaunchListFactory implements RemoteViewsService.RemoteViewsFactory 
         }
         row.setTextViewText(R.id.location, launch.getPad().getLocation().getName());
 
-        Intent exploreIntent = new Intent(context, LaunchDetailActivity.class);
-        exploreIntent.putExtra("TYPE", "launch");
-        exploreIntent.putExtra("launchID", launch.getId());
-        exploreIntent.setData(Uri.parse(exploreIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        exploreIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        row.setOnClickFillInIntent(R.id.rootview, exploreIntent);
+        Bundle extras = new Bundle();
+        extras.putString(LaunchListWidgetProvider.LAUNCH_ID, launch.getId());
+
+        Intent fillInIntent = new Intent();
+        fillInIntent = fillInIntent.putExtras(extras);
+
+        row.setOnClickFillInIntent(R.id.rootview, fillInIntent);
 
         return (row);
     }

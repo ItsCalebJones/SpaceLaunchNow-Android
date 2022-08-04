@@ -2,8 +2,8 @@
 ext {
     app = [
             versionMajor: 3,
-            versionMinor: 13,
-            versionPatch: 2,
+            versionMinor: 14,
+            versionPatch: 0,
             versionCode: Integer.valueOf(System.env.BUILD_NUMBER ?: 0)
 
     ]
