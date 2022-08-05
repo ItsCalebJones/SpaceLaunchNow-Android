@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.jaredrummler.android.colorpicker.ColorPreferenceCompat;
 import com.karumi.dexter.Dexter;
@@ -294,6 +295,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             t.start();
             return true;
         });
+        Preference privacyPreference = findPreference("notifications_privacy");
+        privacyPreference.setOnPreferenceClickListener(preference -> {
+            sendPrivacyEmail();
+            return true;
+        });
+
         Preference filterPreference = findPreference("notification_filters");
         filterPreference.setOnPreferenceClickListener(preference -> {
             Intent intent = null;
@@ -614,5 +621,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             NotificationBuilder.buildNotification(context, launch, launch.getName(), String.format("This is a test notification! (Channel - %s)", CHANNEL_LAUNCH_REMINDER_NAME), CHANNEL_LAUNCH_REMINDER);
         }
         realm.close();
+    }
+
+    private void sendPrivacyEmail() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("message/rfc822");
+        intent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"privacy@spacelaunchnow.me"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Personal Data Request");
+        intent.putExtra(Intent.EXTRA_TEXT, "Please delete all personal data related to Space Launch Now.");
+        startActivity(Intent.createChooser(intent, "Send Email"));
+
     }
 }

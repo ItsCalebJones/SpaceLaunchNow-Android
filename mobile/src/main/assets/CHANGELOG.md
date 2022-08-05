@@ -3,13 +3,24 @@ A space launch tracker for Android using data from the Launch Library API.
 
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
-#### Updated 3-14-2021
 ---
+### Version 3.14.1
+#### Changelog
+Fixed an issue related to clicking on items in widget, also per Google Play policy added a button to request all personal data to be deleted.
+Please note - I do not collect, store or sell any personal data... all I have is anonymized meta-data that Google collects to use its SDKs (Firebase, Admob, etc)
+
+### Version 3.13.0
+#### Changelog
+Small updates to the launch title to shorten long agency names, fixed some margins and improved logic for selecting agency to show in the detailed view.
+
+### Version 3.12.0
+#### Changelog
+Fix an issue with sorting Spacestations.
+
 ### Version 3.11.0
 #### Changelog
 Whoopsie - this wasnt getting filled out.
 Better conditional date formatting to help with confusions around dates that are not certain.
-
 
 ### Version 3.9.5
 #### Changelog

@@ -39,6 +39,12 @@
             android:summary="@string/debug_logging_summary"
             android:title="@string/debug_logging"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:defaultValue="true"
+            app:iconSpaceReserved="false"
+            android:key="notifications_privacy"
+            android:summary="Send a request to delete all personal data."
+            android:title="Data Deletion Request" />
 
     </PreferenceCategory>
     <PreferenceCategory
