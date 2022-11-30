@@ -13,6 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Check Working Dir
+        run: |
+          pwd
+          ls -lah
+          cd ${HOME}
+          ls -lah
+          pwd
+
       - name: Setup Secrets
         run: |
           echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > ${HOME}/spacelaunchnow.keystore
