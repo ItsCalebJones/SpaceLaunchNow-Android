@@ -4,7 +4,7 @@ ext {
             versionMajor: 3,
             versionMinor: 14,
             versionPatch: 1,
-            versionCode: Integer.valueOf(System.env.BUILD_NUMBER ?: 0)
+            versionCode: Integer.valueOf(System.env.GITHUB_RUN_NUMBER ?: 0)
 
     ]
 
