@@ -5,7 +5,7 @@ on:
     branches:
       - "workflow/initial_testing"
 env:
-  BUILD_NUMBER: $GITHUB_RUN_ID
+  BUILD_NUMBER: ${{ GITHUB_RUN_NUMBER }}
   VARIANT: Release
 
 jobs:
