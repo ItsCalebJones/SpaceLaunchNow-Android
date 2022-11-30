@@ -4,35 +4,69 @@ on:
   push:
     branches:
       - "workflow/initial_testing"
+env:
+  BUILD_NUMBER: $GITHUB_RUN_ID
+  VARIANT: Release
 
 jobs:
-  build:
-
+  Test:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+        -
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
 
-      - name: Setup Secrets
-        run: |
-          echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > spacelaunchnow.keystore
-          echo ${{ secrets.PUBLISHER_KEY }} | base64 --decode > publisher-key.json
-          echo ${{ secrets.KEYSTORE_PROPERTIES }} | base64 --decode >keystore.properties
-          echo ${{ secrets.GRADLE_PROPERTIES }} | base64 --decode > gradle.properties
-          echo ${{ secrets.GOOGLE_SERVICE }} | base64 --decode > mobile/google-services.json
-          echo ${{ secrets.API_KEYS }} | base64 --decode > common/src/main/res/values/api_keys.xml
-
-      - name: Set Up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: 8
-          distribution: temurin
-
-      - name: Change wrapper permissions
-        run: chmod +x ./gradlew
-
-      - name: Run Tests
-        run: ./gradlew test
+      - name: Run Test
+        uses: ./.github/actions/run-tests
 
       - name: Build Project
-        run: ./gradlew assemble
+        run: ./gradlew assembleDebug
+
+  Compile:
+    runs-on: ubuntu-latest
+    needs: Test
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout project
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Build Release Bundle
+        run: ./gradlew bundle$VARIANT
+
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign Bundle
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.KEYSTORE_FILE }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+
+      - name: Upload Bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: release.aab
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+
+#  release:
+#    name: Release APK
+#    needs: Compile
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download APK from build
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: release.aab
+#      - name: Create Release
+#        id: create_release
+#        uses: actions/create-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          tag_name: ${{ github.run_number }}
+#          release_name: ${{ github.event.repository.name }} v${{ github.run_number }}
