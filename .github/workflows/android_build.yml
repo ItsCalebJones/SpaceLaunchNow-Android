@@ -13,22 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Check Working Dir
-        run: |
-          pwd
-          ls -lah
-          cd ${HOME}
-          ls -lah
-          pwd
-
       - name: Setup Secrets
         run: |
-          echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > ${HOME}/spacelaunchnow.keystore
-          echo ${{ secrets.PUBLISHER_KEY }} | base64 --decode > ${HOME}/publisher-key.json
-          echo ${{ secrets.KEYSTORE_PROPERTIES }} | base64 --decode > ${HOME}/keystore.properties
-          echo ${{ secrets.GRADLE_PROPERTIES }} | base64 --decode > ${HOME}/gradle.properties
-          echo ${{ secrets.GOOGLE_SERVICE }} | base64 --decode > ${HOME}/mobile/google-services.json
-          echo ${{ secrets.API_KEYS }} | base64 --decode > ${HOME}/common/src/main/res/values/api_keys.xml
+          echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > spacelaunchnow.keystore
+          echo ${{ secrets.PUBLISHER_KEY }} | base64 --decode > publisher-key.json
+          echo ${{ secrets.KEYSTORE_PROPERTIES }} | base64 --decode >keystore.properties
+          echo ${{ secrets.GRADLE_PROPERTIES }} | base64 --decode > gradle.properties
+          echo ${{ secrets.GOOGLE_SERVICE }} | base64 --decode > mobile/google-services.json
+          echo ${{ secrets.API_KEYS }} | base64 --decode > common/src/main/res/values/api_keys.xml
 
       - name: Set Up JDK
         uses: actions/setup-java@v3
