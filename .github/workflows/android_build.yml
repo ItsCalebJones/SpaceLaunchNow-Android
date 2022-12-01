@@ -2,10 +2,7 @@ name: Android Build
 
 on:
   push:
-    branches:
-      - '**'
-    branches-ignore:
-      - master
+    branches-ignore: [master]
 
 jobs:
   Test:
