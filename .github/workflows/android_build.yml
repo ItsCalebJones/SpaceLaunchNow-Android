@@ -33,7 +33,7 @@ jobs:
       - name: Build Project
         run: ./gradlew assembleDebug
 
-  Compile:
+  Build:
     runs-on: ubuntu-latest
     needs: Test
 
@@ -55,28 +55,42 @@ jobs:
         uses: ./.github/actions/setup-env
 
       - name: Build Release Bundle
-        run: ./gradlew -PstorePass=${{ secrets.KEY_STORE_PASSWORD }} -Pkeystore=${{ secrets.KEYSTORE_FILE }} -Palias=${{ secrets.KEY_ALIAS }} -PkeyPass=${{ secrets.KEY_STORE_PASSWORD }} bundle$VARIANT
+        run: ./gradlew assemble bundleRelease
+
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign Bundle
+        id: sign_app
+        with:
+          releaseDirectory: mobile/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.KEYSTORE_FILE }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload Bundle
         uses: actions/upload-artifact@v2
         with:
-          name: release.aab
-          path: mobile/build/outputs/bundle/release
+          name: mobile-artifacts
+          path: |
+          ${{ steps.sign_app.outputs.signedReleaseFile }}
+          mobile/build/outputs/release/*.apk
 
-#  release:
-#    name: Release APK
-#    needs: Compile
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download APK from build
-#        uses: actions/download-artifact@v1
+  Release:
+    name: Release APK
+    needs: Compile
+#    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK from build
+        uses: actions/download-artifact@v1
+        with:
+          name: mobile-artifacts
+      - name: Display structure of downloaded files
+        run: ls -R
+#      - name: Publish Release
+#        uses: r0adkll/upload-google-play@v1
 #        with:
-#          name: release.aab
-#      - name: Create Release
-#        id: create_release
-#        uses: actions/create-release@v1
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        with:
-#          tag_name: ${{ github.run_number }}
-#          release_name: ${{ github.event.repository.name }} v${{ github.run_number }}
+#          serviceAccountJsonPlainText: ${{ secrets.PUBLISHER_KEY }}
+#          packageName: me.calebjones.spacelaunhnow
+#          releaseFiles: mobile-release.aab
+#          track: internal
