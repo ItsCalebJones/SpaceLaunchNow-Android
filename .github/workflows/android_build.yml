@@ -68,7 +68,7 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Upload Bundle
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: mobile-artifacts
           path: |
@@ -78,20 +78,18 @@ jobs:
 
   Release:
     needs: Build
-#    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
       - name: Download APK from build
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: mobile-artifacts
-      - name: Display structure of downloaded files
-        run: ls -R
-#      - name: Publish Release
-#        uses: r0adkll/upload-google-play@v1
-#        with:
-#          serviceAccountJsonPlainText: ${{ secrets.PUBLISHER_KEY }}
-#          packageName: me.calebjones.spacelaunhnow
-#          releaseFiles: mobile-release.aab
-#          track: internal
-# ADD MAPPINGS AND SHIT
+      - name: Publish Release
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PUBLISHER_KEY }}
+          packageName: me.calebjones.spacelaunhnow
+          releaseFiles: mobile-artifacts/bundle/release/mobile-release.aab
+          track: internal
+          mappingFile: mobile-artifacts/mapping/release/mapping.txt
