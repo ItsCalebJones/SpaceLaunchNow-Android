@@ -77,7 +77,7 @@ jobs:
 
   Release:
     name: Release APK
-    needs: Compile
+    needs: Build
 #    if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
