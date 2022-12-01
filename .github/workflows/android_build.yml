@@ -72,8 +72,8 @@ jobs:
         with:
           name: mobile-artifacts
           path: |
-          ${{ steps.sign_app.outputs.signedReleaseFile }}
-          mobile/build/outputs/release/*.apk
+            ${{ steps.sign_app.outputs.signedReleaseFile }}
+            mobile/build/outputs/release/*.apk
 
   Release:
     name: Release APK
