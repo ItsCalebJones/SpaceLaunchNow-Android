@@ -55,22 +55,13 @@ jobs:
         uses: ./.github/actions/setup-env
 
       - name: Build Release Bundle
-        run: ./gradlew bundle$VARIANT
-
-      - uses: r0adkll/sign-android-release@v1
-        name: Sign Bundle
-        id: sign_app
-        with:
-          releaseDirectory: mobile/build/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.KEYSTORE_FILE }}
-          alias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        run: ./gradlew -PstorePass=${{ secrets.KEY_STORE_PASSWORD }} -Pkeystore=${{ secrets.KEYSTORE_FILE }} -Palias=${{ secrets.KEY_ALIAS }} -PkeyPass=${{ secrets.KEY_STORE_PASSWORD }} bundle$VARIANT
 
       - name: Upload Bundle
         uses: actions/upload-artifact@v2
         with:
           name: release.aab
-          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+          path: mobile/build/outputs/bundle/release
 
 #  release:
 #    name: Release APK
