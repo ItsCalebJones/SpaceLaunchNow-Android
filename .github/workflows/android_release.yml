@@ -1,0 +1,95 @@
+name: Android Release
+
+on:
+  push:
+    branches: [master]
+
+env:
+  VARIANT: Release
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Secrets
+        shell: bash
+        run: |
+          echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > spacelaunchnow.keystore
+          echo ${{ secrets.PUBLISHER_KEY }} | base64 --decode > publisher-key.json
+          echo ${{ secrets.KEYSTORE_PROPERTIES }} | base64 --decode >keystore.properties
+          echo ${{ secrets.GRADLE_PROPERTIES }} | base64 --decode > gradle.properties
+          echo ${{ secrets.GOOGLE_SERVICE }} | base64 --decode > mobile/google-services.json
+          echo ${{ secrets.API_KEYS }} | base64 --decode > common/src/main/res/values/api_keys.xml
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Run Test
+        uses: ./.github/actions/run-tests
+
+      - name: Build Project
+        run: ./gradlew assembleDebug
+
+  Build:
+    runs-on: ubuntu-latest
+    needs: Test
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout project
+
+      - name: Setup Secrets
+        shell: bash
+        run: |
+          echo ${{ secrets.KEYSTORE_FILE }} | base64 --decode > spacelaunchnow.keystore
+          echo ${{ secrets.PUBLISHER_KEY }} | base64 --decode > publisher-key.json
+          echo ${{ secrets.KEYSTORE_PROPERTIES }} | base64 --decode >keystore.properties
+          echo ${{ secrets.GRADLE_PROPERTIES }} | base64 --decode > gradle.properties
+          echo ${{ secrets.GOOGLE_SERVICE }} | base64 --decode > mobile/google-services.json
+          echo ${{ secrets.API_KEYS }} | base64 --decode > common/src/main/res/values/api_keys.xml
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Build Release Bundle
+        run: ./gradlew assemble bundleRelease
+
+      - uses: r0adkll/sign-android-release@v1
+        name: Sign Bundle
+        id: sign_app
+        with:
+          releaseDirectory: mobile/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.KEYSTORE_FILE }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload Bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: mobile-artifacts
+          path: |
+            ${{ steps.sign_app.outputs.signedReleaseFile }}
+            mobile/build/outputs/apk/release/*.apk
+            mobile/build/outputs/mapping/release/*.txt
+
+  Release:
+    needs: Build
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK from build
+        uses: actions/download-artifact@v3
+        with:
+          name: mobile-artifacts
+      - name: Publish Release
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PUBLISHER_KEY }}
+          packageName: me.calebjones.spacelaunhnow
+          releaseFiles: mobile-artifacts/bundle/release/mobile-release.aab
+          track: internal
+          mappingFile: mobile-artifacts/mapping/release/mapping.txt

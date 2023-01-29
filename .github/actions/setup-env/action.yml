@@ -1,0 +1,24 @@
+---
+name: Setup Environment
+description: Setup Environment
+
+
+runs:
+  using: composite
+  steps:
+    - name: Set Up JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 8
+        distribution: temurin
+        cache: gradle
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
+    - name: Change wrapper permissions
+      shell: bash
+      run: chmod +x ./gradlew
+

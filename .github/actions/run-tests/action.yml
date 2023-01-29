@@ -1,0 +1,12 @@
+---
+name: Android Test
+description: Run Android Test
+
+
+runs:
+  using: composite
+  steps:
+    - name: Run Test Suite
+      shell: bash
+      run: |
+        ./gradlew test
