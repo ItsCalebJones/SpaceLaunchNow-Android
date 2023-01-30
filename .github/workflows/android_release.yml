@@ -77,14 +77,16 @@ jobs:
             ${{ steps.sign_app.outputs.signedReleaseFile }}
             mobile/build/outputs/apk/release/*.apk
             mobile/build/outputs/mapping/release/*.txt
-      - name: Download APK from build
-        uses: actions/download-artifact@v3
-        with:
-          name: mobile-artifacts
+
+      - name: Decode Credentials
+        run: |
+          mkdir ${HOME}/.credentials
+          echo ${{ secrets.PUBLISHER_KEY }} | base64 --decode > ${HOME}/.credentials/key.json
+          
       - name: Publish Release
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJsonPlainText: ${{ secrets.PUBLISHER_KEY }}
+          serviceAccountJsonPlainText: ${HOME}/.credentials/key.json
           packageName: me.calebjones.spacelaunhnow
           releaseFiles: ${{ steps.sign_app.outputs.signedReleaseFile }}
           track: internal
