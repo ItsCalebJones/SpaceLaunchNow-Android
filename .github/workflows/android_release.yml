@@ -33,7 +33,7 @@ jobs:
       - name: Build Project
         run: ./gradlew assembleDebug
 
-  Build:
+  Build Release:
     runs-on: ubuntu-latest
     needs: Test
 
@@ -75,12 +75,6 @@ jobs:
             ${{ steps.sign_app.outputs.signedReleaseFile }}
             mobile/build/outputs/apk/release/*.apk
             mobile/build/outputs/mapping/release/*.txt
-
-  Release:
-    needs: Build
-    if: github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    steps:
       - name: Download APK from build
         uses: actions/download-artifact@v3
         with:
@@ -90,6 +84,6 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.PUBLISHER_KEY }}
           packageName: me.calebjones.spacelaunhnow
-          releaseFiles: mobile-artifacts/bundle/release/mobile-release.aab
+          releaseFiles: ${{ steps.sign_app.outputs.signedReleaseFile }}
           track: internal
-          mappingFile: mobile-artifacts/mapping/release/mapping.txt
+          mappingFile: mobile/build/outputs/mapping/release/mapping.txt
