@@ -86,7 +86,7 @@ jobs:
       - name: Publish Release
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJson: cat ${HOME}/.credentials/key.json
+          serviceAccountJson: ${HOME}/.credentials/key.json
           packageName: me.calebjones.spacelaunhnow
           releaseFiles: ${{ steps.sign_app.outputs.signedReleaseFile }}
           track: internal
