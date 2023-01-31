@@ -5,7 +5,6 @@ import android.content.Context;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.UiThread;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -14,7 +13,6 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
-import me.calebjones.spacelaunchnow.data.models.main.news.NewsItemResponse;
 import timber.log.Timber;
 
 /**

@@ -1,11 +1,11 @@
 package me.calebjones.spacelaunchnow.data.networking.news.data;
 
+
 import androidx.annotation.Nullable;
 
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import me.calebjones.spacelaunchnow.data.models.main.news.NewsItem;
-import me.calebjones.spacelaunchnow.data.models.main.news.NewsItemResponse;
 
 public class Callbacks {
     public interface NewsListNetworkCallback {

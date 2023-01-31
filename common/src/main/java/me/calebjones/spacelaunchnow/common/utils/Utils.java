@@ -197,7 +197,7 @@ public class Utils {
         Intent actionIntent = new Intent(Intent.ACTION_SEND);
         actionIntent.setType("text/plain");
         actionIntent.putExtra(Intent.EXTRA_TEXT, url);
-        return PendingIntent.getActivity(context, 0, actionIntent, 0);
+        return PendingIntent.getActivity(context, 0, actionIntent, PendingIntent.FLAG_MUTABLE);
     }
 
 

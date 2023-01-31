@@ -42,7 +42,6 @@ public class Utils {
     public final static int DEFAULT_DELAY = 0;
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void animateViewColor(View v, int startColor, int endColor) {
 
         ObjectAnimator animator = ObjectAnimator.ofObject(v, "backgroundColor",
