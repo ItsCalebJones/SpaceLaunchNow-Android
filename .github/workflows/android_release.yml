@@ -82,11 +82,11 @@ jobs:
         run: |
           mkdir ${HOME}/.credentials
           echo ${{ secrets.PUBLISHER_KEY }} | base64 --decode > ${HOME}/.credentials/key.json
-          
+
       - name: Publish Release
         uses: r0adkll/upload-google-play@v1
         with:
-          serviceAccountJsonPlainText: ${HOME}/.credentials/key.json
+          serviceAccountJsonPlainText: cat ${HOME}/.credentials/key.json
           packageName: me.calebjones.spacelaunhnow
           releaseFiles: ${{ steps.sign_app.outputs.signedReleaseFile }}
           track: internal
