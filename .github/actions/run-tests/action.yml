@@ -9,4 +9,4 @@ runs:
     - name: Run Test Suite
       shell: bash
       run: |
-        ./gradlew test
+        ./gradlew clean test

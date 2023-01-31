@@ -28,4 +28,4 @@ jobs:
         uses: ./.github/actions/run-tests
 
       - name: Build Project
-        run: ./gradlew assembleDebug
+        run: ./gradlew clean assembleDebug

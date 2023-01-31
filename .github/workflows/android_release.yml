@@ -32,7 +32,7 @@ jobs:
         uses: ./.github/actions/run-tests
 
       - name: Build Project
-        run: ./gradlew assembleDebug
+        run: ./gradlew clean assembleDebug
 
   Build:
     name: Build and Release to Internal
@@ -57,7 +57,7 @@ jobs:
         uses: ./.github/actions/setup-env
 
       - name: Build Release Bundle
-        run: ./gradlew assemble bundleRelease
+        run: ./gradlew clean assemble bundleRelease
 
       - uses: r0adkll/sign-android-release@v1
         name: Sign Bundle

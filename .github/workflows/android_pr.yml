@@ -31,7 +31,7 @@ jobs:
         uses: ./.github/actions/run-tests
 
       - name: Build Project
-        run: ./gradlew assembleDebug
+        run: ./gradlew clean assembleDebug
 
   Build:
     runs-on: ubuntu-latest
@@ -55,23 +55,4 @@ jobs:
         uses: ./.github/actions/setup-env
 
       - name: Build Release Bundle
-        run: ./gradlew assemble bundleRelease
-
-      - uses: r0adkll/sign-android-release@v1
-        name: Sign Bundle
-        id: sign_app
-        with:
-          releaseDirectory: mobile/build/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.KEYSTORE_FILE }}
-          alias: ${{ secrets.KEY_ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Upload Bundle
-        uses: actions/upload-artifact@v3
-        with:
-          name: mobile-artifacts
-          path: |
-            ${{ steps.sign_app.outputs.signedReleaseFile }}
-            mobile/build/outputs/apk/release/*.apk
-            mobile/build/outputs/mapping/release/*.txt
+        run: ./gradlew clean assemble bundleRelease
