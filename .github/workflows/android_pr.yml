@@ -31,7 +31,7 @@ jobs:
         uses: ./.github/actions/run-tests
 
       - name: Build Project
-        run: ./gradlew clean assembleDebug
+        run: ./gradlew clean assembleDebug --stacktrace
 
   Build:
     runs-on: ubuntu-latest
