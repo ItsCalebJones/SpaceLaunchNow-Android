@@ -2,8 +2,8 @@
 ext {
     app = [
             versionMajor: 3,
-            versionMinor: 14,
-            versionPatch: 1,
+            versionMinor: 15,
+            versionPatch: 0,
             versionCode: Integer.valueOf(System.env.GITHUB_RUN_NUMBER ?: 0)
 
     ]
