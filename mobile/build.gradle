@@ -190,7 +190,7 @@ dependencies {
     implementation deps.adAdapter
     annotationProcessor deps.deepLinkDispatchAnnotation
 
-    implementation deps.checkout
+    implementation deps.billing
 }
 
 apply plugin: 'com.google.gms.google-services'

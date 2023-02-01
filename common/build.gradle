@@ -119,7 +119,8 @@ dependencies {
     implementation deps.preferences
     implementation deps.deepLinkDispatch
 
-    implementation deps.checkout
+    implementation deps.billing
+    implementation deps.guava
 
     implementation deps.adAdapter
     kapt deps.deepLinkDispatchAnnotation

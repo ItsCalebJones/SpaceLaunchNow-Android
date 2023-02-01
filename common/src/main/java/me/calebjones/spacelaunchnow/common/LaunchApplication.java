@@ -15,6 +15,15 @@ import android.widget.ImageView;
 import android.zetterstrom.com.forecast.ForecastClient;
 import android.zetterstrom.com.forecast.ForecastConfiguration;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesResponseListener;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.QueryPurchasesParams;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -31,8 +40,6 @@ import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.tweetui.TweetUi;
-
-import org.solovyev.android.checkout.Billing;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +62,7 @@ import me.calebjones.spacelaunchnow.common.utils.Connectivity;
 import me.calebjones.spacelaunchnow.common.utils.analytics.Analytics;
 import me.calebjones.spacelaunchnow.common.utils.analytics.CrashlyticsTree;
 import me.calebjones.spacelaunchnow.data.models.Constants;
+import me.calebjones.spacelaunchnow.data.models.Products;
 import me.calebjones.spacelaunchnow.data.models.realm.LaunchDataModule;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import timber.log.Timber;
@@ -77,16 +85,17 @@ public class LaunchApplication extends Application {
             SupporterHelper.SKU_2022_PLATINUM};
 
     public static final List<String> LIST_INAPP_SKUS = new ArrayList<>(Arrays.asList(
-                SupporterHelper.SKU_2022_BRONZE,
-                SupporterHelper.SKU_2022_SILVER,
-                SupporterHelper.SKU_2022_GOLD,
-                SupporterHelper.SKU_2022_METAL,
-                SupporterHelper.SKU_2022_PLATINUM));
+            SupporterHelper.SKU_2022_BRONZE,
+            SupporterHelper.SKU_2022_SILVER,
+            SupporterHelper.SKU_2022_GOLD,
+            SupporterHelper.SKU_2022_METAL,
+            SupporterHelper.SKU_2022_PLATINUM));
 
+    private PurchasesUpdatedListener purchasesUpdatedListener = (billingResult, purchases) -> {
+        // To be implemented in a later section.
+    };
 
-    private Billing mBilling;
-
-
+    private BillingClient billingClient;
 
     public LaunchApplication() {
         sInstance = this;
@@ -94,10 +103,6 @@ public class LaunchApplication extends Application {
 
     public static LaunchApplication get() {
         return sInstance;
-    }
-
-    public Billing getBilling() {
-        return mBilling;
     }
 
     @Override
@@ -120,15 +125,71 @@ public class LaunchApplication extends Application {
         setupBilling();
     }
 
-    private void setupBilling(){
-        mBilling = new Billing(this, new Billing.DefaultConfiguration() {
+    private void setupBilling() {
 
-            @Nonnull
+        billingClient = BillingClient.newBuilder(context)
+                .setListener(purchasesUpdatedListener)
+                .enablePendingPurchases()
+                .build();
+
+        billingClient.startConnection(new BillingClientStateListener() {
             @Override
-            public String getPublicKey() {
-                return getString(R.string.rsa_key);
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    // The BillingClient is ready. You can query purchases here.
+                    restorePurchases();
+                }
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
             }
         });
+
+    }
+
+    private void restorePurchases() {
+        billingClient.queryPurchasesAsync(
+                QueryPurchasesParams.newBuilder()
+                        .setProductType(BillingClient.ProductType.INAPP)
+                        .build(),
+                (billingResult, purchases) -> {
+                    // check billingResult
+                    // process returned purchase list, e.g. display the plans user owns
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
+                            && purchases != null) {
+                        for (Purchase purchase : purchases) {
+                            handlePurchase(purchase);
+                        }
+                    }
+                }
+        );
+    }
+
+    private void handlePurchase(Purchase purchase) {
+        Timber.v(purchase.toString());
+        ConsumeParams consumeParams =
+                ConsumeParams.newBuilder()
+                        .setPurchaseToken(purchase.getPurchaseToken())
+                        .build();
+
+        ConsumeResponseListener listener = (billingResult, purchaseToken) -> {
+            // Handle the success of the consume operation.
+            List<String> purchases = purchase.getProducts();
+            for (String purchase_sku : purchases) {
+                Timber.v(purchase_sku);
+                Products product = SupporterHelper.getProduct(purchase_sku);
+                Realm realm = Realm.getDefaultInstance();
+                realm.beginTransaction();
+                realm.copyToRealmOrUpdate(product);
+                realm.commitTransaction();
+                realm.close();
+            }
+        };
+
+        billingClient.consumeAsync(consumeParams, listener);
     }
 
     private void setTheme() {

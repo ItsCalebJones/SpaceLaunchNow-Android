@@ -7,6 +7,7 @@ public class Products extends RealmObject {
 
     @PrimaryKey
     private String name;
+    private String sku;
     private String type;
     private String description;
     private Integer price;
@@ -17,6 +18,14 @@ public class Products extends RealmObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public String getType() {

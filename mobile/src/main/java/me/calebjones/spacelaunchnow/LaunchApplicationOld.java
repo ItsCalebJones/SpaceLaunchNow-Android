@@ -31,7 +31,6 @@ import com.twitter.sdk.android.tweetui.TweetUi;
 
 import java.util.Locale;
 import java.util.TimeZone;
-import org.solovyev.android.checkout.Billing;
 
 import javax.annotation.Nonnull;
 
@@ -70,19 +69,6 @@ public class LaunchApplicationOld extends Application {
             SupporterHelper.SKU_2022_METAL,
             SupporterHelper.SKU_2022_PLATINUM};
 
-
-    private final Billing mBilling = new Billing(this, new Billing.DefaultConfiguration() {
-
-        @Nonnull
-        @Override
-        public String getPublicKey() {
-            return "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn80cBcFMX2lkJcSiqaIuI0aKEhozf+ALq2mGbaAT46NaHHjiZYp30n3X3M2wOo3393PgSI9RLcotK1Q8PKjRGcbyLwTHIySyp9RerJULh0YABUDqX1zjSULhR0238GPfpUpQad5G+nx56bIivDgu7XpqEwJAw9HKo3I+CK8VSezCF46s3OC+4HRqdaGHi1M1EtLtpS8qAR+Ze41iQJnSpv5wY6f46L4ukpPLWhG3ebyzxiHQm8pYSQRkdwCT9oXC4BWjiX5MgiUQzdDTJqDwQaZi087iW8B5xSW1fFX+wk1VcsYshoAywjWo6I+AuWauK37FvCWasK3yKMrHkFxUpwIDAQAB";
-        }
-    });
-
-    public Billing getBilling() {
-        return mBilling;
-    }
 
     @Override
     public void onCreate() {
@@ -241,6 +227,8 @@ public class LaunchApplicationOld extends Application {
                 firebaseMessaging.subscribeToTopic("prod_v3");
                 firebaseMessaging.unsubscribeFromTopic("debug_v3");
             }
+
+            Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
 
             boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
             boolean netstampChanged = Prefs.getBoolean("netstampChanged", false);

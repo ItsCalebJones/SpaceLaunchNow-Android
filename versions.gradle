@@ -30,7 +30,7 @@ ext {
     kotlinVersion = "1.4.20"
     roomVersion = '2.2.3'
     crashlytics = '2.10.1'
-    billing_version = "4.0.0"
+    billing_version = "5.1.0"
 }
 
 // Plugins
@@ -134,7 +134,8 @@ ext.deps = [
         autoValueProcessor             : "com.google.auto.value:auto-value:1.6.2",
         deepLinkDispatch               : "com.airbnb:deeplinkdispatch:5.1.0",
         deepLinkDispatchAnnotation     : "com.airbnb:deeplinkdispatch-processor:5.1.0",
-        checkout                       : "org.solovyev.android:checkout:1.2.3",
+        billing                        : "com.android.billingclient:billing:$billing_version",
+
 
         // Iconography
         iconicsCore                    : 'com.mikepenz:iconics-core:3.2.5@aar',
@@ -156,6 +157,9 @@ ext.deps = [
         junit                          : "junit:junit:4.12",
         mockitoCore                    : "org.mockito:mockito-core:2.8.9",
         assertjCore                    : "org.assertj:assertj-core:1.7.1",
+
+        // no idea
+        guava                          : "com.google.guava:guava:27.0.1-android",
 
 
 ]

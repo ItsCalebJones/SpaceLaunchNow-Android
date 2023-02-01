@@ -1,6 +1,6 @@
 package me.calebjones.spacelaunchnow.common.ui.supporter;
 
-import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,8 +20,21 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
-
-
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.ProductDetailsResponseListener;
+import com.google.common.collect.ImmutableList;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchaseHistoryRecord;
+import com.android.billingclient.api.PurchaseHistoryResponseListener;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryPurchaseHistoryParams;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,34 +44,21 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.transitionseverywhere.TransitionManager;
 
-import org.solovyev.android.checkout.ActivityCheckout;
-import org.solovyev.android.checkout.Checkout;
-import org.solovyev.android.checkout.EmptyRequestListener;
-import org.solovyev.android.checkout.Inventory;
-import org.solovyev.android.checkout.Purchase;
-import org.solovyev.android.checkout.RequestListener;
-import org.solovyev.android.checkout.ResponseCodes;
-import org.solovyev.android.checkout.Sku;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import me.calebjones.spacelaunchnow.common.BuildConfig;
-import me.calebjones.spacelaunchnow.common.LaunchApplication;
+import io.realm.Realm;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
-import me.calebjones.spacelaunchnow.common.ui.views.SnackbarHandler;
 import me.calebjones.spacelaunchnow.data.models.Products;
 import timber.log.Timber;
 
-import static me.calebjones.spacelaunchnow.common.LaunchApplication.LIST_INAPP_SKUS;
-import static org.solovyev.android.checkout.ProductTypes.IN_APP;
+import static me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper.isOwned;
 
 public class SupporterActivity extends BaseActivity {
 
@@ -83,58 +83,55 @@ public class SupporterActivity extends BaseActivity {
 
     private boolean isAvailable = false;
     private boolean isRefreshable = true;
-    private BottomSheetDialog dialog;
+    private Dialog dialog;
     private List<String> ownedProducts;
-    private InventoryCallback mInventoryCallback;
 
 
-    //NEW CHECKOUT LIB CODE
-    private class PurchaseListener extends EmptyRequestListener<Purchase> {
-        @Override
-        public void onSuccess(Purchase purchase) {
-            // here you can process the loaded purchase
+    private PurchasesUpdatedListener purchasesUpdatedListener = (billingResult, purchases) -> {
+        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK
+                && purchases != null) {
+            for (Purchase purchase : purchases) {
+                handlePurchase(purchase);
+            }
+        } else if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.USER_CANCELED) {
+            // Handle an error caused by a user cancelling the purchase flow.
+        } else {
+            // Handle any other error codes.
         }
+    };
 
-        @Override
-        public void onError(int response, Exception e) {
-            // handle errors here
-        }
-    }
+    private void handlePurchase(Purchase purchase) {
+        ConsumeParams consumeParams =
+                ConsumeParams.newBuilder()
+                        .setPurchaseToken(purchase.getPurchaseToken())
+                        .build();
 
-    private class InventoryCallback implements Inventory.Callback {
-        private boolean ready = false;
-        private Inventory.Products products;
-
-        public Inventory.Products getProducts(){
-            return products;
-        }
-
-        @Override
-        public void onLoaded(Inventory.Products products) {
-            this.ready = true;
-            this.products = products;
-            isAvailable = true;
-            if (products.get(IN_APP).getPurchases().size() > 0) {
-                SnackbarHandler.showInfoSnackbar(getApplicationContext(), coordinatorLayout, getString(R.string.thanks_support_development));
-                animatePurchase();
-                for (Purchase purchase : products.get(IN_APP).getPurchases() ) {
-                    Products product = SupporterHelper.getProduct(purchase.sku);
+        ConsumeResponseListener listener = (billingResult, purchaseToken) -> {
+            runOnUiThread(() -> {
+                // Handle the success of the consume operation.
+                List<String> purchases = purchase.getProducts();
+                for (String purchase_sku : purchases) {
+                    Timber.v(purchase_sku);
+                    animatePurchase();
+                    Products product = SupporterHelper.getProduct(purchase_sku);
                     getRealm().beginTransaction();
                     getRealm().copyToRealmOrUpdate(product);
                     getRealm().commitTransaction();
                 }
-            }
-        }
+            });
+        };
+
+        billingClient.consumeAsync(consumeParams, listener);
     }
 
-    private final ActivityCheckout mCheckout = Checkout.forActivity(this, LaunchApplication.get().getBilling());
-    private Inventory mInventory;
+    private BillingClient billingClient;
+    private Context context;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Context context = this;
+        context = this;
 
         setContentView(R.layout.activity_support);
         ButterKnife.bind(this);
@@ -156,29 +153,69 @@ public class SupporterActivity extends BaseActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("");
-        mCheckout.start();
-        mInventoryCallback = new InventoryCallback();
-        reloadInventory();
 
+        billingClient = BillingClient.newBuilder(context)
+                .setListener(purchasesUpdatedListener)
+                .enablePendingPurchases()
+                .build();
 
-        nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
-                fabSupporter.hide();
-            } else {
-                if (!fabSupporter.isShown()) {
-                    fabSupporter.show();
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    // The BillingClient is ready. You can query purchases here.
+                    Timber.v("READY!");
+                    restorePurchases();
+                    isAvailable = true;
                 }
             }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+            }
         });
+
     }
 
-    private void reloadInventory() {
-        final Inventory.Request request = Inventory.Request.create();
-        // load purchase info
-        request.loadAllPurchases();
-        // load SKU details
-        request.loadSkus(IN_APP, LIST_INAPP_SKUS);
-        mCheckout.loadInventory(request, mInventoryCallback);
+    private void restorePurchases() {
+        Timber.v("onRestorePurchases running...");
+        billingClient.queryPurchaseHistoryAsync(
+                QueryPurchaseHistoryParams.newBuilder()
+                        .setProductType(BillingClient.ProductType.INAPP)
+                        .build(),
+                (billingResult, purchasesHistoryList) -> {
+                    // check billingResult
+                    // process returned purchase history list, e.g. display purchase history
+                    Timber.v(billingResult.getDebugMessage());
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        if (purchasesHistoryList.size() > 0) {
+                            for (PurchaseHistoryRecord purchase : purchasesHistoryList) {
+                                handlePurchaseHistoryRecord(purchase);
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+    private void handlePurchaseHistoryRecord(PurchaseHistoryRecord purchaseHistoryRecord) {
+        runOnUiThread(() -> {
+            List<String> purchases = purchaseHistoryRecord.getProducts();
+            for (String purchase : purchases) {
+                Timber.v(purchase);
+
+                Products product = SupporterHelper.getProduct(purchase);
+                Realm mRealm = Realm.getDefaultInstance();
+                mRealm.executeTransactionAsync(
+                        realm -> realm.copyToRealmOrUpdate(product),
+                        () -> Timber.v("SUCCESS!"),
+                        Timber::e);
+
+                animatePurchase();
+            }
+        });
     }
 
     @Override
@@ -194,8 +231,6 @@ public class SupporterActivity extends BaseActivity {
 
         if (id == R.id.action_restore) {
             isRefreshable = true;
-
-//            restorePurchaseHistory(true);
         }
 
         if (id == R.id.action_support) {
@@ -230,8 +265,6 @@ public class SupporterActivity extends BaseActivity {
 
     @Override
     public void onDestroy() {
-        mCheckout.stop();
-
         super.onDestroy();
     }
 
@@ -244,10 +277,57 @@ public class SupporterActivity extends BaseActivity {
 
     @OnClick({R2.id.purchase, R2.id.fab_supporter})
     public void checkClick() {
-        if (mInventoryCallback.ready) {
-            firebaseAnalytics.logEvent(FirebaseAnalytics.Event.BEGIN_CHECKOUT, null);
+        if (billingClient.isReady()) {
+            QueryProductDetailsParams queryProductDetailsParams =
+                    QueryProductDetailsParams.newBuilder()
+                            .setProductList(
+                                    ImmutableList.of(
+                                            QueryProductDetailsParams.Product.newBuilder()
+                                                    .setProductId(SupporterHelper.SKU_2022_BRONZE)
+                                                    .setProductType(BillingClient.ProductType.INAPP)
+                                                    .build(),
+                                            QueryProductDetailsParams.Product.newBuilder()
+                                                    .setProductId(SupporterHelper.SKU_2022_METAL)
+                                                    .setProductType(BillingClient.ProductType.INAPP)
+                                                    .build(),
+                                            QueryProductDetailsParams.Product.newBuilder()
+                                                    .setProductId(SupporterHelper.SKU_2022_SILVER)
+                                                    .setProductType(BillingClient.ProductType.INAPP)
+                                                    .build(),
+                                            QueryProductDetailsParams.Product.newBuilder()
+                                                    .setProductId(SupporterHelper.SKU_2022_GOLD)
+                                                    .setProductType(BillingClient.ProductType.INAPP)
+                                                    .build(),
+                                            QueryProductDetailsParams.Product.newBuilder()
+                                                    .setProductId(SupporterHelper.SKU_2022_PLATINUM)
+                                                    .setProductType(BillingClient.ProductType.INAPP)
+                                                    .build()
+                                    ))
+                            .build();
+
+
+            billingClient.queryProductDetailsAsync(
+                    queryProductDetailsParams,
+                    (billingResult, productDetailsList) -> {
+                        // check billingResult
+                        // process returned productDetailsList
+
+                        if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                            showPurchaseDialog(productDetailsList);
+                        } else {
+                            Timber.v(billingResult.getDebugMessage());
+                        }
+                    }
+            );
+        }
+    }
+
+    private void showPurchaseDialog(List<ProductDetails> productDetailsList) {
+        runOnUiThread(() -> {
+
+
             View view = getLayoutInflater().inflate(R.layout.supporter_dialog, null);
-            dialog = new BottomSheetDialog(this);
+            dialog = new BottomSheetDialog(context);
             dialog.setContentView(view);
 
             View bronzeView = view.findViewById(R.id.bronze_group);
@@ -295,140 +375,114 @@ public class SupporterActivity extends BaseActivity {
                 bottomMessage.setText("Unable to load in-app-products.");
             }
 
-            Inventory.Products products = mInventoryCallback.getProducts();
-            for (Inventory.Product product : products){
-                Timber.v(product.id);
-                Timber.v(String.valueOf(product.supported));
+
+            for (ProductDetails productDetail : productDetailsList) {
+                Timber.v("Checking %s...", productDetail.getName());
+                switch (productDetail.getProductId()) {
+                    case SupporterHelper.SKU_2022_BRONZE:
+                        configureProductItem(bronzeButton, bronzeTitle, bronzeDescription, productDetail,
+                                SupporterHelper.SKU_2022_BRONZE,
+                                new IconicsDrawable(this)
+                                        .icon(FontAwesome.Icon.faw_thumbs_up)
+                                        .color(Color.WHITE)
+                                        .sizeDp(24));
+                        break;
+
+                    case SupporterHelper.SKU_2022_METAL:
+                        configureProductItem(metalButton, metalTitle, metalDescription, productDetail,
+                                SupporterHelper.SKU_2022_METAL,
+                                new IconicsDrawable(this)
+                                        .icon(GoogleMaterial.Icon.gmd_local_cafe)
+                                        .color(Color.WHITE)
+                                        .sizeDp(24));
+                        break;
+
+                    case SupporterHelper.SKU_2022_SILVER:
+                        configureProductItem(silverButton, silverTitle, silverDescription, productDetail,
+                                SupporterHelper.SKU_2022_SILVER,
+                                new IconicsDrawable(this)
+                                        .icon(FontAwesome.Icon.faw_store)
+                                        .color(Color.WHITE)
+                                        .sizeDp(24));
+                        break;
+
+                    case SupporterHelper.SKU_2022_GOLD:
+                        configureProductItem(goldButton, goldTitle, goldDescription, productDetail,
+                                SupporterHelper.SKU_2022_GOLD,
+                                new IconicsDrawable(this)
+                                        .icon(GoogleMaterial.Icon.gmd_local_dining)
+                                        .color(Color.WHITE)
+                                        .sizeDp(24));
+                        break;
+
+                    case SupporterHelper.SKU_2022_PLATINUM:
+                        configureProductItem(platinumButton, platinumTitle, platinumDescription, productDetail,
+                                SupporterHelper.SKU_2022_PLATINUM,
+                                new IconicsDrawable(this)
+                                        .icon(FontAwesome.Icon.faw_money_bill_wave)
+                                        .color(Color.WHITE)
+                                        .sizeDp(24));
+                        break;
+                }
             }
-            Inventory.Product inapp = products.get(IN_APP);
-            List<Purchase> purchases = inapp.getPurchases();
-
-            configureProductItem(bronzeButton, bronzeTitle, bronzeDescription, inapp, purchases,
-                    SupporterHelper.SKU_2022_BRONZE,
-                    new IconicsDrawable(this)
-                            .icon(FontAwesome.Icon.faw_thumbs_up)
-                            .color(Color.WHITE)
-                            .sizeDp(24));
-
-            configureProductItem(metalButton, metalTitle, metalDescription, inapp, purchases,
-                    SupporterHelper.SKU_2022_METAL,
-                    new IconicsDrawable(this)
-                            .icon(GoogleMaterial.Icon.gmd_local_cafe)
-                            .color(Color.WHITE)
-                            .sizeDp(24));
-
-            configureProductItem(silverButton, silverTitle, silverDescription, inapp, purchases,
-                    SupporterHelper.SKU_2022_SILVER,
-                    new IconicsDrawable(this)
-                            .icon(FontAwesome.Icon.faw_store)
-                            .color(Color.WHITE)
-                            .sizeDp(24));
-
-            configureProductItem(goldButton, goldTitle, goldDescription, inapp, purchases,
-                    SupporterHelper.SKU_2022_GOLD,
-                    new IconicsDrawable(this)
-                            .icon(GoogleMaterial.Icon.gmd_local_dining)
-                            .color(Color.WHITE)
-                            .sizeDp(24));
-
-            configureProductItem(platinumButton, platinumTitle, platinumDescription, inapp, purchases,
-                    SupporterHelper.SKU_2022_PLATINUM,
-                    new IconicsDrawable(this)
-                            .icon(FontAwesome.Icon.faw_money_bill_wave)
-                            .color(Color.WHITE)
-                            .sizeDp(24));
             dialog.show();
-        }
+        });
     }
 
     private void configureProductItem(AppCompatButton button, TextView titleView,
-                                      TextView descriptionView, Inventory.Product inApp,
-                                      List<Purchase> purchases, String sku,
+                                      TextView descriptionView,
+                                      ProductDetails productDetail, String sku,
                                       IconicsDrawable drawable) {
-        String price = "(Unable to get price)";
-        String title = "Supporter Product";
+        String price = "N/A";
+        String title = "Product";
         String description = "Unable to get product description.";
 
-        Sku mSku = inApp.getSku(sku);
-        if (mSku != null) {
-            price = mSku.price;
-            title = mSku.title;
-            description = mSku.description;
+        if (productDetail.getOneTimePurchaseOfferDetails() != null) {
+            price = productDetail.getOneTimePurchaseOfferDetails().getFormattedPrice();
         }
+        title = productDetail.getTitle();
+        description = productDetail.getDescription();
 
-        button.setText(price);
-        titleView.setText(title);
-        descriptionView.setText(description);
-
-        if (isOwned(sku, purchases)) {
+        if (isOwned(productDetail.getProductId())) {
             button.setCompoundDrawablesRelative(
                     new IconicsDrawable(this)
                             .icon(FontAwesome.Icon.faw_check)
                             .color(Color.WHITE)
                             .sizeDp(24),
                     null, null, null);
+            price = "purchased";
         } else {
             button.setCompoundDrawablesRelative(drawable, null, null, null);
         }
 
+        button.setText(price);
+        titleView.setText(title);
+        descriptionView.setText(description);
+
         button.setOnClickListener(view1 -> {
             dialog.dismiss();
-            makePurchase(mSku);
+            makePurchase(productDetail);
         });
 
     }
 
-    private boolean isOwned(String currentSku, List<Purchase> purchases) {
-        for (Purchase ownedSku : purchases) {
-            if (currentSku.equals(ownedSku.sku)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    /**
-     * @return {@link RequestListener} that reloads inventory when the action is finished
-     */
-    private <T> RequestListener<T> makeRequestListener() {
-        return new RequestListener<T>() {
-            @Override
-            public void onSuccess(@Nonnull T result) {
-                reloadInventory();
-            }
+    private void makePurchase(ProductDetails productDetail) {
 
-            @SuppressLint("ThrowableNotAtBeginning")
-            @Override
-            public void onError(int response, @Nonnull Exception e) {
-                if (BuildConfig.DEBUG)
-                    Timber.e("Couldn't complete the purchase %s", e);
-                switch (response) {
-                    case ResponseCodes.ITEM_ALREADY_OWNED:
-                    case ResponseCodes.USER_CANCELED:
-                    case ResponseCodes.WRONG_SIGNATURE:
-                    case ResponseCodes.SERVICE_NOT_CONNECTED:
-                    case ResponseCodes.OK:
-                    case ResponseCodes.NULL_INTENT:
-                    case ResponseCodes.ITEM_UNAVAILABLE:
-                    case ResponseCodes.EXCEPTION:
-                    case ResponseCodes.ITEM_NOT_OWNED:
-                    case ResponseCodes.ERROR:
-                    case ResponseCodes.DEVELOPER_ERROR:
-                    case ResponseCodes.BILLING_UNAVAILABLE:
-                    case ResponseCodes.ACCOUNT_ERROR:
-                        // Handle the errors the way you like
-                        break;
-                    default:
-                        throw new RuntimeException("unhandled response code received");
-                }
-                reloadInventory();
-            }
-        };
-    }
+        ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList =
+                ImmutableList.of(
+                        BillingFlowParams.ProductDetailsParams.newBuilder()
+                                // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
+                                .setProductDetails(productDetail)
+                                .build()
+                );
 
-    private void makePurchase(Sku sku) {
-        final RequestListener<Purchase> listener = makeRequestListener();
-        mCheckout.startPurchaseFlow(sku, null, listener);
+        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(productDetailsParamsList)
+                .build();
+
+        // Launch the billing flow
+        BillingResult billingResult = billingClient.launchBillingFlow(this, billingFlowParams);
     }
 
 
@@ -436,26 +490,29 @@ public class SupporterActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        mCheckout.onActivityResult(requestCode, resultCode, data);
     }
 
     private void animatePurchase() {
-        if (supportThankYou.getVisibility() != View.VISIBLE) {
-            enterReveal(supportThankYou);
-        }
+        runOnUiThread(() -> {
+            if (supportThankYou.getVisibility() != View.VISIBLE) {
+                enterReveal(supportThankYou);
+            }
+        });
     }
 
     void enterReveal(View view) {
-        // previously invisible view
-        final View myView = view;
-        //To not have empty scroll, the container is INVISIBLE with 0dp height.
-        //Otherwise the Reveal effect will not work at the first click.
-        //Here I set the parameters programmatically.
-        myView.setLayoutParams(new AppBarLayout.LayoutParams(
-                AppBarLayout.LayoutParams.MATCH_PARENT,
-                AppBarLayout.LayoutParams.WRAP_CONTENT
-        ));
-        TransitionManager.beginDelayedTransition(coordinatorLayout);
-        myView.setVisibility(View.VISIBLE);
+        runOnUiThread(() -> {
+            // previously invisible view
+            final View myView = view;
+            //To not have empty scroll, the container is INVISIBLE with 0dp height.
+            //Otherwise the Reveal effect will not work at the first click.
+            //Here I set the parameters programmatically.
+            myView.setLayoutParams(new AppBarLayout.LayoutParams(
+                    AppBarLayout.LayoutParams.MATCH_PARENT,
+                    AppBarLayout.LayoutParams.WRAP_CONTENT
+            ));
+            TransitionManager.beginDelayedTransition(coordinatorLayout);
+            myView.setVisibility(View.VISIBLE);
+        });
     }
 }
