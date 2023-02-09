@@ -20,6 +20,7 @@
 
 
     <TextView
+        android:id="@+id/descriptionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/material_baseline_grid_2x"
@@ -172,53 +173,6 @@
 
                     <TextView
                         android:id="@+id/silver_description"
-                        style="@style/TextAppearance.AppCompat.Caption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:maxLines="2" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/gold_group"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/material_baseline_grid_1x"
-                android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/gold_button"
-                    style="@style/Base.Widget.AppCompat.Button.Colored"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/material_baseline_grid_1x"
-                    android:layout_marginRight="@dimen/material_baseline_grid_1x"
-                    android:layout_weight=".4"
-                    android:drawableStart="@drawable/cpv_preset_checked"
-                    android:drawablePadding="2dp"
-                    android:singleLine="true" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/material_baseline_grid_0.5x"
-                    android:layout_weight=".6"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/gold_title"
-                        style="@style/TextAppearance.AppCompat.Caption"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/gold_description"
                         style="@style/TextAppearance.AppCompat.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

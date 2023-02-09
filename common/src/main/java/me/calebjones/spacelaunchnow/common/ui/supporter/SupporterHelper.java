@@ -31,6 +31,10 @@ public class SupporterHelper {
     public static final String SKU_2022_SILVER = "2022_silver_support";
     public static final String SKU_2022_GOLD = "2022_gold_support";
     public static final String SKU_2022_PLATINUM = "2022_platinum_support";
+    public static final String SKU_2023_BRONZE = "2023_bronze_supporter";
+    public static final String SKU_2023_METAL = "2023_metal_supporter";
+    public static final String SKU_2023_SILVER = "2023_silver_support";
+    public static final String SKU_2023_PLATINUM = "2023_platinum_support";
     public static final String SKU_OTHER = "beta_supporter";
 
     public static Products getProduct(String productID){
@@ -173,6 +177,30 @@ public class SupporterHelper {
             product.setDescription("This ensures you will always have access to every supporter features.");
             product.setType("Supporter");
             product.setPrice(6);
+        }  else if (productID.equals(SKU_2023_PLATINUM)) {
+            product.setName("Supporter 2023 - Platinum");
+            product.setSku(productID);
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(30);
+        } else if (productID.equals(SKU_2023_SILVER)){
+            product.setName("Supporter 2023 - Silver");
+            product.setSku(productID);
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(10);
+        } else if (productID.equals(SKU_2023_BRONZE)){
+            product.setName("Supporter 2023 - Bronze");
+            product.setSku(productID);
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(3);
+        } else if (productID.equals(SKU_2023_METAL)){
+            product.setName("Supporter 2023 - Metal");
+            product.setSku(productID);
+            product.setDescription("This ensures you will always have access to every supporter features.");
+            product.setType("Supporter");
+            product.setPrice(6);
         } else if (productID.equals(SKU_OTHER)){
             product.setName("Promotion Supporter");
             product.setSku(productID);
@@ -181,6 +209,33 @@ public class SupporterHelper {
             product.setPrice(30);
         }
         return product;
+    }
+
+    public static void saveProductAsOwnedAsync(String sku){
+        Timber.v("Saving SKU %s as owned...", sku);
+        try {
+            Realm realm = Realm.getDefaultInstance();
+            Products product = SupporterHelper.getProduct(sku);
+            realm.executeTransactionAsync(
+                    mRealm -> mRealm.copyToRealmOrUpdate(product),
+                    () -> Timber.v("SUCCESS!"),
+                    Timber::e);
+            realm.close();
+        } catch (Exception e){
+            Timber.e(e);
+        }
+    }
+
+    public static void saveProductAsOwned(String sku){
+        Timber.v("Saving SKU %s as owned...", sku);
+        try {
+            Realm realm = Realm.getDefaultInstance();
+            Products product = SupporterHelper.getProduct(sku);
+            realm.executeTransaction(mRealm -> mRealm.copyToRealmOrUpdate(product));
+            realm.close();
+        } catch (Exception e){
+            Timber.e(e);
+        }
     }
 
     public static boolean isOwned(String sku){

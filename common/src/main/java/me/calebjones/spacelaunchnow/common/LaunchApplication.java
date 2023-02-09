@@ -21,6 +21,7 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchaseHistoryRecord;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryPurchasesParams;
@@ -105,6 +106,8 @@ public class LaunchApplication extends Application {
         return sInstance;
     }
 
+    private Realm mRealm;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -126,6 +129,8 @@ public class LaunchApplication extends Application {
     }
 
     private void setupBilling() {
+
+        mRealm = Realm.getDefaultInstance();
 
         billingClient = BillingClient.newBuilder(context)
                 .setListener(purchasesUpdatedListener)
@@ -166,6 +171,32 @@ public class LaunchApplication extends Application {
                     }
                 }
         );
+
+        billingClient.queryPurchaseHistoryAsync(
+                QueryPurchaseHistoryParams.newBuilder()
+                        .setProductType(BillingClient.ProductType.INAPP)
+                        .build(),
+                (billingResult, purchasesHistoryList) -> {
+                    // check billingResult
+                    // process returned purchase history list, e.g. display purchase history
+                    Timber.v(billingResult.getDebugMessage());
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        if (purchasesHistoryList.size() > 0) {
+                            for (PurchaseHistoryRecord purchase : purchasesHistoryList) {
+                                handlePurchaseHistoryRecord(purchase);
+                            }
+                        }
+                    }
+                }
+        );
+    }
+
+    private void handlePurchaseHistoryRecord(PurchaseHistoryRecord purchaseHistoryRecord) {
+            List<String> purchases = purchaseHistoryRecord.getProducts();
+            for (String purchase : purchases) {
+                Timber.v(purchase);
+                SupporterHelper.saveProductAsOwned(purchase);
+            }
     }
 
     private void handlePurchase(Purchase purchase) {
@@ -180,12 +211,7 @@ public class LaunchApplication extends Application {
             List<String> purchases = purchase.getProducts();
             for (String purchase_sku : purchases) {
                 Timber.v(purchase_sku);
-                Products product = SupporterHelper.getProduct(purchase_sku);
-                Realm realm = Realm.getDefaultInstance();
-                realm.beginTransaction();
-                realm.copyToRealmOrUpdate(product);
-                realm.commitTransaction();
-                realm.close();
+                SupporterHelper.saveProductAsOwned(purchase_sku);
             }
         };
 
