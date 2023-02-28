@@ -215,7 +215,7 @@ public class LaunchListManager {
         detailIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
         PendingIntent detailPendingIntent = PendingIntent.getBroadcast(context, 0,
-                detailIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                detailIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         remoteViews.setPendingIntentTemplate(R.id.launch_list, detailPendingIntent);
 
