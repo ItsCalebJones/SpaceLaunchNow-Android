@@ -1,9 +1,10 @@
 package me.calebjones.spacelaunchnow.starship.ui.upcoming;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.TimeZone;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,16 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.util.ViewPreloadSizeProvider;
-import com.google.android.material.tabs.TabLayout;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.TimeZone;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.realm.RealmList;
 import jp.wasabeef.glide.transformations.ColorFilterTransformation;
 import me.calebjones.spacelaunchnow.common.GlideApp;
@@ -38,10 +33,8 @@ import me.calebjones.spacelaunchnow.common.ui.launchdetail.activity.LaunchDetail
 import me.calebjones.spacelaunchnow.common.utils.Utils;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchList;
-import me.calebjones.spacelaunchnow.data.models.main.starship.Notice;
 import me.calebjones.spacelaunchnow.events.detail.EventDetailsActivity;
 import me.spacelaunchnow.starship.R;
-import me.spacelaunchnow.starship.R2;
 
 public class CombinedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

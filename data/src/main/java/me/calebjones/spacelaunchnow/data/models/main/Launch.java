@@ -66,6 +66,9 @@ public class Launch extends RealmObject {
     @SerializedName("pad")
     @Expose
     public Pad pad;
+    @SerializedName("net_precision")
+    @Expose
+    public DatePrecision netPrecision;
     @SerializedName("infoURLs")
     @Expose
     public RealmList<InfoURL> infoURLs = null;
@@ -87,6 +90,14 @@ public class Launch extends RealmObject {
 
     public Long eventID;
     public Date lastUpdate;
+
+    public DatePrecision getNetPrecision() {
+        return netPrecision;
+    }
+
+    public void setNetPrecision(DatePrecision netPrecision) {
+        this.netPrecision = netPrecision;
+    }
 
     public String getSlug() {
         String baseUrl = "https://spacelaunchnow.me/launch/";

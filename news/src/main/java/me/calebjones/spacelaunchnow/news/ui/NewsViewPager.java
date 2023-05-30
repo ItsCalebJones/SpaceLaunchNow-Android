@@ -58,7 +58,6 @@ public class NewsViewPager extends BaseFragment {
         tabLayout = inflatedView.findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.news));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.events));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.twitter));
         viewPager = inflatedView.findViewById(R.id.viewpager);
 
         pagerAdapter = new PagerAdapter
@@ -101,7 +100,6 @@ public class NewsViewPager extends BaseFragment {
             switch (position) {
                 case 0: return new NewsListFragment();
                 case 1: return new EventListFragment();
-                case 2: return new TwitterFragment();
                 default:
                     return null;
             }

@@ -483,7 +483,6 @@ public class NextLaunchFragment extends BaseFragment implements SwipeRefreshLayo
     public void onResume() {
         super.onResume();
         Timber.v("onResume");
-        adapter.setupDates();
         setTitle();
         if (adapter.getItemCount() == 0) {
             fetchData(false);

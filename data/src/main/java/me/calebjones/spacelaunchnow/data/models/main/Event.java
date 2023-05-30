@@ -54,6 +54,9 @@ public class Event extends RealmObject {
     @SerializedName("updates")
     @Expose
     public RealmList<Update> updates = null;
+    @SerializedName("date_precision")
+    @Expose
+    public DatePrecision datePrecision;
 
     @SerializedName("launches")
     private RealmList<LaunchList> launches;
@@ -77,6 +80,14 @@ public class Event extends RealmObject {
     }
 
     private Date lastUpdate;
+
+    public DatePrecision getDatePrecision() {
+        return datePrecision;
+    }
+
+    public void setDatePrecision(DatePrecision datePrecision) {
+        this.datePrecision = datePrecision;
+    }
 
     public Date getLastUpdate() {
         return lastUpdate;

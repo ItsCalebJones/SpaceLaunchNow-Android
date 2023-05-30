@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -20,10 +22,8 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.YouTubePlayerListener;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -287,7 +287,8 @@ public class SummaryDetailFragment extends BaseFragment implements YouTubePlayer
             Date date = detailLaunch.getNet();
 
             //Get launch date
-            dateText = Utils.getStatusBasedDateFormat(launch.getNet(), launch.getStatus());
+//            dateText = Utils.getStatusBasedDateFormat(launch.getNet(), launch.getStatus());
+            dateText = Utils.getSimpleDateFormatForUIWithPrecision(launch.getNetPrecision()).format(launch.getNet());
             launchDate.setText(Html.fromHtml(String.format(getString(R.string.launch_date), dateText)));
 
 

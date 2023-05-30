@@ -32,6 +32,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.icu.text.SimpleDateFormat;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -49,7 +50,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.pixplicity.easyprefs.library.Prefs;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -62,6 +62,7 @@ import androidx.browser.customtabs.CustomTabsIntent;
 import me.calebjones.spacelaunchnow.common.R;
 import me.calebjones.spacelaunchnow.common.customtab.CustomTabActivityHelper;
 import me.calebjones.spacelaunchnow.common.customtab.SLNWebViewFallback;
+import me.calebjones.spacelaunchnow.data.models.main.DatePrecision;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.LaunchStatus;
 import saschpe.android.customtabs.CustomTabsHelper;
@@ -402,6 +403,145 @@ public class Utils {
         if(Prefs.getBoolean("locale_changer", true)) {
             String format = DateFormat.getBestDateTimePattern(Locale.getDefault(), pattern);
             return new SimpleDateFormat(format, Locale.getDefault());
+        } else {
+            return new SimpleDateFormat(pattern, Locale.US);
+        }
+    }
+
+    public static SimpleDateFormat getSimpleDateFormatForUIWithPrecision(DatePrecision datePrecision) {
+        String pattern = "MMMM dd, yyyy";
+        if (datePrecision != null) {
+            switch (datePrecision.getId()) {
+                case 0:
+                    pattern = "MMMM d, yyyy";
+                    break;
+                case 1:
+                    pattern = "MMMM d, yyyy";
+                    break;
+                case 2:
+                    pattern = "'NET' MMMM d, yyyy";
+                    break;
+                case 3:
+                    pattern = "MMMM d, yyyy";
+                    break;
+                case 4:
+                    pattern = "MMMM d, yyyy";
+                    break;
+                case 5:
+                    pattern = "MMMM d, yyyy";
+                    break;
+                case 6:
+                    pattern = "MMMM d, yyyy";
+                    break;
+                case 7:
+                    pattern = "MMMM yyyy";
+                    break;
+                case 8:
+                    pattern = "QQQ yyyy";
+                    break;
+                case 9:
+                    pattern = "QQQ yyyy";
+                    break;
+                case 10:
+                    pattern = "QQQ yyyy";
+                    break;
+                case 11:
+                    pattern = "QQQ yyyy";
+                    break;
+                case 12:
+                    pattern = "'H1' yyyy";
+                    break;
+                case 13:
+                    pattern = "'H2' yyyy";
+                    break;
+                case 14:
+                    pattern = "'NET' yyyy";
+                    break;
+                case 15:
+                    pattern = "'FY' yyyy";
+                    break;
+                case 16:
+                    pattern = "'Decade' yyyy";
+                    break;
+                default:
+                    pattern = "MMMM dd, yyyy";
+                    break;
+            }
+        }
+
+        if(Prefs.getBoolean("locale_changer", true)) {
+            return new SimpleDateFormat(pattern, Locale.getDefault());
+        } else {
+            return new SimpleDateFormat(pattern, Locale.US);
+        }
+    }
+
+    public static SimpleDateFormat getSimpleDateTimeFormatForUIWithPrecision(DatePrecision datePrecision) {
+
+        String pattern = "EEEE, MMMM dd, yyyy - hh:mm a zzz";
+        if (datePrecision != null) {
+            switch (datePrecision.getId()) {
+                // Second
+                case 0:
+                    pattern = "EEEE, MMMM dd, yyyy - hh:mm:ss a zzz";
+                    break;
+                // Minute
+                case 1:
+                    pattern = "EEEE, MMMM dd, yyyy - hh:mm a zzz";
+                    break;
+                case 2:
+                    pattern = "'NET' EEEE, MMMM dd, yyyy - hh:mm a zzz";
+                    break;
+                case 3:
+                    pattern = "'Morning (local)' EEEE, MMMM dd, yyyy";
+                    break;
+                case 4:
+                    pattern = "'Afternoon (local)' EEEE, MMMM dd, yyyy";
+                    break;
+                case 5:
+                    pattern = "EEEE, MMMM dd, yyyy";
+                    break;
+                case 6:
+                    pattern = "'Week of' MMMM d, yyyy";
+                    break;
+                case 7:
+                    pattern = "MMMM yyyy";
+                    break;
+                case 8:
+                    pattern = "QQQ yyyy";
+                    break;
+                case 9:
+                    pattern = "QQQ yyyy";
+                    break;
+                case 10:
+                    pattern = "QQQ yyyy";
+                    break;
+                case 11:
+                    pattern = "QQQ yyyy";
+                    break;
+                case 12:
+                    pattern = "'H1' yyyy";
+                    break;
+                case 13:
+                    pattern = "'H2' yyyy";
+                    break;
+                case 14:
+                    pattern = "'NET' yyyy";
+                    break;
+                case 15:
+                    pattern = "'FY' yyyy";
+                    break;
+                case 16:
+                    pattern = "'Decade' yyyy's'";
+                    break;
+                default:
+                    pattern = "EEEE, MMMM dd, yyyy - hh:mm a zzz";
+                    break;
+            }
+        }
+
+        if(Prefs.getBoolean("locale_changer", true)) {
+            return new SimpleDateFormat(pattern, Locale.getDefault());
         } else {
             return new SimpleDateFormat(pattern, Locale.US);
         }
