@@ -59,7 +59,7 @@ public class EventRecyclerViewAdapter extends RecyclerView.Adapter<EventRecycler
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = events.get(position);
         holder.eventTitle.setText(holder.mItem.getName());
-        holder.eventDate.setText(Utils.getSimpleDateFormatForUI("MMMM dd, yyyy").format(holder.mItem.getDate()));
+        holder.eventDate.setText(Utils.getSimpleDateFormatForUIWithPrecision(holder.mItem.getDatePrecision()).format(holder.mItem.getDate()));
         holder.eventDescription.setText(holder.mItem.getDescription());
         holder.eventType.setText(holder.mItem.getType().getName());
 

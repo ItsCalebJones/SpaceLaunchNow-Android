@@ -54,32 +54,14 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     public int position;
     private RealmList<Launch> launchList;
     private Context context;
-    private SimpleDateFormat fullDate;
-    private SimpleDateFormat shortDate;
-    private SharedPreferences sharedPref;
 
 
     public CardAdapter(Context context) {
         launchList = new RealmList<>();
         this.context = context;
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        setupDates();
     }
 
-    public void setupDates() {
-        fullDate = Utils.getSLNDateTimeFormat(context);
 
-        fullDate.toLocalizedPattern();
-        shortDate = Utils.getSimpleDateFormatForUI("EEE, MMMM d, yyyy");
-
-        if (!sharedPref.getBoolean("local_time", false)) {
-            fullDate.setTimeZone(TimeZone.getTimeZone("UTC"));
-            shortDate.setTimeZone(TimeZone.getTimeZone("UTC"));
-        } else {
-            fullDate.setTimeZone(TimeZone.getDefault());
-            shortDate.setTimeZone(TimeZone.getDefault());
-        }
-    }
 
     public void addItems(List<Launch> launchList) {
         if (this.launchList != null) {
@@ -92,7 +74,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     }
 
     public void clear() {
-        setupDates();
         if (launchList != null) {
             launchList.clear();
             this.notifyDataSetChanged();
@@ -198,9 +179,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
                     holder.countDownView.setLaunch(launchItem);
 
-                    holder.launchDateCompact.setText(Utils.getStatusBasedDateTimeFormat(launchItem.getNet(),
-                            launchItem.getStatus(),
-                            context));
+//                    holder.launchDateCompact.setText(Utils.getStatusBasedDateTimeFormat(launchItem.getNet(),
+//                            launchItem.getStatus(),
+//                            context));
+                    holder.launchDateCompact.setText(
+                            Utils.getSimpleDateTimeFormatForUIWithPrecision(
+                                    launchItem.getNetPrecision()).format(launchItem.getNet()));
 
                     if (launchItem.getVidURLs() != null) {
                         if (launchItem.getVidURLs().size() == 0) {

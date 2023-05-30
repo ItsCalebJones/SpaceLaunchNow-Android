@@ -2,6 +2,8 @@ package me.calebjones.spacelaunchnow.common.ui.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.TimeZone;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +13,8 @@ import android.widget.TextView;
 import com.bumptech.glide.ListPreloader;
 import com.bumptech.glide.util.ViewPreloadSizeProvider;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;

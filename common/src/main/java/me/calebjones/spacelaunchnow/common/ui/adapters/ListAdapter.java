@@ -117,7 +117,8 @@ public class ListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         .into(holder.categoryIcon);
             }
         }
-        holder.launch_date.setText(Utils.getStatusBasedDateFormat(launchItem.getNet(), launchItem.getStatus()));
+//        holder.launch_date.setText(Utils.getStatusBasedDateFormat(launchItem.getNet(), launchItem.getStatus()));
+        holder.launch_date.setText(Utils.getSimpleDateFormatForUIWithPrecision(launchItem.getNetPrecision()).format(launchItem.getNet()));
 
         //If pad and agency exist add it to location, otherwise get whats always available
         if (launchItem.getLocation() != null) {

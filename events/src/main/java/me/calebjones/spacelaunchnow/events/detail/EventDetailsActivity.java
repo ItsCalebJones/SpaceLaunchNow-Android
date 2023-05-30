@@ -2,6 +2,8 @@ package me.calebjones.spacelaunchnow.events.detail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
+import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -34,8 +36,6 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -288,7 +288,7 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
 
         eventCardTitle.setText("Overview");
         eventType.setText(event.getType().getName());
-        SimpleDateFormat df = Utils.getSimpleDateFormatForUI("EEEE, MMMM dd, yyyy - hh:mm a zzz");
+        SimpleDateFormat df = Utils.getSimpleDateTimeFormatForUIWithPrecision(event.getDatePrecision());
         df.toLocalizedPattern();
         eventDate.setText(df.format(event.getDate()));
         eventDescription.setText(event.getDescription());

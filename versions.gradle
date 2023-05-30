@@ -9,7 +9,7 @@ ext {
     ]
 
     // Sdk and tools
-    minSdkVersion = 23
+    minSdkVersion = 24
     wearMinSdkVersion = 24
     targetSdkVersion = 31
     compileSdkVersion = 31

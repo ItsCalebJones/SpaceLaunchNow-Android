@@ -59,9 +59,20 @@ public class LaunchList extends RealmObject {
     @SerializedName("image")
     @Expose
     public String image;
+    @SerializedName("net_precision")
+    @Expose
+    public DatePrecision netPrecision;
     @SerializedName("landing_success")
     @Expose
     public Integer landingSuccess;
+
+    public DatePrecision getNetPrecision() {
+        return netPrecision;
+    }
+
+    public void setNetPrecision(DatePrecision netPrecision) {
+        this.netPrecision = netPrecision;
+    }
 
     public Integer getLaunchLibraryId() {
         return launchLibraryId;
