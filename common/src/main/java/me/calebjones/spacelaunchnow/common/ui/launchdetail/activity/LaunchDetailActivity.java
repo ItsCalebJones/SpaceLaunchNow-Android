@@ -423,7 +423,11 @@ public class LaunchDetailActivity extends BaseActivity
     }
 
     private void findRocketImage(Launch launch) {
-        if (launch.getRocket().getConfiguration().getName() != null) {
+        if (launch.getImgUrl() != null && launch.getImgUrl().length() > 0) {
+            GlideApp.with(this)
+                    .load(launch.getImgUrl())
+                    .into(detail_profile_backdrop);
+        } else if (launch.getRocket().getConfiguration().getName() != null) {
             if (launch.getRocket().getConfiguration().getImageUrl() != null
                     && launch.getRocket().getConfiguration().getImageUrl().length() > 0
                     && !launch.getRocket().getConfiguration().getImageUrl().contains("placeholder")) {
