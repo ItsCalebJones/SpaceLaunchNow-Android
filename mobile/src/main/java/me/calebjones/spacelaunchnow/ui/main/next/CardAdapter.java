@@ -154,8 +154,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
                             }
                         }
                     }
-
-                    if (launchItem.getRocket().getConfiguration().getImageUrl() != null) {
+                    if (launchItem.getImgUrl() != null && launchItem.getImgUrl().length() > 0) {
+                        holder.launchImage.setVisibility(View.VISIBLE);
+                        GlideApp.with(context)
+                                .load(launchItem.getImgUrl())
+                                .placeholder(R.drawable.placeholder)
+                                .into(holder.launchImage);
+                    } else if (launchItem.getRocket().getConfiguration().getImageUrl() != null) {
                         holder.launchImage.setVisibility(View.VISIBLE);
                         GlideApp.with(context)
                                 .load(launchItem.getRocket().getConfiguration().getImageUrl())
