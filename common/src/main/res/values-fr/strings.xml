@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">Space Launch Now</string>
     <string name="news">Actualités</string>
-    <string name="twitter">Twitter</string>
     <string name="action_settings">Paramètres</string>
     <string name="status_go">"Paré au Lancement"</string>
     <string name="status_nogo">Date de lancement non confirmée</string>
@@ -11,8 +9,6 @@
     <string name="general_settings">Paramètres généraux du suivi des lancements et du comportement de l\'application.</string>
     <string name="supporter_title">Devenez un Supporter</string>
     <string name="supporter_description">Aidez à assurer un support constant, des corrections de bugs régulières et l\'implémentation de nouvelles fonctionnalités.</string>
-    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
-    <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Restez informé de tous les lancements, missions et véhicules spatiaux.</string>
     <string name="slide_two_title">Notification de Lancements</string>
     <string name="slide_two_description">Recevez des notifications pour les prochains lancements et découvrez l\'histoire des vols spatiaux</string>
@@ -35,7 +31,6 @@
     <string name="wear_settings">Changer les paramètres du cadran Android Wear.</string>
     <string name="supporter_unlock_text">Merci d\'avoir envisagé de supporter Space Launch Now.\n\n\nChaque niveau de support est un achat unique qui débloque toutes les fonctionnalités pro pour toujours ! Payez ce que vous souhaitez pour débloquer toutes les fonctionnalités pro !</string>
     <string name="thank_you_support">Merci pour votre soutien continu !</string>
-    <string name="ok">OK</string>
     <string name="issues_connecting_billing">Problème de connexion au service de facturation Google Play</string>
     <string name="thanks_support_development">Merci pour votre support !</string>
     <string name="billing_error_code">erreur de facturation code -</string>
@@ -60,7 +55,6 @@
     <string name="wear_complications_description">Obtenez les complications Space Launch Now sur votre montre Wear OS !</string>
     <string name="remove_ads">Retirer les publicités</string>
     <string name="remove_ads_description">Retirer toutes les publicités pour toujours !</string>
-    <string name="discord">Discord</string>
     <string name="discord_description">Obtenez un rôle de supporter exclusif dans le serveur discord de Space Launch Now.</string>
     <string name="exclusive_widgets">Widgets Personnalisables Exclusifs</string>
     <string name="exclusive_widgets_description">Accédez à un widget supplémentaire et personnalisez-le comme bon vous semble.</string>
@@ -68,7 +62,6 @@
     <string name="blur_brightness">Luminosité</string>
     <string name="blur_sampling">Échantillonage</string>
     <string name="blur_radius">Rayon</string>
-    <string name="blur_saturation">Saturation</string>
     <string name="unknown_launch_location">Lieu de Lancement Inconnu</string>
     <string name="unknown_launch_date">Date de Lancement Inconnue</string>
     <string name="unknown_launch_status">Status du Lancement Inconnu</string>
@@ -80,15 +73,10 @@
     <string name="explore">Afficher</string>
     <string name="days">JOURS</string>
     <string name="hours">HEURES</string>
-    <string name="minutes">MINUTES</string>
     <string name="seconds">SECONDES</string>
-    <string name="min">MIN</string>
-    <string name="sec">SEC</string>
     <string name="launch_service_provider">Fournisseur de Lancement</string>
     <string name="primary_agency">Agence Principale</string>
     <string name="unknown_agency_type">Type d\'Agence Inconnu</string>
-    <string name="info">INFO</string>
-    <string name="wiki">WIKI</string>
     <string name="secondary_agency">Agence Secondaire</string>
     <string name="vehicle_agency">Agence du Véhicule</string>
     <string name="mission_details">Détails de la Mission</string>
@@ -96,7 +84,6 @@
     <string name="launch_vehicle_summary">Détails du Véhicule de Lancement</string>
     <string name="unknown_launch_vehicle">Véhicule de Lancement Inconnu</string>
     <string name="family">Famille:</string>
-    <string name="configuration">Configuration:</string>
     <string name="vehicle_specifications">Caractéristiques du Véhicule</string>
     <string name="height">Hauteur :</string>
     <string name="diameter">Diamètre :</string>
@@ -108,7 +95,6 @@
     <string name="watch_launch">Regarder le Lancement</string>
     <string name="estimated_launch_date">Date de Lancement Estimée</string>
     <string name="nothing_here">Rien à voir ici, rafraîchissez depuis le menu ?</string>
-    <string name="supporter">Supporter</string>
     <string name="debug_launches">Déboguer les Lancements</string>
     <string name="reset">Rétablir</string>
     <string name="agency">Agence</string>
@@ -118,16 +104,7 @@
     <string name="no_launches">Oh oh... pas de lancements !</string>
     <string name="select_launches">Choisir les Lancements à Suivre</string>
     <string name="selection_description">Vos sélections seront visible sur la page d\'accueil et enverront des notifications avant le lancement.</string>
-    <string name="nasa">NASA</string>
-    <string name="spacex">SpaceX</string>
-    <string name="roscosmos">ROSCOSMOS</string>
-    <string name="ula">ULA</string>
-    <string name="kennedy_space_center">Kennedy Space Center</string>
-    <string name="vandenberg_afb">Vandenberg AFB</string>
-    <string name="arianespace">Arianespace</string>
-    <string name="casc">CASC</string>
     <string name="isro">Inde</string>
-    <string name="cape_canaveral">Cape Canaveral</string>
     <string name="plesetsk_cosmodrome">Cosmodrome de Plessetsk</string>
     <string name="all">Tous</string>
     <string name="edit_notification_settings">Changer les Paramètres de Notification</string>
@@ -150,9 +127,7 @@
     <string name="lower_days">jours</string>
     <string name="lower_hours">heures</string>
     <string name="title_activity_settings">Paramètres</string>
-    <string name="title_activity_fullscreen_image">Space Launch Now</string>
     <string name="title_activity_download">Télécharger</string>
-    <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">Restez informé de tous les lancements, missions et véhicules spatiaux.</string>
     <string name="supporter_card_description">Widget exclusif, Cadran Android Wear, Retrait des Pubs et plus.</string>
     <string name="vehicle_card_title">Trouver des Véhicules de Lancement</string>
@@ -167,11 +142,9 @@
     <string name="app_feedback">Donnez votre avis sur l\'application</string>
     <string name="need_support">Besoin d\'aide ?</string>
     <string name="need_support_description">La façon la plus rapide et la plus fiable d\'obtenir de l\'aide est via Discord. Si ça n\'est pas possible veuillez me contacter directement par mail.</string>
-    <string name="email">Email</string>
     <string name="cancel">Annuler</string>
     <string name="unknown_location">Localisation Inconnue</string>
     <string name="details">Détails</string>
-    <string name="mission">Mission</string>
     <string name="agencies">Agence</string>
     <string name="error_launch_details">Erreur - Impossible de charger les détails du lanceur.</string>
     <string name="height_full">Hauteur : %.1f Mètres</string>
@@ -181,13 +154,6 @@
     <string name="mass_gto_full">Masse en GTO : %d kg</string>
     <string name="mass_launch_full">Masse au lancement : %d Tonnes</string>
     <string name="thrust_full">Poussée au lancement : %d kN</string>
-    <string name="height_value">%.1f M</string>
-    <string name="diameter_value">%.1f M</string>
-    <string name="stage_value">%d</string>
-    <string name="mass_leo_value">%d kg</string>
-    <string name="mass_gto_value">%d kg</string>
-    <string name="mass_launch_value">%d T</string>
-    <string name="thrust_value">%d kN</string>
     <string name="upcoming">À venir</string>
     <string name="previous">Précédents</string>
     <string name="select_country">Sélectionner un pays</string>
@@ -220,14 +186,12 @@
     <string name="launch_info_description">Cette option va maintenir les lancements sur la page d\'accueil pendant 24 heures après qu\'ils aient eu lieu.</string>
     <string name="home">Accueil</string>
     <string name="launches">Lancements</string>
-    <string name="missions">Missions</string>
     <string name="vehicles">Véhicules</string>
     <string name="settings">Paramètres</string>
     <string name="stay_connected">Rester Connecté</string>
     <string name="connect_description">Échanger avec la Communauté</string>
     <string name="discord_subtitle">Rejoindre la Communauté</string>
     <string name="twitter_subtitle">Échanger sur Twitter</string>
-    <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Suivre sur Facebook</string>
     <string name="website">Site web</string>
     <string name="website_subtitle">Site Officiel</string>
@@ -330,9 +294,7 @@
     <string name="start_time">Heure de Début</string>
     <string name="end_time">Heure de Fin</string>
     <string name="general">Général</string>
-    <string name="notifications">Notifications</string>
     <string name="appearance">Apparence</string>
-    <string name="wear">Wear</string>
     <string name="Support">Devenez un Supporter</string>
     <string name="about">À propos</string>
     <string name="watch_hour_mode">Mode d\'Affiche de l\'Heure sur la Montre</string>
@@ -357,7 +319,6 @@
     <string name="priority_summary">Notification pop-up, son et vibrations par défaut.</string>
     <string name="priority">Priorité</string>
     <string name="vibration_summary">Activer les vibrations pour les notifications.</string>
-    <string name="vibration">Vibration</string>
     <string name="led_summary">Autoriser le clignotement de la LED avec la notification. (Fonctionne sur certains appareils)</string>
     <string name="led">Clignotement de la LED</string>
     <string name="test_notification_summary">Envoyer une notification de test.</string>
@@ -376,10 +337,8 @@
     <string name="default_launch_count">Nombre de Lancements par Défaut</string>
     <string name="background_sync">Synchronisation en arrière-plan</string>
     <string name="night_mode_title">Mode Nuit</string>
-    <string name="widgets">Widgets</string>
     <string name="weather">Météo</string>
     <string name="watchface_image">Image du Cadran</string>
-    <string name="wear_os">Wear OS</string>
     <string name="misc">Divers</string>
     <string name="launchers">Lanceurs</string>
     <string name="orbiters">Astronefs</string>
@@ -405,7 +364,6 @@
     <string name="view_rocket_launches">Voir les lancements de %s</string>
     <string name="refresh">Rafraîchir</string>
     <string name="search">Chercher</string>
-    <string name="date">Date</string>
     <string name="hide_fab">Masquer le Bouton d\'Action Flottant</string>
     <string name="alert">Alerte</string>
     <string name="restore_purchase">Restorer les Achats</string>
@@ -440,8 +398,6 @@
     <string name="no_live_stream_available">Pas de retransmission en direct disponible.</string>
     <string name="date_confirmed">La date est confirmée mais l\'heure n\'est pas encore connue.</string>
     <string name="date_unconfirmed">La date affichée est une estimation \"au plus tôt\".</string>
-    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
-    <string name="to_be_confirmed_title">To Be Confirmed</string>
     <string name="source">Sélectionner une source</string>
     <string name="long_press_share">Appuyer longtemps pour partager.</string>
     <string name="no_astronauts">Aucun astronautes trouvés.</string>
@@ -462,11 +418,6 @@
     <string name="height_plain">Hauteur</string>
     <string name="width_plain">Largeur</string>
     <string name="mass_plain">Masse</string>
-    <string name="height_unit">%s m</string>
-    <string name="width_unit">%s m</string>
-    <string name="mass_unit">%s T</string>
-    <string name="volume_plain">Volume</string>
-    <string name="volume_unit">%s m³</string>
     <string name="crew_plain">Équipage</string>
     <string name="orbit">Orbite</string>
     <string name="details_fill">%s Détails</string>
@@ -476,7 +427,6 @@
     <string name="spacestations">Stations Spatiales</string>
     <string name="spacestation">Station Spatiale</string>
     <string name="astronauts">Astronautes</string>
-    <string name="starship">Starship</string>
     <string name="events">Événements</string>
     <string name="favorites">Favoris</string>
     <string name="show_me">Montrez Moi</string>
@@ -497,9 +447,6 @@
     <string name="landing_information">Détails de l\'atterrissage</string>
     <string name="launch_service_providers">Fournisseurs de Lancement</string>
     <string name="launch_locations">Bases de Lancement</string>
-    <string name="northrop_grumman">Northrop Grumman</string>
-    <string name="blue_origin">Blue Origin</string>
-    <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Russie et Kazakhstan</string>
     <string name="china">Chine</string>
     <string name="kennedy_space_center_cape_canaveral">Cap Canaveral</string>
@@ -566,13 +513,10 @@
     <string name="air_sea_launch">Lancement aérien / maritime</string>
     <string name="strict_matching">Affiche uniquement les lancements qui correspondent aux agences sélectionnées pour les sites de lancement utilisés par plusieurs agences.\n\n\n\nSi vous voulez uniquement les lancements SpaceX depuis le centre spatial Kennedy, activez le filtrage strict et sélectionnez uniquement CSK et SpaceX.\n\n\nSans le filtrage strict, tous les lancements SpaceX ainsi que tous les lancements depuis le CSK seraient affichés.</string>
     <string name="strict_matching_title">Filtrage strict</string>
-    <string name="texas">Texas</string>
-    <string name="pacific_spaceport">Pacific Spaceport</string>
     <string name="include_other_misc_locations">Inclure les autres sites de lancement</string>
     <string name="view_more_livestreams">Voir plus de directs</string>
     <string name="notices">Annonces</string>
     <string name="road_closures">Fermetures de route</string>
     <string name="up_next">Prochain</string>
     <string name="overview">Vue d\'ensemble</string>
-    <string name="supporter_unlock_text_previous">I appreciate you considering supporting Space Launch Now again in 2023! \n\nPay what you want to support continued development and updates!</string>
 </resources>
