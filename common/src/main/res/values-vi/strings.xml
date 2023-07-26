@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">Space Launch Now</string>
     <string name="news">Tin tức</string>
-    <string name="twitter">Twitter</string>
     <string name="action_settings">Thiết lập</string>
     <string name="status_go">"Vào phóng"</string>
     <string name="status_nogo">Ngày phóng chưa được xác nhận</string>
@@ -11,8 +9,6 @@
     <string name="general_settings">Thiết lập chung cho theo dõi khởi chạy và hành vi của ứng dụng.</string>
     <string name="supporter_title">Trở thành người hỗ trợ</string>
     <string name="supporter_description">Giúp đảm bảo hỗ trợ kéo dài, sửa lỗi kịp thời và thêm các tính năng mới.</string>
-    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
-    <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Luôn được cập nhật về tất cả các lần phóng, nhiệm vụ và phương tiện phóng yêu thích của bạn.</string>
     <string name="slide_two_title">Thông báo cho các lần phóng</string>
     <string name="slide_two_description">Nhận thông báo cho các lần phóng tới và xem lịch sử các chuyến bay không gian</string>
@@ -37,7 +33,6 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="wear_settings">Thay đổi giao diện trên Android Wear</string>
     <string name="supporter_unlock_text">Mình cảm ơn bạn đã hỗ trợ ứng dụng này rất rất nhiều!\n\nTất cả các cấp bậc hỗ trợ sẽ mở khoá các tính năng Pro mãi mãi đó! Hỗ trợ mình với số tiền bạn muốn để mình tiếp tục phát triển và cập nhật ứng dụng này!</string>
     <string name="thank_you_support">Cảm ơn bạn rất rất nhiều vì đã hỗ trợ mình! </string>
-    <string name="ok">OK</string>
     <string name="issues_connecting_billing">Lỗi kết nối tới Google Play</string>
     <string name="thanks_support_development">Cảm ơn bạn rất nhiều vì đã giúp phát triển ứng dụng này!</string>
     <string name="billing_error_code">lỗi thanh toán mã -</string>
@@ -62,7 +57,6 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="wear_complications_description">Tải ứng dụng Space Launch Now trên đồng hồ Wear OS của bạn đi!</string>
     <string name="remove_ads">Loại bỏ quảng cáo</string>
     <string name="remove_ads_description">Loại bỏ quảng cáo mãi mãi!</string>
-    <string name="discord">Discord</string>
     <string name="discord_description">Nhận role \"Supporter\" (Người hỗ trợ) riêng biệt trong server Discord của Space Launch Now.</string>
     <string name="exclusive_widgets">Tiện ích con đặc biệt có thể được tùy chỉnh</string>
     <string name="exclusive_widgets_description">Nhận thêm một tiện ích nữa và có thể tùy chỉnh chúng</string>
@@ -90,7 +84,6 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="primary_agency">Công ty chính</string>
     <string name="unknown_agency_type">Chưa biết loại công ty phóng</string>
     <string name="info">THÔNG TIN</string>
-    <string name="wiki">WIKI</string>
     <string name="secondary_agency">Công ty phụ</string>
     <string name="vehicle_agency">Công ty </string>
     <string name="mission_details">Thông tin về mục tiêu</string>
@@ -120,16 +113,9 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="no_launches">Ồ, không phóng nữa</string>
     <string name="select_launches">Chọn các lần phóng để theo dõi</string>
     <string name="selection_description">Sự lựa chọn của bạn sẽ được hiển thị trên trang chủ và sẽ gửi thông báo trước khi phóng.</string>
-    <string name="nasa">NASA</string>
-    <string name="spacex">SpaceX</string>
-    <string name="roscosmos">ROSCOSMOS</string>
-    <string name="ula">ULA</string>
     <string name="kennedy_space_center">Trung tâm Thiên văn Kennedy</string>
     <string name="vandenberg_afb">Căn cứ không quân Vandenburg</string>
-    <string name="arianespace">Arianespace</string>
-    <string name="casc">CASC</string>
     <string name="isro">ISRO</string>
-    <string name="cape_canaveral">Cape Canaveral</string>
     <string name="plesetsk_cosmodrome">Đài phóng Plesetsk</string>
     <string name="all">Tất cả</string>
     <string name="edit_notification_settings">Thay đổi cài đặt thông báo</string>
@@ -152,9 +138,7 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="lower_days">ngày</string>
     <string name="lower_hours">giờ</string>
     <string name="title_activity_settings">Thiết lập</string>
-    <string name="title_activity_fullscreen_image">Space Launch Now</string>
     <string name="title_activity_download">Tải xuống</string>
-    <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">Luôn được cập nhật về tất cả các lần phóng tên lửa, mục tiêu và phương tiện phóng yêu thích của bạn.</string>
     <string name="supporter_card_description">Tiện ích độc quyền, hỗ trợ Android Wear, loại bỏ quảng cáo và hơn thế nữa.</string>
     <string name="vehicle_card_title">Tìm kiếm phương tiện phóng</string>
@@ -169,7 +153,6 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="app_feedback">Phản hồi về ứng dụng</string>
     <string name="need_support">Bạn cần hỗ trợ đúng không?</string>
     <string name="need_support_description">Cách nhanh nhất và tốt nhất để nhận hỗ trợ là ở Discord của mình. Còn không thì bạn có thể gửi email trực tiếp cho mình đó.</string>
-    <string name="email">Email</string>
     <string name="cancel">Hủy bỏ</string>
     <string name="unknown_location">Chưa biết địa điểm</string>
     <string name="details">Thông tin</string>
@@ -183,13 +166,6 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="mass_gto_full">Khối lượng để đi vào quỹ đạo chuyển tiếp địa tĩnh: %d kg</string>
     <string name="mass_launch_full">Khối lượng lúc phóng: %d T</string>
     <string name="thrust_full">Lực đẩy lúc phóng: %d kN</string>
-    <string name="height_value">%.1f M</string>
-    <string name="diameter_value">%.1f M</string>
-    <string name="stage_value">%d</string>
-    <string name="mass_leo_value">%d kg</string>
-    <string name="mass_gto_value">%d kg</string>
-    <string name="mass_launch_value">%d T</string>
-    <string name="thrust_value">%d kN</string>
     <string name="upcoming">Sắp tới</string>
     <string name="previous">Trước đó</string>
     <string name="select_country">Chọn một quốc gia</string>
@@ -229,7 +205,6 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="connect_description">Kết nối với Cộng đồng</string>
     <string name="discord_subtitle">Tham gia cộng đồng</string>
     <string name="twitter_subtitle">Kết nối trên Twitter</string>
-    <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Theo dõi trên Facebook</string>
     <string name="website">Trên trang Web</string>
     <string name="website_subtitle">Trang web chính thức</string>
@@ -258,7 +233,6 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="no_calendars_available">Không có lịch nào để đồng bộ các sự kiện phóng.</string>
     <string name="calendar_permission_required">Cần quyền truy cập lịch.</string>
     <string name="calendar_permission_required_description">Cần quyền này để đồng bộ các lần phóng vào lịch.</string>
-    <string name="support_again">Support me in 2021!</string>
     <string name="local_timezone">Giờ địa phương</string>
     <string name="local_timezone_on">Thời gian phóng được điều chỉnh để khớp với thời gian nơi bạn.</string>
     <string name="local_timezone_off">Thời gian phóng ở giờ UTC</string>
@@ -442,8 +416,6 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="no_live_stream_available">Không có live stream.</string>
     <string name="date_confirmed">Ngày đã được xác định nhưng giờ cụ thể thì chưa biết.</string>
     <string name="date_unconfirmed">Ngày hiện tại là dự đoán ngày phóng \"không sớm hơn\".</string>
-    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
-    <string name="to_be_confirmed_title">To Be Confirmed</string>
     <string name="source">Chọn một nguồn</string>
     <string name="long_press_share">Nhấn giữ một thứ để chia sẻ</string>
     <string name="no_astronauts">Không tìm thấy phi hành gia nào.</string>
@@ -464,11 +436,7 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="height_plain">Chiều cao</string>
     <string name="width_plain">Chiều rộng</string>
     <string name="mass_plain">Khối lượng</string>
-    <string name="height_unit">%s m</string>
-    <string name="width_unit">%s m</string>
-    <string name="mass_unit">%s T</string>
     <string name="volume_plain">Thể tích</string>
-    <string name="volume_unit">%s m³</string>
     <string name="crew_plain">Đoàn</string>
     <string name="orbit">Quỹ đạo</string>
     <string name="details_fill">Thông tin về %s</string>
@@ -478,7 +446,6 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="spacestations">Các trạm vũ trụ</string>
     <string name="spacestation">Trạm vũ trụ</string>
     <string name="astronauts">Các phi hành gia</string>
-    <string name="starship">Starship</string>
     <string name="events">Sự kiện</string>
     <string name="favorites">Yêu thích</string>
     <string name="show_me">Cho mình xem</string>
@@ -499,14 +466,11 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="landing_information">Thông tin hạ cánh</string>
     <string name="launch_service_providers">Nhà cũng cấp dịch vụ phóng</string>
     <string name="launch_locations">Địa điểm phóng</string>
-    <string name="northrop_grumman">Northrop Grumman</string>
-    <string name="blue_origin">Blue Origin</string>
     <string name="rocket_lab">Phòng thí nghiệm tên lửa (Rocket Lab)</string>
     <string name="russia_and_kazakhstan">Nga và Kazakhstan</string>
     <string name="china">Trung Quốc</string>
     <string name="kennedy_space_center_cape_canaveral">Trung tâm Thiên văn Kennedy / Cape Canaveral</string>
     <string name="wallops_island">Đảo Wallops</string>
-    <string name="new_zealand">New Zealand</string>
     <string name="japan">Nhật Bản</string>
     <string name="french_guiana">Guiana thuộc Pháp</string>
     <string name="follow_all_launches">Theo dõi tất cả các lần phóng</string>
@@ -556,25 +520,4 @@ Còn nếu bạn không thích ứng dụng này thì chúng mình sẽ nghe ph�
     <string name="born_one_argument">Sinh ra vào %1$s</string>
     <string name="died_two_arguments">Chết lúc %1$s (%2$d)</string>
     <string name="related_news">Tin có liên quan</string>
-    <string name="flight_life">Flight Life: %s</string>
-    <string name="thrust">Thrust at Launch:</string>
-    <string name="to_be_determined_with_value">To be determined... %s</string>
-    <string name="click_for_info">Click for more information.</string>
-    <string name="choose_theme">Choose Theme</string>
-    <string name="set_custom_calendar">Set custom reminders for calendar notifications.</string>
-    <string name="event_and_news">Events and News Notifications</string>
-    <string name="event_and_news_description">Receive notifications for post-launch spaceflight events and news.</string>
-    <string name="choose_theme_mode">Choose Theme Mode</string>
-    <string name="air_sea_launch">Air / Sea Launch</string>
-    <string name="strict_matching">Exclusively show launches that match with agencies selected for locations that have multiple launch agencies available.\n\nIf you only want SpaceX launches from KSC then enable strict matching and select only KSC and SpaceX.\n\nOtherwise without strict matching - all KSC and all SpaceX launches would be shown.</string>
-    <string name="strict_matching_title">Strict Matching</string>
-    <string name="texas">Texas</string>
-    <string name="pacific_spaceport">Pacific Spaceport</string>
-    <string name="include_other_misc_locations">Include other Misc. Locations</string>
-    <string name="view_more_livestreams">View More Livestreams</string>
-    <string name="notices">Notices</string>
-    <string name="road_closures">Road Closures</string>
-    <string name="up_next">Up Next</string>
-    <string name="overview">Overview</string>
-    <string name="supporter_unlock_text_previous">I appreciate you considering supporting Space Launch Now again in 2023! \n\nPay what you want to support continued development and updates!</string>
 </resources>
