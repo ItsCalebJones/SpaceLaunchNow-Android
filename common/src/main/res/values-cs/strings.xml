@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">Space Launch Now</string>
     <string name="news">Novinky</string>
-    <string name="twitter">Twitter</string>
     <string name="action_settings">Nastavení</string>
     <string name="status_go">"Start je povolen"</string>
     <string name="status_nogo">Datum startu není potvrzeno</string>
@@ -11,8 +9,6 @@
     <string name="general_settings">Obecná nastavení pro sledování startů a chování aplikace.</string>
     <string name="supporter_title">Staňte se podporovatelem</string>
     <string name="supporter_description">Pomůže zajistit trvalou podporu, včasné opravy chyb a nové funkce.</string>
-    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
-    <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Udržovat aktuální informace o všech vašich oblíbených orbitálních lodích, misích a nosných raketách.</string>
     <string name="slide_two_title">Oznámení pro starty</string>
     <string name="slide_two_description">Dostávat oznámení o nadcházejících startech a podívat se do historie kosmonautiky</string>
@@ -35,7 +31,6 @@
     <string name="wear_settings">Změňit nastavení zobrazení na hodinkách Android Wear.</string>
     <string name="supporter_unlock_text">Vážíme si vaší podpory Space Launch Now.\n\nKaždá úroveň podpory je jednorázový nákup odemykající všechny rozšířené funkce navždy. Přispějte kolik chcete a podpořte budoucí rozvoj aplikace!</string>
     <string name="thank_you_support">Děkujeme za vaši dlouhodobou podporu!</string>
-    <string name="ok">OK</string>
     <string name="issues_connecting_billing">Problémy s připojením k fakturační službě Google Play</string>
     <string name="thanks_support_development">Děkujeme za pomoc při vývoji!</string>
     <string name="billing_error_code">kód chyby fakturace -</string>
@@ -82,12 +77,10 @@
     <string name="hours">HODIN</string>
     <string name="minutes">MINUT</string>
     <string name="seconds">SEKUND</string>
-    <string name="min">MIN</string>
     <string name="sec">SEK</string>
     <string name="launch_service_provider"> Společnost zajištující startovní služby</string>
     <string name="primary_agency">Primární agentura</string>
     <string name="unknown_agency_type">Neznámý typ agentury</string>
-    <string name="info">INFO</string>
     <string name="wiki">WIKIPEDIE</string>
     <string name="secondary_agency">Sekundární agentura</string>
     <string name="vehicle_agency">Agentura rakety</string>
@@ -118,14 +111,8 @@
     <string name="no_launches">Ouha ... žádné starty!</string>
     <string name="select_launches">Zvolte které starty chcete následovat</string>
     <string name="selection_description">Vaše výběry budou viditelné na domovské stránce a před startem dostanete oznámení.</string>
-    <string name="nasa">NASA</string>
-    <string name="spacex">SpaceX</string>
-    <string name="roscosmos">ROSCOSMOS</string>
-    <string name="ula">ULA</string>
     <string name="kennedy_space_center">Kennedyho vesmírné středisko</string>
     <string name="vandenberg_afb">Vandenbergova letecká základna</string>
-    <string name="arianespace">Arianespace</string>
-    <string name="casc">CASC</string>
     <string name="isro">ISRO</string>
     <string name="cape_canaveral">Mys Canaveral</string>
     <string name="plesetsk_cosmodrome">Plesetský kosmodrom</string>
@@ -150,9 +137,7 @@
     <string name="lower_days">dny</string>
     <string name="lower_hours">hodiny</string>
     <string name="title_activity_settings">Nastavení</string>
-    <string name="title_activity_fullscreen_image">Space Launch Now</string>
     <string name="title_activity_download">Stáhnout</string>
-    <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">Udržovat aktuální informace o všech vašich oblíbených orbitálních lodích, misích a nosných raketách.</string>
     <string name="supporter_card_description">Exkluzivní widgety, profily hodinek, odstranění reklam a další.</string>
     <string name="vehicle_card_title">Najít rakety</string>
@@ -167,7 +152,6 @@
     <string name="app_feedback">Zpětná vazba aplikace</string>
     <string name="need_support">Potřebujete podporu?</string>
     <string name="need_support_description">Nejrychlejší a nejspolehlivější způsob, jak získat podporu, je Discord. Pokud tomu tak není, neváhejte mi poslat e-mail.</string>
-    <string name="email">Email</string>
     <string name="cancel">Zrušit</string>
     <string name="unknown_location">Neznámá lokace</string>
     <string name="details">Detaily</string>
@@ -181,13 +165,6 @@
     <string name="mass_gto_full">M na GTO: %d kg</string>
     <string name="mass_launch_full">M při startu: %d T</string>
     <string name="thrust_full">Tah při startu: %d kN</string>
-    <string name="height_value">%.1f M</string>
-    <string name="diameter_value">%.1f M</string>
-    <string name="stage_value">%d</string>
-    <string name="mass_leo_value">%d kg</string>
-    <string name="mass_gto_value">%d kg</string>
-    <string name="mass_launch_value">%d T</string>
-    <string name="thrust_value">%d kN</string>
     <string name="upcoming">Nadcházející</string>
     <string name="previous">Předcházející</string>
     <string name="select_country">Vyberte zemi</string>
@@ -227,7 +204,6 @@
     <string name="connect_description">Spojte se s komunitou</string>
     <string name="discord_subtitle">Připojte se ke komunitě</string>
     <string name="twitter_subtitle">Připojte se na Twitter</string>
-    <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Sledujte na Facebooku</string>
     <string name="website">Na webu</string>
     <string name="website_subtitle">Oficiální webové stránky</string>
@@ -332,7 +308,6 @@
     <string name="general">Všeobecné</string>
     <string name="notifications">Oznámení</string>
     <string name="appearance">Vzhled</string>
-    <string name="wear">Wear</string>
     <string name="Support">Podpořte projekt</string>
     <string name="about">O aplikaci</string>
     <string name="watch_hour_mode">Režim hodinové hodinky</string>
@@ -379,7 +354,6 @@
     <string name="widgets">Widgety</string>
     <string name="weather">Počasí</string>
     <string name="watchface_image">Obraz Watchface</string>
-    <string name="wear_os">Wear OS</string>
     <string name="misc">Různé</string>
     <string name="launchers">Kosmické lodě / rakety</string>
     <string name="orbiters">Kosmická loď</string>
@@ -442,8 +416,6 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="no_live_stream_available">Živý přenos není k dispozici</string>
     <string name="date_confirmed">Datum startu je schváleno, ale čas je neznámý.</string>
     <string name="date_unconfirmed">Aktuální čas startu má status \'Ne dříve než\'.</string>
-    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
-    <string name="to_be_confirmed_title">To Be Confirmed</string>
     <string name="source">Vyberte zdroj</string>
     <string name="long_press_share">Dlouhým podržením start sdílejte</string>
     <string name="no_astronauts">Astronauti nenalezeni.</string>
@@ -464,21 +436,15 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="height_plain">Výška</string>
     <string name="width_plain">Šířka</string>
     <string name="mass_plain">Hmotnost</string>
-    <string name="height_unit">%s m</string>
-    <string name="width_unit">%s m</string>
-    <string name="mass_unit">%s T</string>
     <string name="volume_plain">Objem</string>
-    <string name="volume_unit">%s m³</string>
     <string name="crew_plain">Posádka</string>
     <string name="orbit">Druh orbity</string>
     <string name="details_fill">%s Detaily</string>
     <string name="total_fill">Celkem: %s</string>
-    <string name="start_fill">Start: %s</string>
     <string name="end_fill">Konec: %s</string>
     <string name="spacestations">Vesmírné stanice</string>
     <string name="spacestation">Vesmírná stanice</string>
     <string name="astronauts">Astronauti</string>
-    <string name="starship">Starship</string>
     <string name="events">Události</string>
     <string name="favorites">Oblíbené</string>
     <string name="show_me">Ukaž mi</string>
@@ -499,9 +465,6 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="landing_information">Infomace o přistání</string>
     <string name="launch_service_providers">Společnost zajištující startovní služby</string>
     <string name="launch_locations">Mista startů</string>
-    <string name="northrop_grumman">Northrop Grumman</string>
-    <string name="blue_origin">Blue Origin</string>
-    <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Rusko A Kazachstán</string>
     <string name="china">Čína</string>
     <string name="kennedy_space_center_cape_canaveral">Kennedyho vesmírné středisko / Mys Canaveral</string>
@@ -568,7 +531,6 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="air_sea_launch">Vzdušný / vodní start</string>
     <string name="strict_matching">Exkluzivně ukažte starty, které odpovídají agenturám vybraným pro lokality, které mají k dispozici více startovacích agentur.\n\nPokud chcete pouze spuštění SpaceX z KSC, povolte přísné shody a vyberte pouze KSC a SpaceX.\n\nJinak bez přísného porovnávání - budou zobrazeny všechny starty z KSC a všechna starty SpaceX.</string>
     <string name="strict_matching_title">Přesná schoda</string>
-    <string name="texas">Texas</string>
     <string name="pacific_spaceport">Pacifický kosmodrom</string>
     <string name="include_other_misc_locations">Zahrnout další různá Místa</string>
     <string name="view_more_livestreams">Zobrazit více stramů</string>
@@ -576,5 +538,4 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="road_closures">Dopravní uzavírky</string>
     <string name="up_next">Nadcházející</string>
     <string name="overview">přehled</string>
-    <string name="supporter_unlock_text_previous">I appreciate you considering supporting Space Launch Now again in 2023! \n\nPay what you want to support continued development and updates!</string>
 </resources>
