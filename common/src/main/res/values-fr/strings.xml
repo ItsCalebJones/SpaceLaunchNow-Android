@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Actualités</string>
@@ -11,6 +11,7 @@
     <string name="general_settings">Paramètres généraux du suivi des lancements et du comportement de l\'application.</string>
     <string name="supporter_title">Devenez un Supporter</string>
     <string name="supporter_description">Aidez à assurer un support constant, des corrections de bugs régulières et l\'implémentation de nouvelles fonctionnalités.</string>
+    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Restez informé de tous les lancements, missions et véhicules spatiaux.</string>
     <string name="slide_two_title">Notification de Lancements</string>
@@ -180,6 +181,13 @@
     <string name="mass_gto_full">Masse en GTO : %d kg</string>
     <string name="mass_launch_full">Masse au lancement : %d Tonnes</string>
     <string name="thrust_full">Poussée au lancement : %d kN</string>
+    <string name="height_value">%.1f M</string>
+    <string name="diameter_value">%.1f M</string>
+    <string name="stage_value">%d</string>
+    <string name="mass_leo_value">%d kg</string>
+    <string name="mass_gto_value">%d kg</string>
+    <string name="mass_launch_value">%d T</string>
+    <string name="thrust_value">%d kN</string>
     <string name="upcoming">À venir</string>
     <string name="previous">Précédents</string>
     <string name="select_country">Sélectionner un pays</string>
@@ -410,7 +418,7 @@
     <string name="spacecraft_format">%s Astronefs</string>
     <string name="crew_capacity">Nombre de Places: %s</string>
     <string name="current_weather">Prévisions Météo</string>
-    <string name="upcoming_with_space">"Prochains "</string>
+    <string name="upcoming_with_space">Prochains </string>
     <string name="previous_with_space">Précédents</string>
     <string name="watch">Regarder</string>
     <string name="notification_schedule_changed">Lancement Décalé : Prochaine tentative pas avant %s</string>
@@ -432,6 +440,8 @@
     <string name="no_live_stream_available">Pas de retransmission en direct disponible.</string>
     <string name="date_confirmed">La date est confirmée mais l\'heure n\'est pas encore connue.</string>
     <string name="date_unconfirmed">La date affichée est une estimation \"au plus tôt\".</string>
+    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
+    <string name="to_be_confirmed_title">To Be Confirmed</string>
     <string name="source">Sélectionner une source</string>
     <string name="long_press_share">Appuyer longtemps pour partager.</string>
     <string name="no_astronauts">Aucun astronautes trouvés.</string>
@@ -564,4 +574,5 @@
     <string name="road_closures">Fermetures de route</string>
     <string name="up_next">Prochain</string>
     <string name="overview">Vue d\'ensemble</string>
+    <string name="supporter_unlock_text_previous">I appreciate you considering supporting Space Launch Now again in 2023! \n\nPay what you want to support continued development and updates!</string>
 </resources>
