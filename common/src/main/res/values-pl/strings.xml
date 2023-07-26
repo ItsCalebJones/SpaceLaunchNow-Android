@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">Space Launch Now</string>
     <string name="news">Wiadomości</string>
-    <string name="twitter">Twitter</string>
     <string name="action_settings">Ustawienia</string>
     <string name="status_go">"Gotowy do startu"</string>
     <string name="status_nogo">Data startu niepotwierdzona</string>
@@ -11,8 +9,6 @@
     <string name="general_settings">Ustawienia ogólne aplikacji i śledzenia startów.</string>
     <string name="supporter_title">Zostań sponsorem</string>
     <string name="supporter_description">Pomóż zapewnić rozwój aplikacji, bieżące naprawy błędów oraz nowe funkcje.</string>
-    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
-    <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Bądź na bieżąco ze wszystkimi startami Twoich ulubionych rakiet, misjami i statkami kosmicznymi.</string>
     <string name="slide_two_title">Powiadomienia o startach</string>
     <string name="slide_two_description">Bądź informowany o nadchodzących startach i dowiedz się o historii lotów kosmicznych</string>
@@ -35,7 +31,6 @@
     <string name="wear_settings">Zmień ustawienia dla skórki Android Watch.</string>
     <string name="supporter_unlock_text">Doceniam, że rozważasz wsparcie aplikacji Space Launch Now.\n\nKażdy poziom wsparcia to jednorazowy zakup, który na zawsze odblokuje wszystkie funkcje pro. Zapłać ile chcesz, by wesprzeć dalszy rozwój aplikacji!</string>
     <string name="thank_you_support">Dziękujemy za udzielone wsparcie!</string>
-    <string name="ok">OK</string>
     <string name="issues_connecting_billing">Problem podczas połączenia z Google Play Billing</string>
     <string name="thanks_support_development">Dziękujemy za pomoc w rozwoju aplikacji!</string>
     <string name="billing_error_code">kod błędu płatności -</string>
@@ -56,11 +51,9 @@
     <string name="weather_description">Uzyskaj informacje o pogodzie na platformie startowej dla historycznych i nadchodzących startów.</string>
     <string name="calendar_sync">Synchronizacja z kalendarzem</string>
     <string name="calendar_sync_description">Automatycznie synchronizuj nadchodzące starty z Twoim kalendarzem.</string>
-    <string name="wear_complications">Wear OS Complications</string>
     <string name="wear_complications_description">Zdobądź funkcje Space Launch Now na Twój Wear OS!</string>
     <string name="remove_ads">Pozbądź się reklam</string>
     <string name="remove_ads_description">Pozbądź się wszystkich reklam na zawsze!</string>
-    <string name="discord">Discord</string>
     <string name="discord_description">Otrzymaj szczególną rolę \"Supporter\" na na serwerze Discord Space Launch Now.</string>
     <string name="exclusive_widgets">Ekskluzywne konfigurowalne widżety</string>
     <string name="exclusive_widgets_description">Uzyskaj dostęp do dodatkowego widżetu i możliwość jego dostosowywania.</string>
@@ -82,13 +75,10 @@
     <string name="hours">GODZINY</string>
     <string name="minutes">MINUTY</string>
     <string name="seconds">SEKUNDY</string>
-    <string name="min">MIN</string>
     <string name="sec">SEK</string>
     <string name="launch_service_provider">Obsługa startu rakiety</string>
     <string name="primary_agency">Agencja główna</string>
     <string name="unknown_agency_type">Nieznany typ agencji</string>
-    <string name="info">INFO</string>
-    <string name="wiki">WIKI</string>
     <string name="secondary_agency">Agencja współodpowiedzialna</string>
     <string name="vehicle_agency">Dostawca statku</string>
     <string name="mission_details">Szczegóły misji</string>
@@ -118,14 +108,9 @@
     <string name="no_launches">O, nie... Żadnych startów!</string>
     <string name="select_launches">Wybierz starty, aby je śledzić</string>
     <string name="selection_description">Twoje wybory będą widoczne na stronie startowej i będziesz otrzymywać o nich powiadomienia.</string>
-    <string name="nasa">NASA</string>
-    <string name="spacex">SpaceX</string>
-    <string name="roscosmos">ROSCOSMOS</string>
-    <string name="ula">ULA</string>
     <string name="kennedy_space_center">Centrum Kosmiczne im. Johna F. Kennedy’ego</string>
     <string name="vandenberg_afb">Baza Wojskowa Sił Powietrznych Stanów Zjednoczonych Vandenberg</string>
     <string name="arianespace">Arianspace</string>
-    <string name="casc">CASC</string>
     <string name="isro">Indie</string>
     <string name="cape_canaveral">Przylądek Canaveral</string>
     <string name="plesetsk_cosmodrome">Kosmodrom Plasieck</string>
@@ -150,9 +135,7 @@
     <string name="lower_days">dni</string>
     <string name="lower_hours">godziny</string>
     <string name="title_activity_settings">Ustawienia</string>
-    <string name="title_activity_fullscreen_image">Space Launch Now</string>
     <string name="title_activity_download">Pobierz</string>
-    <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">Bądź na bieżąco ze wszystkimi startami Twoich ulubionych rakiet, misjami i statkami kosmicznymi.</string>
     <string name="supporter_card_description">Ekskluzywne widżety, wsparcie dla Android Wear, brak reklam i wiele więcej.</string>
     <string name="vehicle_card_title">Znajdź start rakiety</string>
@@ -181,13 +164,6 @@
     <string name="mass_gto_full">Masa wynoszona na orbitę geostacjonarną: %d kg</string>
     <string name="mass_launch_full">Masa startowa: %d T</string>
     <string name="thrust_full">Siła ciągu: %d kN</string>
-    <string name="height_value">%.1f M</string>
-    <string name="diameter_value">%.1f M</string>
-    <string name="stage_value">%d</string>
-    <string name="mass_leo_value">%d kg</string>
-    <string name="mass_gto_value">%d kg</string>
-    <string name="mass_launch_value">%d T</string>
-    <string name="thrust_value">%d kN</string>
     <string name="upcoming">Nadchodzące</string>
     <string name="previous">Poprzednie</string>
     <string name="select_country">Wybierz kraj</string>
@@ -227,7 +203,6 @@
     <string name="connect_description">Połącz się ze społecznością</string>
     <string name="discord_subtitle">Dołącz do naszej społeczności</string>
     <string name="twitter_subtitle">Dołącz do nas na Twitterze</string>
-    <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Śledź naszego Facebooka</string>
     <string name="website">W Internecie</string>
     <string name="website_subtitle">Oficjalna strona</string>
@@ -379,7 +354,6 @@
     <string name="widgets">Widżety</string>
     <string name="weather">Pogoda</string>
     <string name="watchface_image">Obraz tła dla zegarka</string>
-    <string name="wear_os">Wear OS</string>
     <string name="misc">Różności</string>
     <string name="launchers">Wyrzutnie</string>
     <string name="orbiters">Statek kosmiczny</string>
@@ -440,8 +414,6 @@
     <string name="no_live_stream_available">Relacja na żywo nie jest dostępna.</string>
     <string name="date_confirmed">Data startu jest potwierdzona, natomiast czas startu jest nieznany.</string>
     <string name="date_unconfirmed">Bieżąca data jest ustalona na \"nie wcześniej niż\".</string>
-    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
-    <string name="to_be_confirmed_title">To Be Confirmed</string>
     <string name="source">Wybierz źródło</string>
     <string name="long_press_share">Przytrzymaj, aby udostępnić.</string>
     <string name="no_astronauts">Nie znaleziono astronautów.</string>
@@ -458,25 +430,18 @@
     <string name="expeditions">Ekspedycje</string>
     <string name="deorbited">Zdeorbitowano: %s</string>
     <string name="founded">Założono: %s</string>
-    <string name="status">Status: %s</string>
     <string name="height_plain">Wysokość</string>
     <string name="width_plain">Szerokość</string>
     <string name="mass_plain">Masa</string>
-    <string name="height_unit">%s m</string>
-    <string name="width_unit">%s m</string>
-    <string name="mass_unit">%s T</string>
     <string name="volume_plain">Objętość</string>
-    <string name="volume_unit">%s m³</string>
     <string name="crew_plain">Załoga</string>
     <string name="orbit">Orbita</string>
     <string name="details_fill">Szczegóły %s</string>
     <string name="total_fill">Łącznie: %s</string>
-    <string name="start_fill">Start: %s</string>
     <string name="end_fill">Zakończenie: %s</string>
     <string name="spacestations">Stacje kosmiczne</string>
     <string name="spacestation">Stacje kosmiczne</string>
     <string name="astronauts">Astronauci</string>
-    <string name="starship">Starship</string>
     <string name="events">Wydarzenia</string>
     <string name="favorites">Ulubione</string>
     <string name="show_me">Pokaż mi</string>
@@ -484,7 +449,6 @@
     <string name="no_spacestations">Nie odnaleziono stacji kosmicznych</string>
     <string name="no_events">Nie odnaleziono wydarzeń</string>
     <string name="founded_alt">Założono:</string>
-    <string name="status_alt">Status:</string>
     <string name="de_orbited">Zdeorbitowano:</string>
     <string name="mission_agency">Agencja odpowiedzialna za misję</string>
     <string name="no_expeditions">Nie znaleziono ekspedycji</string>
@@ -497,13 +461,9 @@
     <string name="landing_information">Informacje o lądowaniu</string>
     <string name="launch_service_providers">Dostawcy usług startowych (LSP)</string>
     <string name="launch_locations">Miejsca startów</string>
-    <string name="northrop_grumman">Northrop Grumman</string>
-    <string name="blue_origin">Blue Origin</string>
-    <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Rosja i Kazachstan</string>
     <string name="china">Chiny</string>
     <string name="kennedy_space_center_cape_canaveral">Przylądek Canaveral</string>
-    <string name="wallops_island">Wallops Island</string>
     <string name="new_zealand">Nowa Zelandia</string>
     <string name="japan">Japonia</string>
     <string name="french_guiana">Gujana Francuska</string>
@@ -525,7 +485,6 @@
     <string name="launch_window_extras"><![CDATA[<b>Okno startowe</b><br>%1$s - %2$s<br>%3$s]]></string>
     <string name="read_more">Czytaj więcej</string>
     <string name="serial_number">Numer seryjny:</string>
-    <string name="status_booster">Status:</string>
     <string name="flights_booster">Loty:</string>
     <string name="flight_proven_booster">Pomyślne loty:</string>
     <string name="landing_attempt_booster">Próby lądowania:</string>
@@ -567,12 +526,10 @@
     <string name="strict_matching">Pokaż wyłącznie starty pasujące do wybranych agencji i lokacji, w przypadku agencji posiadających kilka wyrzutni.\n\nJeśli chcesz widzieć tylko starty SpaceX z KSC, wybierz ścisłe dopasowanie i zaznacz KSC oraz SpaceX.\n\nW przeciwnym przypadku zostaną wyświetlone wszystkie starty dla KSC oraz dla SpaceX.</string>
     <string name="strict_matching_title">Szczegółowe dopasowanie</string>
     <string name="texas">Teksas</string>
-    <string name="pacific_spaceport">Pacific Spaceport</string>
     <string name="include_other_misc_locations">Uwzględnij inne lokacje</string>
     <string name="view_more_livestreams">Zobacz więcej relacji na żywo</string>
     <string name="notices">Powiadomienia</string>
     <string name="road_closures">Zamknięcie drogi</string>
     <string name="up_next">W przyszłości</string>
     <string name="overview">Przegląd</string>
-    <string name="supporter_unlock_text_previous">I appreciate you considering supporting Space Launch Now again in 2023! \n\nPay what you want to support continued development and updates!</string>
 </resources>
