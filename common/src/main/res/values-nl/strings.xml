@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Nieuws</string>
@@ -11,6 +11,7 @@
     <string name="general_settings">Algemene instellingen voor het volgen van lanceringen en de applicatie.</string>
     <string name="supporter_title">Word een supporter</string>
     <string name="supporter_description">Draag bij aan ondersteuning, snelle bug fixes en nieuwe features.</string>
+    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Blijf up-to-date over al je favoriete lanceringen, missies en raketten.</string>
     <string name="slide_two_title">Notificaties voor Lanceringen</string>
@@ -180,6 +181,13 @@
     <string name="mass_gto_full">massa naar geostationaire baan om de aarde: %d kg</string>
     <string name="mass_launch_full">Massa bij lancering: %d T</string>
     <string name="thrust_full">Stuwkracht bij lancering: %d kN</string>
+    <string name="height_value">%.1f M</string>
+    <string name="diameter_value">%.1f M</string>
+    <string name="stage_value">%d</string>
+    <string name="mass_leo_value">%d kg</string>
+    <string name="mass_gto_value">%d kg</string>
+    <string name="mass_launch_value">%d T</string>
+    <string name="thrust_value">%d kN</string>
     <string name="upcoming">Volgende</string>
     <string name="previous">Vorige</string>
     <string name="select_country">Selecteer een land</string>
@@ -410,8 +418,8 @@
     <string name="spacecraft_format">%s Ruimtevaartuig</string>
     <string name="crew_capacity">Bemanningscapaciteit %s</string>
     <string name="current_weather">Huidige weersvoorspelling</string>
-    <string name="upcoming_with_space">"Binnenkort "</string>
-    <string name="previous_with_space">"Vorige "</string>
+    <string name="upcoming_with_space">Binnenkort </string>
+    <string name="previous_with_space">Vorige </string>
     <string name="watch">Bekijk</string>
     <string name="notification_schedule_changed">Update schema: volgende poging niet eerder dan %s</string>
     <string name="notification_launch_successful">De lancering was een succes!</string>
@@ -432,6 +440,8 @@
     <string name="no_live_stream_available">Geen live stream beschikbaar.</string>
     <string name="date_confirmed">Datum is bevestigd maar de tijd van lancering is onbekend.</string>
     <string name="date_unconfirmed">Huidige datum is een \"niet eerder dan\"  inschatting.</string>
+    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
+    <string name="to_be_confirmed_title">To Be Confirmed</string>
     <string name="source">Selecteer een bron</string>
     <string name="long_press_share">Lang ingedrukt houden om een item te delen.</string>
     <string name="no_astronauts">Geen astronauten gevonden.</string>
@@ -466,6 +476,7 @@
     <string name="spacestations">Ruimtestations</string>
     <string name="spacestation">Ruimtestations</string>
     <string name="astronauts">Astronauten</string>
+    <string name="starship">Starship</string>
     <string name="events">Evenementen</string>
     <string name="favorites">Favorieten</string>
     <string name="show_me">Tonen</string>
@@ -552,4 +563,16 @@
     <string name="event_and_news">Evenementen en Nieuws Notificaties</string>
     <string name="event_and_news_description">Ontvang notificaties over gebeurtenissen en nieuws na een lancering.</string>
     <string name="choose_theme_mode">Kies Thema Modus</string>
+    <string name="air_sea_launch">Air / Sea Launch</string>
+    <string name="strict_matching">Exclusively show launches that match with agencies selected for locations that have multiple launch agencies available.\n\nIf you only want SpaceX launches from KSC then enable strict matching and select only KSC and SpaceX.\n\nOtherwise without strict matching - all KSC and all SpaceX launches would be shown.</string>
+    <string name="strict_matching_title">Strict Matching</string>
+    <string name="texas">Texas</string>
+    <string name="pacific_spaceport">Pacific Spaceport</string>
+    <string name="include_other_misc_locations">Include other Misc. Locations</string>
+    <string name="view_more_livestreams">View More Livestreams</string>
+    <string name="notices">Notices</string>
+    <string name="road_closures">Road Closures</string>
+    <string name="up_next">Up Next</string>
+    <string name="overview">Overview</string>
+    <string name="supporter_unlock_text_previous">I appreciate you considering supporting Space Launch Now again in 2023! \n\nPay what you want to support continued development and updates!</string>
 </resources>
