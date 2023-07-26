@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Hírek</string>
@@ -11,6 +11,7 @@
     <string name="general_settings">Általános beállítások az indítások követésére és az alkalmazás működésére.</string>
     <string name="supporter_title">Legyen Támogató</string>
     <string name="supporter_description">Segítsen biztosítani a folyamatos támogatást, időközönkénti hibajavításokat, és új funkciókat.</string>
+    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Legyen naprakész, az ön összes kedvenc indításaival, küldetésivel és indítójárműveivel.</string>
     <string name="slide_two_title">Értesítések az indításokról</string>
@@ -36,7 +37,7 @@
     <string name="thank_you_support">Köszönjük a folyamatos támogatását!</string>
     <string name="ok">Rendben</string>
     <string name="issues_connecting_billing">A Google Play-számlázáshoz kapcsolódó problémák</string>
-    <string name="thanks_support_development">" Köszönjük hogy támogatod a fejlesztést!"</string>
+    <string name="thanks_support_development"> Köszönjük hogy támogatod a fejlesztést!</string>
     <string name="billing_error_code">számlázási hibakód -</string>
     <string name="purchase_history">A vásárlási előzmények visszaálltak.</string>
     <string name="unable_to_start_billing">A számlázási feldolgozó beolvasása nem sikerült.</string>
@@ -182,6 +183,13 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="mass_gto_full">Hasznos teher GTO-ra: %d kg</string>
     <string name="mass_launch_full">Tömeg indításkor: %d kg</string>
     <string name="thrust_full">Tolóerő indításkor: %d kN</string>
+    <string name="height_value">%.1f M</string>
+    <string name="diameter_value">%.1f M</string>
+    <string name="stage_value">%d</string>
+    <string name="mass_leo_value">%d kg</string>
+    <string name="mass_gto_value">%d kg</string>
+    <string name="mass_launch_value">%d T</string>
+    <string name="thrust_value">%d kN</string>
     <string name="upcoming">Közelgő</string>
     <string name="previous">Előző</string>
     <string name="select_country">Válasszon ki egy országot</string>
@@ -412,8 +420,8 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="spacecraft_format">%s Űrhajó</string>
     <string name="crew_capacity">Legénység maximális létszáma: %s</string>
     <string name="current_weather">Jelenlegi időjárás-előrejelzés</string>
-    <string name="upcoming_with_space">"Közelgő "</string>
-    <string name="previous_with_space">"Előző "</string>
+    <string name="upcoming_with_space">Közelgő </string>
+    <string name="previous_with_space">Előző </string>
     <string name="watch">Megnézni</string>
     <string name="notification_schedule_changed">ÜTEMTERV FRISSÍTÉS: Következő próbálkozás nem később mint %s</string>
     <string name="notification_launch_successful">Az indítás sikeres volt!</string>
@@ -434,6 +442,8 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="no_live_stream_available">Élő adás nem elérhető.</string>
     <string name="date_confirmed">Az indítási dátum meg van határozva, de a helyszín ismeretlen.</string>
     <string name="date_unconfirmed">A jelenlegi dátum egy \'nem hamarabb mint\' becslés.</string>
+    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
+    <string name="to_be_confirmed_title">To Be Confirmed</string>
     <string name="source">Válasszon ki egy forrást</string>
     <string name="long_press_share">Hosszan nyomja hogy megossza</string>
     <string name="no_astronauts">Nem találtunk űrhajósokat.</string>
@@ -468,6 +478,7 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="spacestations">Űrállomások</string>
     <string name="spacestation">Űrállomás</string>
     <string name="astronauts">Űrhajósok</string>
+    <string name="starship">Starship</string>
     <string name="events">Események</string>
     <string name="favorites">Kedvencek</string>
     <string name="show_me">Mutassa</string>
@@ -554,4 +565,16 @@ Ha ez nem megfelelő, akkor nyugodtan emailt is küldhet.</string>
     <string name="event_and_news">Események és hírek értesítései</string>
     <string name="event_and_news_description">Kapjon értesítéseket indítás utáni eseményekről és hírekről</string>
     <string name="choose_theme_mode">Téma mód kiválasztása</string>
+    <string name="air_sea_launch">Air / Sea Launch</string>
+    <string name="strict_matching">Exclusively show launches that match with agencies selected for locations that have multiple launch agencies available.\n\nIf you only want SpaceX launches from KSC then enable strict matching and select only KSC and SpaceX.\n\nOtherwise without strict matching - all KSC and all SpaceX launches would be shown.</string>
+    <string name="strict_matching_title">Strict Matching</string>
+    <string name="texas">Texas</string>
+    <string name="pacific_spaceport">Pacific Spaceport</string>
+    <string name="include_other_misc_locations">Include other Misc. Locations</string>
+    <string name="view_more_livestreams">View More Livestreams</string>
+    <string name="notices">Notices</string>
+    <string name="road_closures">Road Closures</string>
+    <string name="up_next">Up Next</string>
+    <string name="overview">Overview</string>
+    <string name="supporter_unlock_text_previous">I appreciate you considering supporting Space Launch Now again in 2023! \n\nPay what you want to support continued development and updates!</string>
 </resources>
