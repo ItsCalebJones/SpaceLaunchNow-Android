@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Novità</string>
@@ -11,6 +11,7 @@
     <string name="general_settings">Impostazioni generali per seguire i lanci e per l\'applicazione.</string>
     <string name="supporter_title">Diventa un sostenitore</string>
     <string name="supporter_description">Aiuta a garantire un supporto continuo, correzioni di bug tempestive e nuove funzionalità.</string>
+    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Tieniti aggiornato su tutti i tuoi lanci, missioni e mezzi spaziali preferiti.</string>
     <string name="slide_two_title">Notifiche per i lanci</string>
@@ -180,6 +181,13 @@
     <string name="mass_gto_full">Massa in GTO: %d kg</string>
     <string name="mass_launch_full">Massa al lancio: %d T</string>
     <string name="thrust_full">Spinta al lancio: %d kN</string>
+    <string name="height_value">%.1f M</string>
+    <string name="diameter_value">%.1f M</string>
+    <string name="stage_value">%d</string>
+    <string name="mass_leo_value">%d kg</string>
+    <string name="mass_gto_value">%d kg</string>
+    <string name="mass_launch_value">%d T</string>
+    <string name="thrust_value">%d kN</string>
     <string name="upcoming">Prossimo</string>
     <string name="previous">Precedente</string>
     <string name="select_country">Seleziona una nazione</string>
@@ -410,8 +418,8 @@
     <string name="spacecraft_format">%s Veicolo spaziale</string>
     <string name="crew_capacity">Equipaggio: %s</string>
     <string name="current_weather">Previsioni meteo attuali</string>
-    <string name="upcoming_with_space">"In arrivo "</string>
-    <string name="previous_with_space">"Precedente "</string>
+    <string name="upcoming_with_space">In arrivo </string>
+    <string name="previous_with_space">Precedente </string>
     <string name="watch">Guarda</string>
     <string name="notification_schedule_changed">Aggiornamento: Prossimo tentativo di lancio non prima di %s</string>
     <string name="notification_launch_successful">Il lancio è stato un successo</string>
@@ -429,14 +437,16 @@
     <string name="settings_one_minute">Un minuto</string>
     <string name="settings_one_minute_on">Ricevi una notifica quando un lancio avverrà in un minuto</string>
     <string name="settings_one_minute_off">non ricevere una notifica quando un lancio avverrà in un minuto</string>
-    <string name="no_live_stream_available">"nessuna live Stream a disposizione "</string>
+    <string name="no_live_stream_available">nessuna live Stream a disposizione </string>
     <string name="date_confirmed">la data del lancio è confermata ma l\'orario è ignoto</string>
     <string name="date_unconfirmed">la data attuale è una stima di \'non prima di\'</string>
+    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
+    <string name="to_be_confirmed_title">To Be Confirmed</string>
     <string name="source">seleziona una sorgente</string>
     <string name="long_press_share">premi a lungo un oggetto per condividerlo</string>
     <string name="no_astronauts">nessun astronauta trovato</string>
     <string name="notification_filters">filtri per le notifiche</string>
-    <string name="notification_filter_description">"seleziona quali notifiche di lancio preferisci "</string>
+    <string name="notification_filter_description">seleziona quali notifiche di lancio preferisci </string>
     <string name="biography">Biografia</string>
     <string name="profile">Profilo</string>
     <string name="flights">Voli</string>
@@ -555,13 +565,14 @@
     <string name="choose_theme_mode">Scegli il tema</string>
     <string name="air_sea_launch">Lancio Da piattaforma aerea/marittima</string>
     <string name="strict_matching">Mostra in esclusiva i lanci che corrispondono alle agenzie selezionate per le località che hanno più agenzie di lancio disponibili.\n\nSe vuoi vedere solo lanci di spacex dal KSC seleziona i lanci dal KSC e abilita la corrispondenza rigorosa, poi seleziona solo il KSC e spaceX\n\nSenza corrispondenza rigorosa tutti i lanci dal KSC e da SpaceX verranno mostrati</string>
-    <string name="strict_matching_title">"Abbinamento rigoroso "</string>
+    <string name="strict_matching_title">Abbinamento rigoroso </string>
     <string name="texas">Texas</string>
     <string name="pacific_spaceport">Spazioporto nel Pacifico</string>
     <string name="include_other_misc_locations">Aggiungi altri luoghi</string>
     <string name="view_more_livestreams">Guarda altre livestreams</string>
     <string name="notices">avvisi</string>
-    <string name="road_closures">"Chiusura delle strade "</string>
+    <string name="road_closures">Chiusura delle strade </string>
     <string name="up_next">Prossimo</string>
-    <string name="overview">"Panoramica "</string>
+    <string name="overview">Panoramica </string>
+    <string name="supporter_unlock_text_previous">I appreciate you considering supporting Space Launch Now again in 2023! \n\nPay what you want to support continued development and updates!</string>
 </resources>
