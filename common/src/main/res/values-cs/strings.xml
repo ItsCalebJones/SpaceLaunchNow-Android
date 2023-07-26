@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Novinky</string>
@@ -11,6 +11,7 @@
     <string name="general_settings">Obecná nastavení pro sledování startů a chování aplikace.</string>
     <string name="supporter_title">Staňte se podporovatelem</string>
     <string name="supporter_description">Pomůže zajistit trvalou podporu, včasné opravy chyb a nové funkce.</string>
+    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Udržovat aktuální informace o všech vašich oblíbených orbitálních lodích, misích a nosných raketách.</string>
     <string name="slide_two_title">Oznámení pro starty</string>
@@ -83,7 +84,7 @@
     <string name="seconds">SEKUND</string>
     <string name="min">MIN</string>
     <string name="sec">SEK</string>
-    <string name="launch_service_provider">" Společnost zajištující startovní služby"</string>
+    <string name="launch_service_provider"> Společnost zajištující startovní služby</string>
     <string name="primary_agency">Primární agentura</string>
     <string name="unknown_agency_type">Neznámý typ agentury</string>
     <string name="info">INFO</string>
@@ -180,6 +181,13 @@
     <string name="mass_gto_full">M na GTO: %d kg</string>
     <string name="mass_launch_full">M při startu: %d T</string>
     <string name="thrust_full">Tah při startu: %d kN</string>
+    <string name="height_value">%.1f M</string>
+    <string name="diameter_value">%.1f M</string>
+    <string name="stage_value">%d</string>
+    <string name="mass_leo_value">%d kg</string>
+    <string name="mass_gto_value">%d kg</string>
+    <string name="mass_launch_value">%d T</string>
+    <string name="thrust_value">%d kN</string>
     <string name="upcoming">Nadcházející</string>
     <string name="previous">Předcházející</string>
     <string name="select_country">Vyberte zemi</string>
@@ -385,7 +393,7 @@
     <string name="gdpr_type_cloud_database">Kloudová databáze</string>
     <string name="gdpr_type_crash">Hlášení pádů aplikace</string>
     <string name="gdpr_type_analytics">Report pro analýzu</string>
-    <string name="space_launch_news">"Startovní novinky "</string>
+    <string name="space_launch_news">Startovní novinky </string>
     <string name="consent_body">Fráze v angličtině (Spojené státy)
 
 Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google AdMod pro zobrazování reklam. Vaše anonymní údaje o využití mohou být použity k přizpůsobení reklam v rámci této aplikace. Oprávnění můžete kdykoli stáhnout z nastavení aplikací.</string>
@@ -412,8 +420,8 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="spacecraft_format">%s Kosmická loď</string>
     <string name="crew_capacity">Počet míst pro posádku: %s</string>
     <string name="current_weather">Aktuální předpověď počasí</string>
-    <string name="upcoming_with_space">"Nadcházející "</string>
-    <string name="previous_with_space">"Předcházející "</string>
+    <string name="upcoming_with_space">Nadcházející </string>
+    <string name="previous_with_space">Předcházející </string>
     <string name="watch">Sledovat</string>
     <string name="notification_schedule_changed">AKTUALIZACE PLÁNU: Další pokus ne dříve než %s</string>
     <string name="notification_launch_successful">Start byl úspěšný!</string>
@@ -434,6 +442,8 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="no_live_stream_available">Živý přenos není k dispozici</string>
     <string name="date_confirmed">Datum startu je schváleno, ale čas je neznámý.</string>
     <string name="date_unconfirmed">Aktuální čas startu má status \'Ne dříve než\'.</string>
+    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
+    <string name="to_be_confirmed_title">To Be Confirmed</string>
     <string name="source">Vyberte zdroj</string>
     <string name="long_press_share">Dlouhým podržením start sdílejte</string>
     <string name="no_astronauts">Astronauti nenalezeni.</string>
@@ -566,4 +576,5 @@ Tato aplikace využívá nástroj Google Firebase pro analýzu a službu Google 
     <string name="road_closures">Dopravní uzavírky</string>
     <string name="up_next">Nadcházející</string>
     <string name="overview">přehled</string>
+    <string name="supporter_unlock_text_previous">I appreciate you considering supporting Space Launch Now again in 2023! \n\nPay what you want to support continued development and updates!</string>
 </resources>
