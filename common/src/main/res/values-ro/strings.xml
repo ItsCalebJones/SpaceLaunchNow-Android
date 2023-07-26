@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space Launch Now</string>
     <string name="news">Noutăți</string>
@@ -11,6 +11,7 @@
     <string name="general_settings">Setări generale pentru urmărirea lansării și comportamentul aplicației.</string>
     <string name="supporter_title">Deveniți un Supporter</string>
     <string name="supporter_description">Ajutați-ne să asigurăm asistență continuă, reparări bug-uri, și funcții noi.</string>
+    <string name="supporter_again_footer">New 2022 Supporter Available!</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Fiți la curent cu toate lansările, misiunile și navele spațiale preferate.</string>
     <string name="slide_two_title">Notificare pentru lansări</string>
@@ -180,6 +181,13 @@
     <string name="mass_gto_full">Masă până la GTO: %d kg</string>
     <string name="mass_launch_full">Masă la Lansare: %d T</string>
     <string name="thrust_full">Propulsie la Lansare: %d kN</string>
+    <string name="height_value">%.1f M</string>
+    <string name="diameter_value">%.1f M</string>
+    <string name="stage_value">%d</string>
+    <string name="mass_leo_value">%d kg</string>
+    <string name="mass_gto_value">%d kg</string>
+    <string name="mass_launch_value">%d T</string>
+    <string name="thrust_value">%d kN</string>
     <string name="upcoming">Viitoare</string>
     <string name="previous">Anterioare</string>
     <string name="select_country">Alege o țară</string>
@@ -410,8 +418,8 @@
     <string name="spacecraft_format">%s Vehicul de Lansare</string>
     <string name="crew_capacity">Capacitate Echipaj: %s</string>
     <string name="current_weather">Forecast Curent al Vremii</string>
-    <string name="upcoming_with_space">"Următoare "</string>
-    <string name="previous_with_space">"Anterioare "</string>
+    <string name="upcoming_with_space">Următoare </string>
+    <string name="previous_with_space">Anterioare </string>
     <string name="watch">Urmărește</string>
     <string name="notification_schedule_changed">UPDATE LANSARE: Următoarea încercare nu mai devreme de %s</string>
     <string name="notification_launch_successful">Lansare a fost cu succes!</string>
@@ -432,6 +440,8 @@
     <string name="no_live_stream_available">Niciun live stream disponibil.</string>
     <string name="date_confirmed">Data este confirmată dar timpul lansarii este necunoscut.</string>
     <string name="date_unconfirmed">Data actuala este \'Nu Mai Devreme de\' estimatie.</string>
+    <string name="to_be_confirmed">Awaiting official confirmation - current date is known with some certainty.</string>
+    <string name="to_be_confirmed_title">To Be Confirmed</string>
     <string name="source">Alege o Sursă</string>
     <string name="long_press_share">Apasa Tare pe un item pentru a-l distribui.</string>
     <string name="no_astronauts">Niciun astronaut găsit.</string>
@@ -564,4 +574,5 @@
     <string name="road_closures">Închideri Drum</string>
     <string name="up_next">Următoarea</string>
     <string name="overview">Prezentarea Generală</string>
+    <string name="supporter_unlock_text_previous">I appreciate you considering supporting Space Launch Now again in 2023! \n\nPay what you want to support continued development and updates!</string>
 </resources>
