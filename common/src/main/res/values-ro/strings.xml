@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="news">Noutăți</string>
+    <string name="news">Știri</string>
     <string name="action_settings">Setări</string>
     <string name="status_go">"Pregătită de Lansare"</string>
     <string name="status_nogo">Data Lansării Neconfirmată</string>
     <string name="status_success">"Lansare cu Succes"</string>
     <string name="status_failure">"Problemă în Timpul Lansării"</string>
-    <string name="general_settings">Setări generale pentru urmărirea lansării și comportamentul aplicației.</string>
+    <string name="general_settings">Setările generale pentru urmărirea lansărilor și al comportamentul aplicației.</string>
     <string name="supporter_title">Deveniți un Supporter</string>
-    <string name="supporter_description">Ajutați-ne să asigurăm asistență continuă, reparări bug-uri, și funcții noi.</string>
+    <string name="supporter_description">Ajutați-ne să asigurăm asistență continuă, la reparări bug-uri, și funcții noi.</string>
     <string name="slide_one_description">Fiți la curent cu toate lansările, misiunile și navele spațiale preferate.</string>
-    <string name="slide_two_title">Notificare pentru lansări</string>
-    <string name="slide_two_description">Obțineți notificări pentru lansările viitoare și consultați istoricul lansărilor spațiale</string>
-    <string name="slide_three_title">Găsiți Vehicule de lansare</string>
-    <string name="slide_three_description">Cunoașteți vehiculele care ne-au dus pe orbită.</string>
-    <string name="thank_you">Această aplicație, Space Launch Now, a început ca un simplu proiect de weekend. Pe parcursul unui an a crescut la aproape 10.000 de utilizatori activi. Sunt incredibil de apreciativ pentru toată lumea care și-au luat timpul să raporteze erori, să dea feedback, să participe la BETA și să devină susținători.</string>
+    <string name="slide_two_title">Notificare pentru Lansări</string>
+    <string name="slide_two_description">Obțineți notificări pentru lansăriile viitoare și consultați istoricul lansărilor spațiale</string>
+    <string name="slide_three_title">Găsiți Vehiculele de lansare</string>
+    <string name="slide_three_description">Stați sa cunoașteți vehiculele care ne-au dus pe orbită.</string>
+    <string name="thank_you">Această aplicație, Space Launch Now, a început ca un simplu proiect de weekend. Pe parcursul unui an a crescut la aproape 10.000 de utilizatori activi. Sunt incredibil de mulțumit pentru toată lumea care și-au luat din timp pentru a raporta erori, să dea un feedback, să participe la versiuni BETA și să devină susținători.</string>
     <string name="player_error">Eroare la inițializarea playerului YouTube: %s</string>
     <string name="please_rate">Buna! Se pare că vă place această aplicație, v-ar deranja să vizitați Play Store și să acordați un rating? Ne-ar ajuta foarte mult!
-\ n \ nDacă, în schimb, urăști această aplicație, ne-ar plăcea să auzim feedback-ul tău, astfel încât să putem îmbunătăți aplicația. Mulțumim!</string>
+\ n \ nDacă, în schimb, urăști această aplicație, ne-ar plăcea să auzim feedback-ul tău, astfel încât să putem face îmbunătățiri. Mulțumim!</string>
     <string name="please_rate_short">Se pare că îți place această aplicație. Ne-ai ajuta foarte mult cu un rating de 5 stele! În caz contrar, dacă aveți sugestii - vă rugăm să ne informați.</string>
     <string name="button_yes">Dați un rating!</string>
     <string name="button_no">Nu mulțumesc</string>
@@ -63,9 +63,9 @@
     <string name="blur_sampling">Sampling.</string>
     <string name="blur_radius">Rază</string>
     <string name="blur_saturation">Saturație</string>
-    <string name="unknown_launch_location">Locația de Lansare Necunoscută</string>
-    <string name="unknown_launch_date">Data de Lansare Necunoscută</string>
-    <string name="unknown_launch_status">Stare de Lansare Necunoscută</string>
+    <string name="unknown_launch_location">Locația Lansării Necunoscută</string>
+    <string name="unknown_launch_date">Data Lansării Necunoscută</string>
+    <string name="unknown_launch_status">Stare Lansării Necunoscută</string>
     <string name="unknown_countdown_status">Stare de Contorizare Necunoscută</string>
     <string name="unknown">Necunoscut</string>
     <string name="unknown_mission">Misiune Necunoscută</string>
@@ -86,7 +86,7 @@
     <string name="unknown_launch_vehicle">Vehicul de Lansare Necunoscut</string>
     <string name="family">Familie:</string>
     <string name="configuration">Configurație:</string>
-    <string name="vehicle_specifications">Specificați despre Vehicul</string>
+    <string name="vehicle_specifications">Specificații despre Vehicul</string>
     <string name="height">Intalțime:</string>
     <string name="diameter">Diametru:</string>
     <string name="stages">Stagii:</string>
@@ -122,7 +122,7 @@
     <string name="support">Suport</string>
     <string name="support_description">Urmărește-mi proiectele și contribuie la dezvoltarea viitoare a aplicației.</string>
     <string name="wear_description">Modificați setările de față a Ceasului Android Wear.</string>
-    <string name="unknown_rocket_name">Nume Rachetei Necunoscut</string>
+    <string name="unknown_rocket_name">Numele Rachetei Necunoscut</string>
     <string name="unknown_family">Familie Necunoscută</string>
     <string name="become_a_supporter">Deveniți un Suporter pentru a debloca acest widget.</string>
     <string name="lower_days">zile</string>
@@ -173,8 +173,8 @@
     <string name="error_loading_mission">Imposibil de încărcat misiunile.</string>
     <string name="updating_mission_data">Actualizarea datelor misiunii ... poate dura câteva secunde.</string>
     <string name="error_unknown_launch">Eroare - Lansare Necunoscută</string>
-    <string name="weather_favorable">Vremea favorabilă: %d%%</string>
-    <string name="watch_webcast">Urmăriți Transmisia Web Live pentru Starea Actualizată.</string>
+    <string name="weather_favorable">Vreme favorabilă: %d%%</string>
+    <string name="watch_webcast">Urmăriți Transmisia Web Live pentru o Stare Actualizată.</string>
     <string name="pending_confirmed_go_specific">În așteptarea confirmației GO de la %s</string>
     <string name="pending_confirmed_go">În așteptarea confirmării Go For Launch de la Agenția de Lansare</string>
     <string name="waiting_on_launch_time">Așteptăm ora exactă de la furnizorul de lansare</string>
@@ -203,7 +203,7 @@
     <string name="feedback_subtitle">Ați găsit o eroare?</string>
     <string name="thank_you_for_support">Mulțumim pentru suport!</string>
     <string name="upgrade_pro">Vă interesează funcțiile Pro sau eliminarea anunțurilor?</string>
-    <string name="updated_version">Actualizat la versiune</string>
+    <string name="updated_version">Actualizat la Versiune</string>
     <string name="exit">Ieșire</string>
     <string name="error_orbiter_details">Eroare - Nu se pot încărca detaliile orbiterului.</string>
     <string name="spacecraft_history">%s Istoria Navelor Spațiale</string>
@@ -213,7 +213,7 @@
     <string name="auto_daynight_restart">Auto DayNight este dezactivat, este posibil să fie nevoie să reporniți aplicația pentru a intra în efect.</string>
     <string name="supporter_feature">(Caracteristică suporter)</string>
     <string name="location_denied"><![CDATA[Locația refuzată, accesați Setări Android -> Aplicații pentru a le activa.]]></string>
-    <string name="calendar_permissions_denied"><![CDATA[Permisul calendarului a fost refuzat, încercați să re-selectați sau accesați Setări Android -> Aplicații pentru a le activa.]]></string>
+    <string name="calendar_permissions_denied"><![CDATA[Permisiunea calendarului a fost refuzată, încercați să re-selectați sau accesați Setări Android -> Aplicații pentru a le activa.]]></string>
     <string name="current_calendar">Calendar curent:</string>
     <string name="select_calendar">Selectați un calendar pentru a adăuga evenimente de lansări.</string>
     <string name="default_calendar">Calendar Default:</string>
@@ -263,7 +263,7 @@
     <string name="data_saver">Salvator de Date</string>
     <string name="data_saver_off">Lansările se vor sincroniza nu mai mult decât odată pe zi.</string>
     <string name="data_saver_on">Sincronizează lansările următoare odata pe săptămână chiar dacă o rețea wifi nu este disponibilă. (Nu afectează notificarile)</string>
-    <string name="wifi_only_summary">Data despre lansare nu va fi sincronizată daca o conexiune WiFi nu este disponibilă.</string>
+    <string name="wifi_only_summary">Datele despre lansare nu vor fi sincronizate daca o conexiune WiFi nu este disponibilă.</string>
     <string name="launch_tracking">Urmărește Lansările</string>
     <string name="calendar_settings">Setări Calendar</string>
     <string name="auto_calendar">Sincronizare Calendar Automată</string>
@@ -282,7 +282,7 @@
     <string name="enable_notifications">Activează Notificările</string>
     <string name="enable_notifications_on">Notificarile sunt activate pentru lansările din viitor.</string>
     <string name="enable_notifications_off">Autorizează Notificarile pentru lansările următoare.</string>
-    <string name="status_updates">Status Update</string>
+    <string name="status_updates">Update al Statusului</string>
     <string name="status_updates_on">Primește notificări update pentru schimbările statului lansarii.</string>
     <string name="status_updates_off">Nu trimite notificări cans statutul lansarii se schimbă.</string>
     <string name="webcast_only_summary">Trimite notificări numai cand un web-cast este activ.</string>
@@ -292,7 +292,7 @@
     <string name="end_time">Timp de Sfârșit</string>
     <string name="notifications">Notificări</string>
     <string name="appearance">Aparența</string>
-    <string name="Support">Fă te un Suporter</string>
+    <string name="Support">Fă-te un Suporter</string>
     <string name="about">Despre</string>
     <string name="watch_hour_mode">Urmărește Hour Mode</string>
     <string name="watch_hour_mode_on">Folosește Modul 24 Ore</string>
@@ -312,6 +312,7 @@
     <string name="do_not_disturb">Nu Deranja</string>
     <string name="notification_preferences">Preferinta Notificarilor</string>
     <string name="ringtone_summary">Selectează o notificare cu ringtone custom.</string>
+    <string name="ringtone">Sonerie</string>
     <string name="priority_summary">Notificare Heads-up, sunet si vibratie default.</string>
     <string name="priority">Prioritate</string>
     <string name="vibration_summary">Permite vibratie pentru notificări.</string>
@@ -340,7 +341,7 @@
     <string name="wear_os">Ceas OS</string>
     <string name="launchers">Lansatori</string>
     <string name="orbiters">Nava Spațială</string>
-    <string name="translate_settings">Contribuie traducerii Space Launch Now!</string>
+    <string name="translate_settings">Contribuie traducerii aplicației Space Launch Now!</string>
     <string name="translate">Traducere</string>
     <string name="get_help">Primește Ajutor</string>
     <string name="help_description">Ajutor si Support</string>
@@ -400,8 +401,9 @@
     <string name="notification_filter_description">Alege ce notificări de lansare preferi.</string>
     <string name="biography">Biografie</string>
     <string name="flights">Zboruri</string>
+    <string name="docked">Îmbarcate:</string>
     <string name="human_rated">Evaluat Uman:</string>
-    <string name="no_active_expeditions">Nici o Expediție Activă</string>
+    <string name="no_active_expeditions">Nici-o Expediție Activă</string>
     <string name="past_expeditions">Expediții Anterioare</string>
     <string name="expeditions">Expediții</string>
     <string name="deorbited">De-orbitat: %s</string>
@@ -421,7 +423,7 @@
     <string name="favorites">Favorite</string>
     <string name="show_me">Arată-mi</string>
     <string name="docked_alt">Îmbarcat</string>
-    <string name="no_spacestations">Nici o Stație Spațială găsită</string>
+    <string name="no_spacestations">Nici-o Stație Spațială găsită</string>
     <string name="no_events">Niciun Eveniment Găsit</string>
     <string name="founded_alt">Fondat:</string>
     <string name="status_alt">Statut:</string>
