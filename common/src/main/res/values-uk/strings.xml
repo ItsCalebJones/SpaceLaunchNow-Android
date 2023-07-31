@@ -191,7 +191,7 @@
     <string name="watch_webcast">Дивіться пряму трансляцію, щоб дізнатися актуальний статус місії.</string>
     <string name="pending_confirmed_go_specific">Очікується підтвердження готовності від %s</string>
     <string name="settings">Налаштування</string>
-    <string name="mass_plain">Масса</string>
+    <string name="mass_plain">Маса</string>
     <string name="mass_unit">%s т</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
