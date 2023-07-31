@@ -3,7 +3,7 @@
     <string name="news">Nieuws</string>
     <string name="action_settings">Instellingen</string>
     <string name="status_go">"Klaar voor lancering"</string>
-    <string name="status_nogo">Lanceerdatum onbevestigd</string>
+    <string name="status_nogo">Lanceerdatum niet bevestigd</string>
     <string name="status_success">"Succesvolle lancering"</string>
     <string name="status_failure">"Er heeft zich een fout tijdens de lancering voorgedaan"</string>
     <string name="general_settings">Algemene instellingen voor het volgen van lanceringen en de applicatie.</string>
