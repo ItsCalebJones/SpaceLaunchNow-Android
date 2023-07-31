@@ -1,8 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">Space launch now</string>
     <string name="news">Uutiset</string>
-    <string name="twitter">Twitter</string>
     <string name="action_settings">Asetukset</string>
     <string name="status_go">"Lähtölaskenta"</string>
     <string name="status_nogo">Laukaisupäivä vahvistamaton</string>
@@ -11,7 +10,6 @@
     <string name="general_settings">Yleiset asetukset laukaisun seurannalle ja sovelluskäyttäytymiselle.</string>
     <string name="supporter_title">ryhdy tukijaksi</string>
     <string name="supporter_description">Auta varmistamaan jatkuva tuki, ajoittaiset virheekorjaukset ja uudet toiminnot.</string>
-    <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Ole ajan tasalla kaikista sinun suosikkilaukaisuista, avaruuslennoista ja laukaisualuksista</string>
     <string name="slide_two_title">Ilmoitukset Laukaisuista</string>
     <string name="slide_two_description">Saa ilmoituksia tulevista laukaisuista ja katso avaruuslentojen historiaan.</string>
@@ -33,7 +31,6 @@
     <string name="wear_settings">Muuta Android Wear-älykellon ulkonäky-asetuksia</string>
     <string name="supporter_unlock_text">Arvostan, että olet harkinnut Space Launch Now -ohjelman tukemista.\n\nJokainen tuen taso on kertaluonteinen osto, joka vapauttaa kaikki pro-ominaisuudet ikuisesti. Maksa mitä haluat tukeaksesi jatkuvaa kehitystä ja päivityksiä!</string>
     <string name="thank_you_support">Kiitos jatkuneesta tuestasi!</string>
-    <string name="ok">OK</string>
     <string name="issues_connecting_billing">Virhe yhdistäessä Google Play Laskutukseen</string>
     <string name="thanks_support_development">Kiitos, kun tuet kehitystä!</string>
     <string name="billing_error_code">laskutus virhekoodi -</string>
@@ -57,7 +54,6 @@
     <string name="wear_complications">Wear OS Komplikaatiot</string>
     <string name="remove_ads">Poista Mainokset</string>
     <string name="remove_ads_description">Poista kaikki mainostus ikuisesti!</string>
-    <string name="discord">Discord</string>
     <string name="discord_description">Vastaanota ylimääräinen Supporter-asema Space Launch Now -Discord viestintäpalvelussa.</string>
     <string name="exclusive_widgets">Erityiset kustomoitavat widgetit</string>
     <string name="exclusive_widgets_description">Hanki oikeus ylimääräiseen widgettiin ja kyky muokata niitä.</string>
@@ -79,13 +75,10 @@
     <string name="hours">TUNTIA</string>
     <string name="minutes">MINUUTTIA</string>
     <string name="seconds">SEKUNTIA</string>
-    <string name="min">MIN</string>
     <string name="sec">S</string>
     <string name="launch_service_provider">Avaruuslaukaisun tarjoaja</string>
     <string name="primary_agency">ensisijainen järjestö</string>
     <string name="unknown_agency_type">Tuntematon järjestön tyyppi</string>
-    <string name="info">INFO</string>
-    <string name="wiki">WIKI</string>
     <string name="secondary_agency">toissijainen järjestö</string>
     <string name="vehicle_agency">aluksen järjestö</string>
     <string name="mission_details">avaruuslennon tiedot</string>
@@ -112,17 +105,8 @@
     <string name="no_launches">ou nou...ei laukaisuja!</string>
     <string name="select_launches">Valitse seurattavat laukaisut</string>
     <string name="selection_description">Valintasi näkyvät kotisivulla ja lähettää ilmoitukset ennen laukaisua.</string>
-    <string name="nasa">NASA</string>
-    <string name="spacex">SpaceX</string>
-    <string name="roscosmos">ROSCOSMOS</string>
-    <string name="ula">ULA</string>
     <string name="kennedy_space_center">Kennedyn avaruuskeskus</string>
-    <string name="vandenberg_afb">Vandenberg AFB</string>
-    <string name="arianespace">Arianespace</string>
-    <string name="casc">CASC</string>
     <string name="isro">Intia</string>
-    <string name="cape_canaveral">Cape Canaveral</string>
-    <string name="plesetsk_cosmodrome">Plesetsk Cosmodrome</string>
     <string name="all">Kaikki</string>
     <string name="edit_notification_settings">Muokkaa ilmoitusasetuksia</string>
     <string name="additional_filters">lisäsuotimet laukaisuihin</string>
@@ -159,7 +143,6 @@
     <string name="app_feedback">Palaute sovelluksesta</string>
     <string name="need_support">Tarvitsetko tukea?</string>
     <string name="need_support_description">Nopein ja luotettavin tapa saada tukea on Discord. Jos tämä ei ole vaihtoehto, voit lähettää sähköpostia minulle suoraan.</string>
-    <string name="email">Email</string>
     <string name="cancel">Hylkää</string>
     <string name="unknown_location">tuntematon sijainti</string>
     <string name="details">yksityiskohdat</string>
@@ -179,18 +162,28 @@
     <string name="close">Sulje</string>
     <string name="filter">Suodatin</string>
     <string name="select_location">Valitse sijainti</string>
+    <string name="select_location_description">Poista kaikki suodattimet työkalurivin nollauskuvakkeella, jos haluat poistaa kaikki suodattimet.</string>
     <string name="select_launch_vehicle">Valitse kantoraketti</string>
+    <string name="select_launch_vehicle_description">Tarkista alla oleva ajoneuvo, poista kaikki suodattimet käyttämällä työkalurivin nollauskuvaketta.</string>
     <string name="select_launch_agency">Valitse kantoraketin järjestö</string>
+    <string name="select_launch_agency_description">Tarkista alla oleva virasto, jos haluat poistaa kaikki suodattimet käyttämällä työkalurivin nollauskuvaketta.</string>
     <string name="launch_history_data">Laukaisu Historian Data</string>
+    <string name="launch_history_data_description">Hae historialliset laukaisutiedot? Tyypillisesti noin 2-3 Mt datan käyttöä.</string>
     <string name="error_loading_mission">Tehtäviä ei voi ladata.</string>
     <string name="updating_mission_data">Päivitetään tehtävän tietoja... tässä voi kestää hetki.</string>
     <string name="error_unknown_launch">Virhe - Tuntematon Laukaisu</string>
     <string name="weather_favorable">Sää Suotuisa: %d%%</string>
     <string name="watch_webcast">Katso Live-lähetystä, jotta saat viimeisimmän tilannetiedon.</string>
+    <string name="pending_confirmed_go">Laukaisutoimisto ei ole vielä vahvistanut Go for Launch -tilannetta</string>
     <string name="waiting_on_launch_time">Odottaa uusinta tietoa laukaisuajasta laukaisun tuottajalta.</string>
     <string name="waiting_on_launch_time_specific">Odottaa tarkkaa laukaisuaikaa laukaisun tarjoajalta %s.</string>
     <string name="unconfirmed">(Ei Vahvistettu)</string>
     <string name="no_go">Perutut Laukaisut</string>
+    <string name="no_go_description">Tämä piilottaa laukaisut, joiden tila on \"no-go\", ja voi joskus piilottaa laukaisut, jotka ovat laukaisuikkunan sisällä mutta odottavat teknisten ongelmien tai kantamaongelmien vuoksi.</string>
+    <string name="to_be_determined">Piilota TBD käynnistää</string>
+    <string name="to_be_determined_description">Tämä piilottaa julkaisut, joilla ei ole vahvistettua julkaisupäivää tai -aikaa. Tämä voi toisinaan piilottaa laukaisut, jotka on peruutettu tältä päivältä.</string>
+    <string name="launch_info">Säilytä käynnistykset 24 tunnin ajan</string>
+    <string name="launch_info_description">Tämä vaihtoehto näyttää käynnistykset etusivulla enintään 24 tunnin ajan käynnistyksen jälkeen.</string>
     <string name="home">Koti</string>
     <string name="launches">Laukaisut</string>
     <string name="missions">Tehtävät</string>
@@ -200,10 +193,10 @@
     <string name="connect_description">Yhdistä Yhteisöön</string>
     <string name="discord_subtitle">Liity Yhteisöön</string>
     <string name="twitter_subtitle">Yhdistä Twitterissä</string>
-    <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Seuraa Facebookissa</string>
     <string name="website">Verkossa</string>
     <string name="website_subtitle">Virallinen Nettisivusto</string>
+    <string name="whats_new_subtitle">Katso muutosluettelo.</string>
     <string name="about_subtitle">Tietoja Kehittäjästä</string>
     <string name="feedback">Palaute</string>
     <string name="feedback_subtitle">Löysitkö Vian?</string>
@@ -211,6 +204,7 @@
     <string name="upgrade_pro">Oletko Kiinnostunut Pro Ominaisuuksista Tai Mainosten Poistamisesta?</string>
     <string name="updated_version">Päivitetty Versioon</string>
     <string name="exit">Poistu</string>
+    <string name="error_orbiter_details">Virhe - Orbiterin tietoja ei pystytä lataamaan.</string>
     <string name="spacecraft_history">%s Avaruusaluksen Historia</string>
     <string name="spacecraft_details">%s Avaruusaluksen Yksityiskohdat</string>
     <string name="night_mode_restart">Yötila Saattaa Tarvita Sovelluksen Uudelleenkäynnistyksen Jotta Se Tulee Toimintaan.</string>
@@ -226,8 +220,7 @@
     <string name="local_timezone">Paikallinen Aikavyöhyke</string>
     <string name="time_format">Aikamuoto</string>
     <string name="time_format_on">Laukaisu ajat 24 tunnin muodossa.</string>
-    <string name="time_format_off">"Laukaisu ajat AM/PM Muodossa.
-"</string>
+    <string name="time_format_off">Laukaisu ajat AM/PM Muodossa.</string>
     <string name="night_mode">Yötila</string>
     <string name="night_mode_on">Yötila Käytössä.</string>
     <string name="night_mode_off">Yötila poissa käytöstä.</string>
@@ -262,7 +255,6 @@
     <string name="start_time">Aloitus Aika</string>
     <string name="end_time">Lopetus Aika</string>
     <string name="notifications">Ilmoitukset</string>
-    <string name="wear">Wear</string>
     <string name="mission_agency">avaruuslennon järjestö</string>
     <string name="dynamic_watch_face">Dynaaminen rannekellon ulkonäkö</string>
     <string name="dynamic_watch_face_description">Dynaamiset kuvat kantoraketeista rannekellon taustakuvana.</string>

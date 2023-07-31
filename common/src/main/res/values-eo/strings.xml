@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="action_settings">Parametroj</string>
     <string name="status_go">"Preta por lanĉo"</string>
@@ -32,11 +32,7 @@
     <string name="height_plain">Alteco</string>
     <string name="width_plain">Larĝo</string>
     <string name="mass_plain">Maso</string>
-    <string name="height_unit">%s m</string>
-    <string name="width_unit">%s m</string>
-    <string name="mass_unit">%s T</string>
     <string name="volume_plain">Volumo</string>
-    <string name="volume_unit">%s m³</string>
     <string name="crew_plain">Ŝipanaro</string>
     <string name="orbit">Orbito</string>
     <string name="details_fill">%s Detaloj</string>

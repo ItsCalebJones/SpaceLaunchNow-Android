@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="action_settings">设置</string>
+    <string name="status_go">"准备发射"</string>
+    <string name="status_nogo">发射时间待定</string>
+    <string name="status_success">"发射成功"</string>
+    <string name="status_failure">"发射失败"</string>
+    <string name="general_settings">发射跟踪和应用的一般设置。</string>
+    <string name="supporter_title">成为赞助者</string>
+    <string name="supporter_description">帮助确保我们拥有持续的赞助、及时修复bug和添加新特性。</string>
+    <string name="slide_one_description">及时了解您最感兴趣的轨道发射，任务以及发射载具。</string>
+    <string name="slide_two_title">发射通知</string>
+    <string name="slide_two_description">接收未来发射任务的通知，回顾航天发射历史</string>
+    <string name="slide_three_title">寻找运载火箭</string>
+    <string name="slide_three_description">了解把我们送上轨道的运载火箭。</string>
+    <string name="thank_you">这个应用程序，Space Launch Now，开始只是一个简单的周末项目。在一年的时间里，它拥有了近10，000个活跃用户。我非常感谢每一个花时间报告错误、提供反馈、参与测试并成为赞助者的人。</string>
+    <string name="player_error">载入Youtube播放器错误：%s</string>
+    <string name="please_rate">嗨！你似乎喜欢这个应用程序，你介意去应用商店给一个评分吗？这对我们有很大的帮助！
+
+
+如果你不喜欢这个应用程序，我们很想听听你的反馈，这样我们就可以改进了。谢谢！</string>
+    <string name="please_rate_short">嘿，你似乎喜欢这个应用程序。如果给我们一个五星好评的话对我们会有很大的帮助！如果你有建议的话也请告诉我们。</string>
+    <string name="button_yes">评分！</string>
+    <string name="button_no">不了，谢谢</string>
+    <string name="button_feedback">反馈</string>
+    <string name="button_dont_ask">不再提醒</string>
+    <string name="swipe_to_dismiss">滑动清除消息</string>
+    <string name="notifications_settings">设置发射提醒和安排。</string>
+    <string name="appearance_settings">自定义APP主题，桌面小部件和颜色。</string>
+    <string name="about_settings">有关许可证、数据库、更新日志等的应用信息</string>
+    <string name="support_settings">获取专业版并为未来的发展做出贡献。</string>
+    <string name="wear_settings">更改安卓穿戴设备表面设置。</string>
+    <string name="supporter_unlock_text">感谢您考虑赞助Space Launch Now。\n\n每个级别的支持都是一次性购买，永远解锁所有专业版功能。购买您想要的版本，支持我们的持续发展和更新！</string>
+    <string name="thank_you_support">感谢您的持续支持！</string>
+    <string name="ok">好的</string>
+    <string name="issues_connecting_billing">GooglePlay支付相关的问题</string>
+    <string name="thanks_support_development">感谢您帮助支持我们的发展！</string>
+    <string name="billing_error_code">支付错误 -</string>
+    <string name="purchase_history">购买历史已恢复。</string>
+    <string name="unable_to_start_billing">无法初始化支付处理器。</string>
+    <!-- TODO: Remove or change this placeholder text -->
+</resources>

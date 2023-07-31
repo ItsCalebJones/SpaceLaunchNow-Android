@@ -1,8 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">Space Launch Now</string>
     <string name="news">Novità</string>
-    <string name="twitter">Twitter</string>
     <string name="action_settings">Impostazioni</string>
     <string name="status_go">"Pronto al lancio"</string>
     <string name="status_nogo">La data di lancio non è confermata</string>
@@ -11,7 +9,6 @@
     <string name="general_settings">Impostazioni generali per seguire i lanci e per l\'applicazione.</string>
     <string name="supporter_title">Diventa un sostenitore</string>
     <string name="supporter_description">Aiuta a garantire un supporto continuo, correzioni di bug tempestive e nuove funzionalità.</string>
-    <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Tieniti aggiornato su tutti i tuoi lanci, missioni e mezzi spaziali preferiti.</string>
     <string name="slide_two_title">Notifiche per i lanci</string>
     <string name="slide_two_description">Ricevi notifiche dei prossimi lanci ed esamina la storia del volo spaziale</string>
@@ -34,7 +31,6 @@
     <string name="wear_settings">Modifica le impostazioni del quadrante di Android Wear.</string>
     <string name="supporter_unlock_text">Grazie per aver pensato di supportare Space Launch Now. Ogni livello di supporto è un acquisto una tantum che sblocca tutte le funzionalità PRO per sempre! Paga quello che desideri per sbloccare ogni funzionalità PRO!</string>
     <string name="thank_you_support">Grazie per il continuo supporto!</string>
-    <string name="ok">OK</string>
     <string name="issues_connecting_billing">Problemi nella connessione alla fatturazione di Google Play</string>
     <string name="thanks_support_development">Grazie per aver aiutato a supportare lo sviluppo!</string>
     <string name="billing_error_code">codice errore di fatturazione -</string>
@@ -59,13 +55,11 @@
     <string name="wear_complications_description">Ricevi le complicazioni di Space Launch Now sul tuo orologio Wear OS!</string>
     <string name="remove_ads">Rimuovi le pubblicità</string>
     <string name="remove_ads_description">Rimuovi per sempre tutte le pubblicità!</string>
-    <string name="discord">Discord</string>
     <string name="discord_description">Ricevi l\'esclusivo ruolo di sostenitore nel server Discord di Space Launch Now.</string>
     <string name="exclusive_widgets">Widget modificabili esclusivi</string>
     <string name="exclusive_widgets_description">Ottieni l\'accesso a un widget aggiuntivo e alla possibilità di personalizzarlo.</string>
     <string name="blur_description">Configura l\'intensità e le caratteristiche della sfocatura applicata alle immagini di sfondo</string>
     <string name="blur_brightness">Luminosità</string>
-    <string name="blur_sampling">Sampling</string>
     <string name="blur_radius">Raggio</string>
     <string name="blur_saturation">Saturazione</string>
     <string name="unknown_launch_location">Luogo di lancio sconosciuto</string>
@@ -81,13 +75,9 @@
     <string name="hours">ORE</string>
     <string name="minutes">MINUTI</string>
     <string name="seconds">SECONDI</string>
-    <string name="min">MIN</string>
-    <string name="sec">SEC</string>
     <string name="launch_service_provider">Provider dei servizi di lancio</string>
     <string name="primary_agency">Agenzia primaria</string>
     <string name="unknown_agency_type">Tipo di agenzia sconosciuto</string>
-    <string name="info">INFO</string>
-    <string name="wiki">WIKI</string>
     <string name="secondary_agency">Agenzia secondaria</string>
     <string name="vehicle_agency">Agenzia del veicolo</string>
     <string name="mission_details">Dettagli sulla missione</string>
@@ -109,7 +99,6 @@
     <string name="nothing_here">Qui non c\'è niente, ricarica dal menù?</string>
     <string name="supporter">Sostenitore</string>
     <string name="debug_launches">Debug dei lanci</string>
-    <string name="reset">Reset</string>
     <string name="agency">Agenzia</string>
     <string name="country">Nazione</string>
     <string name="location">Luogo</string>
@@ -117,16 +106,6 @@
     <string name="no_launches">Uh oh...nessun lancio!</string>
     <string name="select_launches">Seleziona i lanci da seguire</string>
     <string name="selection_description">Le tue selezioni saranno visibili nella pagina principale e nelle notifiche prima del lancio.</string>
-    <string name="nasa">NASA</string>
-    <string name="spacex">SpaceX</string>
-    <string name="roscosmos">ROSCOSMOS</string>
-    <string name="ula">ULA</string>
-    <string name="kennedy_space_center">Kennedy Space Center</string>
-    <string name="vandenberg_afb">Vandenberg AFB</string>
-    <string name="arianespace">Arianespace</string>
-    <string name="casc">CASC</string>
-    <string name="isro">India</string>
-    <string name="cape_canaveral">Cape Canaveral</string>
     <string name="plesetsk_cosmodrome">Cosmodromo di Plesetsk</string>
     <string name="all">Tutti</string>
     <string name="edit_notification_settings">Modifica le impostazioni delle notifiche</string>
@@ -149,9 +128,6 @@
     <string name="lower_days">giorni</string>
     <string name="lower_hours">ore</string>
     <string name="title_activity_settings">Impostazioni</string>
-    <string name="title_activity_fullscreen_image">Space Launch Now</string>
-    <string name="title_activity_download">Download</string>
-    <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">Tieniti aggiornato sui tuoi lanci orbitali, missioni e mezzi spaziali preferiti.</string>
     <string name="supporter_card_description">Widget esclusivi, complicazioni Wear, rimuovi la pubblicità e di più.</string>
     <string name="vehicle_card_title">Trova i veicoli di lancio</string>
@@ -166,7 +142,6 @@
     <string name="app_feedback">Feedback riguardanti l\'app</string>
     <string name="need_support">Necessiti del supporto?</string>
     <string name="need_support_description">Il modo più veloce ed efficiente per ottenere supporto è tramite Discord. Se preferisci puoi contattarmi direttamente via email.</string>
-    <string name="email">Email</string>
     <string name="cancel">Annulla</string>
     <string name="unknown_location">Luogo sconosciuto</string>
     <string name="details">Dettagli</string>
@@ -219,7 +194,6 @@
     <string name="connect_description">Collegati alla community</string>
     <string name="discord_subtitle">Entra nella community</string>
     <string name="twitter_subtitle">Seguici su Twitter</string>
-    <string name="facebook">Facebook</string>
     <string name="facebook_subtitle">Seguici su Facebook</string>
     <string name="website">Sul web</string>
     <string name="website_subtitle">Sito ufficiale</string>
@@ -324,7 +298,6 @@
     <string name="general">Generale</string>
     <string name="notifications">Notifiche</string>
     <string name="appearance">Aspetto</string>
-    <string name="wear">Wear</string>
     <string name="Support">Diventa un sostenitore</string>
     <string name="about">Informazioni</string>
     <string name="watch_hour_mode">Modalità \"watch hour\"</string>
@@ -368,10 +341,8 @@
     <string name="default_launch_count">Launch Count Default</string>
     <string name="background_sync">Sincronizzazione in background</string>
     <string name="night_mode_title">Modalità notturna</string>
-    <string name="widgets">Widgets</string>
     <string name="weather">Meteo</string>
     <string name="watchface_image">Immagine watchface</string>
-    <string name="wear_os">Wear OS</string>
     <string name="misc">Mischia</string>
     <string name="launchers">Razzi vettori</string>
     <string name="orbiters">Navicella spaziale</string>
@@ -410,8 +381,8 @@
     <string name="spacecraft_format">%s Veicolo spaziale</string>
     <string name="crew_capacity">Equipaggio: %s</string>
     <string name="current_weather">Previsioni meteo attuali</string>
-    <string name="upcoming_with_space">"In arrivo "</string>
-    <string name="previous_with_space">"Precedente "</string>
+    <string name="upcoming_with_space">In arrivo </string>
+    <string name="previous_with_space">Precedente </string>
     <string name="watch">Guarda</string>
     <string name="notification_schedule_changed">Aggiornamento: Prossimo tentativo di lancio non prima di %s</string>
     <string name="notification_launch_successful">Il lancio è stato un successo</string>
@@ -429,14 +400,14 @@
     <string name="settings_one_minute">Un minuto</string>
     <string name="settings_one_minute_on">Ricevi una notifica quando un lancio avverrà in un minuto</string>
     <string name="settings_one_minute_off">non ricevere una notifica quando un lancio avverrà in un minuto</string>
-    <string name="no_live_stream_available">"nessuna live Stream a disposizione "</string>
+    <string name="no_live_stream_available">nessuna live Stream a disposizione </string>
     <string name="date_confirmed">la data del lancio è confermata ma l\'orario è ignoto</string>
     <string name="date_unconfirmed">la data attuale è una stima di \'non prima di\'</string>
     <string name="source">seleziona una sorgente</string>
     <string name="long_press_share">premi a lungo un oggetto per condividerlo</string>
     <string name="no_astronauts">nessun astronauta trovato</string>
     <string name="notification_filters">filtri per le notifiche</string>
-    <string name="notification_filter_description">"seleziona quali notifiche di lancio preferisci "</string>
+    <string name="notification_filter_description">seleziona quali notifiche di lancio preferisci </string>
     <string name="biography">Biografia</string>
     <string name="profile">Profilo</string>
     <string name="flights">Voli</string>
@@ -452,11 +423,6 @@
     <string name="height_plain">Altezza</string>
     <string name="width_plain">Larghezza</string>
     <string name="mass_plain">Massa</string>
-    <string name="height_unit">%s m</string>
-    <string name="width_unit">%s m</string>
-    <string name="mass_unit">%s T</string>
-    <string name="volume_plain">Volume</string>
-    <string name="volume_unit">%s m³</string>
     <string name="crew_plain">Equipaggio</string>
     <string name="orbit">Orbita</string>
     <string name="details_fill">%s dettagli</string>
@@ -466,7 +432,6 @@
     <string name="spacestations">Stazioni spaziali</string>
     <string name="spacestation">Stazione spaziale</string>
     <string name="astronauts">Astronauti</string>
-    <string name="starship">Starship</string>
     <string name="events">Eventi</string>
     <string name="favorites">Preferiti</string>
     <string name="show_me">Fammi vedere</string>
@@ -487,12 +452,8 @@
     <string name="landing_information">informazioni sull\'atterraggio</string>
     <string name="launch_service_providers">Provider dei servizi di lancio</string>
     <string name="launch_locations">Ubicazione del lancio</string>
-    <string name="northrop_grumman">Northrop Grumman</string>
-    <string name="blue_origin">Blue Origin</string>
-    <string name="rocket_lab">Rocket Lab</string>
     <string name="russia_and_kazakhstan">Russia e Kazakistan</string>
     <string name="china">Cina</string>
-    <string name="kennedy_space_center_cape_canaveral">Cape Canaveral</string>
     <string name="wallops_island">Isola di Wallops</string>
     <string name="new_zealand">Nuova Zelanda</string>
     <string name="japan">Giappone</string>
@@ -555,13 +516,12 @@
     <string name="choose_theme_mode">Scegli il tema</string>
     <string name="air_sea_launch">Lancio Da piattaforma aerea/marittima</string>
     <string name="strict_matching">Mostra in esclusiva i lanci che corrispondono alle agenzie selezionate per le località che hanno più agenzie di lancio disponibili.\n\nSe vuoi vedere solo lanci di spacex dal KSC seleziona i lanci dal KSC e abilita la corrispondenza rigorosa, poi seleziona solo il KSC e spaceX\n\nSenza corrispondenza rigorosa tutti i lanci dal KSC e da SpaceX verranno mostrati</string>
-    <string name="strict_matching_title">"Abbinamento rigoroso "</string>
-    <string name="texas">Texas</string>
+    <string name="strict_matching_title">Abbinamento rigoroso </string>
     <string name="pacific_spaceport">Spazioporto nel Pacifico</string>
     <string name="include_other_misc_locations">Aggiungi altri luoghi</string>
     <string name="view_more_livestreams">Guarda altre livestreams</string>
     <string name="notices">avvisi</string>
-    <string name="road_closures">"Chiusura delle strade "</string>
+    <string name="road_closures">Chiusura delle strade </string>
     <string name="up_next">Prossimo</string>
-    <string name="overview">"Panoramica "</string>
+    <string name="overview">Panoramica </string>
 </resources>

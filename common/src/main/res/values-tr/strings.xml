@@ -1,8 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">Space Launch Now</string>
     <string name="news">Haberler</string>
-    <string name="twitter">Twitter</string>
     <string name="action_settings">Ayarlar</string>
     <string name="status_go">"Fırlatılış"</string>
     <string name="status_nogo">Fırlatılış Tarihi Onaylanmadı</string>
@@ -11,7 +9,6 @@
     <string name="general_settings">Fırlatma izlemesi ve uygulama davranışı için genel ayarlar.</string>
     <string name="supporter_title">Destekçi Ol</string>
     <string name="supporter_description">Sürekli destek, zamanında hata düzeltmeleri ve yeni özellikler sağlanmasına yardımcı olun.</string>
-    <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">En sevdiğiniz tüm yörünge fırlatışlarında, görevlerinde ve araç fırlatma işlemlerinde güncel kalın.</string>
     <string name="slide_two_title">Fırlatmalar için bildirim</string>
     <string name="slide_two_description">Yaklaşan fırlatmalar için bildirimler alın ve uzay uçuşu tarihini inceleyin</string>
@@ -61,7 +58,6 @@ Bunun yerine bu uygulamadan nefret ederseniz, görüşlerinizi bilmek isteriz, b
     <string name="wear_complications_description">Space Launch\'ı İndirin Wear OS saatinizde komplikasyonları deneyin!</string>
     <string name="remove_ads">Reklamları Kaldır</string>
     <string name="remove_ads_description">Sonsuza dek tüm reklamları kaldırın!</string>
-    <string name="discord">Discord</string>
     <string name="discord_description">Space Launch Now Discord sohbet sunucusunda özel bir Destekçi rolü alın.</string>
     <string name="exclusive_widgets">Özelleştirilebilir Widget\'lar</string>
     <string name="exclusive_widgets_description">Ek bir widget\'a ve bunları özelleştirebilme özelliğine erişin.</string>
@@ -89,7 +85,6 @@ Bunun yerine bu uygulamadan nefret ederseniz, görüşlerinizi bilmek isteriz, b
     <string name="primary_agency">Birincil Ajans</string>
     <string name="unknown_agency_type">Bilinmeyen Ajans Tipi</string>
     <string name="info">BİLGİ</string>
-    <string name="wiki">WIKI</string>
     <string name="secondary_agency">İkincil Ajans</string>
     <string name="vehicle_agency">Taşıt Ajansı</string>
     <string name="mission_details">Görev Detayları</string>
@@ -110,7 +105,6 @@ Bunun yerine bu uygulamadan nefret ederseniz, görüşlerinizi bilmek isteriz, b
     <string name="estimated_launch_date">Tahmini Fırlatma Tarihi</string>
     <string name="nothing_here">Burada hiçbir şey yok, menüden yenilemek ister misin?</string>
     <string name="supporter">Destekçi</string>
-    <string name="debug_launches">Debug Launches</string>
     <string name="reset">Sıfırla</string>
     <string name="agency">Ajans</string>
     <string name="country">Ülke</string>
@@ -119,17 +113,8 @@ Bunun yerine bu uygulamadan nefret ederseniz, görüşlerinizi bilmek isteriz, b
     <string name="no_launches">Ah hadi ama... fırlatma yok!</string>
     <string name="select_launches">İzlenecek Fırlatmaları Seçin</string>
     <string name="selection_description">Seçimleriniz Giriş sayfasında görünecek ve fırlatmadan önce bildirim gönderecektir.</string>
-    <string name="nasa">NASA</string>
-    <string name="spacex">SpaceX</string>
-    <string name="roscosmos">ROSCOSMOS</string>
-    <string name="ula">ULA</string>
     <string name="kennedy_space_center">Kennedy Uzay Merkezi</string>
-    <string name="vandenberg_afb">Vandenberg AFB</string>
-    <string name="arianespace">Arianespace</string>
-    <string name="casc">CASC</string>
     <string name="isro">ISRO</string>
-    <string name="cape_canaveral">Cape Canaveral</string>
-    <string name="plesetsk_cosmodrome">Plesetsk Cosmodrome</string>
     <string name="all">Tümü</string>
     <string name="edit_notification_settings">Bildirim Ayarlarını Değiştir</string>
     <string name="additional_filters">Ek Fırlatma Filtreleri</string>
@@ -151,9 +136,7 @@ Bunun yerine bu uygulamadan nefret ederseniz, görüşlerinizi bilmek isteriz, b
     <string name="lower_days">gün</string>
     <string name="lower_hours">saat</string>
     <string name="title_activity_settings">Ayarlar</string>
-    <string name="title_activity_fullscreen_image">Space Launch Now</string>
     <string name="title_activity_download">İndir</string>
-    <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">En sevdiğiniz tüm yörünge fırlatmalarında, görevlerinde ve araç fırlatma işlemlerinde güncel kalın.</string>
     <string name="supporter_card_description">Özel Widget\'lar, Wear Komplikasyonları, Reklamları Kaldır ve daha fazlası.</string>
     <string name="vehicle_card_title">Fırlatma Araçlarını Bul</string>
@@ -226,11 +209,7 @@ Bunun yerine bu uygulamadan nefret ederseniz, görüşlerinizi bilmek isteriz, b
     <string name="height_plain">Yükseklik</string>
     <string name="width_plain">Genişlik</string>
     <string name="mass_plain">Kitle</string>
-    <string name="height_unit">%s m</string>
-    <string name="width_unit">%s m</string>
-    <string name="mass_unit">%s T</string>
     <string name="volume_plain">Hacim</string>
-    <string name="volume_unit">%s m³</string>
     <string name="crew_plain">Ekip</string>
     <string name="orbit">Yörünge</string>
     <string name="details_fill">%s ayrıntı</string>

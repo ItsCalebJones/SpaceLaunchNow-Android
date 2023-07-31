@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="action_settings">Inställningar</string>
     <string name="status_go">"Klar för start"</string>
@@ -23,7 +23,6 @@
     <string name="weather_forecast">Väderprognos</string>
     <string name="remove_ads">Ta bort reklam</string>
     <string name="remove_ads_description">Ta bort all reklam för alltid</string>
-    <string name="discord">Discord</string>
     <string name="discord_description">Få en exclusive Supporter roll i Space Launch Now discord servers.</string>
     <string name="blur_brightness">Ljusstyrka</string>
     <string name="blur_radius">Radie</string>
@@ -32,11 +31,8 @@
     <string name="hours">TIMMAR</string>
     <string name="minutes">MINUTER</string>
     <string name="seconds">SEKUNDER</string>
-    <string name="min">MIN</string>
     <string name="sec">SEK</string>
     <string name="launch_service_provider">Uppskjutningsleverantör</string>
-    <string name="info">INFO</string>
-    <string name="wiki">WIKI</string>
     <string name="unknown_payload">Okänd Last</string>
     <string name="family">Familj:</string>
     <string name="configuration">Konfiguration</string>
