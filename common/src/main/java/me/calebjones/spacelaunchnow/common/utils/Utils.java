@@ -156,42 +156,56 @@ public class Utils {
     }
 
     public static void openCustomTab(Activity activity, Context context, String url) {
-        CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        if (sharedPref.getBoolean("open_links_in_app", true)) {
+            CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
 
-        intentBuilder.setShowTitle(true);
+            intentBuilder.setShowTitle(true);
 
-        PendingIntent actionPendingIntent = createPendingShareIntent(context, url);
-        intentBuilder.setActionButton(BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.ic_menu_share_white), "Share", actionPendingIntent);
-        intentBuilder.setCloseButtonIcon(BitmapFactory.decodeResource(
-                context.getResources(), R.drawable.ic_arrow_back));
+            PendingIntent actionPendingIntent = createPendingShareIntent(context, url);
+            intentBuilder.setActionButton(BitmapFactory.decodeResource(context.getResources(),
+                    R.drawable.ic_menu_share_white), "Share", actionPendingIntent);
+            intentBuilder.setCloseButtonIcon(BitmapFactory.decodeResource(
+                    context.getResources(), R.drawable.ic_arrow_back));
 
 
-        intentBuilder.setStartAnimations(activity,
-                R.anim.slide_in_right, R.anim.slide_out_left);
-        intentBuilder.setExitAnimations(activity,
-                android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+            intentBuilder.setStartAnimations(activity,
+                    R.anim.slide_in_right, R.anim.slide_out_left);
+            intentBuilder.setExitAnimations(activity,
+                    android.R.anim.slide_in_left, android.R.anim.slide_out_right);
 
-        if (URLUtil.isValidUrl(url)) {
-            CustomTabActivityHelper.openCustomTab(activity, intentBuilder.build(), Uri.parse(url), new SLNWebViewFallback());
+            if (URLUtil.isValidUrl(url)) {
+                CustomTabActivityHelper.openCustomTab(activity, intentBuilder.build(), Uri.parse(url), new SLNWebViewFallback());
+            } else {
+                Toast.makeText(activity, "ERROR: URL is malformed - sorry! " + url, Toast.LENGTH_SHORT);
+            }
         } else {
-            Toast.makeText(activity, "ERROR: URL is malformed - sorry! " + url, Toast.LENGTH_SHORT);
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            activity.startActivity(browserIntent);
         }
     }
 
     public static void openCustomTab(Context context, String url) {
-        CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
-                .addDefaultShareMenuItem()
-                .setShowTitle(true)
-                .build();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
-        // This is optional but recommended
-        CustomTabsHelper.addKeepAliveExtra(context, customTabsIntent.intent);
+        if (sharedPref.getBoolean("open_links_in_app", true)) {
 
-        // This is where the magic happens...
-        CustomTabsHelper.openCustomTab(context, customTabsIntent,
-                Uri.parse(url),
-                new WebViewFallback());
+            CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+                    .addDefaultShareMenuItem()
+                    .setShowTitle(true)
+                    .build();
+
+            // This is optional but recommended
+            CustomTabsHelper.addKeepAliveExtra(context, customTabsIntent.intent);
+
+            // This is where the magic happens...
+            CustomTabsHelper.openCustomTab(context, customTabsIntent,
+                    Uri.parse(url),
+                    new WebViewFallback());
+        } else {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            context.startActivity(browserIntent);
+        }
     }
 
     private static PendingIntent createPendingShareIntent(Context context, String url) {

@@ -30,6 +30,12 @@
             android:entryValues="@array/time_format_array_entries"
             />
         <SwitchPreference
+            android:key="open_links_in_app"
+            android:defaultValue="true"
+            android:summary="@string/open_links_in_app_summary"
+            android:title="@string/open_links_in_app_title"
+            app:iconSpaceReserved="false"/>
+        <SwitchPreference
             android:defaultValue="false"
             app:iconSpaceReserved="false"
             android:key="confirm_exit"
