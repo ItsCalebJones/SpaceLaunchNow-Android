@@ -51,7 +51,8 @@
     <string name="weather_description">Uzyskaj informacje o pogodzie na platformie startowej dla historycznych i nadchodzących startów.</string>
     <string name="calendar_sync">Synchronizacja z kalendarzem</string>
     <string name="calendar_sync_description">Automatycznie synchronizuj nadchodzące starty z Twoim kalendarzem.</string>
-    <string name="wear_complications_description">Zdobądź funkcje Space Launch Now na Twój Wear OS!</string>
+    <string name="wear_complications">Funkcje Wear OS</string>
+    <string name="wear_complications_description">Zdobądź funkcje Space Launch Now na Twoim zegarku z systemem Wear OS!</string>
     <string name="remove_ads">Pozbądź się reklam</string>
     <string name="remove_ads_description">Pozbądź się wszystkich reklam na zawsze!</string>
     <string name="discord_description">Otrzymaj szczególną rolę \"Supporter\" na na serwerze Discord Space Launch Now.</string>
