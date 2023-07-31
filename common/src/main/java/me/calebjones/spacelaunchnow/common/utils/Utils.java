@@ -33,6 +33,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
+import android.icu.util.TimeZone;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -490,21 +491,57 @@ public class Utils {
         }
     }
 
-    public static SimpleDateFormat getSimpleDateTimeFormatForUIWithPrecision(DatePrecision datePrecision) {
+    public static SimpleDateFormat getSimpleDateTimeFormatForUIWithPrecision(Context context, DatePrecision datePrecision) {
+        // Ugly code - don't care - CJ 2023
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String pattern;
 
-        String pattern = "EEEE, MMMM dd, yyyy - hh:mm a zzz";
+        if (sharedPref.getString("time_format", "Default").contains("12-Hour")) {
+            pattern = "EEEE, MMMM dd, yyyy - h:mm a zzz";
+        } else if (sharedPref.getString("time_format", "Default").contains("24-Hour")) {
+            pattern = "EEEE, MMMM dd, yyyy - HH:mm zzz";
+        } else if (DateFormat.is24HourFormat(context)) {
+            pattern = "EEEE, MMMM dd, yyyy - HH:mm zzz";
+        } else {
+            pattern = "EEEE, MMMM dd, yyyy - h:mm a zzz";
+        }
+
         if (datePrecision != null) {
             switch (datePrecision.getId()) {
                 // Second
                 case 0:
-                    pattern = "EEEE, MMMM dd, yyyy - hh:mm:ss a zzz";
+                    if (sharedPref.getString("time_format", "Default").contains("12-Hour")) {
+                        pattern = "EEEE, MMMM dd, yyyy - h:mm:ss a zzz";
+                    } else if (sharedPref.getString("time_format", "Default").contains("24-Hour")) {
+                        pattern = "EEEE, MMMM dd, yyyy - HH:mm:ss zzz";
+                    } else if (DateFormat.is24HourFormat(context)) {
+                        pattern = "EEEE, MMMM dd, yyyy - HH:mm:ss zzz";
+                    } else {
+                        pattern = "EEEE, MMMM dd, yyyy - h:mm:ss a zzz";
+                    }
                     break;
                 // Minute
                 case 1:
-                    pattern = "EEEE, MMMM dd, yyyy - hh:mm a zzz";
+                    if (sharedPref.getString("time_format", "Default").contains("12-Hour")) {
+                        pattern = "EEEE, MMMM dd, yyyy - h:mm a zzz";
+                    } else if (sharedPref.getString("time_format", "Default").contains("24-Hour")) {
+                        pattern = "EEEE, MMMM dd, yyyy - HH:mm zzz";
+                    } else if (DateFormat.is24HourFormat(context)) {
+                        pattern = "EEEE, MMMM dd, yyyy - HH:mm zzz";
+                    } else {
+                        pattern = "EEEE, MMMM dd, yyyy - h:mm a zzz";
+                    }
                     break;
                 case 2:
-                    pattern = "'NET' EEEE, MMMM dd, yyyy - hh:mm a zzz";
+                    if (sharedPref.getString("time_format", "Default").contains("12-Hour")) {
+                        pattern = "'NET' EEEE, MMMM dd, yyyy - h:mm a zzz";
+                    } else if (sharedPref.getString("time_format", "Default").contains("24-Hour")) {
+                        pattern = "'NET' EEEE, MMMM dd, yyyy - HH:mm zzz";
+                    } else if (DateFormat.is24HourFormat(context)) {
+                        pattern = "'NET' EEEE, MMMM dd, yyyy - HH:mm zzz";
+                    } else {
+                        pattern = "'NET' EEEE, MMMM dd, yyyy - h:mm a zzz";
+                    }
                     break;
                 case 3:
                     pattern = "'Morning (local)' EEEE, MMMM dd, yyyy";
@@ -549,7 +586,6 @@ public class Utils {
                     pattern = "'Decade' yyyy's'";
                     break;
                 default:
-                    pattern = "EEEE, MMMM dd, yyyy - hh:mm a zzz";
                     break;
             }
         }

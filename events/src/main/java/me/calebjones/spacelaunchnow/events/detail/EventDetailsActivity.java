@@ -288,7 +288,7 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
 
         eventCardTitle.setText("Overview");
         eventType.setText(event.getType().getName());
-        SimpleDateFormat df = Utils.getSimpleDateTimeFormatForUIWithPrecision(event.getDatePrecision());
+        SimpleDateFormat df = Utils.getSimpleDateTimeFormatForUIWithPrecision(this, event.getDatePrecision());
         df.toLocalizedPattern();
         eventDate.setText(df.format(event.getDate()));
         eventDescription.setText(event.getDescription());

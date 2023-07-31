@@ -188,7 +188,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 //                            launchItem.getStatus(),
 //                            context));
                     holder.launchDateCompact.setText(
-                            Utils.getSimpleDateTimeFormatForUIWithPrecision(
+                            Utils.getSimpleDateTimeFormatForUIWithPrecision(context,
                                     launchItem.getNetPrecision()).format(launchItem.getNet()));
 
                     if (launchItem.getVidURLs() != null) {
