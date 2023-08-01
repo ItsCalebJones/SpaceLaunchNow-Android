@@ -136,7 +136,6 @@ public class AstronautDataRepository {
         dataLoader.getAstronaut(id, new Callbacks.AstronautNetworkCallback() {
             @Override
             public void onSuccess(Astronaut astronaut) {
-
                 callback.onNetworkStateChanged(false);
                 callback.onAstronautLoaded(astronaut);
             }
@@ -173,6 +172,39 @@ public class AstronautDataRepository {
         }
 
         realm.executeTransaction(realm -> realm.copyToRealmOrUpdate(astronauts));
+    }
+
+    public Agency getAgencyByIdFromRealm(int id) {
+        return realm.where(Agency.class).equalTo("id", id).findFirst();
+    }
+
+    @UiThread
+    public void getAgencyById(int id, Callbacks.AgencyCallback callback) {
+        callback.onAgencyLoaded(getAgencyByIdFromRealm(id));
+        getAgencyByIdFromNetwork(id, callback);
+    }
+
+    private void getAgencyByIdFromNetwork(int id, final Callbacks.AgencyCallback callback) {
+        callback.onNetworkStateChanged(true);
+        dataLoader.getAgency(id, new Callbacks.AgencyNetworkCallback() {
+            @Override
+            public void onSuccess(Agency agency) {
+                callback.onNetworkStateChanged(false);
+                callback.onAgencyLoaded(agency);
+            }
+
+            @Override
+            public void onNetworkFailure(int code) {
+                callback.onNetworkStateChanged(false);
+                callback.onError("Unable to load launch data.", null);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                callback.onNetworkStateChanged(false);
+                callback.onError("An error has occurred! Uh oh.", throwable);
+            }
+        });
     }
 }
 

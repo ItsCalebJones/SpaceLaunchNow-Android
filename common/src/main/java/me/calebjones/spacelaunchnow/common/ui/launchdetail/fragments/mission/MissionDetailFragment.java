@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.common.ui.launchdetail.fragments.mission;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -193,7 +195,7 @@ public class MissionDetailFragment extends RetroFitFragment {
                 flightclubButton.setVisibility(View.VISIBLE);
                 flightclubButton.setOnClickListener(v -> {
                     Activity activity = (Activity) context;
-                    Utils.openCustomTab(activity, context, detailLaunch.getFlightclub());
+                    openCustomTab(activity, context, detailLaunch.getFlightclub());
                 });
             } else {
                 flightclubButton.setVisibility(View.GONE);
@@ -206,7 +208,7 @@ public class MissionDetailFragment extends RetroFitFragment {
             if (detailLaunch.getRocket().getConfiguration().getInfoUrl() != null && detailLaunch.getRocket().getConfiguration().getInfoUrl().length() > 0) {
                 vehicleInfoButton.setOnClickListener(view -> {
                     Activity activity = (Activity) context;
-                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getInfoUrl());
+                    openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getInfoUrl());
                 });
             } else {
                 vehicleInfoButton.setVisibility(View.GONE);
@@ -225,7 +227,7 @@ public class MissionDetailFragment extends RetroFitFragment {
             if (detailLaunch.getRocket().getConfiguration().getWikiUrl() != null && detailLaunch.getRocket().getConfiguration().getWikiUrl().length() > 0) {
                 vehicleWikiButton.setOnClickListener(view -> {
                     Activity activity = (Activity) context;
-                    Utils.openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getWikiUrl());
+                    openCustomTab(activity, context, detailLaunch.getRocket().getConfiguration().getWikiUrl());
                 });
             } else {
                 vehicleWikiButton.setVisibility(View.GONE);

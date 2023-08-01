@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.launcher;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -28,7 +30,7 @@ import me.calebjones.spacelaunchnow.data.models.main.launcher.LauncherConfig;
 import me.calebjones.spacelaunchnow.ui.imageviewer.FullscreenImageActivity;
 import me.calebjones.spacelaunchnow.common.ui.launchdetail.launches.launcher.LauncherLaunchActivity;
 import me.calebjones.spacelaunchnow.common.GlideApp;
-import me.calebjones.spacelaunchnow.utils.Utils;
+import me.calebjones.spacelaunchnow.common.utils.Utils;
 
 public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdapter.ViewHolder> {
 
@@ -201,7 +203,7 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
 
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.imageView)
         ImageView vehicleImage;
@@ -226,8 +228,6 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         TextView launchVehicleSpecsLaunchMass;
         @BindView(R2.id.launch_vehicle_specs_thrust_value)
         TextView launchVehicleSpecsThrust;
-
-
         @BindView(R2.id.launch_success_value)
         TextView launchSuccess;
         @BindView(R2.id.consecutive_success_value)
@@ -236,8 +236,6 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         TextView launchTotal;
         @BindView(R2.id.launch_failure_value)
         TextView launchFailure;
-
-
         @BindView(R.id.vehicle_infoButton)
         AppCompatButton infoButton;
         @BindView(R.id.vehicle_wikiButton)
@@ -249,40 +247,25 @@ public class VehicleDetailAdapter extends RecyclerView.Adapter<VehicleDetailAdap
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            view.setOnClickListener(this);
 
-            launchesButton.setOnClickListener(this);
-            infoButton.setOnClickListener(this);
-            wikiButton.setOnClickListener(this);
-            vehicleImage.setOnClickListener(this);
-        }
 
-        //React to click events.
-        @Override
-        public void onClick(View v) {
-            final int position = getAdapterPosition();
-            switch (v.getId()) {
-                case R.id.infoButton:
-                    Utils.openCustomTab(activity, mContext, items.get(position).getInfoUrl());
-                    break;
-                case R.id.wikiButton:
-                    Utils.openCustomTab(activity, mContext, items.get(position).getWikiUrl());
-                    break;
-                case R.id.imageView:
-                    Intent animateIntent = new Intent(activity, FullscreenImageActivity.class);
-                    animateIntent.putExtra("imageURL", items.get(position).getImageUrl());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        activity.startActivity(animateIntent, ActivityOptions.makeSceneTransitionAnimation(activity, vehicleImage, "imageCover").toBundle());
-                    } else {
-                        activity.startActivity(animateIntent);
-                    }
-                    break;
-                case R.id.launcher_launches:
-                    Intent launches = new Intent(activity, LauncherLaunchActivity.class);
-                    launches.putExtra("launcherId", items.get(position).getId());
-                    launches.putExtra("launcherName", items.get(position).getName());
-                    activity.startActivity(launches);
-            }
+            launchesButton.setOnClickListener(v -> {
+                Intent launches = new Intent(activity, LauncherLaunchActivity.class);
+                launches.putExtra("launcherId", items.get(getAdapterPosition()).getId());
+                launches.putExtra("launcherName", items.get(getAdapterPosition()).getName());
+                activity.startActivity(launches);
+            });
+            infoButton.setOnClickListener(v -> openCustomTab(activity, mContext, items.get(getAdapterPosition()).getInfoUrl()));
+            wikiButton.setOnClickListener(v -> openCustomTab(activity, mContext, items.get(getAdapterPosition()).getWikiUrl()));
+            vehicleImage.setOnClickListener(v -> {
+                Intent animateIntent = new Intent(activity, FullscreenImageActivity.class);
+                animateIntent.putExtra("imageURL", items.get(getAdapterPosition()).getImageUrl());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    activity.startActivity(animateIntent, ActivityOptions.makeSceneTransitionAnimation(activity, vehicleImage, "imageCover").toBundle());
+                } else {
+                    activity.startActivity(animateIntent);
+                }
+            });
         }
     }
 }

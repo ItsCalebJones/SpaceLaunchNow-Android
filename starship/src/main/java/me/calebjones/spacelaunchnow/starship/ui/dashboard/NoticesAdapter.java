@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.starship.ui.dashboard;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -78,7 +80,7 @@ public class NoticesAdapter extends RecyclerView.Adapter<NoticesAdapter.ViewHold
             noticeLink.setOnClickListener(v -> {
                 Notice notice = noticeList.get(getAdapterPosition());
                 if (notice.getUrl() != null) {
-                    Utils.openCustomTab(context, notice.getUrl());
+                    openCustomTab(context, notice.getUrl());
                 }
             });
 

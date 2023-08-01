@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.main;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
 import android.annotation.SuppressLint;
@@ -754,10 +756,10 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 checkRefreshAd();
                 break;
             case R.id.menu_launch:
-                Utils.openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
+                openCustomTab(this, getApplicationContext(), "https://launchlibrary.net/");
                 break;
             case R.id.menu_patreon:
-                Utils.openCustomTab(this, getApplicationContext(), "https://www.patreon.com/spacelaunchnow");
+                openCustomTab(this, getApplicationContext(), "https://www.patreon.com/spacelaunchnow");
                 break;
             case R.id.menu_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);

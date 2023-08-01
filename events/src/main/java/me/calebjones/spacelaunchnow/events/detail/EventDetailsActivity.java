@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.events.detail;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.content.Context;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
@@ -425,7 +427,7 @@ public class EventDetailsActivity extends BaseActivityOld implements AppBarLayou
 
     @OnClick(R2.id.event_web_button)
     void webClicked(){
-        Utils.openCustomTab(this, getApplicationContext(), event.getNewsUrl());
+        openCustomTab(this, getApplicationContext(), event.getNewsUrl());
     }
 
     @Override

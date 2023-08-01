@@ -64,7 +64,7 @@ public class Spacestation extends RealmObject {
     public RealmList<Agency> owners = null;
     @SerializedName("docked_vehicles")
     @Expose
-    public RealmList<SpacecraftStage> dockedVehicles = null;
+    public Integer dockedVehiclesCount;
     @SerializedName("active_expeditions")
     @Expose
     public RealmList<Expedition> activeExpeditions = null;
@@ -155,14 +155,6 @@ public class Spacestation extends RealmObject {
         this.owners = owners;
     }
 
-    public RealmList<SpacecraftStage> getDockedVehicles() {
-        return dockedVehicles;
-    }
-
-    public void setDockedVehicles(RealmList<SpacecraftStage> dockedVehicles) {
-        this.dockedVehicles = dockedVehicles;
-    }
-
     public RealmList<Expedition> getActiveExpeditions() {
         return activeExpeditions;
     }
@@ -233,5 +225,13 @@ public class Spacestation extends RealmObject {
 
     public void setDockingLocations(RealmList<DockingLocation> dockingLocations) {
         this.dockingLocations = dockingLocations;
+    }
+
+    public Integer getDockedVehiclesCount() {
+        return dockedVehiclesCount;
+    }
+
+    public void setDockedVehiclesCount(Integer dockedVehiclesCount) {
+        this.dockedVehiclesCount = dockedVehiclesCount;
     }
 }

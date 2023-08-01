@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.common.ui.adapters;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,7 +103,7 @@ public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.ViewHo
         public void onClick(View v) {
             final NewsItem item = newsList.get(getAdapterPosition());
             if (item != null) {
-                Utils.openCustomTab(mContext, item.getUrl());
+                openCustomTab(mContext, item.getUrl());
             }
         }
     }

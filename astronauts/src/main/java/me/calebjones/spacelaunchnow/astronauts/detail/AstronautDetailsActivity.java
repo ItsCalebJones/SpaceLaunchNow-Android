@@ -41,7 +41,7 @@ import me.calebjones.spacelaunchnow.astronauts.data.Callbacks;
 import me.calebjones.spacelaunchnow.common.GlideApp;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
 import me.calebjones.spacelaunchnow.common.ui.supporter.SupporterHelper;
-import me.calebjones.spacelaunchnow.common.utils.Utils;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.spacelaunchnow.astronauts.R;
 import me.spacelaunchnow.astronauts.R2;
@@ -94,6 +94,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
     private AstronautDataRepository astronautDataRepository;
     private AstronautDetailViewModel viewModel;
     private Astronaut astronaut;
+    private Agency agency;
     private int astronautId;
 
     @Override
@@ -147,7 +148,12 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         // update UI
         viewModel.getAstronaut().observe(this, astronaut -> {
             if (astronaut != null) {
-                updateViews(astronaut);
+                updateAstronautViews(astronaut);
+            }
+        });
+        viewModel.getAgency().observe(this, agency -> {
+            if (agency != null) {
+                updateAgencyViews(agency);
             }
         });
 
@@ -179,7 +185,29 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
             @Override
             public void onAstronautLoaded(Astronaut astronaut) {
                 if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
-                    updateViewModel(astronaut);
+                    updateAstronautViewModel(astronaut);
+                    astronautDataRepository.getAgencyById(astronaut.getAgency().getId(), new Callbacks.AgencyCallback() {
+                        @Override
+                        public void onAgencyLoaded(Agency agency) {
+                            updateAgencyViewModel(agency);
+                        }
+
+                        @Override
+                        public void onNetworkStateChanged(boolean refreshing) {
+                            if (getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.STARTED)) {
+                                showNetworkLoading(refreshing);
+                            }
+                        }
+
+                        @Override
+                        public void onError(String message, @Nullable Throwable throwable) {
+                            if (throwable != null) {
+                                Timber.e(throwable);
+                            } else {
+                                Timber.e(message);
+                            }
+                        }
+                    });
                 }
             }
 
@@ -202,7 +230,7 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
 
     }
 
-    private void updateViews(Astronaut astronaut) {
+    private void updateAstronautViews(Astronaut astronaut) {
         this.astronaut = astronaut;
         try {
             astronautTitle.setText(astronaut.getName());
@@ -219,9 +247,16 @@ public class AstronautDetailsActivity extends BaseActivity implements AppBarLayo
         }
     }
 
-    private void updateViewModel(Astronaut astronaut) {
+    private void updateAgencyViews(Agency agency) {
+        this.agency = agency;
+    }
 
+    private void updateAstronautViewModel(Astronaut astronaut) {
         viewModel.getAstronaut().setValue(astronaut);
+    }
+
+    private void updateAgencyViewModel(Agency agency){
+        viewModel.getAgency().setValue(agency);
     }
 
     @Override

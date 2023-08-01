@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.common.ui.adapters;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -93,7 +95,7 @@ public class UpdateAdapter extends RecyclerView.Adapter<UpdateAdapter.ViewHolder
             rootview.setOnClickListener(v -> {
                 Update update = updates.get(getAdapterPosition());
                 if (update.getInfoUrl() != null) {
-                    Utils.openCustomTab(context, update.getInfoUrl());
+                    openCustomTab(context, update.getInfoUrl());
                 }
             });
 

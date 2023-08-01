@@ -2,6 +2,7 @@ package me.calebjones.spacelaunchnow.data.networking;
 
 import java.io.IOException;
 
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
@@ -159,6 +160,14 @@ public class DataClient {
 
     public Call<AgencyResponse> getFeaturedAgencies(Callback<AgencyResponse> callback, int limit) {
         Call<AgencyResponse> call = spaceLaunchNowService.getAgencies(true, "list", limit);
+
+        call.enqueue(callback);
+
+        return call;
+    }
+
+    public Call<Agency> getAgency(int id, Callback<Agency> callback) {
+        Call<Agency> call = spaceLaunchNowService.getAgencyById(id);
 
         call.enqueue(callback);
 

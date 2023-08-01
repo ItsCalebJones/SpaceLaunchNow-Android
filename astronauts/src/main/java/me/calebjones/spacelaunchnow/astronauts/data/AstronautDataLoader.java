@@ -6,6 +6,7 @@ import android.net.Uri;
 
 import java.util.List;
 
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 import me.calebjones.spacelaunchnow.data.networking.DataClient;
 import me.calebjones.spacelaunchnow.data.networking.error.ErrorUtil;
@@ -72,7 +73,7 @@ public class AstronautDataLoader {
     }
 
     public void getAstronaut(int id, final Callbacks.AstronautNetworkCallback networkCallback) {
-        Timber.i("Running getUpcomingLaunchesList");
+        Timber.i("Running getAstronaut");
         DataClient.getInstance().getAstronautsById(id, new Callback<Astronaut>() {
             @Override
             public void onResponse(Call<Astronaut> call, Response<Astronaut> response) {
@@ -88,6 +89,28 @@ public class AstronautDataLoader {
 
             @Override
             public void onFailure(Call<Astronaut> call, Throwable t) {
+                networkCallback.onFailure(t);
+            }
+        });
+    }
+
+    public void getAgency(int id, final Callbacks.AgencyNetworkCallback networkCallback){
+        Timber.i("Running getAgency for id %s", id);
+        DataClient.getInstance().getAgency(id, new Callback<Agency>() {
+            @Override
+            public void onResponse(Call<Agency> call, Response<Agency> response) {
+                if (response.isSuccessful()) {
+                    Agency agency = response.body();
+                    networkCallback.onSuccess(agency);
+
+                } else {
+                    networkCallback.onNetworkFailure(response.code());
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Agency> call, Throwable t) {
                 networkCallback.onFailure(t);
             }
         });

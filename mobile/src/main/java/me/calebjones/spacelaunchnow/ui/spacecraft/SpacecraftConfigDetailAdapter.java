@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.ui.spacecraft;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -166,14 +168,14 @@ public class SpacecraftConfigDetailAdapter extends RecyclerView.Adapter<Spacecra
 
         if (spacecraftConfig.getWikiLink() != null && spacecraftConfig.getWikiLink().length() > 0) {
             holder.wikiButton.setVisibility(View.VISIBLE);
-            holder.wikiButton.setOnClickListener(v -> Utils.openCustomTab(activity, context, spacecraftConfig.getWikiLink()));
+            holder.wikiButton.setOnClickListener(v -> openCustomTab(activity, context, spacecraftConfig.getWikiLink()));
         } else {
             holder.wikiButton.setVisibility(View.GONE);
         }
 
         if (spacecraftConfig.getInfoLink() != null && spacecraftConfig.getInfoLink().length() > 0) {
             holder.infoButton.setVisibility(View.VISIBLE);
-            holder.infoButton.setOnClickListener(v -> Utils.openCustomTab(activity, context, spacecraftConfig.getInfoLink()));
+            holder.infoButton.setOnClickListener(v -> openCustomTab(activity, context, spacecraftConfig.getInfoLink()));
         } else {
             holder.infoButton.setVisibility(View.GONE);
         }

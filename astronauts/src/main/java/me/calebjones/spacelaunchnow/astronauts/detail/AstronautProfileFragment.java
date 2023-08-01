@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.astronauts.detail;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +52,8 @@ public class AstronautProfileFragment extends BaseFragment {
     AppCompatImageButton astronautInstagramButton;
     @BindView(R2.id.astronaut_wiki_button)
     AppCompatImageButton astronautWikiButton;
+    @BindView(R2.id.astronaut_wiki_button_solo)
+    AppCompatButton astronautWikiButtonSolo;
     @BindView(R2.id.astronaut_status)
     TextView astronautStatus;
     @BindView(R2.id.lsp_logo)
@@ -104,6 +108,7 @@ public class AstronautProfileFragment extends BaseFragment {
         mViewModel = ViewModelProviders.of(getActivity()).get(AstronautDetailViewModel.class);
         // update UI
         mViewModel.getAstronaut().observe(this, this::setAstronaut);
+        mViewModel.getAgency().observe(this, this::setAgency);
     }
 
     private void setAstronaut(Astronaut astronaut) {
@@ -114,50 +119,42 @@ public class AstronautProfileFragment extends BaseFragment {
         astronautWikiButton.setImageDrawable(new IconicsDrawable(context).icon(FontAwesome.Icon.faw_wikipedia_w).sizeDp(24).color(color));
         astronautTwitterButton.setImageDrawable(new IconicsDrawable(context).icon(FontAwesome.Icon.faw_twitter).sizeDp(24).color(color));
 
-        if (astronaut.getWiki() != null){
-            astronautWikiButton.setVisibility(View.VISIBLE);
-            astronautWikiButton.setOnClickListener(v -> {
-                try {
-                    Uri webpage = Uri.parse(astronaut.getWiki());
-                    Intent myIntent = new Intent(Intent.ACTION_VIEW, webpage);
-                    startActivity(myIntent);
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                }
-            });
-        } else {
-            astronautWikiButton.setVisibility(View.GONE);
-        }
-
-        if (astronaut.getInstagram() != null){
+        if (astronaut.getInstagram() != null) {
             astronautInstagramButton.setVisibility(View.VISIBLE);
             astronautInstagramButton.setOnClickListener(v -> {
-                try {
-                    Uri webpage = Uri.parse(astronaut.getInstagram());
-                    Intent myIntent = new Intent(Intent.ACTION_VIEW, webpage);
-                    startActivity(myIntent);
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                }
+                openCustomTab(context, astronaut.getInstagram());
             });
         } else {
             astronautInstagramButton.setVisibility(View.GONE);
         }
 
-        if (astronaut.getTwitter() != null){
+        if (astronaut.getTwitter() != null) {
             astronautTwitterButton.setVisibility(View.VISIBLE);
             astronautTwitterButton.setOnClickListener(v -> {
-                try {
-                    Uri webpage = Uri.parse(astronaut.getTwitter());
-                    Intent myIntent = new Intent(Intent.ACTION_VIEW, webpage);
-                    startActivity(myIntent);
-                } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
-                }
+                openCustomTab(context, astronaut.getTwitter());
             });
         } else {
             astronautTwitterButton.setVisibility(View.GONE);
         }
+
+        if (astronaut.getTwitter() == null
+                & astronaut.getInstagram() == null
+                & astronaut.getWiki() != null) {
+            astronautWikiButtonSolo.setVisibility(View.VISIBLE);
+            astronautWikiButton.setVisibility(View.GONE);
+            astronautWikiButtonSolo.setOnClickListener(v -> {
+                openCustomTab(context, astronaut.getWiki());
+            });
+        } else if (astronaut.getWiki() != null) {
+            astronautWikiButton.setVisibility(View.VISIBLE);
+            astronautWikiButton.setOnClickListener(v -> {
+                openCustomTab(context, astronaut.getWiki());
+            });
+        } else {
+            astronautWikiButton.setVisibility(View.GONE);
+        }
+
+
 
         String bornDate = null;
         String deathDate = null;
@@ -170,8 +167,6 @@ public class AstronautProfileFragment extends BaseFragment {
         }
 
 
-
-
         if (bornDate != null && deathDate == null) {
             int bornYear = astronaut.getDateOfBirth().getYear();
             int currentYear = Calendar.getInstance().getTime().getYear();
@@ -180,15 +175,15 @@ public class AstronautProfileFragment extends BaseFragment {
         }
         if (deathDate != null && bornDate != null) {
             int bornYear = astronaut.getDateOfBirth().getYear();
-            int diedYear =  astronaut.getDateOfDeath().getYear();
+            int diedYear = astronaut.getDateOfDeath().getYear();
             astronautBorn.setText(getString(R.string.born_one_argument, bornDate));
             astronautDied.setText(getString(R.string.died_two_arguments, deathDate, diedYear - bornYear));
             astronautDied.setVisibility(View.VISIBLE);
         }
+    }
 
+    private void setAgency(Agency agency) {
         try {
-            Agency agency = astronaut.getAgency();
-
             Timber.v("Setting up views...");
             if (agency != null) {
                 lspCard.setVisibility(View.VISIBLE);
@@ -223,6 +218,7 @@ public class AstronautProfileFragment extends BaseFragment {
                 if (agency.getWikiUrl() == null) {
                     lspWikiButtonOne.setVisibility(View.GONE);
                 }
+
                 lspAgency.setVisibility(View.VISIBLE);
             } else {
                 lspCard.setVisibility(View.GONE);
@@ -231,14 +227,6 @@ public class AstronautProfileFragment extends BaseFragment {
         } catch (NullPointerException e) {
             Timber.e(e);
         }
-        astronaut.getAgency();
-        astronaut.getBio();
-        astronaut.getDateOfBirth();
-        astronaut.getDateOfDeath();
-        astronaut.getInstagram();
-        astronaut.getTwitter();
-        astronaut.getWiki();
-        astronaut.getStatus();
     }
 
     @OnClick(R2.id.lsp_agency)

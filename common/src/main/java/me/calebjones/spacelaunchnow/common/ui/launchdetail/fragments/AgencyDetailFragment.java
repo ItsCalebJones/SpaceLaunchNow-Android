@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.common.ui.launchdetail.fragments;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.app.Activity;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -243,13 +245,13 @@ public class AgencyDetailFragment extends BaseFragment {
     @OnClick(R2.id.lsp_infoButton_one)
     public void onLspInfoButtonOneClicked() {
         Activity activity = (Activity) context;
-        Utils.openCustomTab(activity, context, detailLaunch.getLaunchServiceProvider().getInfoUrl());
+        openCustomTab(activity, context, detailLaunch.getLaunchServiceProvider().getInfoUrl());
     }
 
     @OnClick(R2.id.lsp_wikiButton_one)
     public void onLspWikiButtonOneClicked() {
         Activity activity = (Activity) context;
-        Utils.openCustomTab(activity, context, detailLaunch.getLaunchServiceProvider().getWikiUrl());
+        openCustomTab(activity, context, detailLaunch.getLaunchServiceProvider().getWikiUrl());
     }
 
     @OnClick(R2.id.lsp_agency)

@@ -1,6 +1,7 @@
 package me.calebjones.spacelaunchnow.data.networking.interfaces;
 
 import me.calebjones.spacelaunchnow.data.BuildConfig;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.Event;
 import me.calebjones.spacelaunchnow.data.models.main.Launch;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
@@ -73,6 +74,10 @@ public interface SpaceLaunchNowService {
     @GET(version + "/agencies/")
     Call<AgencyResponse> getAgenciesWithOrbiters(@Query("spacecraft") boolean orbiters,
                                                  @Query("limit") int limit);
+
+    @Headers({"User-Agent: SpaceLaunchNow-" + BuildConfig.VERSION_NAME})
+    @GET(version + "/agencies/{id}/")
+    Call<Agency> getAgencyById(@Path("id") int id);
 
 
     // Launches

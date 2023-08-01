@@ -133,39 +133,6 @@ public class Utils {
         return cal;
     }
 
-    public static void openCustomTab(Activity activity, Context context, String url) {
-        CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
-
-        ListPreferences sharedPreference = ListPreferences.getInstance(context);
-        int color;
-        if (ThemeHelper.isDarkMode(activity)){
-            color = R.color.darkPrimary;
-        } else {
-            color = R.color.colorPrimary;
-        }
-        intentBuilder.setToolbarColor(ContextCompat.getColor((context), color));
-
-        intentBuilder.setShowTitle(true);
-
-        PendingIntent actionPendingIntent = createPendingShareIntent(context, url);
-        intentBuilder.setActionButton(BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.ic_menu_share_white), "Share", actionPendingIntent);
-        intentBuilder.setCloseButtonIcon(BitmapFactory.decodeResource(
-                context.getResources(), R.drawable.ic_arrow_back));
-
-
-        intentBuilder.setStartAnimations(activity,
-                R.anim.slide_in_right, R.anim.slide_out_left);
-        intentBuilder.setExitAnimations(activity,
-                android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-
-        if (URLUtil.isValidUrl(url)) {
-            CustomTabActivityHelper.openCustomTab(activity, intentBuilder.build(), Uri.parse(url), new WebViewFallback());
-        } else {
-            Toast.makeText(activity, "ERROR: URL is malformed - sorry! " + url, Toast.LENGTH_SHORT);
-        }
-    }
-
     private static PendingIntent createPendingShareIntent(Context context, String url) {
         Intent actionIntent = new Intent(Intent.ACTION_SEND);
         actionIntent.setType("text/plain");

@@ -1,5 +1,7 @@
 package me.calebjones.spacelaunchnow.news.ui;
 
+import static me.calebjones.spacelaunchnow.common.utils.LinkHandler.openCustomTab;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -48,7 +50,7 @@ public class NewsViewPager extends BaseFragment {
             if (bundle.containsKey("newsUrl")){
                 Timber.v("Received bundle.");
                 String url = bundle.getString("newsUrl");
-                new Handler().postDelayed(() -> Utils.openCustomTab(context, url), 500);
+                new Handler().postDelayed(() -> openCustomTab(context, url), 500);
                 getArguments().remove("newsUrl");
             }
         }

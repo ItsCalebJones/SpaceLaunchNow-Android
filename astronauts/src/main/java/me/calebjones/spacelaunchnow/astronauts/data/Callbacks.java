@@ -4,6 +4,7 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 import io.realm.RealmResults;
+import me.calebjones.spacelaunchnow.data.models.main.Agency;
 import me.calebjones.spacelaunchnow.data.models.main.astronaut.Astronaut;
 
 public class Callbacks {
@@ -27,6 +28,18 @@ public class Callbacks {
 
     public interface AstronautCallback {
         void onAstronautLoaded(Astronaut astronaut);
+        void onNetworkStateChanged(boolean refreshing);
+        void onError(String message, @Nullable Throwable throwable);
+    }
+
+    public interface AgencyNetworkCallback {
+        void onSuccess(Agency agency);
+        void onNetworkFailure(int code);
+        void onFailure(Throwable throwable);
+    }
+
+    public interface AgencyCallback {
+        void onAgencyLoaded(Agency agency);
         void onNetworkStateChanged(boolean refreshing);
         void onError(String message, @Nullable Throwable throwable);
     }
