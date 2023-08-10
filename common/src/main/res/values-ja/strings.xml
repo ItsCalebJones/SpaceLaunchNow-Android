@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">打ち上げ中</string>
+    <string name="app_name">Space Launch Now</string>
     <string name="news">ニュース</string>
     <string name="twitter">Twitter</string>
     <string name="action_settings">設定</string>
@@ -17,6 +17,7 @@
     <string name="slide_two_title">打ち上げ通知</string>
     <string name="slide_two_description">今後の打ち上げの通知を取得し、宇宙飛行の歴史を調べましょう</string>
     <string name="slide_three_title">ローンチ・ヴィークルを探す</string>
+    <string name="button_yes">評価する</string>
     <string name="button_no">結構です</string>
     <string name="button_feedback">フィードバックを送信</string>
     <string name="button_dont_ask">今後この質問を表示しない</string>
@@ -27,13 +28,40 @@
     <string name="support_settings">プロの機能を入手して、開発に貢献しましょう。</string>
     <string name="ok">OK</string>
     <string name="whats_new">最新情報</string>
+    <string name="unknown_rocket">不明なロケット</string>
+    <string name="unknown_mission_location">不明なミッションと場所</string>
+    <string name="unknown_agency">不明な機関</string>
+    <string name="unknown_launch">不明な打ち上げ</string>
     <string name="weather_forecast">天気予報</string>
     <string name="remove_ads">広告を消す</string>
     <string name="remove_ads_description">すべての広告を削除</string>
     <string name="discord">Discord</string>
+    <string name="blur_brightness">明るさ</string>
+    <string name="blur_sampling">サンプリング:</string>
+    <string name="blur_radius">半径</string>
+    <string name="unknown_launch_location">打ち上げ場所不明</string>
+    <string name="unknown_launch_date">打ち上げ日不明</string>
+    <string name="unknown_launch_status">打ち上げ状況不明</string>
+    <string name="unknown">不明</string>
+    <string name="unknown_mission">不明なミッション</string>
     <string name="watch_live">LIVEを視聴</string>
+    <string name="share">共有</string>
+    <string name="days">日</string>
+    <string name="hours">時間</string>
+    <string name="minutes">分</string>
+    <string name="seconds">秒</string>
+    <string name="min">分</string>
+    <string name="sec">秒</string>
     <string name="info">情報</string>
+    <string name="wiki">ウィキ</string>
+    <string name="unknown_payload">ペイロード不明</string>
+    <string name="unknown_launch_vehicle">不明なロケット</string>
+    <string name="family">家族</string>
+    <string name="height">高さ</string>
+    <string name="stages">ステージ</string>
     <string name="watch_launch">動画を視聴</string>
+    <string name="reset">リセット</string>
+    <string name="agency">機関</string>
     <string name="country">国</string>
     <string name="nasa">NASA</string>
     <string name="spacex">SpaceX</string>
@@ -51,15 +79,27 @@
     <string name="unknown_mission_date">ミッション日未定</string>
     <string name="launch">打ち上げ</string>
     <string name="support">サポート</string>
+    <string name="unknown_rocket_name">不明なロケット名</string>
     <string name="lower_days">日</string>
     <string name="lower_hours">時</string>
     <string name="title_activity_settings">設定</string>
     <string name="title_activity_download">ダウンロード</string>
+    <string name="done">完了</string>
     <string name="launch_data">打ち上げ情報</string>
     <string name="app_feedback">App フィードバック</string>
     <string name="need_support">サポートが必要ですか？</string>
+    <string name="email">E メール</string>
     <string name="cancel">キャンセル</string>
+    <string name="unknown_location">不明な場所</string>
     <string name="mission">ミッション</string>
+    <string name="agencies">機関</string>
+    <string name="height_value">%.1f M</string>
+    <string name="diameter_value">%.1f M</string>
+    <string name="stage_value">%d</string>
+    <string name="mass_leo_value">%d kg</string>
+    <string name="mass_gto_value">%d kg</string>
+    <string name="mass_launch_value">%d T</string>
+    <string name="thrust_value">%d kN</string>
     <string name="select_country">地域を選んでください</string>
     <string name="close">閉じる</string>
     <string name="filter">フィルター</string>
@@ -76,19 +116,26 @@
     <string name="feedback">フィードバック</string>
     <string name="feedback_subtitle">バグを見つけましたか？</string>
     <string name="thank_you_for_support">サポートしてくれてありがとう！</string>
+    <string name="exit">終了</string>
     <string name="night_mode">ダークモード</string>
     <string name="night_mode_on">ダークモードが有効です。</string>
     <string name="night_mode_off">ダークモードが無効です。</string>
     <string name="wifi_only">WiFiのみ</string>
+    <string name="general">一般</string>
+    <string name="about">このアプリについて</string>
     <string name="status_hold">打ち上げ保留</string>
     <string name="status_in_flight">飛行中</string>
     <string name="twenty_four_hour_title">24時間</string>
     <string name="night_mode_title">ダークモード</string>
     <string name="widgets">ウィジェット</string>
     <string name="weather">天気</string>
+    <string name="wear_os">Wear OS</string>
     <string name="translate">翻訳</string>
+    <string name="unknown_mission_or_payload">不明なミッションまたはペイロード</string>
+    <string name="refresh">更新</string>
     <string name="search">検索</string>
     <string name="date">日</string>
+    <string name="alert">アラート</string>
     <string name="upcoming_with_space">近日公開</string>
     <string name="previous_with_space">前へ</string>
     <string name="watch">視聴</string>
@@ -96,8 +143,25 @@
     <string name="notification_launch_liftoff">発射！ロケットが飛行中！</string>
     <string name="settings_in_flight">飛行中</string>
     <string name="settings_success">成功</string>
-    <string name="to_be_confirmed_title">最終確認中</string>
+    <string name="to_be_confirmed_title">確認中</string>
+    <string name="profile">プロファイル</string>
+    <string name="flights">飛行</string>
+    <string name="docked">ドッキング:</string>
+    <string name="height_plain">高さ</string>
+    <string name="width_plain">幅</string>
+    <string name="mass_plain">質量</string>
+    <string name="height_unit">%s m</string>
+    <string name="width_unit">%s m</string>
+    <string name="mass_unit">%s T</string>
+    <string name="volume_unit">%s m³</string>
+    <string name="crew_plain">乗組員</string>
+    <string name="orbit">軌道</string>
+    <string name="end_fill">終了時間：%s</string>
+    <string name="astronauts">宇宙飛行士</string>
     <string name="events">イベント</string>
+    <string name="docked_alt">ドッキング完了</string>
+    <string name="status_alt">状態:</string>
+    <string name="spacecraft_default_sub_title">不明な宇宙船</string>
     <string name="history">歴史</string>
     <string name="blue_origin">Blue Origin</string>
     <string name="rocket_lab">Rocket Lab</string>
@@ -110,4 +174,50 @@
     <string name="french_guiana">フランス領ギアナ</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="news_and_events">ニュースとイベント</string>
+    <string name="status_booster">状態:</string>
+    <string name="type_booster">種類:</string>
+    <string name="active_orbiter">有効:</string>
+    <string name="texas">テキサス州</string>
+    <string name="notices">お知らせ</string>
+    <string-array name="widget_presets">
+        <item>Light</item>
+        <item>ダーク</item>
+        <item>Light - Transparent</item>
+        <item>Dark - Transparent</item>
+        <item>Material Blue</item>
+        <item>Material Red</item>
+        <item>Material Teal</item>
+        <item>Material Orange</item>
+        <item>カスタム</item>
+    </string-array>
+    <string-array name="spinner_list_item_array">
+        <item>全て</item>
+        <item>Upcoming</item>
+        <item>Previous</item>
+    </string-array>
+    <string-array name="status_array">
+        <item>有効</item>
+        <item>Retired</item>
+        <item>Deceased</item>
+        <item>In-Training</item>
+        <item>Lost in Flight</item>
+        <item>Lost in Training</item>
+        <item>Died While in Active Service</item>
+        <item>Dismissed</item>
+        <item>Resigned during Training</item>
+    </string-array>
+    <string-array name="time_format_array">
+        <item>デフォルト</item>
+        <item>12-Hour AM/PM Format</item>
+        <item>24-Hour Format</item>
+    </string-array>
+    <string-array name="multi_calendar_reminder">
+        <item>One Minute</item>
+        <item>Five Minutes</item>
+        <item>Thirty Minutes</item>
+        <item>One Hour</item>
+        <item>Two Hours</item>
+        <item>Four Hours</item>
+        <item>1日</item>
+    </string-array>
 </resources>
