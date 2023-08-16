@@ -131,8 +131,8 @@
     <string name="edit_notification_settings">Налаштувати сповіщення</string>
     <string name="additional_filters">Додаткові фільтри запусків</string>
     <string name="these_do_not_affect_launch_notifications">Це не впливає на сповіщення про запуски.</string>
-    <string name="hide_no_go_launches">Заховати не готові запуски</string>
-    <string name="hide_tbd_launches">Заховати не підтверджені запуски</string>
+    <string name="hide_no_go_launches">Приховати не готові запуски</string>
+    <string name="hide_tbd_launches">Приховати не підтверджені запуски</string>
     <string name="keep_launches">Залишити запуски на 24 години</string>
     <string name="unknown_mission_date">Невідома дата місії</string>
     <string name="launch">Запуск</string>
@@ -208,8 +208,24 @@
     <string name="pending_confirmed_go_specific">Очікується підтвердження готовності від %s</string>
     <string name="waiting_on_launch_time">Очікування точного часу запуску від постачальника послуг запуску</string>
     <string name="unconfirmed">(Непідтверджено)</string>
+    <string name="no_go">Не готові запуски</string>
+    <string name="no_go_description">Це приховує запуски з не готовим статусом й іноді може приховати запуски, які перебувають у вікні запуску, але можуть запізнитись через технічні проблеми чи проблеми з діапазоном запуску.</string>
+    <string name="to_be_determined">Приховати не підтверджені запуски</string>
+    <string name="to_be_determined_description">Це приховує запуски, у яких не має підтвердженої дати запуску або часу запуску. Це може іноді приховати запуски, які були відкладені після невдалої спроби запуску.</string>
+    <string name="launch_info">Залишити запуски на 24 години</string>
+    <string name="launch_info_description">Ця опція дозволить показувати запуски на головній сторінці 24 години після того, як запуск відбувся.</string>
+    <string name="home">Головна</string>
+    <string name="launches">Запуски</string>
     <string name="settings">Налаштування</string>
+    <string name="upcoming_launches">Майбутні запуски</string>
+    <string name="upcoming_launches_summary">Вкажіть, скільки запусків завантажувати.</string>
+    <string name="view_upcoming_launches">Переглянути майбутні запуски</string>
+    <string name="view_more_launches">Переглянути більше запусків</string>
+    <string name="view_rocket_launches">Переглянути %s запусків</string>
+    <string name="no_launches_found">Жодних запусків не знайдено.</string>
     <string name="mass_plain">Маса</string>
     <string name="mass_unit">%s т</string>
+    <string name="follow_all_launches">Слідкувати за усіма запусками</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="view_x_launches">Переглянути %s запусків</string>
 </resources>
