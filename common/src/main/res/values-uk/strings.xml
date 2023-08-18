@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">Space Launch Now</string>
     <string name="news">Новини</string>
     <string name="twitter">Твіттер</string>
     <string name="action_settings">Налаштування</string>
@@ -10,6 +11,7 @@
     <string name="general_settings">Загальні налаштування відстежень запуску та поведінки програми.</string>
     <string name="supporter_title">Підтримати нас</string>
     <string name="supporter_description">Допоможіть забезпечити постійну підтримку, вчасне виправлення помилок і нові функції.</string>
+    <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Будьте в курсі всіх ваших улюблених орбітальних запусків, місій і ракет-носіїв.</string>
     <string name="slide_two_title">Сповіщення про запуски</string>
     <string name="slide_two_description">Отримуйте сповіщення про майбутні запуски та переглядайте історію космічних польотів</string>
@@ -18,7 +20,7 @@
     <string name="thank_you">Ця програма, Space Launch Now, починалася як простий проєкт над яким ми працювали в вільний час. Через рік в нього було вже майже 10 000 активних користувачів. Ми неймовірно вдячні усім, хто знайшов час, щоб звітувати про помилки, залишали відгуки, брали участь у бета-версіях та напряму підтримали нас.</string>
     <string name="player_error">Помилка ініціалізації програвача YouTube: %s</string>
     <string name="please_rate">Вітаю! Схоже, вам подобається ця програма, чи не могли б ви відвідати Play Store й оцінити її? Це б нам дуже допомогло!
-\n\nЯкщо ви ненавидите цей додаток то ми будемо раді почути ваші відгуки, що б ми могли й далі покращувати його. Дякую!</string>
+    \n\nЯкщо ви ненавидите цей додаток то ми будемо раді почути ваші відгуки, що б ми могли й далі покращувати його. Дякую!</string>
     <string name="please_rate_short">Гей! Схоже, вам подобається ця програма. Ви б дуже нам допомогли б 5-зірковим відгуком! Але якщо у вас є пропозиції - будь ласка, дайте нам знати.</string>
     <string name="button_yes">Оцінити!</string>
     <string name="button_no">Ні дякую</string>
@@ -57,8 +59,8 @@
     <string name="wear_complications_description">Отримайте додатки Space Launch Now на своєму годиннику Wear OS!</string>
     <string name="remove_ads">Позбутись реклами</string>
     <string name="remove_ads_description">Позбутись усієї реклами назавжди!</string>
-    <string name="discord">Дискорд</string>
-    <string name="discord_description">Отримати ексклюзивну роль підтримки на сервері Space Launch Now в Дискорді.</string>
+    <string name="discord">Discord</string>
+    <string name="discord_description">Отримати ексклюзивну роль підтримки на сервері Space Launch Now в Discord.</string>
     <string name="exclusive_widgets">Ексклюзивні настроювані віджети</string>
     <string name="exclusive_widgets_description">Отримайте доступ до додаткового віджета та можливості його налаштування.</string>
     <string name="blur_description">Налаштуйте силу та характеристики розмиття фонових зображень.</string>
@@ -89,19 +91,19 @@
     <string name="secondary_agency">Вторинна агенція</string>
     <string name="vehicle_agency">Транспортна агенція</string>
     <string name="mission_details">Деталі місії</string>
-    <string name="unknown_payload">Невідомий Вантаж</string>
+    <string name="unknown_payload">Невідомий вантаж</string>
     <string name="launch_vehicle_summary">Опис ракети-носія</string>
     <string name="unknown_launch_vehicle">Невідома ракета-носій</string>
-    <string name="family">Сім\'я</string>
+    <string name="family">Сім\'я:</string>
     <string name="configuration">Конфігурація:</string>
     <string name="vehicle_specifications">Характеристики ракети-носія</string>
-    <string name="height">Висота:</string>
-    <string name="diameter">Діаметр:</string>
-    <string name="stages">Ступенів:</string>
+    <string name="height">Висота</string>
+    <string name="diameter">Діаметр</string>
+    <string name="stages">Ступенів</string>
     <string name="mass_to_leo">Вантаж на НОО(LEO)</string>
     <string name="mass_to_gto">Вантаж на ГПО(GTO)</string>
-    <string name="mass_at_launch">Маса при запуску:</string>
-    <string name="thrust_at_launch">Тяга при запуску:</string>
+    <string name="mass_at_launch">Маса при запуску</string>
+    <string name="thrust_at_launch">Тяга при запуску</string>
     <string name="watch_launch">Дивитись запуск</string>
     <string name="estimated_launch_date">Орієнтовна дата запуску</string>
     <string name="nothing_here">Тут нічого немає, оновіть з меню?</string>
@@ -114,9 +116,14 @@
     <string name="no_launches">Ой йой... нема запусків!</string>
     <string name="select_launches">Вибрати запуски для стеження</string>
     <string name="selection_description">Вибрані місії відображатимуться на домашній сторінці та надсилатимуть сповіщення перед запуском.</string>
+    <string name="nasa">НАСА</string>
+    <string name="spacex">SpaceX</string>
     <string name="roscosmos">Роскосмос</string>
+    <string name="ula">ULA</string>
     <string name="kennedy_space_center">Космічний центр імені Кеннеді</string>
     <string name="vandenberg_afb">ВПБ Ванденберг</string>
+    <string name="arianespace">Arianespace</string>
+    <string name="casc">КДКУ</string>
     <string name="isro">Індія</string>
     <string name="cape_canaveral">Мис Канаверал</string>
     <string name="plesetsk_cosmodrome">Космодром Плесецьк</string>
@@ -124,8 +131,8 @@
     <string name="edit_notification_settings">Налаштувати сповіщення</string>
     <string name="additional_filters">Додаткові фільтри запусків</string>
     <string name="these_do_not_affect_launch_notifications">Це не впливає на сповіщення про запуски.</string>
-    <string name="hide_no_go_launches">Заховати не готові запуски</string>
-    <string name="hide_tbd_launches">Заховати не підтверджені запуски</string>
+    <string name="hide_no_go_launches">Приховати не готові запуски</string>
+    <string name="hide_tbd_launches">Приховати не підтверджені запуски</string>
     <string name="keep_launches">Залишити запуски на 24 години</string>
     <string name="unknown_mission_date">Невідома дата місії</string>
     <string name="launch">Запуск</string>
@@ -141,7 +148,9 @@
     <string name="lower_days">днів</string>
     <string name="lower_hours">годин</string>
     <string name="title_activity_settings">Налаштування</string>
+    <string name="title_activity_fullscreen_image">Space Launch Now</string>
     <string name="title_activity_download">Завантажити</string>
+    <string name="title_activity_web_view_fallback">Space Launch Now</string>
     <string name="intro_card_description">Будьте в курсі всіх ваших улюблених орбітальних запусків, місій і ракет-носіїв.</string>
     <string name="supporter_card_description">Ексклюзивні віджети, Wear OS ускладнення, усунення реклами тощо.</string>
     <string name="vehicle_card_title">Шукати ракети-носії</string>
@@ -170,18 +179,25 @@
     <string name="mass_gto_full">Вантаж на ГПО(GTO): %d кг</string>
     <string name="mass_launch_full">Маса при запуску: %d т</string>
     <string name="thrust_full">Тяга при запуску: %d кН</string>
+    <string name="height_value">%.1f м</string>
+    <string name="diameter_value">%.1f м</string>
+    <string name="stage_value">%d</string>
+    <string name="mass_leo_value">%d кг</string>
+    <string name="mass_gto_value">%d кг</string>
+    <string name="mass_launch_value">%d т</string>
+    <string name="thrust_value">%d кН</string>
     <string name="upcoming">Майбутні</string>
     <string name="previous">Попередні</string>
     <string name="select_country">Виберіть країну</string>
-    <string name="select_country_description">Вибрати країну, щоб вимкнути всі фільтри скористайтеся функцією скидання на панелі інструментів.</string>
+    <string name="select_country_description">Вибрати країну. Щоб вимкнути всі фільтри скористайтеся функцією скидання на панелі інструментів.</string>
     <string name="close">Закрити</string>
     <string name="filter">Фільтрувати</string>
     <string name="select_location">Вибрати місце</string>
-    <string name="select_location_description">Вибрати місце запуску, щоб вимкнути всі фільтри скористайтеся функцією скидання на панелі інструментів.</string>
+    <string name="select_location_description">Вибрати місце запуску. Щоб вимкнути всі фільтри скористайтеся функцією скидання на панелі інструментів.</string>
     <string name="select_launch_vehicle">Вибрати ракету-носій</string>
-    <string name="select_launch_vehicle_description">Вибрати ракету-носій, щоб вимкнути всі фільтри скористайтеся функцією скидання на панелі інструментів.</string>
+    <string name="select_launch_vehicle_description">Вибрати ракету-носій. Щоб вимкнути всі фільтри скористайтеся функцією скидання на панелі інструментів.</string>
     <string name="select_launch_agency">Вибрати космічну агенцію</string>
-    <string name="select_launch_agency_description">Вибрати агенцію, щоб вимкнути всі фільтри скористайтеся функцією скидання на панелі інструментів.</string>
+    <string name="select_launch_agency_description">Вибрати агенцію. Щоб вимкнути всі фільтри скористайтеся функцією скидання на панелі інструментів.</string>
     <string name="launch_history_data">Дані історії запусків</string>
     <string name="launch_history_data_description">Хочете отримати дані історичних запусків? Зазвичай використовується близько 2-3 МБ даних.</string>
     <string name="error_loading_mission">Не вдалося завантажити місії.</string>
@@ -190,8 +206,33 @@
     <string name="weather_favorable">Погода сприятлива: %d%%</string>
     <string name="watch_webcast">Дивіться пряму трансляцію, щоб дізнатися актуальний статус місії.</string>
     <string name="pending_confirmed_go_specific">Очікується підтвердження готовності від %s</string>
+    <string name="waiting_on_launch_time">Очікування точного часу запуску від постачальника послуг запуску</string>
+    <string name="waiting_on_launch_time_specific">Очікування точного часу запуску від %s</string>
+    <string name="unconfirmed">(Непідтверджено)</string>
+    <string name="no_go">Не готові запуски</string>
+    <string name="no_go_description">Це приховує запуски з не готовим статусом й іноді може приховати запуски, які перебувають у вікні запуску, але можуть запізнитись через технічні проблеми чи проблеми з діапазоном запуску.</string>
+    <string name="to_be_determined">Приховати не підтверджені запуски</string>
+    <string name="to_be_determined_description">Це приховує запуски, у яких не має підтвердженої дати запуску або часу запуску. Це може іноді приховати запуски, які були відкладені після невдалої спроби запуску.</string>
+    <string name="launch_info">Залишити запуски на 24 години</string>
+    <string name="launch_info_description">Ця опція дозволить показувати запуски на головній сторінці 24 години після того, як запуск відбувся.</string>
+    <string name="home">Головна</string>
+    <string name="launches">Запуски</string>
+    <string name="missions">Місії</string>
+    <string name="vehicles">Ракети-носії</string>
     <string name="settings">Налаштування</string>
+    <string name="stay_connected">Залишатись на звʼязку</string>
+    <string name="connect_description">Приєднатися до спільноти</string>
+    <string name="discord_subtitle">Приєднатися до спільноти</string>
+    <string name="twitter_subtitle">Стежити через Twitter</string>
+    <string name="upcoming_launches">Майбутні запуски</string>
+    <string name="upcoming_launches_summary">Вкажіть, скільки запусків завантажувати.</string>
+    <string name="view_upcoming_launches">Переглянути майбутні запуски</string>
+    <string name="view_more_launches">Переглянути більше запусків</string>
+    <string name="view_rocket_launches">Переглянути %s запусків</string>
+    <string name="no_launches_found">Жодних запусків не знайдено.</string>
     <string name="mass_plain">Маса</string>
     <string name="mass_unit">%s т</string>
+    <string name="follow_all_launches">Слідкувати за усіма запусками</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="view_x_launches">Переглянути %s запусків</string>
 </resources>
