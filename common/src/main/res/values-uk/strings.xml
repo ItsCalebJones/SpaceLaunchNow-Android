@@ -246,6 +246,15 @@
     <string name="supporter_feature">(Функція для підтримувачів)</string>
     <string name="upcoming_launches">Майбутні запуски</string>
     <string name="upcoming_launches_summary">Вкажіть, скільки запусків завантажувати.</string>
+    <string name="wifi_only">Тільки по Wi-Fi</string>
+    <string name="confirm_exit">Підтверджувати вихід</string>
+    <string name="confirm_exit_summary">Показати вікно підтвердження перед виходом.</string>
+    <string name="enable_notifications">Увімкнути сповіщення</string>
+    <string name="enable_notifications_on">Сповіщення увімкнені для майбутніх запусків.</string>
+    <string name="enable_notifications_off">Дозволити сповіщення для майбутніх запусків.</string>
+    <string name="status_updates">Оновлення статусу</string>
+    <string name="general">Основне</string>
+    <string name="notifications">Сповіщення</string>
     <string name="supporter_main">Отримати Pro-функції | Позбутись реклами</string>
     <string name="view_upcoming_launches">Переглянути майбутні запуски</string>
     <string name="view_more_launches">Переглянути більше запусків</string>
@@ -253,6 +262,10 @@
     <string name="no_launches_found">Жодних запусків не знайдено.</string>
     <string name="mass_plain">Маса</string>
     <string name="mass_unit">%s т</string>
+    <string name="history">Історія</string>
+    <string name="northrop_grumman">Northrop Grumman</string>
+    <string name="blue_origin">Blue Origin</string>
+    <string name="rocket_lab">Rocket Lab</string>
     <string name="follow_all_launches">Слідкувати за усіма запусками</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="view_x_launches">Переглянути %s запусків</string>
@@ -261,7 +274,13 @@
     <string name="choose_theme">Вибрати тему</string>
     <string name="air_sea_launch">Повітряний / Морський запуск</string>
     <string name="texas">Техас</string>
+    <string name="pacific_spaceport">Тихоокеанський космодром</string>
+    <string name="notices">Повідомлення</string>
+    <string name="road_closures">Перекриття доріг</string>
     <string name="up_next">Далі</string>
+    <string name="overview">Огляд</string>
+    <string name="open_links_in_app_summary">Виберіть, чи відкривати додатки локально або у браузері.</string>
+    <string name="open_links_in_app_title">Відкривати посилання у додатку</string>
     <string-array name="widget_presets">
         <item>Світлий</item>
         <item>Темний</item>
