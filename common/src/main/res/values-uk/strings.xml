@@ -30,7 +30,7 @@
     <string name="notifications_settings">Налаштувати сповіщення про запуски й змін у графіку.</string>
     <string name="appearance_settings">Налаштувати тему, віджети й кольори програми.</string>
     <string name="about_settings">Інформація програми про ліцензію, бібліотеки, журнал змін тощо</string>
-    <string name="support_settings">Отримати pro функції та допомогти майбутньому розвитку.</string>
+    <string name="support_settings">Отримати pro-функції та допомогти майбутньому розвитку.</string>
     <string name="wear_settings">Налаштувати циферблат Android Wear.</string>
     <string name="supporter_unlock_text">Ми дякуємо вам за те, що ви підтримали Space Launch Now.\n\nКожен рівень підтримки — це одноразова покупка, яка назавжди дає доступ до всіх професійних функцій. Жертвуйте стільки, скільки хочете, щоб підтримати наш постійний розвиток та подальші оновлення!</string>
     <string name="thank_you_support">Дякуємо вам за вашу постійну підтримку!</string>
@@ -49,7 +49,7 @@
     <string name="unknown_agency">Невідома агенція</string>
     <string name="unknown_launch">Невідомий запуск</string>
     <string name="description_unavailable">Опис відсутній.</string>
-    <string name="get_pro_features">Отримати Pro функції</string>
+    <string name="get_pro_features">Отримати Pro-функції</string>
     <string name="support_development">Підтримати розробку</string>
     <string name="weather_forecast">Прогноз погоди</string>
     <string name="weather_description">Отримайте інформацію про погоду зі стартових майданчиків для історичних і майбутніх запусків.</string>
@@ -206,6 +206,7 @@
     <string name="weather_favorable">Погода сприятлива: %d%%</string>
     <string name="watch_webcast">Дивіться пряму трансляцію, щоб дізнатися актуальний статус місії.</string>
     <string name="pending_confirmed_go_specific">Очікується підтвердження готовності від %s</string>
+    <string name="pending_confirmed_go">Очікується підтвердження готовності від агенції</string>
     <string name="waiting_on_launch_time">Очікування точного часу запуску від постачальника послуг запуску</string>
     <string name="waiting_on_launch_time_specific">Очікування точного часу запуску від %s</string>
     <string name="unconfirmed">(Непідтверджено)</string>
@@ -224,8 +225,19 @@
     <string name="connect_description">Приєднатися до спільноти</string>
     <string name="discord_subtitle">Приєднатися до спільноти</string>
     <string name="twitter_subtitle">Стежити через Twitter</string>
+    <string name="facebook">Facebook</string>
+    <string name="facebook_subtitle">Стежити за нами на Facebook</string>
+    <string name="website">В мережі</string>
+    <string name="website_subtitle">Офіційний сайт</string>
+    <string name="whats_new_subtitle">Переглянути список змін.</string>
+    <string name="about_subtitle">Про розробника!</string>
+    <string name="feedback">Відгуки</string>
+    <string name="feedback_subtitle">Знайшли помилку?</string>
+    <string name="thank_you_for_support">Дякуємо вам за підтримку!</string>
+    <string name="upgrade_pro">Хочете Pro-функції або прибрати рекламу?</string>
     <string name="upcoming_launches">Майбутні запуски</string>
     <string name="upcoming_launches_summary">Вкажіть, скільки запусків завантажувати.</string>
+    <string name="supporter_main">Отримати Pro-функції | Позбутись реклами</string>
     <string name="view_upcoming_launches">Переглянути майбутні запуски</string>
     <string name="view_more_launches">Переглянути більше запусків</string>
     <string name="view_rocket_launches">Переглянути %s запусків</string>
