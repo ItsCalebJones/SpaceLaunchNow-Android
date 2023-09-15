@@ -269,6 +269,8 @@
     <string name="follow_all_launches">Слідкувати за усіма запусками</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="view_x_launches">Переглянути %s запусків</string>
+    <string name="video_source_unavailable">Відео джерела недоступні.</string>
+    <string name="launch_date"><![CDATA[<b>Дата запуску</b><br>%1$s]]></string>
     <string name="to_be_determined_with_value">Ще визначається... %s</string>
     <string name="click_for_info">Натисніть, щоб дізнатись більше.</string>
     <string name="choose_theme">Вибрати тему</string>
