@@ -30,7 +30,7 @@
     <string name="notifications_settings">Налаштувати сповіщення про запуски й змін у графіку.</string>
     <string name="appearance_settings">Налаштувати тему, віджети й кольори програми.</string>
     <string name="about_settings">Інформація програми про ліцензію, бібліотеки, журнал змін тощо</string>
-    <string name="support_settings">Отримати pro функції та допомогти майбутньому розвитку.</string>
+    <string name="support_settings">Отримати pro-функції та допомогти майбутньому розвитку.</string>
     <string name="wear_settings">Налаштувати циферблат Android Wear.</string>
     <string name="supporter_unlock_text">Ми дякуємо вам за те, що ви підтримали Space Launch Now.\n\nКожен рівень підтримки — це одноразова покупка, яка назавжди дає доступ до всіх професійних функцій. Жертвуйте стільки, скільки хочете, щоб підтримати наш постійний розвиток та подальші оновлення!</string>
     <string name="thank_you_support">Дякуємо вам за вашу постійну підтримку!</string>
@@ -49,7 +49,7 @@
     <string name="unknown_agency">Невідома агенція</string>
     <string name="unknown_launch">Невідомий запуск</string>
     <string name="description_unavailable">Опис відсутній.</string>
-    <string name="get_pro_features">Отримати Pro функції</string>
+    <string name="get_pro_features">Отримати Pro-функції</string>
     <string name="support_development">Підтримати розробку</string>
     <string name="weather_forecast">Прогноз погоди</string>
     <string name="weather_description">Отримайте інформацію про погоду зі стартових майданчиків для історичних і майбутніх запусків.</string>
@@ -206,13 +206,14 @@
     <string name="weather_favorable">Погода сприятлива: %d%%</string>
     <string name="watch_webcast">Дивіться пряму трансляцію, щоб дізнатися актуальний статус місії.</string>
     <string name="pending_confirmed_go_specific">Очікується підтвердження готовності від %s</string>
+    <string name="pending_confirmed_go">Очікується підтвердження готовності від агенції</string>
     <string name="waiting_on_launch_time">Очікування точного часу запуску від постачальника послуг запуску</string>
     <string name="waiting_on_launch_time_specific">Очікування точного часу запуску від %s</string>
     <string name="unconfirmed">(Непідтверджено)</string>
     <string name="no_go">Не готові запуски</string>
     <string name="no_go_description">Це приховує запуски з не готовим статусом й іноді може приховати запуски, які перебувають у вікні запуску, але можуть запізнитись через технічні проблеми чи проблеми з діапазоном запуску.</string>
     <string name="to_be_determined">Приховати не підтверджені запуски</string>
-    <string name="to_be_determined_description">Це приховує запуски, у яких не має підтвердженої дати запуску або часу запуску. Це може іноді приховати запуски, які були відкладені після невдалої спроби запуску.</string>
+    <string name="to_be_determined_description">Це приховує запуски, у яких не має визначеної дати запуску або часу запуску. Це може іноді приховати запуски, які були відкладені після невдалої спроби запуску.</string>
     <string name="launch_info">Залишити запуски на 24 години</string>
     <string name="launch_info_description">Ця опція дозволить показувати запуски на головній сторінці 24 години після того, як запуск відбувся.</string>
     <string name="home">Головна</string>
@@ -224,15 +225,127 @@
     <string name="connect_description">Приєднатися до спільноти</string>
     <string name="discord_subtitle">Приєднатися до спільноти</string>
     <string name="twitter_subtitle">Стежити через Twitter</string>
+    <string name="facebook">Facebook</string>
+    <string name="facebook_subtitle">Стежити за нами на Facebook</string>
+    <string name="website">В мережі</string>
+    <string name="website_subtitle">Офіційний сайт</string>
+    <string name="whats_new_subtitle">Переглянути список змін.</string>
+    <string name="about_subtitle">Про розробника!</string>
+    <string name="feedback">Відгуки</string>
+    <string name="feedback_subtitle">Знайшли помилку?</string>
+    <string name="thank_you_for_support">Дякуємо вам за підтримку!</string>
+    <string name="upgrade_pro">Хочете Pro-функції або прибрати рекламу?</string>
+    <string name="updated_version">Оновлено до версії</string>
+    <string name="exit">Вийти</string>
+    <string name="error_orbiter_details">Помилка - Не вдалося завантажити подробиці КА.</string>
+    <string name="spacecraft_history">%s Історія космічного апарата</string>
+    <string name="spacecraft_details">%s Подробиці космічного апарата</string>
+    <string name="night_mode_restart">Іноді треба перезапустити додаток, щоб запрацював Нічний режим.</string>
+    <string name="day_mode_restart">Іноді треба перезапустити додаток, щоб запрацював Денний режим.</string>
+    <string name="auto_daynight_restart">Режим Дня/Ночі вимкнений, іноді треба перезапустити додаток для застосування змін.</string>
+    <string name="supporter_feature">(Функція для підтримувачів)</string>
     <string name="upcoming_launches">Майбутні запуски</string>
     <string name="upcoming_launches_summary">Вкажіть, скільки запусків завантажувати.</string>
+    <string name="wifi_only">Тільки по Wi-Fi</string>
+    <string name="confirm_exit">Підтверджувати вихід</string>
+    <string name="confirm_exit_summary">Показати вікно підтвердження перед виходом.</string>
+    <string name="enable_notifications">Увімкнути сповіщення</string>
+    <string name="enable_notifications_on">Сповіщення увімкнені для майбутніх запусків.</string>
+    <string name="enable_notifications_off">Дозволити сповіщення для майбутніх запусків.</string>
+    <string name="status_updates">Оновлення статусу</string>
+    <string name="general">Основне</string>
+    <string name="notifications">Сповіщення</string>
+    <string name="supporter_main">Отримати Pro-функції | Позбутись реклами</string>
     <string name="view_upcoming_launches">Переглянути майбутні запуски</string>
+    <string name="unknown_mission_or_payload">Невідома місія або вантаж</string>
     <string name="view_more_launches">Переглянути більше запусків</string>
     <string name="view_rocket_launches">Переглянути %s запусків</string>
+    <string name="unknown_administrator">Невідомий адміністратор</string>
     <string name="no_launches_found">Жодних запусків не знайдено.</string>
+    <string name="payload">Вантаж: %d (кг)</string>
+    <string name="crew_capacity">Розмір Екіпажу: %s</string>
     <string name="mass_plain">Маса</string>
     <string name="mass_unit">%s т</string>
+    <string name="spacecraft_default_sub_title">Невідомий космічний корабель</string>
+    <string name="history">Історія</string>
+    <string name="northrop_grumman">Northrop Grumman</string>
+    <string name="blue_origin">Blue Origin</string>
+    <string name="rocket_lab">Rocket Lab</string>
     <string name="follow_all_launches">Слідкувати за усіма запусками</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="view_x_launches">Переглянути %s запусків</string>
+    <string name="video_source_unavailable">Відео джерела недоступні.</string>
+    <string name="launch_date"><![CDATA[<b>Дата запуску</b><br>%1$s]]></string>
+    <string name="instantaneous_launch_window"><![CDATA[<b>Миттєве стартове вікно</b><br>%1$s]]></string>
+    <string name="launch_window_extras"><![CDATA[<b>Стартове вікно</b><br>%1$s - %2$s<br>%3$s]]></string>
+    <string name="read_more">Читати більше</string>
+    <string name="serial_number">Серійний номер:</string>
+    <string name="status_booster">Статус:</string>
+    <string name="flights_booster">Польотів:</string>
+    <string name="flight_proven_booster">Перевірено польотом:</string>
+    <string name="landing_attempt_booster">Спроба приземлення:</string>
+    <string name="landing_success_booster">Успішне приземлення:</string>
+    <string name="type_booster">Тип:</string>
+    <string name="location_booster">Місцезнаходження:</string>
+    <string name="first_flight_orbiter">Перший політ</string>
+    <string name="active_orbiter">В службі:</string>
+    <string name="human_rated_orbiter">Сертифіковано на пасажирів:</string>
+    <string name="specifications_orbiter">Специфікації</string>
+    <string name="diameter_unknown_m">Діаметр: Невідомий (м)</string>
+    <string name="height_unknown_m">Висота: Невідома (м)</string>
+    <string name="payload_unknown_kg">Вантаж: Невідомий (кг)</string>
+    <string name="crew_capacity_unknown">Розмір Екіпажу: Невідомий</string>
+    <string name="to_be_determined_with_value">Ще визначається... %s</string>
+    <string name="click_for_info">Натисніть, щоб дізнатись більше.</string>
+    <string name="choose_theme">Вибрати тему</string>
+    <string name="air_sea_launch">Повітряний / Морський запуск</string>
+    <string name="texas">Техас</string>
+    <string name="pacific_spaceport">Тихоокеанський космодром</string>
+    <string name="notices">Повідомлення</string>
+    <string name="road_closures">Перекриття доріг</string>
+    <string name="up_next">Далі</string>
+    <string name="overview">Огляд</string>
+    <string name="open_links_in_app_summary">Виберіть, чи відкривати додатки локально або у браузері.</string>
+    <string name="open_links_in_app_title">Відкривати посилання у додатку</string>
+    <string-array name="widget_presets">
+        <item>Світлий</item>
+        <item>Темний</item>
+        <item>Світлий - прозорий</item>
+        <item>Темний - прозорий</item>
+        <item>Матеріальний синій</item>
+        <item>Матеріальний червоний</item>
+        <item>Матеріальний синьо-зелений</item>
+        <item>Матеріальний оранжевий</item>
+        <item>Власний</item>
+    </string-array>
+    <string-array name="spinner_list_item_array">
+        <item>Всі</item>
+        <item>Наступний</item>
+        <item>Попередній</item>
+    </string-array>
+    <string-array name="status_array">
+        <item>В службі</item>
+        <item>На пенсії</item>
+        <item>Загинули</item>
+        <item>У тренуванні</item>
+        <item>Загинули у польоті</item>
+        <item>Загинули під час тренування</item>
+        <item>Померли під час служби</item>
+        <item>Звільнено</item>
+        <item>Пішли у відставку під час тренування</item>
+    </string-array>
+    <string-array name="time_format_array">
+        <item>Стандартний</item>
+        <item>12-годинний формат AM/PM</item>
+        <item>24-годинний формат</item>
+    </string-array>
+    <string-array name="multi_calendar_reminder">
+        <item>Одна хвилина</item>
+        <item>П\'ять хвилин</item>
+        <item>Тридцять хвилин</item>
+        <item>Одна година</item>
+        <item>Дві години</item>
+        <item>Чотири години</item>
+        <item>Один день</item>
+    </string-array>
 </resources>
