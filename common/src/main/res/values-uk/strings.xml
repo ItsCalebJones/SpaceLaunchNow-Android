@@ -257,6 +257,10 @@
     <string name="status_updates">Оновлення статусу</string>
     <string name="general">Основне</string>
     <string name="notifications">Сповіщення</string>
+    <string name="test_notification">Тест сповіщень</string>
+    <string name="notification_interval">Інтервал сповіщень</string>
+    <string name="notification_interval_summary">Виберіть інтервали для отримання сповіщень про запуск</string>
+    <string name="twenty_four_hour_title">24 години</string>
     <string name="supporter_main">Отримати Pro-функції | Позбутись реклами</string>
     <string name="view_upcoming_launches">Переглянути майбутні запуски</string>
     <string name="unknown_mission_or_payload">Невідома місія або вантаж</string>
