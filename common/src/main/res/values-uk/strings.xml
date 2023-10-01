@@ -246,6 +246,7 @@
     <string name="supporter_feature">(Функція для підтримувачів)</string>
     <string name="permission_denied">Дозвіл відхилено</string>
     <string name="permission_denied_description"><![CDATA[Якщо ви передумаєте, спробуйте знову увімкнути. Або перейдіть до Налаштування -> Додатки -> Space Launch Now -> Дозволи.]]></string>
+    <string name="local_timezone">Місцевий часовий пояс</string>
     <string name="upcoming_launches">Майбутні запуски</string>
     <string name="upcoming_launches_summary">Вкажіть, скільки запусків завантажувати.</string>
     <string name="wifi_only">Тільки по Wi-Fi</string>
