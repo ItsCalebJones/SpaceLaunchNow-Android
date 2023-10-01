@@ -300,6 +300,8 @@
     <string name="priority">Пріоритет</string>
     <string name="vibration_summary">Дозволити вібрацію для сповіщень.</string>
     <string name="vibration">Вібрація</string>
+    <string name="led_summary">Дозволити блимання світлодіода зі сповіщенням. (Працює на деяких пристроях)</string>
+    <string name="led">Блимання світлодіода</string>
     <string name="test_notification_summary">Надіслати пробне сповіщення.</string>
     <string name="test_notification">Тест сповіщень</string>
     <string name="notification_interval">Інтервал сповіщень</string>
@@ -438,6 +440,10 @@
     <string name="height_unknown_m">Висота: Невідома (м)</string>
     <string name="payload_unknown_kg">Вантаж: Невідомий (кг)</string>
     <string name="crew_capacity_unknown">Розмір Екіпажу: Невідомий</string>
+    <string name="use_system_language">Використовувати мову системи</string>
+    <string name="force_english">Тільки англійська мова.</string>
+    <string name="force_english_off">Використовуйте мову вашого пристрою.</string>
+    <string name="dark_theme">Темна тема</string>
     <string name="primary_color_title">Основний колір</string>
     <string name="primary_color_summary">Встановити власний основний колір.</string>
     <string name="accent_color_title">Колір відтінку</string>
@@ -453,6 +459,9 @@
     <string name="to_be_determined_with_value">Ще визначається... %s</string>
     <string name="click_for_info">Натисніть, щоб дізнатись більше.</string>
     <string name="choose_theme">Вибрати тему</string>
+    <string name="set_custom_calendar">Встановіть власні нагадування для сповіщень календаря.</string>
+    <string name="event_and_news">Сповіщення про події та новини</string>
+    <string name="event_and_news_description">Отримувати сповіщення про події та новини космічних польотів після їх запуску.</string>
     <string name="air_sea_launch">Повітряний / Морський запуск</string>
     <string name="texas">Техас</string>
     <string name="pacific_spaceport">Тихоокеанський космодром</string>
