@@ -284,8 +284,15 @@
     <string name="round_corners_summary">Увімкнути круглі кути для віджетів.</string>
     <string name="enable_weather">Ввімкнути погоду</string>
     <string name="enable_weather_summary">Показувати дані про погоду для подальших запусків в деталях про запуски.</string>
+    <string name="weather_type">Тип вимірювання погоди</string>
+    <string name="weather_type_on">Використовувати Імперські одиниці США, для температури, швидкості вітру та опадів.</string>
+    <string name="weather_type_off">Використовувати Метричну систему стандарту Міжнародної системи одиниць, для температури, швидкості вітру та опадів.</string>
     <string name="upcoming_launches">Майбутні запуски</string>
     <string name="upcoming_launches_summary">Вкажіть, скільки запусків завантажувати.</string>
+    <string name="allow_background">Дозволити фонову синхронізацію</string>
+    <string name="allow_background_on">Дані запусків будуть синхронізовані, навіть коли додаток знаходиться у фоновому режимі.</string>
+    <string name="allow_background_off">Дозволити синхронізацію даних запусків у фоновому режимі, необхідно для надсилання сповіщень.</string>
+    <string name="data_saver">Заощадження трафіку</string>
     <string name="wifi_only">Тільки по Wi-Fi</string>
     <string name="confirm_exit">Підтверджувати вихід</string>
     <string name="confirm_exit_summary">Показати вікно підтвердження перед виходом.</string>
