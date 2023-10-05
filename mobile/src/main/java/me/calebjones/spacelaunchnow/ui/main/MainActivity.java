@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -16,6 +17,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.widget.Toolbar;
 
@@ -158,12 +160,21 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
             showFilter = true;
             startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
-        } else if (!Once.beenDone("show2023dialog") &&
-                Once.beenDone("appOpen", Amount.moreThan(5))) {
+        } else if (!Once.beenDone("show2023dialog") && Once.beenDone("appOpen", Amount.moreThan(5))) {
             Once.markDone("show2023dialog");
             if (!SupporterHelper.is2023Supporter()) {
                 becomeSupporter();
             }
+        } else if (!Once.beenDone("showNotificationPermission")){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                int permissionState = ContextCompat.checkSelfPermission(this,
+                        android.Manifest.permission.POST_NOTIFICATIONS);
+                // If the permission is not granted, request it.
+                if (permissionState == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+                }
+            }
+            Once.markDone("showNotificationPermission");
         }
 
         // Get intent, action and MIME type
