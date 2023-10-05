@@ -936,6 +936,17 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 Once.markDone("showTutorial");
                 showFilter = true;
                 navigate(mNavItemId);
+                if (!Once.beenDone("showNotificationPermission")){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        int permissionState = ContextCompat.checkSelfPermission(this,
+                                android.Manifest.permission.POST_NOTIFICATIONS);
+                        // If the permission is not granted, request it.
+                        if (permissionState == PackageManager.PERMISSION_DENIED) {
+                            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+                        }
+                    }
+                    Once.markDone("showNotificationPermission");
+                }
             }
         }
     }
