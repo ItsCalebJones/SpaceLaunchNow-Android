@@ -187,7 +187,7 @@
     <string name="mass_launch_value">%d т</string>
     <string name="thrust_value">%d кН</string>
     <string name="upcoming">Майбутні</string>
-    <string name="previous">Попередні</string>
+    <string name="previous">Минулі</string>
     <string name="select_country">Виберіть країну</string>
     <string name="select_country_description">Вибрати країну. Щоб вимкнути всі фільтри скористайтеся функцією скидання на панелі інструментів.</string>
     <string name="close">Закрити</string>
@@ -542,7 +542,7 @@
     <string-array name="spinner_list_item_array">
         <item>Всі</item>
         <item>Наступний</item>
-        <item>Попередній</item>
+        <item>Минулі</item>
     </string-array>
     <string-array name="status_array">
         <item>В службі</item>
