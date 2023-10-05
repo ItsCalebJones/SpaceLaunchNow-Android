@@ -486,6 +486,20 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         // show GDPR Dialog if necessary, the library takes care about if and how to show it
         GDPR.getInstance().checkIfNeedsToBeShown(this, getGDPRSetup());
         configureAdState(GDPR.getInstance().getConsentState());
+
+        if (Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
+            if (!Once.beenDone("showNotificationPermission")) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    int permissionState = ContextCompat.checkSelfPermission(this,
+                            android.Manifest.permission.POST_NOTIFICATIONS);
+                    // If the permission is not granted, request it.
+                    if (permissionState == PackageManager.PERMISSION_DENIED) {
+                        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
+                    }
+                }
+                Once.markDone("showNotificationPermission");
+            }
+        }
     }
 
     private void showRemoveAd() {
@@ -936,17 +950,6 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 Once.markDone("showTutorial");
                 showFilter = true;
                 navigate(mNavItemId);
-                if (!Once.beenDone("showNotificationPermission")){
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        int permissionState = ContextCompat.checkSelfPermission(this,
-                                android.Manifest.permission.POST_NOTIFICATIONS);
-                        // If the permission is not granted, request it.
-                        if (permissionState == PackageManager.PERMISSION_DENIED) {
-                            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1);
-                        }
-                    }
-                    Once.markDone("showNotificationPermission");
-                }
             }
         }
     }
