@@ -390,8 +390,10 @@
     <string name="gdpr_type_crash">звіт про збій</string>
     <string name="gdpr_type_analytics">аналітика звітності</string>
     <string name="space_launch_news">Новини космічних запусків</string>
+    <string name="consent_body">Ця програма використовує Google Firebase для аналітики та Google AdMod для подачі реклами. Ваші анонімні дані про використання можуть використовуватися для персоналізації реклами в цьому додатку. Ви можете вимкнути передачу даних в налаштуваннях додатка.</string>
     <string name="data_consent">Згода на передачу даних</string>
     <string name="supporter_main">Отримати Pro-функції | Позбутись реклами</string>
+    <string name="join_discord">Приєднуйтесь до нас на Space Launch Now сервер Discord для обговорення останніх новин з космічними ентузіастами!</string>
     <string name="founded_in">Відкрито: %s</string>
     <string name="view_upcoming_launches">Переглянути майбутні запуски</string>
     <string name="unknown_mission_or_payload">Невідома місія або вантаж</string>
@@ -556,6 +558,7 @@
     <string name="event_and_news_description">Отримувати сповіщення про події та новини космічних польотів після їх запуску.</string>
     <string name="choose_theme_mode">Обрати режим теми</string>
     <string name="air_sea_launch">Повітряний / Морський запуск</string>
+    <string name="strict_matching">Виключно показувати запуски, які збігаються з агенціями, вибраними для розташувань, у яких є декілька агентств запуску.\n\nЯкщо ви хочете тільки запуски SpaceX з Канаверал то увімкніть суворі зіставлення і виберіть тільки Канаверал й SpaceX.\n\nВ іншому випадку без суворих зіставлень - всі запуски з Канаверал та всі запуски SpaceX будуть показані.</string>
     <string name="strict_matching_title">Суворе зіставлення</string>
     <string name="texas">Техас</string>
     <string name="pacific_spaceport">Тихоокеанський космодром</string>
@@ -565,6 +568,7 @@
     <string name="road_closures">Перекриття доріг</string>
     <string name="up_next">Далі</string>
     <string name="overview">Огляд</string>
+    <string name="supporter_unlock_text_previous">Ми вдячні за те, що ви знову підтримали Space Launch Now у 2023 році! \n\nПлатіть стільки, скільки хочете, щоб підтримувати наш постійний розвиток і оновлення!</string>
     <string name="open_links_in_app_summary">Виберіть, чи відкривати додатки локально або у браузері.</string>
     <string name="open_links_in_app_title">Відкривати посилання у додатку</string>
     <string-array name="widget_presets">
