@@ -394,7 +394,13 @@
     <string name="notification_launch_successful">Запуск пройшов успішно!</string>
     <string name="notification_launch_failure">Сталася помилка запуску.</string>
     <string name="notification_launch_partial_failure">Запуск був частковою невдачею.</string>
+    <string name="notification_launch_liftoff">Запуск! Ракета-носій вже в польоті!</string>
+    <string name="notification_one_minute">Спроба запуску менш ніж за хвилину в %s</string>
+    <string name="notification_ten_minutes">Спроба запуску менш ніж за 10 хвилин в %s</string>
+    <string name="notification_one_hour">Спроба запуску менш ніж за годину в %s</string>
+    <string name="notification_twenty_four_hours">Спроба запуску менш ніж за 24 години в %s</string>
     <string name="settings_in_flight">У польоті</string>
+    <string name="settings_in_flight_summary">Отримувати сповіщення, коли запуск вже в польоті.</string>
     <string name="settings_success">Успіх</string>
     <string name="settings_success_summary">Отримувати сповіщення, коли запуск підтверджено успішним чи ні.</string>
     <string name="settings_one_minute">Одна хвилина</string>
