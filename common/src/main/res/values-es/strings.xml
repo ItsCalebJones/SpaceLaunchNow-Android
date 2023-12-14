@@ -529,4 +529,6 @@
     <string name="road_closures">Cierres de carreteras</string>
     <string name="up_next">Hasta la próxima</string>
     <string name="overview">Visión global</string>
+    <string name="supporter_unlock_text_previous">¡Le agradezco que considere apoyar Space Launch Now nuevamente en el 2023! \n\nPaga lo que quieras para apoyar el desarrollo continuo y las actualizaciones!</string>
+    <string name="open_links_in_app_summary">Elija si desea abrir aplicaciones localmente o en un navegador.</string>
 </resources>
