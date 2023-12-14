@@ -302,6 +302,7 @@
     <string name="do_not_disturb_summary">Habilitar las notificaciones silenciosas dentro de la ventana \"No molestar\".</string>
     <string name="start_time">Hora de inicio</string>
     <string name="end_time">Hora de finalización</string>
+    <string name="general">General</string>
     <string name="notifications">Notificaciones</string>
     <string name="appearance">Apariencia</string>
     <string name="Support">Conviértete en patrocinador</string>
@@ -523,6 +524,7 @@
     <string name="air_sea_launch">Lanzamiento desde el aire / mar</string>
     <string name="strict_matching">Muestre de forma exclusiva los lanzamientos que coincidan con las agencias seleccionadas para ubicaciones que tienen varias agencias de lanzamiento disponibles.\n\nSi solo desea que SpaceX se lance desde KSC, habilite la coincidencia estricta y seleccione solo KSC y SpaceX.\n\nDe lo contrario, sin una coincidencia estricta, se mostrarían todos los lanzamientos de KSC y SpaceX.</string>
     <string name="strict_matching_title">Coincidencia estricta</string>
+    <string name="texas">Texas</string>
     <string name="include_other_misc_locations">Incluir otras Ubicaciones</string>
     <string name="view_more_livestreams">Ver más transmisiones en vivo</string>
     <string name="notices">Avisos</string>
@@ -531,4 +533,5 @@
     <string name="overview">Visión global</string>
     <string name="supporter_unlock_text_previous">¡Le agradezco que considere apoyar Space Launch Now nuevamente en el 2023! \n\nPaga lo que quieras para apoyar el desarrollo continuo y las actualizaciones!</string>
     <string name="open_links_in_app_summary">Elija si desea abrir aplicaciones localmente o en un navegador.</string>
+    <string name="open_links_in_app_title">Abrir enlaces en la aplicación</string>
 </resources>
