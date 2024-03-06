@@ -70,7 +70,6 @@ import jonathanfinerty.once.Amount;
 import jonathanfinerty.once.Once;
 import me.calebjones.spacelaunchnow.BuildConfig;
 import me.calebjones.spacelaunchnow.R;
-import me.calebjones.spacelaunchnow.common.R2;
 import me.calebjones.spacelaunchnow.common.base.BaseActivity;
 import me.calebjones.spacelaunchnow.common.ui.settings.SettingsActivity;
 import me.calebjones.spacelaunchnow.events.list.EventListFragment;
@@ -160,9 +159,9 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
         if (!Once.beenDone(Once.THIS_APP_INSTALL, "showTutorial")) {
             showFilter = true;
             startActivityForResult(new Intent(this, OnboardingActivity.class), SHOW_INTRO);
-        } else if (!Once.beenDone("show2023dialog") && Once.beenDone("appOpen", Amount.moreThan(5))) {
-            Once.markDone("show2023dialog");
-            if (!SupporterHelper.is2023Supporter()) {
+        } else if (!Once.beenDone("show2024dialog") && Once.beenDone("appOpen", Amount.moreThan(5))) {
+            Once.markDone("show2024dialog");
+            if (!SupporterHelper.is2024Supporter()) {
                 becomeSupporter();
             }
         } else if (!Once.beenDone("showNotificationPermission")){
@@ -443,7 +442,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                     && Once.beenDone("appOpen", Amount.moreThan(2))) {
                 Once.markDone("showChangelog");
                 final Handler handler = new Handler();
-                handler.postDelayed(() -> showChangelogSnackbar(), 1000);
+                handler.postDelayed(() -> showChangelogSnackBar(), 1000);
 
             } else if (!SupporterHelper.isSupporter()) {
                 if (!Once.beenDone("userCheckedSupporter")) {
@@ -537,7 +536,7 @@ public class MainActivity extends BaseActivity implements GDPR.IGDPRCallback, Ne
                 .show();
     }
 
-    private void showChangelogSnackbar() {
+    private void showChangelogSnackBar() {
         snackbar = Snackbar
                 .make(coordinatorLayout, getString(R.string.updated_version) + " " + Utils.getVersionName(context), Snackbar.LENGTH_LONG)
                 .setActionTextColor(ContextCompat.getColor(context, R.color.colorPrimary))
