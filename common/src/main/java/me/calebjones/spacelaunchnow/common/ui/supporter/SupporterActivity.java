@@ -135,13 +135,13 @@ public class SupporterActivity extends BaseActivity {
         ownedProducts = new ArrayList<>();
 
 
-        if (SupporterHelper.is2023Supporter()) {
+        if (SupporterHelper.is2024Supporter()) {
             purchaseButton.setText(R.string.support_us_2022);
             title.setText("Thank You!");
             subtitle.setText("Here's to another year...");
-        } else if (SupporterHelper.isSupporter() && !SupporterHelper.is2023Supporter()) {
-            purchaseButton.setText(R.string.support_again_2023);
-            title.setText("Become a 2023 Supporter");
+        } else if (SupporterHelper.isSupporter() && !SupporterHelper.is2024Supporter()) {
+            purchaseButton.setText(R.string.support_again_2024);
+            title.setText("Become a 2024 Supporter");
             subtitle.setText("Continue Your Support!");
         } else {
             title.setText("Become a Supporter");
@@ -274,19 +274,19 @@ public class SupporterActivity extends BaseActivity {
                             .setProductList(
                                     ImmutableList.of(
                                             QueryProductDetailsParams.Product.newBuilder()
-                                                    .setProductId(SupporterHelper.SKU_2023_BRONZE)
+                                                    .setProductId(SupporterHelper.SKU_2024_BRONZE)
                                                     .setProductType(BillingClient.ProductType.INAPP)
                                                     .build(),
                                             QueryProductDetailsParams.Product.newBuilder()
-                                                    .setProductId(SupporterHelper.SKU_2023_METAL)
+                                                    .setProductId(SupporterHelper.SKU_2024_METAL)
                                                     .setProductType(BillingClient.ProductType.INAPP)
                                                     .build(),
                                             QueryProductDetailsParams.Product.newBuilder()
-                                                    .setProductId(SupporterHelper.SKU_2023_SILVER)
+                                                    .setProductId(SupporterHelper.SKU_2024_SILVER)
                                                     .setProductType(BillingClient.ProductType.INAPP)
                                                     .build(),
                                             QueryProductDetailsParams.Product.newBuilder()
-                                                    .setProductId(SupporterHelper.SKU_2023_PLATINUM)
+                                                    .setProductId(SupporterHelper.SKU_2024_PLATINUM)
                                                     .setProductType(BillingClient.ProductType.INAPP)
                                                     .build()
                                     ))
@@ -341,9 +341,9 @@ public class SupporterActivity extends BaseActivity {
             TextView bottomMessage = view.findViewById(R.id.bottom_message);
             TextView description = view.findViewById(R.id.descriptionView);
 
-            if (SupporterHelper.is2023Supporter()) {
+            if (SupporterHelper.is2024Supporter()) {
                 description.setText(R.string.thanks_support_development);
-            } else if (SupporterHelper.isSupporter() && !SupporterHelper.is2023Supporter()) {
+            } else if (SupporterHelper.isSupporter() && !SupporterHelper.is2024Supporter()) {
                 description.setText(R.string.supporter_unlock_text_previous);
             } else {
                 description.setText(R.string.supporter_unlock_text);
@@ -369,36 +369,36 @@ public class SupporterActivity extends BaseActivity {
             for (ProductDetails productDetail : productDetailsList) {
                 Timber.v("Checking %s...", productDetail.getName());
                 switch (productDetail.getProductId()) {
-                    case SupporterHelper.SKU_2023_BRONZE:
+                    case SupporterHelper.SKU_2024_BRONZE:
                         configureProductItem(bronzeButton, bronzeTitle, bronzeDescription, productDetail,
-                                SupporterHelper.SKU_2023_BRONZE,
+                                SupporterHelper.SKU_2024_BRONZE,
                                 new IconicsDrawable(this)
                                         .icon(FontAwesome.Icon.faw_thumbs_up)
                                         .color(Color.WHITE)
                                         .sizeDp(24));
                         break;
 
-                    case SupporterHelper.SKU_2023_METAL:
+                    case SupporterHelper.SKU_2024_METAL:
                         configureProductItem(metalButton, metalTitle, metalDescription, productDetail,
-                                SupporterHelper.SKU_2023_METAL,
+                                SupporterHelper.SKU_2024_METAL,
                                 new IconicsDrawable(this)
                                         .icon(GoogleMaterial.Icon.gmd_local_cafe)
                                         .color(Color.WHITE)
                                         .sizeDp(24));
                         break;
 
-                    case SupporterHelper.SKU_2023_SILVER:
+                    case SupporterHelper.SKU_2024_SILVER:
                         configureProductItem(silverButton, silverTitle, silverDescription, productDetail,
-                                SupporterHelper.SKU_2023_SILVER,
+                                SupporterHelper.SKU_2024_SILVER,
                                 new IconicsDrawable(this)
                                         .icon(FontAwesome.Icon.faw_store)
                                         .color(Color.WHITE)
                                         .sizeDp(24));
                         break;
 
-                    case SupporterHelper.SKU_2023_PLATINUM:
+                    case SupporterHelper.SKU_2024_PLATINUM:
                         configureProductItem(platinumButton, platinumTitle, platinumDescription, productDetail,
-                                SupporterHelper.SKU_2023_PLATINUM,
+                                SupporterHelper.SKU_2024_PLATINUM,
                                 new IconicsDrawable(this)
                                         .icon(FontAwesome.Icon.faw_money_bill_wave)
                                         .color(Color.WHITE)
@@ -477,13 +477,13 @@ public class SupporterActivity extends BaseActivity {
         runOnUiThread(() -> {
             if (supportThankYou.getVisibility() != View.VISIBLE) {
                 enterReveal(supportThankYou);
-                if (SupporterHelper.is2023Supporter()) {
+                if (SupporterHelper.is2024Supporter()) {
                     purchaseButton.setText(R.string.support_us_2022);
                     title.setText("Thank You!");
                     subtitle.setText("Here's to another year...");
-                } else if (SupporterHelper.isSupporter() && !SupporterHelper.is2023Supporter()) {
-                    purchaseButton.setText(R.string.support_again_2023);
-                    title.setText("Become a 2023 Supporter");
+                } else if (SupporterHelper.isSupporter() && !SupporterHelper.is2024Supporter()) {
+                    purchaseButton.setText(R.string.support_again_2024);
+                    title.setText("Become a 2024 Supporter");
                     subtitle.setText("Continue Your Support!");
                 } else {
                     title.setText("Become a Supporter");
