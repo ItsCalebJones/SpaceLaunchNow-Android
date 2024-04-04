@@ -11,17 +11,36 @@ import io.realm.annotations.PrimaryKey;
 
 public class NewsItemResponse extends RealmObject {
 
-    @SerializedName("docs")
+    @SerializedName("results")
     private RealmList<NewsItem> newsItems;
-    private int totalDocs;
-    private int limit;
-    private int page;
-    private int totalPages;
-    private int pagingCounter;
-    private int prevPage;
-    private int nextPage;
-    private boolean hasPrevPage;
-    private boolean hasNextPage;
+    private String next;
+    private String previous;
+
+    public String getNext() {
+        return next;
+    }
+
+    public void setNext(String next) {
+        this.next = next;
+    }
+
+    public String getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(String previous) {
+        this.previous = previous;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    private int count;
 
     public RealmList<NewsItem> getNewsItems() {
         return newsItems;
@@ -29,77 +48,5 @@ public class NewsItemResponse extends RealmObject {
 
     public void setNewsItems(RealmList<NewsItem> newsItems) {
         this.newsItems = newsItems;
-    }
-
-    public int getTotalDocs() {
-        return totalDocs;
-    }
-
-    public void setTotalDocs(int totalDocs) {
-        this.totalDocs = totalDocs;
-    }
-
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
-    }
-
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
-    }
-
-    public int getTotalPages() {
-        return totalPages;
-    }
-
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
-
-    public int getPagingCounter() {
-        return pagingCounter;
-    }
-
-    public void setPagingCounter(int pagingCounter) {
-        this.pagingCounter = pagingCounter;
-    }
-
-    public int getPrevPage() {
-        return prevPage;
-    }
-
-    public void setPrevPage(int prevPage) {
-        this.prevPage = prevPage;
-    }
-
-    public int getNextPage() {
-        return nextPage;
-    }
-
-    public void setNextPage(int nextPage) {
-        this.nextPage = nextPage;
-    }
-
-    public boolean isHasPrevPage() {
-        return hasPrevPage;
-    }
-
-    public void setHasPrevPage(boolean hasPrevPage) {
-        this.hasPrevPage = hasPrevPage;
-    }
-
-    public boolean isHasNextPage() {
-        return hasNextPage;
-    }
-
-    public void setHasNextPage(boolean hasNextPage) {
-        this.hasNextPage = hasNextPage;
     }
 }

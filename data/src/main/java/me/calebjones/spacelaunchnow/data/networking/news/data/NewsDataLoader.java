@@ -25,19 +25,22 @@ public class NewsDataLoader {
     public void getNewsList(int limit, final Callbacks.NewsListNetworkCallback networkCallback) {
         Timber.i("Running get news list");
 
-        newsDataClient.getArticles(limit, new Callback<RealmList<NewsItem>>() {
+        newsDataClient.getArticles(limit, new Callback<NewsItemResponse>() {
             @Override
-            public void onResponse(Call<RealmList<NewsItem>> call, Response<RealmList<NewsItem>> response) {
+            public void onResponse(Call<NewsItemResponse> call, Response<NewsItemResponse> response) {
                 if (response.isSuccessful()) {
-                    RealmList<NewsItem> responseBody = response.body();
-                    networkCallback.onSuccess(responseBody);
+                    RealmList<NewsItem> news = new RealmList<>();
+                    if (response.body() != null) {
+                        news.addAll(response.body().getNewsItems());
+                    }
+                    networkCallback.onSuccess(news);
                 } else {
                     networkCallback.onNetworkFailure(response.code());
                 }
             }
 
             @Override
-            public void onFailure(Call<RealmList<NewsItem>> call, Throwable t) {
+            public void onFailure(Call<NewsItemResponse> call, Throwable t) {
                 networkCallback.onFailure(t);
             }
         });
@@ -68,11 +71,15 @@ public class NewsDataLoader {
 
     public void getNewsByLaunch(int limit, String launchId, final Callbacks.NewsListNetworkCallback networkCallback) {
         Timber.i("Running get news by launch");
-        newsDataClient.getArticlesByLaunch(limit, launchId, new Callback<RealmList<NewsItem>>() {
+        newsDataClient.getArticlesByLaunch(limit, launchId, new Callback<NewsItemResponse>() {
             @Override
-            public void onResponse(Call<RealmList<NewsItem>> call, Response<RealmList<NewsItem>> response) {
+            public void onResponse(Call<NewsItemResponse> call, Response<NewsItemResponse> response) {
                 if (response.isSuccessful()) {
-                    RealmList<NewsItem> news = response.body();
+                    RealmList<NewsItem> news = new RealmList<>();
+                    if (response.body() != null) {
+                        news.addAll(response.body().getNewsItems());
+                    }
+
                     networkCallback.onSuccess(news);
 
                 } else {
@@ -82,7 +89,7 @@ public class NewsDataLoader {
             }
 
             @Override
-            public void onFailure(Call<RealmList<NewsItem>> call, Throwable t) {
+            public void onFailure(Call<NewsItemResponse> call, Throwable t) {
                 networkCallback.onFailure(t);
             }
         });

@@ -4,6 +4,14 @@ A space launch tracker for Android using data from the Launch Library API.
 [View the latest releases here.](https://github.com/ItsCalebJones/SpaceLaunchNow-Android/releases)
 ## Changelog
 ---
+### Version 3.17.0
+#### Changelog
+Updated to the latest version of the Spaceflight News API.
+
+### Version 3.16.1
+#### Changelog
+Maintenance release to add 2024 IAP's.
+
 ### Version 3.14.1
 #### Changelog
 Fixed an issue related to clicking on items in widget, also per Google Play policy added a button to request all personal data to be deleted.
