@@ -52,8 +52,8 @@ public class NewsDataClient {
         return call;
     }
 
-    public Call<RealmList<NewsItem>> getArticles(int limit, Callback<RealmList<NewsItem>>  callback){
-        Call<RealmList<NewsItem>>  call;
+    public Call<NewsItemResponse> getArticles(int limit, Callback<NewsItemResponse>  callback){
+        Call<NewsItemResponse>  call;
 
         call = newsInterface.getArticles(limit);
 
@@ -62,8 +62,8 @@ public class NewsDataClient {
         return call;
     }
 
-    public Call<RealmList<NewsItem>> getArticlesByLaunch(int limit, String launchId, Callback<RealmList<NewsItem>>  callback){
-        Call<RealmList<NewsItem>>  call;
+    public Call<NewsItemResponse> getArticlesByLaunch(int limit, String launchId, Callback<NewsItemResponse>  callback){
+        Call<NewsItemResponse>  call;
 
         call = newsInterface.getArticlesByLaunch(launchId, limit);
 

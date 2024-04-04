@@ -14,27 +14,28 @@ public class NewsItem extends RealmObject {
 
     @PrimaryKey
     @SerializedName("id")
-    private int id;
+    private String id;
     @SerializedName("title")
     private String title;
-    @SerializedName("newsSite")
+    @SerializedName("news_site")
     private String newsSite;
-    @SerializedName("imageUrl")
+    @SerializedName("image_url")
     private String featured_image;
     @SerializedName("url")
     private String url;
     @SerializedName("launches")
     @Expose
     public RealmList<NewsItemLaunch> launches = null;
-    @SerializedName("publishedAt")
+    @SerializedName("published_at")
     private Date datePublished;
+    @SerializedName("updated_at")
     private Date lastUpdate;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

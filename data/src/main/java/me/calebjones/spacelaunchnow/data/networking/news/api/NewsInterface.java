@@ -10,15 +10,15 @@ import retrofit2.http.Query;
 
 public interface NewsInterface {
 
-    String version = "v3";
+    String version = "v4";
 
-    @GET(version + "/article/{id}")
+    @GET(version + "/articles/{id}")
     Call<NewsItem> getArticleById(@Path("id") String id);
 
-    @GET(version + "/articles")
-    Call<RealmList<NewsItem>> getArticles(@Query("_limit") int amount);
+    @GET(version + "/articles/")
+    Call<NewsItemResponse> getArticles(@Query("limit") int amount);
 
-    @GET(version + "/articles/launch/{id}")
-    Call<RealmList<NewsItem>> getArticlesByLaunch(@Path("id") String launchId, @Query("_limit") int amount);
+    @GET(version + "/articles/")
+    Call<NewsItemResponse> getArticlesByLaunch(@Query("launch") String launchId, @Query("limit") int amount);
 
 }
