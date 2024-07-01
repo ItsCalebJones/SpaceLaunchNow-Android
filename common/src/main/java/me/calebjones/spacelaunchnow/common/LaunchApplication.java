@@ -31,7 +31,6 @@ import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.michaelflisar.gdprdialog.GDPR;
 import com.mikepenz.materialdrawer.util.AbstractDrawerImageLoader;
@@ -603,10 +602,14 @@ public class LaunchApplication extends Application {
             firebaseMessaging.unsubscribeFromTopic("oneMinute");
         }
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
-            String token = instanceIdResult.getToken();
+        firebaseMessaging.getToken().addOnCompleteListener(task -> {
+            Log.e("FirebaseToken", "2");
+            if (!task.isSuccessful()) {
+                Timber.e(task.getException());
+                return;
+            }
+            String token = task.getResult();
             Timber.v("Here is your FCM token: %s", token);
-            // send it to server
         });
 
     }
