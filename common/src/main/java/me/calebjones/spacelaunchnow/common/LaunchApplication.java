@@ -347,263 +347,260 @@ public class LaunchApplication extends Application {
     }
 
     private void setupNotification() {
-        if (!Once.beenDone(Once.THIS_APP_VERSION, "syncNotifications")) {
-            Once.markDone("syncNotifications");
-            firebaseMessaging.unsubscribeFromTopic("debug");
-            firebaseMessaging.unsubscribeFromTopic("production");
-            firebaseMessaging.unsubscribeFromTopic("debug_v2");
-            firebaseMessaging.unsubscribeFromTopic("prod_v2");
+        firebaseMessaging.unsubscribeFromTopic("debug");
+        firebaseMessaging.unsubscribeFromTopic("production");
+        firebaseMessaging.unsubscribeFromTopic("debug_v2");
+        firebaseMessaging.unsubscribeFromTopic("prod_v2");
 
-            if (BuildConfig.DEBUG) {
-                Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
-                firebaseMessaging.subscribeToTopic("debug_v3");
-                firebaseMessaging.unsubscribeFromTopic("prod_v3");
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree(), new CrashlyticsTree(context));
+            firebaseMessaging.subscribeToTopic("debug_v3");
+            firebaseMessaging.unsubscribeFromTopic("prod_v3");
 
-            } else {
-                Timber.plant(new CrashlyticsTree(context));
-                firebaseMessaging.subscribeToTopic("prod_v3");
-                firebaseMessaging.unsubscribeFromTopic("debug_v3");
-            }
+        } else {
+            Timber.plant(new CrashlyticsTree(context));
+            firebaseMessaging.subscribeToTopic("prod_v3");
+            firebaseMessaging.unsubscribeFromTopic("debug_v3");
+        }
 
-            boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
-            boolean netstampChanged = Prefs.getBoolean("netstampChanged", false);
-            boolean webcastOnly = Prefs.getBoolean("webcastOnly", true);
-            boolean twentyFourHour = Prefs.getBoolean("twentyFourHour", false);
-            boolean oneHour = Prefs.getBoolean("oneHour", false);
-            boolean tenMinutes = Prefs.getBoolean("tenMinutes", true);
-            boolean oneMinute = Prefs.getBoolean("oneMinute", false);
-            boolean inFlight = Prefs.getBoolean("inFlight", false);
-            boolean success = Prefs.getBoolean("success", false);
-            boolean events = Prefs.getBoolean("eventNotifications", true);
+        boolean notificationEnabled = Prefs.getBoolean("notificationEnabled", true);
+        boolean netstampChanged = Prefs.getBoolean("netstampChanged", false);
+        boolean webcastOnly = Prefs.getBoolean("webcastOnly", true);
+        boolean twentyFourHour = Prefs.getBoolean("twentyFourHour", false);
+        boolean oneHour = Prefs.getBoolean("oneHour", false);
+        boolean tenMinutes = Prefs.getBoolean("tenMinutes", true);
+        boolean oneMinute = Prefs.getBoolean("oneMinute", false);
+        boolean inFlight = Prefs.getBoolean("inFlight", false);
+        boolean success = Prefs.getBoolean("success", false);
+        boolean events = Prefs.getBoolean("eventNotifications", true);
 
-            boolean all = switchPreferences.getAllSwitch();
-            boolean ples = switchPreferences.getSwitchRussia();
-            boolean ksc = switchPreferences.getSwitchKSC();
-            boolean van = switchPreferences.getSwitchVan();
-            boolean isro = switchPreferences.getSwitchISRO();
-            boolean casc = switchPreferences.getSwitchCASC();
-            boolean ariane = switchPreferences.getSwitchArianespace();
-            boolean ula = switchPreferences.getSwitchULA();
-            boolean roscosmos = switchPreferences.getSwitchRoscosmos();
-            boolean spacex = switchPreferences.getSwitchSpaceX();
-            boolean nasa = switchPreferences.getSwitchNasa();
-            boolean blueOrigin = switchPreferences.getSwitchBO();
-            boolean rocketLab = switchPreferences.getSwitchRL();
-            boolean frenchGuiana = switchPreferences.getSwitchFG();
-            boolean japan = switchPreferences.getSwitchJapan();
-            boolean wallops = switchPreferences.getSwitchWallops();
-            boolean northrop = switchPreferences.getSwitchNorthrop();
-            boolean newZealand = switchPreferences.getSwitchNZ();
-            boolean texas = switchPreferences.getSwitchTexas();
-            boolean kodiak = switchPreferences.getSwitchKodiak();
-            boolean other = switchPreferences.getSwitchOtherLocations();
-            boolean strictMatching = switchPreferences.getSwitchStrictMatching();
+        boolean all = switchPreferences.getAllSwitch();
+        boolean ples = switchPreferences.getSwitchRussia();
+        boolean ksc = switchPreferences.getSwitchKSC();
+        boolean van = switchPreferences.getSwitchVan();
+        boolean isro = switchPreferences.getSwitchISRO();
+        boolean casc = switchPreferences.getSwitchCASC();
+        boolean ariane = switchPreferences.getSwitchArianespace();
+        boolean ula = switchPreferences.getSwitchULA();
+        boolean roscosmos = switchPreferences.getSwitchRoscosmos();
+        boolean spacex = switchPreferences.getSwitchSpaceX();
+        boolean nasa = switchPreferences.getSwitchNasa();
+        boolean blueOrigin = switchPreferences.getSwitchBO();
+        boolean rocketLab = switchPreferences.getSwitchRL();
+        boolean frenchGuiana = switchPreferences.getSwitchFG();
+        boolean japan = switchPreferences.getSwitchJapan();
+        boolean wallops = switchPreferences.getSwitchWallops();
+        boolean northrop = switchPreferences.getSwitchNorthrop();
+        boolean newZealand = switchPreferences.getSwitchNZ();
+        boolean texas = switchPreferences.getSwitchTexas();
+        boolean kodiak = switchPreferences.getSwitchKodiak();
+        boolean other = switchPreferences.getSwitchOtherLocations();
+        boolean strictMatching = switchPreferences.getSwitchStrictMatching();
 
 
-            if (all) {
-                firebaseMessaging.subscribeToTopic("all");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("all");
+        if (all) {
+            firebaseMessaging.subscribeToTopic("all");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("all");
+            firebaseMessaging.unsubscribeFromTopic("not_strict");
+            firebaseMessaging.unsubscribeFromTopic("strict");
+        }
+
+        if (events) {
+            firebaseMessaging.subscribeToTopic("events");
+            firebaseMessaging.subscribeToTopic("featured_news");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("events");
+            firebaseMessaging.unsubscribeFromTopic("featured_news");
+        }
+
+        if (!all) {
+            if (strictMatching) {
+                firebaseMessaging.subscribeToTopic("strict");
                 firebaseMessaging.unsubscribeFromTopic("not_strict");
+            } else {
                 firebaseMessaging.unsubscribeFromTopic("strict");
+                firebaseMessaging.subscribeToTopic("not_strict");
             }
+        }
 
-            if (events) {
-                firebaseMessaging.subscribeToTopic("events");
-                firebaseMessaging.subscribeToTopic("featured_news");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("events");
-                firebaseMessaging.unsubscribeFromTopic("featured_news");
-            }
+        if (texas) {
+            firebaseMessaging.subscribeToTopic("texas");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("texas");
+        }
 
-            if (!all) {
-                if (strictMatching) {
-                    firebaseMessaging.subscribeToTopic("strict");
-                    firebaseMessaging.unsubscribeFromTopic("not_strict");
-                } else {
-                    firebaseMessaging.unsubscribeFromTopic("strict");
-                    firebaseMessaging.subscribeToTopic("not_strict");
-                }
-            }
+        if (kodiak) {
+            firebaseMessaging.subscribeToTopic("kodiak");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("kodiak");
+        }
 
-            if (texas) {
-                firebaseMessaging.subscribeToTopic("texas");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("texas");
-            }
+        if (ksc) {
+            firebaseMessaging.subscribeToTopic("ksc");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ksc");
+        }
 
-            if (kodiak) {
-                firebaseMessaging.subscribeToTopic("kodiak");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("kodiak");
-            }
+        if (ples) {
+            firebaseMessaging.subscribeToTopic("russia");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("russia");
+        }
 
-            if (ksc) {
-                firebaseMessaging.subscribeToTopic("ksc");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("ksc");
-            }
+        if (van) {
+            firebaseMessaging.subscribeToTopic("van");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("van");
+        }
 
-            if (ples) {
-                firebaseMessaging.subscribeToTopic("russia");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("russia");
-            }
+        if (isro) {
+            firebaseMessaging.subscribeToTopic("isro");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("isro");
+        }
 
-            if (van) {
-                firebaseMessaging.subscribeToTopic("van");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("van");
-            }
+        if (casc) {
+            firebaseMessaging.subscribeToTopic("china");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("china");
+        }
 
-            if (isro) {
-                firebaseMessaging.subscribeToTopic("isro");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("isro");
-            }
+        if (ariane) {
+            firebaseMessaging.subscribeToTopic("arianespace");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("arianespace");
+        }
 
-            if (casc) {
-                firebaseMessaging.subscribeToTopic("china");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("china");
-            }
+        if (blueOrigin) {
+            firebaseMessaging.subscribeToTopic("blueOrigin");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("blueOrigin");
+        }
 
-            if (ariane) {
-                firebaseMessaging.subscribeToTopic("arianespace");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("arianespace");
-            }
+        if (rocketLab) {
+            firebaseMessaging.subscribeToTopic("rocketLab");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("rocketLab");
+        }
 
-            if (blueOrigin) {
-                firebaseMessaging.subscribeToTopic("blueOrigin");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("blueOrigin");
-            }
+        if (ula) {
+            firebaseMessaging.subscribeToTopic("ula");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("ula");
+        }
 
-            if (rocketLab) {
-                firebaseMessaging.subscribeToTopic("rocketLab");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("rocketLab");
-            }
+        if (roscosmos) {
+            firebaseMessaging.subscribeToTopic("roscosmos");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("roscosmos");
+        }
 
-            if (ula) {
-                firebaseMessaging.subscribeToTopic("ula");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("ula");
-            }
+        if (spacex) {
+            firebaseMessaging.subscribeToTopic("spacex");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("spacex");
+        }
 
-            if (roscosmos) {
-                firebaseMessaging.subscribeToTopic("roscosmos");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("roscosmos");
-            }
+        if (nasa) {
+            firebaseMessaging.subscribeToTopic("nasa");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("nasa");
+        }
 
-            if (spacex) {
-                firebaseMessaging.subscribeToTopic("spacex");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("spacex");
-            }
+        if (frenchGuiana) {
+            firebaseMessaging.subscribeToTopic("frenchGuiana");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
+        }
 
-            if (nasa) {
-                firebaseMessaging.subscribeToTopic("nasa");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("nasa");
-            }
+        if (japan) {
+            firebaseMessaging.subscribeToTopic("japan");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("japan");
+        }
 
-            if (frenchGuiana) {
-                firebaseMessaging.subscribeToTopic("frenchGuiana");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("frenchGuiana");
-            }
+        if (wallops) {
+            firebaseMessaging.subscribeToTopic("wallops");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("wallops");
+        }
 
-            if (japan) {
-                firebaseMessaging.subscribeToTopic("japan");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("japan");
-            }
+        if (northrop) {
+            firebaseMessaging.subscribeToTopic("northrop");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("northrop");
+        }
 
-            if (wallops) {
-                firebaseMessaging.subscribeToTopic("wallops");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("wallops");
-            }
+        if (newZealand) {
+            firebaseMessaging.subscribeToTopic("newZealand");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("newZealand");
+        }
 
-            if (northrop) {
-                firebaseMessaging.subscribeToTopic("northrop");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("northrop");
-            }
+        if (other) {
+            firebaseMessaging.subscribeToTopic("other");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("other");
+        }
 
-            if (newZealand) {
-                firebaseMessaging.subscribeToTopic("newZealand");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("newZealand");
-            }
+        if (notificationEnabled) {
+            firebaseMessaging.subscribeToTopic("notificationEnabled");
+            firebaseMessaging.subscribeToTopic("webcastLive");
+            firebaseMessaging.subscribeToTopic("custom");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("notificationEnabled");
+            firebaseMessaging.unsubscribeFromTopic("webcastLive");
+            firebaseMessaging.unsubscribeFromTopic("custom");
+        }
 
-            if (other) {
-                firebaseMessaging.subscribeToTopic("other");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("other");
-            }
+        if (netstampChanged) {
+            firebaseMessaging.subscribeToTopic("netstampChanged");
 
-            if (notificationEnabled) {
-                firebaseMessaging.subscribeToTopic("notificationEnabled");
-                firebaseMessaging.subscribeToTopic("webcastLive");
-                firebaseMessaging.subscribeToTopic("custom");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("notificationEnabled");
-                firebaseMessaging.unsubscribeFromTopic("webcastLive");
-                firebaseMessaging.unsubscribeFromTopic("custom");
-            }
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("netstampChanged");
+        }
 
-            if (netstampChanged) {
-                firebaseMessaging.subscribeToTopic("netstampChanged");
+        if (webcastOnly) {
+            firebaseMessaging.subscribeToTopic("webcastOnly");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("webcastOnly");
+        }
 
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("netstampChanged");
-            }
+        if (twentyFourHour) {
+            firebaseMessaging.subscribeToTopic("twentyFourHour");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
+        }
 
-            if (webcastOnly) {
-                firebaseMessaging.subscribeToTopic("webcastOnly");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("webcastOnly");
-            }
+        if (oneHour) {
+            firebaseMessaging.subscribeToTopic("oneHour");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("oneHour");
+        }
 
-            if (twentyFourHour) {
-                firebaseMessaging.subscribeToTopic("twentyFourHour");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("twentyFourHour");
-            }
+        if (tenMinutes) {
+            firebaseMessaging.subscribeToTopic("tenMinutes");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("tenMinutes");
+        }
 
-            if (oneHour) {
-                firebaseMessaging.subscribeToTopic("oneHour");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("oneHour");
-            }
+        if (inFlight) {
+            firebaseMessaging.subscribeToTopic("inFlight");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("inFlight");
+        }
 
-            if (tenMinutes) {
-                firebaseMessaging.subscribeToTopic("tenMinutes");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("tenMinutes");
-            }
+        if (success) {
+            firebaseMessaging.subscribeToTopic("success");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("success");
+        }
 
-            if (inFlight) {
-                firebaseMessaging.subscribeToTopic("inFlight");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("inFlight");
-            }
-
-            if (success) {
-                firebaseMessaging.subscribeToTopic("success");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("success");
-            }
-
-            if (oneMinute) {
-                firebaseMessaging.subscribeToTopic("oneMinute");
-            } else {
-                firebaseMessaging.unsubscribeFromTopic("oneMinute");
-            }
+        if (oneMinute) {
+            firebaseMessaging.subscribeToTopic("oneMinute");
+        } else {
+            firebaseMessaging.unsubscribeFromTopic("oneMinute");
         }
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(instanceIdResult -> {
