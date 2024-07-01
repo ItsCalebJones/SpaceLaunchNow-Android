@@ -67,7 +67,7 @@ ext.deps = [
         //Firebase
         firebaseAnalytics              : "com.google.firebase:firebase-analytics:18.0.2",
         firebaseAds                    : "com.google.firebase:firebase-ads:20.3.0",
-        firebaseMessaging              : "com.google.firebase:firebase-messaging:20.1.0",
+        firebaseMessaging              : "com.google.firebase:firebase-messaging:23.0.8",
 
         //Kotlin
         kotlin_stdlib_jdk7             : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion",
