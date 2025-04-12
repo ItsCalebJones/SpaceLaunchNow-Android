@@ -208,10 +208,26 @@
     <string name="night_mode_on">启用夜间模式。</string>
     <string name="night_mode_off">禁用夜间模式。</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string-array name="status_array">
+        <item>活动的</item>
+        <item>已退役</item>
+        <item>Deceased</item>
+        <item>训练中</item>
+        <item>Lost in Flight</item>
+        <item>在训练中损失</item>
+        <item>Died While in Active Service</item>
+        <item>已忽略</item>
+        <item>Resigned during Training</item>
+    </string-array>
+    <string-array name="time_format_array">
+        <item>默认格式</item>
+        <item>12小时制</item>
+        <item>24 小时制</item>
+    </string-array>
     <string-array name="multi_calendar_reminder">
-        <item>One Minute</item>
-        <item>Five Minutes</item>
-        <item>Thirty Minutes</item>
+        <item>1 分钟</item>
+        <item>5 分钟</item>
+        <item>30 分钟</item>
         <item>1 小时</item>
         <item>2 小时</item>
         <item>4 小时</item>
