@@ -45,7 +45,7 @@
     <string name="unknown_rocket">未知火箭</string>
     <string name="unknown_mission_location">未知的任务和地点</string>
     <string name="unknown_orbiter">未知轨道器</string>
-    <string name="unknown_agency">未知机构</string>
+    <string name="unknown_agency">未知承包商</string>
     <string name="unknown_launch">未知发射</string>
     <string name="description_unavailable">没有描述。</string>
     <string name="get_pro_features">获取专业版功能</string>
@@ -78,12 +78,14 @@
     <string name="min">分</string>
     <string name="sec">秒</string>
     <string name="launch_service_provider">发射服务提供商</string>
-    <string name="primary_agency"></string>
-    <string name="unknown_agency_type">未知机构类型</string>
+    <string name="primary_agency">主承包商</string>
+    <string name="unknown_agency_type">未知承包商类型</string>
     <string name="info">信息</string>
     <string name="wiki">百科</string>
+    <string name="secondary_agency">次级承包商</string>
+    <string name="vehicle_agency">运载火箭承包商</string>
     <string name="mission_details">任务详情</string>
-    <string name="unknown_payload">未知载荷</string>
+    <string name="unknown_payload">未知有效载荷</string>
     <string name="launch_vehicle_summary">运载火箭概述</string>
     <string name="unknown_launch_vehicle">未知运载火箭</string>
     <string name="family">家族：</string>
@@ -93,11 +95,16 @@
     <string name="stages">级数</string>
     <string name="mass_to_leo">LEO 运力</string>
     <string name="mass_to_gto">GTO 运力</string>
+    <string name="mass_at_launch">起飞质量</string>
+    <string name="thrust_at_launch">起飞推力</string>
     <string name="watch_launch">观看发射</string>
     <string name="estimated_launch_date">预计发射日期</string>
     <string name="supporter">支持者</string>
+    <string name="reset">重置</string>
+    <string name="agency">承包商</string>
     <string name="country">国家或地区</string>
     <string name="location">地点</string>
+    <string name="no_launches">啊哦……还没有发射！</string>
     <string name="select_launches">选择要关注的发射</string>
     <string name="selection_description">您的选择将在主页上可见并在发射前通知。</string>
     <string name="nasa">NASA</string>
@@ -151,7 +158,7 @@
     <string name="unknown_location">未知地点</string>
     <string name="details">详情</string>
     <string name="mission">任务</string>
-    <string name="agencies">机构</string>
+    <string name="agencies">承包商</string>
     <string name="height_full">高度：%.1f 米</string>
     <string name="diameter_full">直径：%.1f 米</string>
     <string name="stage_full">最大级数：%d</string>
@@ -163,6 +170,7 @@
     <string name="diameter_value">%.1f 米</string>
     <string name="stage_value">%d</string>
     <string name="mass_leo_value">%d 千克</string>
+    <string name="mass_gto_value">%d 千克</string>
     <string name="mass_launch_value">%d 吨</string>
     <string name="thrust_value">%d 千牛</string>
     <string name="upcoming">即将到来的</string>
@@ -171,6 +179,7 @@
     <string name="close">关闭</string>
     <string name="filter">筛选</string>
     <string name="select_location">选择地点</string>
+    <string name="select_launch_agency">选择一个发射承包商</string>
     <string name="launch_history_data">历史发射数据</string>
     <string name="error_loading_mission">无法载入任务。</string>
     <string name="updating_mission_data">更新任务数据... 这可能需要几秒钟。</string>
@@ -181,6 +190,9 @@
     <string name="launches">发射</string>
     <string name="missions">任务</string>
     <string name="settings">设置</string>
+    <string name="facebook">Facebook</string>
+    <string name="facebook_subtitle">在 Facebook 上关注</string>
+    <string name="website">在网络上</string>
     <string name="website_subtitle">官方网站</string>
     <string name="whats_new_subtitle">查看更新日志。</string>
     <string name="about_subtitle">关于开发者！</string>
@@ -188,6 +200,7 @@
     <string name="feedback_subtitle">遇到了Bug？</string>
     <string name="thank_you_for_support">感谢您的支持 ！</string>
     <string name="upgrade_pro">对专业版功能或移除广告感兴趣？</string>
+    <string name="updated_version">已是最新版本</string>
     <string name="exit">退出</string>
     <string name="error_orbiter_details">错误 - 无法加载轨道器详情。</string>
     <string name="spacecraft_history">航天器 %s 的历史</string>
@@ -195,7 +208,7 @@
     <string name="night_mode_restart">可能需要重新启动应用才能使夜间模式生效。</string>
     <string name="day_mode_restart">可能需要重新启动应用才能使日间模式生效。</string>
     <string name="current_calendar">当前日历：</string>
-    <string name="select_calendar">选择一个日历以添加发射事件。</string>
+    <string name="select_calendar">选择一个日历以添加发射动态。</string>
     <string name="default_calendar">默认日历：</string>
     <string name="permission_denied">拒绝访问</string>
     <string name="local_timezone">本地时区</string>
@@ -207,13 +220,159 @@
     <string name="night_mode">夜间模式</string>
     <string name="night_mode_on">启用夜间模式。</string>
     <string name="night_mode_off">禁用夜间模式。</string>
+    <string name="widget_themes">小部件主题</string>
+    <string name="widget_themes_summary">从默认的几个小部件主题中选择。</string>
+    <string name="widget_background">小部件背景</string>
+    <string name="widget_background_summary">设置小部件背景色。</string>
+    <string name="primary_text">主文本颜色‌</string>
+    <string name="primary_text_summary">设置小部件主文本颜色‌。</string>
+    <string name="secondary_text">辅助文本颜色</string>
+    <string name="secondary_text_summary">设置小部件辅助文本颜色‌。</string>
+    <string name="icon_color">图标颜色</string>
+    <string name="weather_type_on">使用英制单位的温度、风速和降水量。</string>
+    <string name="weather_type_off">使用公制单位的温度、风速和降水量。</string>
+    <string name="upcoming_launches">近期发射</string>
+    <string name="allow_background">允许后台同步</string>
+    <string name="calendar_settings">日历设置</string>
+    <string name="auto_calendar">自动日历同步</string>
+    <string name="event_reminder">动态提醒</string>
+    <string name="start_time">开始时间</string>
+    <string name="watch_hour_mode_off">使用 12 小时制。</string>
+    <string name="utc_time">使用 UTC 时间</string>
+    <string name="vibration_summary">允许来通知时振动。</string>
+    <string name="vibration">振动</string>
+    <string name="led">LED 灯闪烁</string>
+    <string name="test_notification">测试通知</string>
+    <string name="notification_interval">通知间隔</string>
+    <string name="notification_interval_summary">选择接收发射通知的间隔</string>
+    <string name="twenty_four_hour_title">24 小时</string>
+    <string name="one_hour_title">1 小时</string>
+    <string name="ten_minutes_title">10 分钟</string>
+    <string name="background_sync">后台同步</string>
+    <string name="night_mode_title">夜间模式</string>
+    <string name="weather">天气</string>
+    <string name="wear_os">Wear OS</string>
+    <string name="misc">杂项</string>
+    <string name="orbiters">航天器</string>
+    <string name="translate_settings">帮助翻译 Space Launch Now！</string>
+    <string name="translate">翻译</string>
+    <string name="get_help">获取帮助</string>
+    <string name="help_description">帮助与支持</string>
+    <string name="unknown_mission_or_payload">未知的任务或有效载荷</string>
+    <string name="payload">有效载荷：%d（千克）</string>
+    <string name="height_plain">高度</string>
+    <string name="mass_plain">质量</string>
+    <string name="height_unit">%s 米</string>
+    <string name="width_unit">%s 米</string>
+    <string name="crew_plain">乘组</string>
+    <string name="orbit">轨道</string>
+    <string name="start_fill">始于：%s</string>
+    <string name="end_fill">终于：%s</string>
+    <string name="spacestations">空间站</string>
+    <string name="spacestation">空间站</string>
+    <string name="astronauts">宇航员</string>
+    <string name="starship">星舰</string>
+    <string name="events">动态</string>
+    <string name="favorites">收藏夹</string>
+    <string name="docked_alt">已对接</string>
+    <string name="no_events">未找到动态</string>
+    <string name="founded_alt">成立于：</string>
+    <string name="status_alt">状态：</string>
+    <string name="de_orbited">已脱轨：</string>
+    <string name="mission_agency">任务承包商</string>
+    <string name="no_docked">无对接的航天器</string>
+    <string name="no_news">没有新闻</string>
+    <string name="spacecraft_default_title">航天器详情</string>
+    <string name="spacecraft_default_sub_title">未知航天器</string>
+    <string name="history">历史</string>
+    <string name="time_format_description">选择偏好的时间格式。</string>
+    <string name="landing_information">着陆信息</string>
+    <string name="launch_service_providers">发射服务提供商</string>
+    <string name="launch_locations">发射地点</string>
+    <string name="northrop_grumman">诺斯罗普·格鲁曼</string>
+    <string name="blue_origin">蓝色起源</string>
+    <string name="rocket_lab">火箭实验室</string>
+    <string name="china">中国</string>
+    <string name="kennedy_space_center_cape_canaveral">卡纳维拉尔角</string>
+    <string name="new_zealand">新西兰</string>
+    <string name="japan">日本</string>
+    <string name="french_guiana">法属圭亚那</string>
+    <string name="follow_all_launches">关注所有发射</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="news_and_events">新闻动态</string>
+    <string name="view_x_launches">查看 %s 发射</string>
+    <string name="booster_information">%s 信息</string>
+    <string name="first_stage_x">第一级 - %s</string>
+    <string name="x_landing_information">%s 着陆信息</string>
+    <string name="additional_landing_information">其他着陆信息</string>
+    <string name="launch_day_weather">发射日天气</string>
+    <string name="video_source_unavailable">视频源不可用。</string>
+    <string name="launch_date"><![CDATA[<b>发射日期</b><br>%1$s]]></string>
+    <string name="launch_window_extras"><![CDATA[<b>发射窗口</b><br>%1$s - %2$s<br>%3$s]]></string>
+    <string name="read_more">阅读更多</string>
+    <string name="serial_number">序列号：</string>
+    <string name="status_booster">状态：</string>
+    <string name="landing_attempt_booster">着陆尝试：</string>
+    <string name="landing_success_booster">着陆成功：</string>
+    <string name="type_booster">类型：</string>
+    <string name="location_booster">位置：</string>
+    <string name="first_flight_orbiter">首次飞行</string>
+    <string name="active_orbiter">在役的：</string>
+    <string name="specifications_orbiter">规格</string>
+    <string name="diameter_unknown_m">直径：未知（米）</string>
+    <string name="height_unknown_m">高度：未知（米）</string>
+    <string name="payload_unknown_kg">有效载荷：未知（千克）</string>
+    <string name="crew_capacity_unknown">承租容量：未知</string>
+    <string name="use_system_language">跟随系统语言</string>
+    <string name="force_english">强制使用英语。</string>
+    <string name="force_english_off">使用您设备语言。</string>
+    <string name="dark_theme">深色主题</string>
+    <string name="primary_color_title">主色调</string>
+    <string name="primary_color_summary">自定义主色调。</string>
+    <string name="accent_color_title">强调色</string>
+    <string name="accent_color_summary">自定义强调色。</string>
+    <string name="background_color_title">背景色</string>
+    <string name="background_color_summary">自定义背景色。</string>
+    <string name="related_news">相关新闻</string>
+    <string name="thrust">起飞推力：</string>
+    <string name="to_be_determined_with_value">待定…… %s</string>
+    <string name="click_for_info">点击以了解更多。</string>
+    <string name="choose_theme">选择主题</string>
+    <string name="set_custom_calendar">为日历通知设置自定义提醒。</string>
+    <string name="event_and_news">新闻动态通知</string>
+    <string name="event_and_news_description">接收有关发射后太空飞行新闻动态的通知。</string>
+    <string name="choose_theme_mode">选择主题模式</string>
+    <string name="air_sea_launch">空射或海射</string>
+    <string name="strict_matching_title">严格匹配</string>
+    <string name="texas">得克萨斯州</string>
+    <string name="pacific_spaceport">太平洋太空港</string>
+    <string name="notices">公告</string>
+    <string name="road_closures">道路封闭</string>
+    <string name="overview">总览</string>
+    <string name="open_links_in_app_summary">选择在应用还是浏览器中打开链接。</string>
+    <string name="open_links_in_app_title">在应用中打开链接</string>
+    <string-array name="widget_presets">
+        <item>浅色</item>
+        <item>深色</item>
+        <item>浅色 - 透明</item>
+        <item>深色 - 透明</item>
+        <item>材质蓝</item>
+        <item>材质红</item>
+        <item>材质青绿</item>
+        <item>材质橙</item>
+        <item>自定义</item>
+    </string-array>
+    <string-array name="spinner_list_item_array">
+        <item>所有</item>
+        <item>即将到来</item>
+        <item>过去的</item>
+    </string-array>
     <string-array name="status_array">
-        <item>活动的</item>
+        <item>在役的</item>
         <item>已退役</item>
         <item>Deceased</item>
         <item>训练中</item>
-        <item>Lost in Flight</item>
+        <item>在飞行中损失</item>
         <item>在训练中损失</item>
         <item>Died While in Active Service</item>
         <item>已忽略</item>
