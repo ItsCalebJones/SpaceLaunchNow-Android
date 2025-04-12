@@ -51,6 +51,7 @@
     <string name="get_pro_features">获取专业版功能</string>
     <string name="support_development">支持开发者</string>
     <string name="weather_forecast">天气预报</string>
+    <string name="calendar_sync_description">自动将未来的发射同步到您的日历。</string>
     <string name="wear_complications">Wear OS 复杂功能</string>
     <string name="wear_complications_description">在您的 Wear OS 手表上获取 Space Launch Now！</string>
     <string name="remove_ads">移除广告</string>
@@ -252,11 +253,13 @@
     <string name="allow_background">允许后台同步</string>
     <string name="data_saver">流量节省</string>
     <string name="wifi_only">仅 WiFi 网络</string>
+    <string name="wifi_only_summary">仅在 WiFi 网络可用时同步发射数据。</string>
     <string name="calendar_settings">日历设置</string>
     <string name="auto_calendar">自动日历同步</string>
     <string name="event_reminder">动态提醒</string>
     <string name="confirm_exit">确认退出</string>
     <string name="debug_logging">调试日志</string>
+    <string name="enable_notifications">启用通知</string>
     <string name="start_time">开始时间</string>
     <string name="general">概况</string>
     <string name="notifications">通知</string>
@@ -307,6 +310,7 @@
     <string name="gdpr_type_crash">崩溃报告</string>
     <string name="space_launch_news">太空发射新闻</string>
     <string name="supporter_main">获得专业版功能 | 移除广告</string>
+    <string name="join_discord">请加入我们的 Space Launch Now Discord 服务器，参与实时发射活动，并与航天爱好者分享最新消息！</string>
     <string name="founded_in">建立于 %s</string>
     <string name="unknown_mission_or_payload">未知的任务或有效载荷</string>
     <string name="refresh">刷新</string>
@@ -314,8 +318,13 @@
     <string name="date">日期</string>
     <string name="alert">警报</string>
     <string name="payload">有效载荷：%d（千克）</string>
+    <string name="spacecraft_format">航天器 %s</string>
+    <string name="crew_capacity">乘组容量：%s</string>
     <string name="previous_with_space">过去的</string>
     <string name="watch">观看</string>
+    <string name="notification_launch_successful">发射成功！</string>
+    <string name="notification_launch_failure">发射失败。</string>
+    <string name="notification_launch_partial_failure">发射部分失败。</string>
     <string name="notification_launch_liftoff">起飞！运载火箭正在飞行中！</string>
     <string name="settings_in_flight">飞行中</string>
     <string name="settings_success">成功</string>
@@ -456,13 +465,13 @@
     <string-array name="status_array">
         <item>在役的</item>
         <item>已退役</item>
-        <item>Deceased</item>
+        <item>已故</item>
         <item>训练中</item>
         <item>在飞行中损失</item>
         <item>在训练中损失</item>
-        <item>Died While in Active Service</item>
+        <item>任务中牺牲</item>
         <item>已忽略</item>
-        <item>Resigned during Training</item>
+        <item>训练中退出</item>
     </string-array>
     <string-array name="time_format_array">
         <item>默认格式</item>
