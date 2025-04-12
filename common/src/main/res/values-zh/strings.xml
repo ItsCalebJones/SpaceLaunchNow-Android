@@ -475,7 +475,7 @@
     </string-array>
     <string-array name="time_format_array">
         <item>默认格式</item>
-        <item>12小时制</item>
+        <item>12 小时制</item>
         <item>24 小时制</item>
     </string-array>
     <string-array name="multi_calendar_reminder">
