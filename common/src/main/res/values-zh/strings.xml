@@ -11,6 +11,7 @@
     <string name="general_settings">发射跟踪和应用的一般设置。</string>
     <string name="supporter_title">成为赞助者</string>
     <string name="supporter_description">帮助确保我们拥有持续的赞助、及时修复bug和添加新特性。</string>
+    <string name="supporter_again_footer">新的 2022 赞助者可用了！</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">及时了解您最感兴趣的轨道发射，任务以及发射载具。</string>
     <string name="slide_two_title">发射通知</string>
@@ -52,6 +53,7 @@
     <string name="get_pro_features">获取专业版功能</string>
     <string name="support_development">支持开发者</string>
     <string name="weather_forecast">天气预报</string>
+    <string name="weather_description">获取该发射场在过去和未来发射时的天气情况。</string>
     <string name="calendar_sync">日历同步</string>
     <string name="calendar_sync_description">自动将未来的发射同步到您的日历。</string>
     <string name="wear_complications">Wear OS 复杂功能</string>
@@ -105,6 +107,7 @@
     <string name="thrust_at_launch">起飞推力</string>
     <string name="watch_launch">观看发射</string>
     <string name="estimated_launch_date">预计发射日期</string>
+    <string name="nothing_here">这里空空如也。从菜单中刷新？</string>
     <string name="supporter">赞助者</string>
     <string name="debug_launches">Debug Launches</string>
     <string name="reset">重置</string>
@@ -212,7 +215,9 @@
     <string name="no_go">暂停或终止的发射</string>
     <string name="no_go_description">隐藏处于“暂停或终止”状态的发射，有时也可以隐藏位于发射窗口内但由于技术或安全区问题而暂停的发射。</string>
     <string name="to_be_determined">隐藏待定的发射</string>
+    <string name="to_be_determined_description">隐藏没有确认时间或日期的发射，也有可能隐藏当天临时取消的发射。</string>
     <string name="launch_info">保留发射 24 小时</string>
+    <string name="launch_info_description">在主页上显示过去 24 小时内的发射。</string>
     <string name="home">主页</string>
     <string name="launches">发射</string>
     <string name="missions">任务</string>
@@ -282,14 +287,15 @@
     <string name="round_corners">圆角</string>
     <string name="round_corners_summary">为小部件启用圆角。</string>
     <string name="enable_weather">启用天气</string>
-    <string name="enable_weather_summary">在未来发射的详情中展示天气卡片。</string>
+    <string name="enable_weather_summary">在未来发射的详情中显示天气卡片。</string>
     <string name="weather_type">天气计量单位制</string>
     <string name="weather_type_on">英制单位的温度、风速和降水量。</string>
     <string name="weather_type_off">公制单位的温度、风速和降水量。</string>
     <string name="upcoming_launches">近期发射</string>
     <string name="upcoming_launches_summary">指定要加载多少未来的发射。</string>
     <string name="allow_background">允许后台同步</string>
-    <string name="allow_background_off">允许在后台同步发射数据以提供通知。</string>
+    <string name="allow_background_on">当应用程序处于后台时也会同步发射数据。</string>
+    <string name="allow_background_off">不允许在后台同步发射数据以提供通知。</string>
     <string name="data_saver">流量节省</string>
     <string name="data_saver_off">每天最多同步一次发射数据。</string>
     <string name="data_saver_on">除非 WiFi 网络可用，否则每周仅同步一次未来的发射。（不影响通知）</string>
@@ -310,6 +316,7 @@
     <string name="confirm_exit">确认退出</string>
     <string name="confirm_exit_summary">退出前确认。</string>
     <string name="debug_logging">调试日志</string>
+    <string name="debug_logging_summary">启用调试日志以进行崩溃调查。</string>
     <string name="enable_notifications">启用通知</string>
     <string name="enable_notifications_on">启用未来发射的通知。</string>
     <string name="enable_notifications_off">禁用未来发射的通知。</string>
@@ -325,8 +332,10 @@
     <string name="general">概况</string>
     <string name="notifications">通知</string>
     <string name="appearance">外观</string>
+    <string name="wear">穿戴</string>
     <string name="Support">成为赞助者</string>
     <string name="about">关于</string>
+    <string name="watch_hour_mode">手表的时间规则</string>
     <string name="watch_hour_mode_on">使用 24 小时制。</string>
     <string name="watch_hour_mode_off">使用 12 小时制。</string>
     <string name="utc_time">使用 UTC 时间</string>
@@ -378,6 +387,7 @@
     <string name="translate">翻译</string>
     <string name="get_help">获取帮助</string>
     <string name="help_description">帮助与支持</string>
+    <string name="gdpr_dialog_disagree_info">我理解，如果我不是赞助者，仍可能看到广告，但这些广告可能与我的兴趣关联度较低。</string>
     <string name="gdpr_dialog_disagree_no_ads">请不要有广告。</string>
     <string name="gdpr_type_ads">广告</string>
     <string name="gdpr_type_cloud_database">云数据库</string>
@@ -402,6 +412,7 @@
     <string name="unknown_administrator">未知负责人</string>
     <string name="unknown_year">创立年份 - 未知。</string>
     <string name="improve_our_data">帮助改进我们的数据</string>
+    <string name="improve_our_data_content">有兴趣帮助我们提高发射数据的准确性吗？请加入我们的 Space Launch Now Discord 服务器并询问如何成为一名资料管理员。</string>
     <string name="no_launches_found">未找到发射。</string>
     <string name="payload">有效载荷：%d（千克）</string>
     <string name="spacecraft_format">航天器 %s</string>
@@ -468,6 +479,7 @@
     <string name="starship">星舰</string>
     <string name="events">动态</string>
     <string name="favorites">收藏夹</string>
+    <string name="show_me">给我看看</string>
     <string name="docked_alt">已对接</string>
     <string name="no_spacestations">没有找到空间站</string>
     <string name="no_events">未找到动态</string>
@@ -509,6 +521,7 @@
     <string name="launch_day_weather">发射日天气</string>
     <string name="video_source_unavailable">视频源不可用。</string>
     <string name="launch_date"><![CDATA[<b>发射日期</b><br>%1$s]]></string>
+    <string name="instantaneous_launch_window"><![CDATA[<b>瞬时发射窗口</b><br>%1$s]]></string>
     <string name="launch_window_extras"><![CDATA[<b>发射窗口</b><br>%1$s - %2$s<br>%3$s]]></string>
     <string name="read_more">阅读更多</string>
     <string name="serial_number">序列号：</string>
@@ -554,11 +567,13 @@
     <string name="strict_matching_title">严格匹配</string>
     <string name="texas">得克萨斯州</string>
     <string name="pacific_spaceport">太平洋太空港</string>
+    <string name="include_other_misc_locations">包含其他地点</string>
     <string name="view_more_livestreams">查看更多直播</string>
     <string name="notices">公告</string>
     <string name="road_closures">道路封闭</string>
     <string name="up_next">下一个</string>
     <string name="overview">总览</string>
+    <string name="supporter_unlock_text_previous">衷心感谢您在 2023 年再次考虑支持 Space Launch Now！\n\n任意金额的支持都能助力我们继续开发和更新！</string>
     <string name="open_links_in_app_summary">选择在应用还是浏览器中打开链接。</string>
     <string name="open_links_in_app_title">在应用中打开链接</string>
     <string-array name="widget_presets">
