@@ -52,6 +52,7 @@
     <string name="get_pro_features">获取专业版功能</string>
     <string name="support_development">支持开发者</string>
     <string name="weather_forecast">天气预报</string>
+    <string name="calendar_sync">日历同步</string>
     <string name="calendar_sync_description">自动将未来的发射同步到您的日历。</string>
     <string name="wear_complications">Wear OS 复杂功能</string>
     <string name="wear_complications_description">在您的 Wear OS 手表上获取 Space Launch Now！</string>
@@ -60,6 +61,7 @@
     <string name="discord">Discord</string>
     <string name="discord_description">在 Space Launch Now 的 Discord 服务器中得到专属的赞助者角色。</string>
     <string name="exclusive_widgets">专属自定义小部件</string>
+    <string name="blur_description">配置背景图像的模糊度和特征。</string>
     <string name="blur_brightness">亮度</string>
     <string name="blur_sampling">采样</string>
     <string name="blur_radius">半径</string>
@@ -276,6 +278,8 @@
     <string name="confirm_exit">确认退出</string>
     <string name="debug_logging">调试日志</string>
     <string name="enable_notifications">启用通知</string>
+    <string name="do_not_disturb_enable">开启免打扰</string>
+    <string name="do_not_disturb_summary">在免打扰时间段内启用静音通知。</string>
     <string name="start_time">开始时间</string>
     <string name="end_time">结束时间</string>
     <string name="general">概况</string>
@@ -287,9 +291,11 @@
     <string name="watch_hour_mode_off">使用 12 小时制。</string>
     <string name="utc_time">使用 UTC 时间</string>
     <string name="utc_time_summary">显示当前的 UTC 时间。</string>
+    <string name="dynamic_background">动态背景</string>
     <string name="blur_background">模糊背景</string>
     <string name="blur_background_summary">使背景图片模糊。</string>
     <string name="blur_settings">模糊设置</string>
+    <string name="blur_settings_summary">配置模糊效果的强度和特征。</string>
     <string name="mission_agencies">任务承包商</string>
     <string name="status_hold">暂停发射</string>
     <string name="status_in_flight">飞行中</string>
@@ -298,6 +304,7 @@
     <string name="notification_preferences">通知偏好</string>
     <string name="ringtone_summary">自定义通知铃声。</string>
     <string name="ringtone">铃声</string>
+    <string name="priority">优先级</string>
     <string name="vibration_summary">允许来通知时振动。</string>
     <string name="vibration">振动</string>
     <string name="led_summary">允许 LED 闪烁通知。(在某些设备上可用)</string>
@@ -314,7 +321,7 @@
     <string name="one_hour_off">不通知即将到来的发射。</string>
     <string name="ten_minutes_title">10 分钟</string>
     <string name="ten_minutes_on">接受 10 分钟内发射的通知。</string>
-    <string name="ten_minutes_off">不通知十分钟内的发射。</string>
+    <string name="ten_minutes_off">不通知 10 分钟内的发射。</string>
     <string name="background_sync">后台同步</string>
     <string name="night_mode_title">夜间模式</string>
     <string name="widgets">小部件</string>
@@ -331,10 +338,12 @@
     <string name="gdpr_type_cloud_database">云数据库</string>
     <string name="gdpr_type_crash">崩溃报告</string>
     <string name="space_launch_news">太空发射新闻</string>
+    <string name="consent_body">此应用程序使用 Google Firebase 进行分析，并使用 Google AdMod 提供广告服务。您的匿名使用数据可能用于个性化此应用程序中的广告。您可以随时在应用程序设置中撤回权限。</string>
     <string name="supporter_main">获得专业版功能 | 移除广告</string>
     <string name="join_discord">请加入我们的 Space Launch Now Discord 服务器，参与实时发射活动，并与航天爱好者分享最新消息！</string>
     <string name="founded_in">建立于 %s</string>
     <string name="unknown_mission_or_payload">未知的任务或有效载荷</string>
+    <string name="view_rocket_launches">查看 %s 发射</string>
     <string name="refresh">刷新</string>
     <string name="search">搜索</string>
     <string name="date">日期</string>
@@ -361,8 +370,12 @@
     <string name="notification_one_hour">距离于 %s 的下一次尝试已不足 1 小时</string>
     <string name="notification_twenty_four_hours">距离于 %s 的下一次尝试已不足 24 小时</string>
     <string name="settings_in_flight">飞行中</string>
+    <string name="settings_in_flight_summary">接收确认发射在飞行中的通知。</string>
     <string name="settings_success">成功</string>
+    <string name="settings_success_summary">接收确认发射成功或失败的通知。</string>
     <string name="settings_one_minute">1 分钟</string>
+    <string name="settings_one_minute_on">接受 1 分钟内发射的通知。</string>
+    <string name="settings_one_minute_off">不通知 1 分钟内的发射。</string>
     <string name="no_live_stream_available">无可用直播。</string>
     <string name="to_be_confirmed_title">待确认</string>
     <string name="source">选择来源</string>
@@ -468,7 +481,7 @@
     <string name="choose_theme">选择主题</string>
     <string name="set_custom_calendar">为日历通知设置自定义提醒。</string>
     <string name="event_and_news">新闻动态通知</string>
-    <string name="event_and_news_description">接收有关发射后太空飞行新闻动态的通知。</string>
+    <string name="event_and_news_description">接收航天发射后新闻动态的通知。</string>
     <string name="choose_theme_mode">选择主题模式</string>
     <string name="air_sea_launch">空射或海射</string>
     <string name="strict_matching_title">严格匹配</string>
