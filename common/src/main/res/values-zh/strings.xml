@@ -61,6 +61,7 @@
     <string name="discord">Discord</string>
     <string name="discord_description">在 Space Launch Now 的 Discord 服务器中得到专属的赞助者角色。</string>
     <string name="exclusive_widgets">专属自定义小部件</string>
+    <string name="exclusive_widgets_description">获取自定义额外小部件的能力。</string>
     <string name="blur_description">配置背景图像的模糊度和特征。</string>
     <string name="blur_brightness">亮度</string>
     <string name="blur_sampling">采样</string>
@@ -131,6 +132,7 @@
     <string name="these_do_not_affect_launch_notifications">这不影响发射通知。</string>
     <string name="hide_no_go_launches">隐藏暂停或终止的发射</string>
     <string name="hide_tbd_launches">隐藏待定发射</string>
+    <string name="keep_launches">保留 24 小时内的发射</string>
     <string name="unknown_mission_date">未知任务日期</string>
     <string name="launch">发射</string>
     <string name="about_description">有关许可证、数据库、更新日志等的应用信息</string>
@@ -186,19 +188,25 @@
     <string name="upcoming">即将到来的</string>
     <string name="previous">过去的</string>
     <string name="select_country">选择国家或地区</string>
+    <string name="select_country_description">在下方选择一个国家或地区；使用工具栏中的重置图标移除所有筛选器。</string>
     <string name="close">关闭</string>
     <string name="filter">筛选</string>
     <string name="select_location">选择地点</string>
+    <string name="select_location_description">在下方选择一个地点；使用工具栏中的重置图标移除所有筛选器。</string>
     <string name="select_launch_vehicle">选择一个运载火箭</string>
+    <string name="select_launch_vehicle_description">在下方选择一个运载火箭；使用工具栏中的重置图标移除所有筛选器。</string>
     <string name="select_launch_agency">选择一个运载火箭承包商</string>
-    <string name="select_launch_agency_description">在下方选中一个承包商；使用工具栏中的重置图标移除所有筛选器。</string>
+    <string name="select_launch_agency_description">在下方选择一个承包商；使用工具栏中的重置图标移除所有筛选器。</string>
     <string name="launch_history_data">历史发射数据</string>
+    <string name="launch_history_data_description">获取历史发射数据？通常需要 2-3 MB 流量。</string>
     <string name="error_loading_mission">无法载入任务。</string>
     <string name="updating_mission_data">更新任务数据... 这可能需要几秒钟。</string>
     <string name="error_unknown_launch">错误 - 未知的发射</string>
     <string name="weather_favorable">天气条件有利概率：%d%%</string>
+    <string name="watch_webcast">观看网络直播以获取最新状态。</string>
     <string name="pending_confirmed_go_specific">等待 %s 确认继续发射</string>
     <string name="pending_confirmed_go">等待承包商确认发射</string>
+    <string name="waiting_on_launch_time">正在等待供应商的确切发射时间</string>
     <string name="waiting_on_launch_time_specific">等待 %s 提供确切的发射时间</string>
     <string name="unconfirmed">（待定）</string>
     <string name="no_go">暂停或终止的发射</string>
@@ -269,6 +277,7 @@
     <string name="launch_list_widget_text_summary">选择发射列表小部件的标题文字颜色。</string>
     <string name="icon_color">图标颜色</string>
     <string name="icon_color_summary">选择发射卡片小部件的图标颜色。</string>
+    <string name="hide_refresh">隐藏刷新</string>
     <string name="hide_refresh_summary">隐藏刷新按钮。</string>
     <string name="round_corners">圆角</string>
     <string name="enable_weather">启用天气</string>
@@ -280,6 +289,7 @@
     <string name="allow_background_off">允许在后台同步发射数据以提供通知。</string>
     <string name="data_saver">流量节省</string>
     <string name="data_saver_off">每天最多同步一次发射数据。</string>
+    <string name="data_saver_on">除非 WiFi 网络可用，否则每周仅同步一次未来的发射。（不影响通知）</string>
     <string name="wifi_only">仅 WiFi 网络</string>
     <string name="wifi_only_summary">仅在 WiFi 网络可用时同步发射数据。</string>
     <string name="launch_tracking">追踪发射</string>
@@ -288,6 +298,7 @@
     <string name="calendar_account">日历账户</string>
     <string name="calendar_account_summary">配置发射动态日历。</string>
     <string name="event_reminder">动态提醒</string>
+    <string name="event_reminder_summary">为日历通知设置自定义提醒。</string>
     <string name="event_count_dialog">选择要同步的动态数量。</string>
     <string name="confirm_exit">确认退出</string>
     <string name="confirm_exit_summary">退出前确认。</string>
@@ -498,7 +509,7 @@
     <string name="landing_attempt_booster">着陆尝试：</string>
     <string name="landing_success_booster">着陆成功：</string>
     <string name="type_booster">类型：</string>
-    <string name="location_booster">位置：</string>
+    <string name="location_booster">地点：</string>
     <string name="first_flight_orbiter">首次飞行</string>
     <string name="active_orbiter">在役的：</string>
     <string name="human_rated_orbiter">评分：</string>
