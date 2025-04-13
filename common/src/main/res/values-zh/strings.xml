@@ -564,6 +564,7 @@
     <string name="event_and_news_description">接收航天发射后新闻动态的通知。</string>
     <string name="choose_theme_mode">选择主题模式</string>
     <string name="air_sea_launch">空射或海射</string>
+    <string name="strict_matching">在由多个承包商使用的发射地点，仅显示所选承包商的任务。\n\n例如您只想查看 SpaceX 在肯尼迪航天中心的发射任务，就启用严格匹配并只选择肯尼迪航天中心和 SpaceX。\n\n若不启用严格匹配，则将列出所有KSC和所有SpaceX发射。</string>
     <string name="strict_matching_title">严格匹配</string>
     <string name="texas">得克萨斯州</string>
     <string name="pacific_spaceport">太平洋太空港</string>
