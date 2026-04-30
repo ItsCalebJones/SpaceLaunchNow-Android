@@ -2,6 +2,17 @@
 # SpaceLaunchNow
 A space launch tracker for Android using data from the Launch Library API provided by The Space Devs.
 
+[!WARNING]
+## ⚠️ This Repository is Deprecated
+
+**Space Launch Now has moved!** This Android-only codebase is no longer maintained and will not receive further updates, bug fixes, or security patches.
+
+Active development has moved to a new **Kotlin Multiplatform** project that powers Android, Wear OS, and iOS from a single codebase:
+
+### 👉 [github.com/space-launch-now/SpaceLaunchNow-KMP](https://github.com/space-launch-now/SpaceLaunchNow-KMP)
+
+Please file new issues, contributions, and pull requests against the new repository. This repo is preserved for historical reference only.
+
 ## Data Sources
 
 A majority of the data is currently sourced from [Launch Libary](https://thespacedevs.com/) a wonderful set of API's and Librarians that are constantly tracking and updating launches around the world. Additionally I utilize [Space Launch Now - Server](https://github.com/ItsCalebJones/SpaceLaunchNow-Server) to provide additional vehicle data and push notifications for launch times.
