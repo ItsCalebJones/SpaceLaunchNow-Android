@@ -11,6 +11,7 @@
     <string name="general_settings">Загальні налаштування відстежень запуску та поведінки програми.</string>
     <string name="supporter_title">Підтримати нас</string>
     <string name="supporter_description">Допоможіть забезпечити постійну підтримку, вчасне виправлення помилок і нові функції.</string>
+    <string name="supporter_again_footer">Доступна роль учасника 2022!</string>
     <string name="slide_one_title">Space Launch Now</string>
     <string name="slide_one_description">Будьте в курсі всіх ваших улюблених орбітальних запусків, місій і ракет-носіїв.</string>
     <string name="slide_two_title">Сповіщення про запуски</string>
@@ -108,6 +109,7 @@
     <string name="estimated_launch_date">Орієнтовна дата запуску</string>
     <string name="nothing_here">Тут нічого немає, оновіть з меню?</string>
     <string name="supporter">Підтримувач</string>
+    <string name="debug_launches">Налагодження запусків</string>
     <string name="reset">Скинути</string>
     <string name="agency">Агенція</string>
     <string name="country">Держава</string>
@@ -305,6 +307,7 @@
     <string name="auto_calendar_summary">Дозволити наступному запуску синхронізуватись з календарем за замовчуванням.</string>
     <string name="event_count">Кількість подій</string>
     <string name="event_count_summary">Налаштування кількості подій календаря для синхронізації.</string>
+    <string name="calendar_account">Профіль календаря</string>
     <string name="calendar_account_summary">Налаштувати Календар для подій запусків.</string>
     <string name="event_reminder">Нагадування про події</string>
     <string name="event_reminder_summary">Встановити власні нагадування для сповіщень календаря.</string>
@@ -329,6 +332,7 @@
     <string name="general">Основне</string>
     <string name="notifications">Сповіщення</string>
     <string name="appearance">Оформлення</string>
+    <string name="wear">Wear</string>
     <string name="Support">Підтримати нас</string>
     <string name="about">Про додаток</string>
     <string name="watch_hour_mode">Режим циферблата</string>
@@ -402,6 +406,7 @@
     <string name="refresh">Оновити</string>
     <string name="search">Шукати</string>
     <string name="date">Дата</string>
+    <string name="hide_fab">Приховати Фільтр</string>
     <string name="alert">Попередження</string>
     <string name="restore_purchase">Відновити покупку</string>
     <string name="unknown_administrator">Невідомий адміністратор</string>
@@ -437,6 +442,7 @@
     <string name="date_unconfirmed">Поточна дата встановлена ​​на \'не раніше ніж\'.</string>
     <string name="to_be_confirmed">Очікується офіційне підтвердження - поточна дата відома з певною впевненістю.</string>
     <string name="to_be_confirmed_title">Ще не підтверджено</string>
+    <string name="source">Вибрати джерело</string>
     <string name="long_press_share">Тримайте натиск на елементі, щоб поділитись ним.</string>
     <string name="no_astronauts">Не знайдено астронавтів.</string>
     <string name="notification_filters">Фільтри сповіщень</string>
